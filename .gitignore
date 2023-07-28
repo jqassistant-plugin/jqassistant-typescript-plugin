@@ -1,0 +1,12 @@
+/.idea
+*.iml
+*.ipr
+*~
+*.log
+.DS_Store
+.java-version
+*.backup
+
+# Maven related files and directories
+target
+/.mvn

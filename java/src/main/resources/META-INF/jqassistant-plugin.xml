@@ -1,0 +1,15 @@
+<jqassistant-plugin xmlns="http://schema.jqassistant.org/plugin/v1.10"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://schema.jqassistant.org/plugin/v1.10 https://schema.jqassistant.org/plugin/jqassistant-plugin-v1.8.xsd"
+                    name="jQAssistant Typescript Plugin" id="jqassistant.plugin.typescript">
+    <description>Provides a scanner for Typescript.</description>
+    <model>
+        <class>org.jqassistant.plugin.typescript.api.model.ProjectDescriptor</class>
+    </model>
+    <scope>
+        <class>org.jqassistant.plugin.typescript.api.TypescriptScope</class>
+    </scope>
+    <scanner>
+        <class>org.jqassistant.plugin.typescript.impl.TypescriptProjectScannerPlugin</class>
+    </scanner>
+</jqassistant-plugin>
