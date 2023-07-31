@@ -14,6 +14,7 @@ import {ClassTraverser} from "../traversers/class.traverser";
 import {InterfaceDeclarationTraverser} from "../traversers/interface-declaration.traverser";
 import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
 import {parseClassLikeBaseType, parseClassLikeTypeParameters} from "./type.utils";
+import {CodeCoordinateUtils} from "./code-coordinate.utils";
 
 export class InterfaceDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.TSInterfaceDeclaration], ({node}) => {
@@ -50,7 +51,7 @@ export class InterfaceDeclarationProcessor extends Processor {
                 getAndDeleteChildConcepts(ClassTraverser.MEMBERS_PROP, LCEMethodDeclaration.conceptId, childConcepts),
                 getAndDeleteChildConcepts(ClassTraverser.MEMBERS_PROP, LCEGetterDeclaration.conceptId, childConcepts),
                 getAndDeleteChildConcepts(ClassTraverser.MEMBERS_PROP, LCESetterDeclaration.conceptId, childConcepts),
-                globalContext.sourceFilePath
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
             );
             return mergeConceptMaps(
                 singleEntryConceptMap(LCEInterfaceDeclaration.conceptId, interfaceDecl),

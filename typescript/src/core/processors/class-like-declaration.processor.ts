@@ -22,6 +22,7 @@ import {MethodTraverser, ParameterPropertyTraverser} from "../traversers/method.
 import {PropertyTraverser} from "../traversers/property.traverser";
 import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
 import {parseClassPropertyType, parseMethodType} from "./type.utils";
+import {CodeCoordinateUtils} from "./code-coordinate.utils";
 
 export class MethodProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
@@ -56,7 +57,8 @@ export class MethodProcessor extends Processor {
 
     public override postChildrenProcessing({
                                                node,
-                                               localContexts
+                                               localContexts,
+                                               globalContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (
             (node.type === AST_NODE_TYPES.MethodDefinition ||
@@ -88,6 +90,7 @@ export class MethodProcessor extends Processor {
                                     ? getAndDeleteChildConcepts(MethodTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
                                     : [],
                                 visibility,
+                                CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                                 "override" in node ? node.override : undefined,
                                 inClass ? (node.type === AST_NODE_TYPES.TSAbstractMethodDefinition) : undefined,
                                 inClass ? (node.static ? node.static : false) : undefined
@@ -101,7 +104,8 @@ export class MethodProcessor extends Processor {
                         new LCEConstructorDeclaration(
                             fqn,
                             getAndDeleteChildConcepts(MethodTraverser.PARAMETERS_PROP, LCEParameterDeclaration.conceptId, childConcepts),
-                            getAndDeleteChildConcepts(MethodTraverser.PARAMETERS_PROP, LCEParameterPropertyDeclaration.conceptId, childConcepts)
+                            getAndDeleteChildConcepts(MethodTraverser.PARAMETERS_PROP, LCEParameterPropertyDeclaration.conceptId, childConcepts),
+                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
                         )
                     );
                 } else if (node.kind === "get") {
@@ -116,8 +120,9 @@ export class MethodProcessor extends Processor {
                                 ? getAndDeleteChildConcepts(MethodTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
                                 : [],
                             visibility,
+                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                             "override" in node ? node.override : undefined,
-                            inClass ? (node.type === AST_NODE_TYPES.TSAbstractMethodDefinition ? true : false) : undefined,
+                            inClass ? (node.type === AST_NODE_TYPES.TSAbstractMethodDefinition) : undefined,
                             inClass ? (node.static ? node.static : false) : undefined
                         )
                     );
@@ -133,8 +138,9 @@ export class MethodProcessor extends Processor {
                                 ? getAndDeleteChildConcepts(MethodTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
                                 : [],
                             visibility,
+                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                             "override" in node ? node.override : undefined,
-                            inClass ? (node.type === AST_NODE_TYPES.TSAbstractMethodDefinition ? true : false) : undefined,
+                            inClass ? (node.type === AST_NODE_TYPES.TSAbstractMethodDefinition) : undefined,
                             inClass ? (node.static ? node.static : false) : undefined
                         )
                     );
@@ -159,7 +165,8 @@ export class MethodParameterProcessor extends Processor {
 
     public override postChildrenProcessing({
                                                node,
-                                               localContexts
+                                               localContexts,
+                                               globalContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (localContexts.parentContexts) {
             const functionType = localContexts.parentContexts.get(MethodParameterProcessor.METHOD_TYPE_CONTEXT_ID) as LCETypeFunction;
@@ -181,7 +188,8 @@ export class MethodParameterProcessor extends Processor {
                                 funcTypeParam.name,
                                 funcTypeParam.type,
                                 "optional" in node && !!node.optional,
-                                getAndDeleteChildConcepts(IdentifierTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
+                                getAndDeleteChildConcepts(IdentifierTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
+                                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
                             )
                         );
                     } else if (node.type === AST_NODE_TYPES.TSParameterProperty) {
@@ -200,6 +208,7 @@ export class MethodParameterProcessor extends Processor {
                                 getChildConcepts(ParameterPropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
                                 node.accessibility ?? "public",
                                 !!node.readonly,
+                                CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                                 node.override ?? false
                             )
                         );
@@ -210,7 +219,8 @@ export class MethodParameterProcessor extends Processor {
                                 funcTypeParam.name,
                                 funcTypeParam.type,
                                 "optional" in node.parameter && !!node.parameter.optional,
-                                getAndDeleteChildConcepts(ParameterPropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
+                                getAndDeleteChildConcepts(ParameterPropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
+                                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
                             )
                         );
                         DependencyResolutionProcessor.registerDeclaration(localContexts, funcTypeParam.name, paramPropFQN, true);
@@ -271,8 +281,9 @@ export class PropertyProcessor extends Processor {
                             : [],
                         jsPrivate ? "js_private" : node.accessibility ?? "public",
                         !!node.readonly,
+                        CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                         "override" in node ? node.override : undefined,
-                        inClass ? (node.type === AST_NODE_TYPES.TSAbstractPropertyDefinition ? true : false) : undefined,
+                        inClass ? (node.type === AST_NODE_TYPES.TSAbstractPropertyDefinition) : undefined,
                         inClass ? (node.static ? node.static : false) : undefined
                     )
                 ),
@@ -286,7 +297,7 @@ export class PropertyProcessor extends Processor {
 
 /**
  * Returns the field or method name for a given non-computed class element.
- * Also returns if the element was declared private by using a #
+ * Also returns if the element was declared private by using the # prefix
  */
 function processMemberName(name: ClassPropertyNameNonComputed | PropertyNameNonComputed): [string, boolean] {
     let result = "";

@@ -9,6 +9,7 @@ import {
 import {LCEPropertyDeclaration} from "./property-declaration.concept";
 import {LCETypeParameterDeclaration} from "./type-parameter.concept";
 import {LCETypeDeclared} from "./type.concept";
+import {CodeCoordinates} from "./code-coordinate.concept";
 
 export class LCEClassDeclaration extends LCENamedConcept {
     public static override conceptId = "class-declaration";
@@ -26,7 +27,7 @@ export class LCEClassDeclaration extends LCENamedConcept {
         public getters: LCEGetterDeclaration[],
         public setters: LCESetterDeclaration[],
         public decorators: LCEDecorator[],
-        public sourceFilePath: string
+        public coordinates: CodeCoordinates
     ) {
         super(fqn);
     }

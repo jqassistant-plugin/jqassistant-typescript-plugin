@@ -1,4 +1,4 @@
-import { TestClass } from '../../../1simple/example-program1';
+import { TestClass } from '../../../sample-project-3/example-program1';
 import { ImplementMe, myConst as myC } from '../component1/component1';
 import { component, required } from '../framework';
 import { Model2 } from './component2.model';

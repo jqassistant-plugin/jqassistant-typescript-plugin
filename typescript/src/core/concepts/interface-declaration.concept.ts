@@ -3,6 +3,7 @@ import {LCEGetterDeclaration, LCEMethodDeclaration, LCESetterDeclaration} from "
 import {LCEPropertyDeclaration} from "./property-declaration.concept";
 import {LCETypeParameterDeclaration} from "./type-parameter.concept";
 import {LCETypeDeclared} from "./type.concept";
+import {CodeCoordinates} from "./code-coordinate.concept";
 
 export class LCEInterfaceDeclaration extends LCENamedConcept {
     public static override conceptId = "interface-declaration";
@@ -16,7 +17,7 @@ export class LCEInterfaceDeclaration extends LCENamedConcept {
         public methods: LCEMethodDeclaration[],
         public getters: LCEGetterDeclaration[],
         public setters: LCESetterDeclaration[],
-        public sourceFilePath: string
+        public coordinates: CodeCoordinates
     ) {
         super(fqn);
     }

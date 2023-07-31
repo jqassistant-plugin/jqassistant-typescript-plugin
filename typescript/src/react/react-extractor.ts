@@ -1,9 +1,7 @@
 import {AST_NODE_TYPES} from "@typescript-eslint/types";
 
-import {GENERATORS, PROCESSORS, TRAVERSERS} from "../core/features";
+import {PROCESSORS, TRAVERSERS} from "../core/features";
 import {SimpleTraverser} from "../core/traverser";
-import {ReactComponentGenerator} from "./generators/react-component.generator";
-import {ReactHookGenerator} from "./generators/react-hook.generator";
 import {ReactHookProcessor} from "./processors/react-hook.processor";
 import {
     JSXAttributeTraverser,
@@ -26,7 +24,4 @@ export function initializeReactExtractor() {
     TRAVERSERS.set(AST_NODE_TYPES.JSXExpressionContainer, new JSXExpressionContainerTraverser());
 
     PROCESSORS.push(new ReactHookProcessor());
-
-    GENERATORS.push(new ReactComponentGenerator());
-    GENERATORS.push(new ReactHookGenerator());
 }

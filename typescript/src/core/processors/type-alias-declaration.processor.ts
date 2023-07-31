@@ -7,6 +7,7 @@ import {ExecutionCondition} from "../execution-condition";
 import {Processor} from "../processor";
 import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
 import {parseESNodeType, parseTypeAliasTypeParameters} from "./type.utils";
+import {CodeCoordinateUtils} from "./code-coordinate.utils";
 
 export class TypeAliasDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.TSTypeAliasDeclaration], ({node}) => {
@@ -35,7 +36,7 @@ export class TypeAliasDeclarationProcessor extends Processor {
                 fqn,
                 parseTypeAliasTypeParameters({globalContext, localContexts, node}, node),
                 parseESNodeType({globalContext, localContexts, node}, node.typeAnnotation, typeAliasName),
-                globalContext.sourceFilePath
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
             );
             return mergeConceptMaps(
                 singleEntryConceptMap(LCETypeAliasDeclaration.conceptId, typeAliasDecl),

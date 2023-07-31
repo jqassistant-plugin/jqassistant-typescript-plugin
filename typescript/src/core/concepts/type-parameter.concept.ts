@@ -11,7 +11,8 @@ export class LCETypeParameterDeclaration extends LCEConcept {
      * @param name name of type variable
      * @param constraint type of the constraint on the type variable
      */
-    constructor(public name: string, public constraint: LCEType) {
+    constructor(public name: string,
+                public constraint: LCEType) {
         super();
     }
 }

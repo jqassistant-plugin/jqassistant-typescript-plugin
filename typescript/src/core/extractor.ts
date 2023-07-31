@@ -1,15 +1,11 @@
 import {parseAndGenerateServices} from "@typescript-eslint/typescript-estree";
 import * as fs from "fs";
-import {auth as neo4jAuth, driver as neo4jDriver} from "neo4j-driver";
 import path from "path";
 import {TypeChecker} from "typescript";
 
-import {ConceptMap, LCEConcept, mergeConceptMaps, singleEntryConceptMap, unifyConceptMap} from "./concept";
-import {LCETypeScriptProject} from "./concepts/typescript-project.concept";
-import {ConnectionIndex} from "./connection-index";
+import {ConceptMap, mergeConceptMaps, singleEntryConceptMap, unifyConceptMap} from "./concept";
+import {LCEProject} from "./concepts/typescript-project.concept";
 import {GlobalContext} from "./context";
-import {GENERATORS} from "./features";
-import {ConnectionGenerator} from "./generators/connection.generator";
 import {PathUtils} from "./path.utils";
 import {AstTraverser} from "./traversers/ast.traverser";
 import {Utils} from "./utils";
@@ -23,7 +19,7 @@ export async function processProject(projectRoot: string, readFile: Function = f
     const fileList = Utils.getProjectSourceFileList(projectRoot);
 
     // maps filenames to the extracted concepts from these files
-    let concepts: ConceptMap = singleEntryConceptMap(LCETypeScriptProject.conceptId, new LCETypeScriptProject(projectRoot));
+    let concepts: ConceptMap = singleEntryConceptMap(LCEProject.conceptId, new LCEProject(projectRoot));
 
     console.log("Analyzing " + fileList.length + " project files...");
     const startTime = process.hrtime();
@@ -76,27 +72,4 @@ export async function processProject(projectRoot: string, readFile: Function = f
         })
 
     }
-
-    // if (normalizedConcepts) await generateGraphs(normalizedConcepts);
-}
-
-async function generateGraphs(concepts: Map<string, LCEConcept[]>) {
-    console.log("Generating graph...");
-    const startTime = process.hrtime();
-    const driver = neo4jDriver("bolt://localhost:7687", neo4jAuth.basic("neo4j", "neo"));
-    const session = driver.session();
-    const connectionIndex = new ConnectionIndex();
-
-    const connectionGenerator = new ConnectionGenerator();
-    try {
-        for (const generator of GENERATORS) {
-            await generator.run(session, concepts, connectionIndex);
-            await connectionGenerator.run(session, concepts, connectionIndex);
-        }
-    } finally {
-        await session.close();
-    }
-    await driver.close();
-    const endTime = process.hrtime();
-    console.log("Finished generating graph. Runtime: " + (endTime[0] - startTime[0]) + "s");
 }

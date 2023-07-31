@@ -1,5 +1,6 @@
 import {LCENamedConcept} from "../concept";
 import {LCEValue} from "./value.concept";
+import {CodeCoordinates} from "./code-coordinate.concept";
 
 export class LCEEnumDeclaration extends LCENamedConcept {
     public static override conceptId = "enum-declaration";
@@ -10,7 +11,7 @@ export class LCEEnumDeclaration extends LCENamedConcept {
         public members: LCEEnumMember[],
         public constant: boolean,
         public declared: boolean,
-        public sourceFilePath: string
+        public coordinates: CodeCoordinates
     ) {
         super(fqn);
     }
@@ -19,7 +20,10 @@ export class LCEEnumDeclaration extends LCENamedConcept {
 export class LCEEnumMember extends LCENamedConcept {
     public static override conceptId = "enum-member";
 
-    constructor(public enumMemberName: string, fqn: string, public init?: LCEValue) {
+    constructor(public enumMemberName: string,
+                fqn: string,
+                public coordinates: CodeCoordinates,
+                public init?: LCEValue) {
         super(fqn);
     }
 }

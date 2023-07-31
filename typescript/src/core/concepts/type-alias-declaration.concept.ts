@@ -1,6 +1,7 @@
 import {LCENamedConcept} from "../concept";
 import {LCETypeParameterDeclaration} from "./type-parameter.concept";
 import {LCEType} from "./type.concept";
+import {CodeCoordinates} from "./code-coordinate.concept";
 
 export class LCETypeAliasDeclaration extends LCENamedConcept {
     public static override conceptId = "type-alias-declaration";
@@ -10,7 +11,7 @@ export class LCETypeAliasDeclaration extends LCENamedConcept {
         fqn: string,
         public typeParameters: LCETypeParameterDeclaration[],
         public type: LCEType,
-        public sourceFilePath: string
+        public coordinates: CodeCoordinates
     ) {
         super(fqn);
     }

@@ -11,6 +11,7 @@ import {VariableDeclaratorTraverser} from "../traversers/variable-declaration.tr
 import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
 import {parseESNodeType} from "./type.utils";
 import {VALUE_PROCESSING_FLAG} from "./value.processor";
+import {CodeCoordinateUtils} from "./code-coordinate.utils";
 
 export class VariableDeclarationProcessor extends Processor {
     public static readonly VARIABLE_DECLARATION_KIND_CONTEXT = "variable-declaration-type";
@@ -82,7 +83,7 @@ export class VariableDeclaratorProcessor extends Processor {
                 kind,
                 parseESNodeType({node, localContexts, globalContext}, node, name),
                 init,
-                globalContext.sourceFilePath
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
             );
 
             return mergeConceptMaps(

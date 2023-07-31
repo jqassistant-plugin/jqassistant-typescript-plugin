@@ -18,6 +18,7 @@ import {getAndDeleteChildConcepts, getParentPropName} from "../processor.utils";
 import {ClassTraverser} from "../traversers/class.traverser";
 import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
 import {parseClassLikeBaseType, parseClassLikeTypeParameters} from "./type.utils";
+import {CodeCoordinateUtils} from "./code-coordinate.utils";
 
 export class ClassDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.ClassDeclaration], ({node}) => {
@@ -62,7 +63,7 @@ export class ClassDeclarationProcessor extends Processor {
                 getAndDeleteChildConcepts(ClassTraverser.MEMBERS_PROP, LCEGetterDeclaration.conceptId, childConcepts),
                 getAndDeleteChildConcepts(ClassTraverser.MEMBERS_PROP, LCESetterDeclaration.conceptId, childConcepts),
                 getAndDeleteChildConcepts(ClassTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
-                globalContext.sourceFilePath
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true)
             );
             DependencyResolutionProcessor.scheduleFqnResolution(localContexts, className, classDecl);
 

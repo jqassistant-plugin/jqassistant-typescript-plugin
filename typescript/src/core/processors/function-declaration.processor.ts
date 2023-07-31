@@ -14,6 +14,7 @@ import {IdentifierTraverser} from "../traversers/expression.traverser";
 import {FunctionTraverser} from "../traversers/function.traverser";
 import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
 import {parseFunctionType} from "./type.utils";
+import {CodeCoordinateUtils} from "./code-coordinate.utils";
 
 export class FunctionDeclarationProcessor extends Processor {
     /** is used to provide an LCETypeFunction object of the currently traversed function */
@@ -73,7 +74,7 @@ export class FunctionDeclarationProcessor extends Processor {
                             getAndDeleteChildConcepts(FunctionTraverser.PARAMETERS_PROP, LCEParameterDeclaration.conceptId, childConcepts),
                             returnType,
                             typeParameters,
-                            globalContext.sourceFilePath
+                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
                         )
                     ),
                     DependencyResolutionProcessor.getRegisteredDependencies(localContexts)
@@ -93,7 +94,8 @@ export class FunctionParameterProcessor extends Processor {
 
     public override postChildrenProcessing({
                                                node,
-                                               localContexts
+                                               localContexts,
+                                               globalContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (localContexts.parentContexts) {
             const functionType = localContexts.parentContexts.get(FunctionDeclarationProcessor.FUNCTION_TYPE_CONTEXT_ID) as LCETypeFunction;
@@ -111,7 +113,8 @@ export class FunctionParameterProcessor extends Processor {
                                 funcTypeParam.name,
                                 funcTypeParam.type,
                                 "optional" in node && !!node.optional,
-                                getAndDeleteChildConcepts(IdentifierTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
+                                getAndDeleteChildConcepts(IdentifierTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
+                                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
                             )
                         );
                     }

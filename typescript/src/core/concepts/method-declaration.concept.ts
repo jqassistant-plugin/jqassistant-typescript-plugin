@@ -4,6 +4,7 @@ import {LCEPropertyDeclaration} from "./property-declaration.concept";
 import {LCETypeParameterDeclaration} from "./type-parameter.concept";
 import {LCEType} from "./type.concept";
 import {Visibility} from "./visibility.concept";
+import {CodeCoordinates} from "./code-coordinate.concept";
 
 export class LCEMethodDeclaration extends LCENamedConcept {
     public static override conceptId = "method-declaration";
@@ -16,9 +17,10 @@ export class LCEMethodDeclaration extends LCENamedConcept {
         public typeParameters: LCETypeParameterDeclaration[],
         public decorators: LCEDecorator[],
         public visibility: Visibility,
+        public coordinates: CodeCoordinates,
         public override?: boolean,
         public abstract?: boolean,
-        public isStatic?: boolean
+        public isStatic?: boolean,
     ) {
         super(fqn);
     }
@@ -27,7 +29,13 @@ export class LCEMethodDeclaration extends LCENamedConcept {
 export class LCEParameterDeclaration extends LCEConcept {
     public static override conceptId = "parameter-declaration";
 
-    constructor(public index: number, public name: string, public type: LCEType, public optional: boolean, public decorators: LCEDecorator[]) {
+    constructor(public index: number,
+                public name: string,
+                public type: LCEType,
+                public optional: boolean,
+                public decorators: LCEDecorator[],
+                public coordinates: CodeCoordinates
+    ) {
         super();
     }
 }
@@ -44,9 +52,10 @@ export class LCEParameterPropertyDeclaration extends LCEPropertyDeclaration {
         decorators: LCEDecorator[],
         visibility: Visibility,
         readonly: boolean,
+        coordinates: CodeCoordinates,
         override?: boolean
     ) {
-        super(propertyName, fqn, optional, type, decorators, visibility, readonly, override, false, false);
+        super(propertyName, fqn, optional, type, decorators, visibility, readonly, coordinates, override, false, false);
     }
 }
 
@@ -56,7 +65,12 @@ export class LCEConstructorDeclaration extends LCENamedConcept {
     /**
      * @param parameterProperties maps parameter index numbers to declared parameter properties
      */
-    constructor(fqn: string, public parameters: LCEParameterDeclaration[], public parameterProperties: LCEParameterPropertyDeclaration[]) {
+    constructor(
+        fqn: string,
+        public parameters: LCEParameterDeclaration[],
+        public parameterProperties: LCEParameterPropertyDeclaration[],
+        public coordinates: CodeCoordinates
+    ) {
         super(fqn);
     }
 }
@@ -70,6 +84,7 @@ export class LCEGetterDeclaration extends LCENamedConcept {
         public returnType: LCEType,
         public decorators: LCEDecorator[],
         public visibility: Visibility,
+        public coordinates: CodeCoordinates,
         public override?: boolean,
         public abstract?: boolean,
         public isStatic?: boolean
@@ -87,6 +102,7 @@ export class LCESetterDeclaration extends LCENamedConcept {
         public parameters: LCEParameterDeclaration[],
         public decorators: LCEDecorator[],
         public visibility: Visibility,
+        public coordinates: CodeCoordinates,
         public override?: boolean,
         public abstract?: boolean,
         public isStatic?: boolean

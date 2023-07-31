@@ -1,14 +1,4 @@
 import {AST_NODE_TYPES} from "@typescript-eslint/types";
-
-import {Generator} from "./generator";
-import {ClassDeclarationGenerator} from "./generators/class-declaration.generator";
-import {DependencyGenerator} from "./generators/dependency.generator";
-import {EnumDeclarationGenerator} from "./generators/enum-declaration.generator";
-import {FunctionDeclarationGenerator} from "./generators/function-declaration.generator";
-import {InterfaceDeclarationGenerator} from "./generators/interface-declaration.generator";
-import {TypeAliasDeclarationGenerator} from "./generators/type-alias-declaration.generator";
-import {TypeScriptProjectFilesGenerator} from "./generators/typescript-project-files.generator";
-import {VariableDeclarationGenerator} from "./generators/variable-declaration.generator";
 import {Processor} from "./processor";
 import {
     ClassDeclarationProcessor,
@@ -235,18 +225,4 @@ export const PROCESSORS: Processor[] = [
     new TypeAliasDeclarationProcessor(),
     new VariableDeclarationProcessor(),
     new VariableDeclaratorProcessor(),
-];
-
-/**
- * Central index of all generators used by the LCE.
- */
-export const GENERATORS: Generator[] = [
-    new TypeScriptProjectFilesGenerator(),
-    new ClassDeclarationGenerator(),
-    new InterfaceDeclarationGenerator(),
-    new TypeAliasDeclarationGenerator(),
-    new EnumDeclarationGenerator(),
-    new FunctionDeclarationGenerator(),
-    new VariableDeclarationGenerator(),
-    new DependencyGenerator(),
 ];

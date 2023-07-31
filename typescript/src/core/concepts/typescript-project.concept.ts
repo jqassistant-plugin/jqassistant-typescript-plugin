@@ -1,7 +1,7 @@
 import {LCEConcept} from "../concept";
 
-export class LCETypeScriptProject extends LCEConcept {
-    public static override conceptId = "typescript-project";
+export class LCEProject extends LCEConcept {
+    public static override conceptId = "project";
 
     constructor(public projectRoot: string) {
         super();

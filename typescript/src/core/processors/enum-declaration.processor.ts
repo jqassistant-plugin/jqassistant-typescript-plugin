@@ -9,6 +9,7 @@ import {getAndDeleteAllValueChildConcepts, getAndDeleteChildConcepts} from "../p
 import {EnumDeclarationTraverser, EnumMemberTraverser} from "../traversers/enum.traverser";
 import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
 import {VALUE_PROCESSING_FLAG} from "./value.processor";
+import {CodeCoordinateUtils} from "./code-coordinate.utils";
 
 export class EnumDeclarationProcessor extends Processor {
     public static readonly PARSE_ENUM_MEMBERS_CONTEXT = "parse-enum-members";
@@ -48,7 +49,7 @@ export class EnumDeclarationProcessor extends Processor {
                 members,
                 node.const ?? false,
                 node.declare ?? false,
-                globalContext.sourceFilePath
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
             );
 
             return singleEntryConceptMap(LCEEnumDeclaration.conceptId, enumeration);
@@ -68,7 +69,8 @@ export class EnumMemberProcessor extends Processor {
 
     public override postChildrenProcessing({
                                                node,
-                                               localContexts
+                                               localContexts,
+                                               globalContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (node.type === AST_NODE_TYPES.TSEnumMember && !node.computed) {
             const init = getAndDeleteAllValueChildConcepts(EnumMemberTraverser.INIT_PROP, childConcepts);
@@ -78,6 +80,7 @@ export class EnumMemberProcessor extends Processor {
             const member = new LCEEnumMember(
                 memberName,
                 DependencyResolutionProcessor.constructFQNPrefix(localContexts) + memberName,
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                 init.length === 1 ? init[0] : undefined
             );
             return singleEntryConceptMap(LCEEnumMember.conceptId, member);
