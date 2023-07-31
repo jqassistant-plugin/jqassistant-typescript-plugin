@@ -1,0 +1,10 @@
+= jQAssistant TypeScript Plugin
+
+This is the TypeScript Plugin of https://jqassistant.org[jQAssistant].
+It provides a tool to extract language concepts from TypeScript code and a scanner for the resulting JSON files.
+
+For more information on jQAssistant see https://jqassistant.org[^].
+
+== Usage
+
+TODO

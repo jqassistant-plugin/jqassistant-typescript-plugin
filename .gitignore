@@ -10,3 +10,7 @@
 # Maven related files and directories
 target
 /.mvn
+
+# TS
+**/node_modules/
+**/tmp/
