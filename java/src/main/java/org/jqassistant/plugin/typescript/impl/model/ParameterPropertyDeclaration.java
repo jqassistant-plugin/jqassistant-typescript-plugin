@@ -7,8 +7,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public class ParameterPropertyDeclaration extends PropertyDeclaration {
 
-    private String projectRoot;
+    private Integer index;
 
 }

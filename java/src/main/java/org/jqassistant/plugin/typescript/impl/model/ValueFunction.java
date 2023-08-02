@@ -7,8 +7,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public class ValueFunction extends Value {
 
-    private String projectRoot;
+    private Boolean arrowFunction;
 
 }

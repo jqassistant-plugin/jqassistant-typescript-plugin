@@ -1,5 +1,5 @@
 import { model } from '../framework';
-import { TestClass } from '../../../sample-project-3/example-program1';
+import { TestClass } from '../../../supplementary-sample-project/example-program1';
 import { parse } from 'path';
 
 class SomeInternalClass {}

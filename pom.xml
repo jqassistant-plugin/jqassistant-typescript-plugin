@@ -14,7 +14,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>jQAssistant TypeScript Plugin</name>
+    <name>jQAssistant TypeScript Plugin Parent</name>
     <url>https://jqassistant.org/</url>
 
     <description>

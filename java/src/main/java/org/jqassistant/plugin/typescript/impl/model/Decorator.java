@@ -7,8 +7,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public class Decorator {
 
-    private String projectRoot;
+    private Value value;
+
+    private CodeCoordinates coordinates;
 
 }

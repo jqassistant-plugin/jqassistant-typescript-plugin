@@ -4,6 +4,9 @@ import {LCETypeParameterDeclaration} from "./type-parameter.concept";
 /** Base class for all types. */
 export abstract class LCEType extends LCEConcept {
     public static override conceptId = "type";
+    protected constructor(public type: string) {
+        super();
+    }
 }
 
 /**
@@ -16,7 +19,7 @@ export class LCETypePrimitive extends LCEType {
      * @param name identifier of the primitive type
      */
     constructor(public name: string) {
-        super();
+        super("primitive");
     }
 }
 
@@ -31,7 +34,7 @@ export class LCETypeDeclared extends LCEType {
      * @param typeArguments list of type arguments provided for generics
      */
     constructor(public fqn: string, public typeArguments: LCEType[]) {
-        super();
+        super("declared");
     }
 }
 
@@ -45,7 +48,7 @@ export class LCETypeUnion extends LCEType {
      * @param types constituents of the union type
      */
     constructor(public types: LCEType[]) {
-        super();
+        super("union");
     }
 }
 
@@ -59,7 +62,7 @@ export class LCETypeIntersection extends LCEType {
      * @param types constituents of the intersection type
      */
     constructor(public types: LCEType[]) {
-        super();
+        super("intersection");
     }
 }
 
@@ -73,7 +76,7 @@ export class LCETypeObject extends LCEType {
      * @param members members of the object type
      */
     constructor(public members: Map<string, LCEType>) {
-        super();
+        super("object");
     }
 }
 
@@ -88,7 +91,7 @@ export class LCETypeFunction extends LCEType {
      * @param parameters map of parameter names and their respective types
      */
     constructor(public returnType: LCEType, public parameters: LCETypeFunctionParameter[], public typeParameters: LCETypeParameterDeclaration[]) {
-        super();
+        super("function");
     }
 }
 
@@ -119,7 +122,7 @@ export class LCETypeParameter extends LCEType {
      * @param name name of the type parameter
      */
     constructor(public name: string) {
-        super();
+        super("type-parameter");
     }
 }
 
@@ -133,7 +136,7 @@ export class LCETypeLiteral extends LCEType {
      * @param value content of the type literal
      */
     constructor(public value: string | number | boolean) {
-        super();
+        super("literal");
     }
 }
 
@@ -147,7 +150,7 @@ export class LCETypeTuple extends LCEType {
      * @param types types of the tuple
      */
     constructor(public types: LCEType[]) {
-        super();
+        super("tuple");
     }
 }
 
@@ -161,6 +164,6 @@ export class LCETypeNotIdentified extends LCEType {
      * @param identifier string representation of type that could not successfully parsed
      */
     constructor(public identifier: string) {
-        super();
+        super("not-identified");
     }
 }

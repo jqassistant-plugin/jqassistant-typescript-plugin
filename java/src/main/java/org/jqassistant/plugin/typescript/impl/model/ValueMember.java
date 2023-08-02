@@ -7,8 +7,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public class ValueMember extends Value {
 
-    private String projectRoot;
+    private Value parent;
+
+    private Value member;
 
 }

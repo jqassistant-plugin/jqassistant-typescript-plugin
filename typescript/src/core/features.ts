@@ -106,6 +106,7 @@ import {
     TypeParameterTraverser,
 } from "./traversers/type-parameter.traverser";
 import {VariableDeclarationTraverser, VariableDeclaratorTraverser} from "./traversers/variable-declaration.traverser";
+import {ModuleProcessor} from "./processors/typescript-module.processor";
 
 /**
  * Central index of all traversers natively supported by the LCE.
@@ -216,6 +217,7 @@ export const PROCESSORS: Processor[] = [
     new MemberValueProcessor(),
     new MethodParameterProcessor(),
     new MethodProcessor(),
+    new ModuleProcessor(),
     new ObjectValueProcessor(),
     new ObjectValuePropertyProcessor(),
     new PropertyProcessor(),

@@ -4,11 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Getter
 @Setter
 @ToString
-public class Project {
+public class ValueObject extends Value {
 
-    private String projectRoot;
+    private Map<String, Value> members = new HashMap<>();
 
 }

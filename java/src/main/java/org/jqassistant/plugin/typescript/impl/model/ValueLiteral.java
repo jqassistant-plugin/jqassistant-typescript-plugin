@@ -7,8 +7,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public class ValueLiteral extends Value{
 
-    private String projectRoot;
+    private Object value;
 
 }

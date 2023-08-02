@@ -1,4 +1,4 @@
-import { TestClass } from '../../../sample-project-3/example-program1';
+import { TestClass } from '../../../supplementary-sample-project/example-program1';
 import { ImplementMe, myConst as myC } from '../component1/component1';
 import { component, required } from '../framework';
 import { Model2 } from './component2.model';
@@ -156,6 +156,7 @@ let a10 = class A {};
 let a11 = new Date(),
   a12 = 12;
 let a13 = [1, 2, 3, ...[4, 5, 6]];
+let a14: {x: number, y:string} = {x: 1, y: "y"};
 
 let aFunc = function <T extends { x: string }>(a: string, b?: T): string {
   let c = new Model2();

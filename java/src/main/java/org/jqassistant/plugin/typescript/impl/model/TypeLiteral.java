@@ -7,8 +7,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public class TypeLiteral extends  Type {
 
-    private String projectRoot;
+    /**
+     * This can either be a string, number or boolean
+     */
+    private Object value;
 
 }

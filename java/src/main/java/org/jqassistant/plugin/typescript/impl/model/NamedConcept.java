@@ -7,8 +7,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public abstract class NamedConcept {
 
-    private String projectRoot;
+    private String fqn;
 
 }

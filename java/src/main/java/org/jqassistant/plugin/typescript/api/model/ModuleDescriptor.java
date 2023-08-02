@@ -5,10 +5,9 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 import java.util.List;
 
-@Label("Project")
-public interface ProjectDescriptor extends TypeScriptDescriptor {
+@Label("Module")
+public interface ModuleDescriptor extends TypeScriptDescriptor {
 
-    @Relation("CONTAINS")
-    List<ModuleDescriptor> getModules();
-
+    @Relation("DECLARES")
+    List<ClassDeclarationDescriptor> getClassDeclarations();
 }

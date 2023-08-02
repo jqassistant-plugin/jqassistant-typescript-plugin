@@ -5,6 +5,8 @@
     <description>Provides a scanner for Typescript.</description>
     <model>
         <class>org.jqassistant.plugin.typescript.api.model.ProjectDescriptor</class>
+        <class>org.jqassistant.plugin.typescript.api.model.ModuleDescriptor</class>
+        <class>org.jqassistant.plugin.typescript.api.model.ClassDeclarationDescriptor</class>
     </model>
     <scope>
         <class>org.jqassistant.plugin.typescript.api.TypescriptScope</class>

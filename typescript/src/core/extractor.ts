@@ -55,8 +55,8 @@ export async function processProject(projectRoot: string, readFile: Function = f
 
     if (normalizedConcepts) {
         const json = JSON.stringify(Object.fromEntries(normalizedConcepts), (_, value) => typeof value === 'bigint' ? value.toString() : value);
-        let dirPath = path.join(projectRoot, "tmp");
-        let filePath = path.join(dirPath, 'output.json');
+        let dirPath = path.join(projectRoot, "build");
+        let filePath = path.join(dirPath, 'jqa-ts-output.json');
         fs.mkdir(dirPath, {recursive: true}, (errDir) => {
             if (errDir) {
                 console.log("Could not create directory: " + dirPath);

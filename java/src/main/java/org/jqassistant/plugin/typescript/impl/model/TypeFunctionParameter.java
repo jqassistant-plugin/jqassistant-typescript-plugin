@@ -7,8 +7,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public class TypeFunctionParameter {
 
-    private String projectRoot;
+    private Integer index;
+
+    private String name;
+
+    private Boolean optional;
+
+    private Type type;
 
 }

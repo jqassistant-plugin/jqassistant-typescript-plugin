@@ -7,8 +7,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public class TypeNotIdentified {
 
-    private String projectRoot;
+    private String identifier;
 
 }

@@ -1,0 +1,15 @@
+jqassistant:
+  plugins:
+    - group-id: org.jqassistant.plugin.typescript
+      artifact-id: jqassistant-typescript-plugin
+      version: 1.0.0-SNAPSHOT
+  scan:
+    include:
+      files:
+        -
+        - typescript:project::build/jqa-ts-output.json
+    properties:
+      file.exclude:
+        - /node_modules/**
+        - /build/**
+        - /jqassistant/**

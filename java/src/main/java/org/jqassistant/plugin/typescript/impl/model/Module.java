@@ -7,8 +7,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public class Module {
 
-    private String projectRoot;
+    private String path;
 
 }

@@ -8,7 +8,10 @@ export abstract class LCEValue extends LCEConcept {
     /**
      * @param type type of the value
      */
-    constructor(public type: LCEType) {
+    protected constructor(
+        public valueType: string,
+        public type: LCEType
+    ) {
         super();
     }
 }
@@ -23,7 +26,7 @@ export class LCEValueNull extends LCEValue {
      * @param kind indicates whether value is `undefined` or `null`
      */
     constructor(public kind: "undefined" | "null") {
-        super(new LCETypePrimitive(kind));
+        super("null", new LCETypePrimitive(kind));
     }
 }
 
@@ -37,7 +40,10 @@ export class LCEValueLiteral extends LCEValue {
      * @param value the value of the literal
      */
     constructor(public value: string | number | bigint | boolean | RegExp) {
-        super(typeof value === "object" ? new LCETypeDeclared("RegExp", []) : new LCETypePrimitive(typeof value));
+        super(
+            "literal",
+            typeof value === "object" ? new LCETypeDeclared("RegExp", []) : new LCETypePrimitive(typeof value)
+        );
     }
 }
 
@@ -51,7 +57,7 @@ export class LCEValueDeclared extends LCEValue {
      * @param fqn fully qualified name of the referenced variable/function/class
      */
     constructor(type: LCEType, public fqn: string) {
-        super(type);
+        super("declared", type);
     }
 }
 
@@ -66,7 +72,7 @@ export class LCEValueMember extends LCEValue {
      * @param member member value which is accessed
      */
     constructor(type: LCEType, public parent: LCEValue, public member: LCEValue) {
-        super(type);
+        super("member", type);
     }
 }
 
@@ -80,7 +86,7 @@ export class LCEValueObject extends LCEValue {
      * @param members map of the object member's names to their respective values
      */
     constructor(type: LCEType, public members: Map<string, LCEValue>) {
-        super(type);
+        super("object", type);
     }
 }
 
@@ -96,7 +102,7 @@ export class LCEValueObjectProperty extends LCEValue {
      * @param value value of the property
      */
     constructor(public name: string, public value: LCEValue) {
-        super(value.type);
+        super("object-property", value.type);
     }
 }
 
@@ -110,7 +116,7 @@ export class LCEValueArray extends LCEValue {
      * @param items item values of the array
      */
     constructor(type: LCEType, public items: LCEValue[]) {
-        super(type);
+        super("array", type);
     }
 }
 
@@ -127,7 +133,7 @@ export class LCEValueCall extends LCEValue {
      * @param typeArgs type arguments specified for call
      */
     constructor(type: LCEType, public callee: LCEValue, public args: LCEValue[], public typeArgs: LCEType[]) {
-        super(type);
+        super("call", type);
     }
 }
 
@@ -142,7 +148,7 @@ export class LCEValueFunction extends LCEValue {
      * @param arrowFunction indicates whether the function is an arrow function
      */
     constructor(type: LCEType, public arrowFunction: boolean) {
-        super(type);
+        super("function", type);
     }
 }
 
@@ -153,7 +159,7 @@ export class LCEValueClass extends LCEValue {
     public static override conceptId = "class-value";
 
     constructor() {
-        super(new LCETypeNotIdentified("class expression"));
+        super("class", new LCETypeNotIdentified("class expression"));
     }
 }
 
@@ -167,7 +173,7 @@ export class LCEValueComplex extends LCEValue {
      * @param expression string representation of the value's expression
      */
     constructor(public expression: string) {
-        super(new LCETypeNotIdentified("complex"));
+        super("complex", new LCETypeNotIdentified("complex"));
     }
 }
 

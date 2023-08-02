@@ -7,8 +7,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Project {
+public class TypeParameterDeclaration {
 
-    private String projectRoot;
+    private String name;
+
+    private Type constraint;
 
 }
