@@ -8,3 +8,54 @@ For more information on jQAssistant see https://jqassistant.org[^].
 == Usage
 
 TODO
+
+== Model
+
+image::docs/jqa-ts-plugin-model.jpg[Neo4j model for the jQAssistant TypeScript plugin]
+
+The destinations of the `REFERENCES` relations of `:Type:Declared` and `:Value:Declared` as well as all `:DEPENDS_ON` relations have been omitted for the sake of clarity.
+
+The `REFERENCES` relation of `:Type:Declared` can target:
+
+* `:Class`
+* `:Interface`
+* `:TypeAlias`
+* `:Enum`
+* `:ExternalDeclaration`
+
+The `REFERENCES` relation of `:Value:Declared` can target:
+
+* `:Variable`
+* `:Function`
+* `:Class`
+* `:Interface`
+* `:TypeAlias`
+* `:Enum`
+* `:EnumMember`
+* `:ExternalDeclaration`
+
+The `DEPENDS_ON` relation can originate from:
+
+* `:Module`
+* `:Class`
+* `:Property`
+* `:Method` (including all subtypes)
+* `:Interface`
+* `:TypeAlias`
+* `:Enum`
+* `:Variable`
+* `:Function`
+
+and can target one or more of the following nodes:
+
+* `:Module`
+* `:Module:External`
+* `:ExternalDeclaration`
+* `:Class`
+* `:Property`
+* `:Method` (including all subtypes)
+* `:Interface`
+* `:TypeAlias`
+* `:Enum`
+* `:Variable`
+* `:Function`
