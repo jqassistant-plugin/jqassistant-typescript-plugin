@@ -19,7 +19,7 @@ import lombok.ToString;
     @JsonSubTypes.Type(value = TypeIntersection.class, name = "intersection"),
     @JsonSubTypes.Type(value = TypeObject.class, name = "object"),
     @JsonSubTypes.Type(value = TypeFunction.class, name = "function"),
-    @JsonSubTypes.Type(value = TypeParameter.class, name = "type-parameter"),
+    @JsonSubTypes.Type(value = TypeParameterReference.class, name = "type-parameter"),
     @JsonSubTypes.Type(value = TypeLiteral.class, name = "literal"),
     @JsonSubTypes.Type(value = TypeTuple.class, name = "tuple"),
     @JsonSubTypes.Type(value = TypeNotIdentified.class, name = "not-identified")

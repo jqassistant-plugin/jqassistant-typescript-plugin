@@ -12,6 +12,7 @@ export class LCETypeParameterDeclaration extends LCEConcept {
      * @param constraint type of the constraint on the type variable
      */
     constructor(public name: string,
+                public index: number,
                 public constraint: LCEType) {
         super();
     }

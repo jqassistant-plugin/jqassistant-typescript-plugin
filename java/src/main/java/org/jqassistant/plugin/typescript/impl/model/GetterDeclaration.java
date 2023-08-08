@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class GetterDeclaration {
+public class GetterDeclaration extends NamedConcept {
 
     private String methodName;
 

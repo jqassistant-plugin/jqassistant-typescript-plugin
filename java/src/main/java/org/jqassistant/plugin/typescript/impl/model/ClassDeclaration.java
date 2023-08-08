@@ -24,7 +24,8 @@ public class ClassDeclaration extends NamedConcept {
 
     private List<TypeDeclared> implementsInterfaces = new ArrayList<>();
 
-    private ConstructorDeclaration constr;
+    @JsonAlias("constr")
+    private ConstructorDeclaration constructor;
 
     private List<PropertyDeclaration> properties = new ArrayList<>();
 

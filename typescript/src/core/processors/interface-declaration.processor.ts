@@ -51,7 +51,7 @@ export class InterfaceDeclarationProcessor extends Processor {
                 getAndDeleteChildConcepts(ClassTraverser.MEMBERS_PROP, LCEMethodDeclaration.conceptId, childConcepts),
                 getAndDeleteChildConcepts(ClassTraverser.MEMBERS_PROP, LCEGetterDeclaration.conceptId, childConcepts),
                 getAndDeleteChildConcepts(ClassTraverser.MEMBERS_PROP, LCESetterDeclaration.conceptId, childConcepts),
-                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true)
             );
             return mergeConceptMaps(
                 singleEntryConceptMap(LCEInterfaceDeclaration.conceptId, interfaceDecl),

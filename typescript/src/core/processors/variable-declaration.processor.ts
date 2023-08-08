@@ -83,7 +83,7 @@ export class VariableDeclaratorProcessor extends Processor {
                 kind,
                 parseESNodeType({node, localContexts, globalContext}, node, name),
                 init,
-                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true)
             );
 
             return mergeConceptMaps(

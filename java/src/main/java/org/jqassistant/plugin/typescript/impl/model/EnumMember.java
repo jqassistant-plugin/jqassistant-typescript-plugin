@@ -7,8 +7,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class TypeParameter extends Type {
+public class EnumMember extends NamedConcept {
 
-    private String name;
+    private String enumMemberName;
+
+    private Value initValue;
+
+    private CodeCoordinates coordinates;
 
 }

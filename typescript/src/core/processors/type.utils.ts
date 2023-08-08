@@ -39,7 +39,7 @@ import {
     LCETypeLiteral,
     LCETypeNotIdentified,
     LCETypeObject,
-    LCETypeParameter,
+    LCETypeParameterReference,
     LCETypePrimitive,
     LCETypeTuple,
     LCETypeUnion,
@@ -192,7 +192,8 @@ export function parseClassLikeTypeParameters(
     const type = globalContext.typeChecker.getTypeAtLocation(node);
     const tc = globalContext.typeChecker;
     const result: LCETypeParameterDeclaration[] = [];
-    for (const typeParam of tc.getTypeArguments(type as TypeReference)) {
+    for (let i = 0; i < tc.getTypeArguments(type as TypeReference).length; i++){
+        const typeParam = tc.getTypeArguments(type as TypeReference)[i];
         const name = typeParam.symbol.name;
         let constraintType: LCEType;
 
@@ -206,7 +207,7 @@ export function parseClassLikeTypeParameters(
             constraintType = new LCETypeObject(new Map());
         }
 
-        result.push(new LCETypeParameterDeclaration(name, constraintType));
+        result.push(new LCETypeParameterDeclaration(name, i, constraintType));
     }
 
     return result;
@@ -222,7 +223,9 @@ export function parseTypeAliasTypeParameters(processingContext: ProcessingContex
     const tc = globalContext.typeChecker;
     const result: LCETypeParameterDeclaration[] = [];
 
-    for (const esTypeParam of esElement.typeParameters?.params ?? []) {
+    const esTypeParameters = esElement.typeParameters?.params ?? [];
+    for (let i = 0; i < esTypeParameters.length; i++){
+        const esTypeParam = esTypeParameters[i];
         const typeParam = tc.getTypeAtLocation(globalContext.services.esTreeNodeToTSNodeMap.get(esTypeParam));
         const name = typeParam.symbol.name;
         let constraintType: LCEType;
@@ -237,7 +240,7 @@ export function parseTypeAliasTypeParameters(processingContext: ProcessingContex
             constraintType = new LCETypeObject(new Map());
         }
 
-        result.push(new LCETypeParameterDeclaration(name, constraintType));
+        result.push(new LCETypeParameterDeclaration(name, i, constraintType));
     }
 
     return result;
@@ -300,7 +303,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
 
     if (type.isTypeParameter()) {
         // type parameter (generics)
-        return new LCETypeParameter(type.symbol.name);
+        return new LCETypeParameterReference(type.symbol.name);
     }
 
     const primitive = !fqn;
@@ -452,7 +455,8 @@ function parseFunctionTypeParameters(processingContext: ProcessingContext, signa
     const result: LCETypeParameterDeclaration[] = [];
     const typeParameters = signature.getTypeParameters();
     if (typeParameters) {
-        for (const typeParam of typeParameters) {
+        for (let i = 0; i < typeParameters.length; i++){
+            const typeParam = typeParameters[i];
             const name = typeParam.symbol.name;
             let constraintType: LCEType;
 
@@ -464,7 +468,7 @@ function parseFunctionTypeParameters(processingContext: ProcessingContext, signa
                 constraintType = new LCETypeObject(new Map());
             }
 
-            result.push(new LCETypeParameterDeclaration(name, constraintType));
+            result.push(new LCETypeParameterDeclaration(name, i, constraintType));
         }
     }
 

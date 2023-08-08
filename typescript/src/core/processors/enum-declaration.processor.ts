@@ -49,7 +49,7 @@ export class EnumDeclarationProcessor extends Processor {
                 members,
                 node.const ?? false,
                 node.declare ?? false,
-                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true)
             );
 
             return singleEntryConceptMap(LCEEnumDeclaration.conceptId, enumeration);

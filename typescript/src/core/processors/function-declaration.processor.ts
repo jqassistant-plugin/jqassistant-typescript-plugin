@@ -74,7 +74,7 @@ export class FunctionDeclarationProcessor extends Processor {
                             getAndDeleteChildConcepts(FunctionTraverser.PARAMETERS_PROP, LCEParameterDeclaration.conceptId, childConcepts),
                             returnType,
                             typeParameters,
-                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
+                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true)
                         )
                     ),
                     DependencyResolutionProcessor.getRegisteredDependencies(localContexts)

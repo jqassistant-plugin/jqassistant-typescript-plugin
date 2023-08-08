@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class TypeLiteral extends  Type {
+public class TypeLiteral extends Type {
 
     /**
      * This can either be a string, number or boolean

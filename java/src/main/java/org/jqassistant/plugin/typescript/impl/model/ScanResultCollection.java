@@ -15,9 +15,25 @@ public class ScanResultCollection {
 
     private List<Project> project = new ArrayList<>();
 
-    private List<Module> module = new ArrayList<>();
+    @JsonAlias("module")
+    private List<Module> modules = new ArrayList<>();
+
+    @JsonAlias("type-alias-declaration")
+    private List<TypeAliasDeclaration> typeAliasDeclarations = new ArrayList<>();
 
     @JsonAlias("class-declaration")
-    private List<ClassDeclaration> classDeclaration = new ArrayList<>();
+    private List<ClassDeclaration> classDeclarations = new ArrayList<>();
+
+    @JsonAlias("interface-declaration")
+    private List<InterfaceDeclaration> interfaceDeclarations = new ArrayList<>();
+
+    @JsonAlias("enum-declaration")
+    private List<EnumDeclaration> enumDeclarations = new ArrayList<>();
+
+    @JsonAlias("function-declaration")
+    private List<FunctionDeclaration> functionDeclarations = new ArrayList<>();
+
+    @JsonAlias("variable-declaration")
+    private List<VariableDeclaration> variableDeclarations = new ArrayList<>();
 
 }

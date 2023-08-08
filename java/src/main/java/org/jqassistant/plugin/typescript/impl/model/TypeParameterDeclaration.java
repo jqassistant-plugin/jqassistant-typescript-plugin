@@ -11,6 +11,8 @@ public class TypeParameterDeclaration {
 
     private String name;
 
+    private Integer index;
+
     private Type constraint;
 
 }

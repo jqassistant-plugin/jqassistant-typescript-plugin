@@ -1,6 +1,7 @@
-package org.jqassistant.plugin.typescript.impl.ts;
+package org.jqassistant.plugin.typescript.impl.mapper;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerContext;
 import com.buschmais.jqassistant.plugin.common.api.model.DirectoryDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.FileResolver;
@@ -16,9 +17,14 @@ public class ProjectMapper {
         FileDescriptor fileDescriptor = fileResolver.match(scanResultCollection.getProject().get(0).getProjectRoot(), DirectoryDescriptor.class, scanner.getContext());
         ProjectDescriptor result = scanner.getContext().getStore().addDescriptorType(fileDescriptor, ProjectDescriptor.class);
 
+        ScannerContext context = scanner.getContext();
+        context.push(FqnResolver.class, new FqnResolver());
+
         result.getModules().addAll(
             ModuleMapper.INSTANCE.map(scanResultCollection, scanner)
         );
+
+        context.pop(FqnResolver.class).resolveAll();
 
         return result;
     }

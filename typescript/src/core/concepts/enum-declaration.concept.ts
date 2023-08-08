@@ -23,7 +23,7 @@ export class LCEEnumMember extends LCENamedConcept {
     constructor(public enumMemberName: string,
                 fqn: string,
                 public coordinates: CodeCoordinates,
-                public init?: LCEValue) {
+                public initValue?: LCEValue) {
         super(fqn);
     }
 }

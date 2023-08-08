@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Module {
+public class Module extends NamedConcept {
 
     private String path;
 

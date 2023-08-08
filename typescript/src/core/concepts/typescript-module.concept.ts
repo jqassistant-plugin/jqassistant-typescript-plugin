@@ -1,9 +1,9 @@
-import {LCEConcept} from "../concept";
+import {LCENamedConcept} from "../concept";
 
-export class LCEModule extends LCEConcept {
+export class LCEModule extends LCENamedConcept {
     public static override conceptId = "module";
 
-    constructor(public path: string) {
-        super();
+    constructor(fqn: string, public path: string) {
+        super(fqn);
     }
 }

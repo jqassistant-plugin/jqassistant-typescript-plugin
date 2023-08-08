@@ -36,7 +36,7 @@ export class TypeAliasDeclarationProcessor extends Processor {
                 fqn,
                 parseTypeAliasTypeParameters({globalContext, localContexts, node}, node),
                 parseESNodeType({globalContext, localContexts, node}, node.typeAnnotation, typeAliasName),
-                CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true)
             );
             return mergeConceptMaps(
                 singleEntryConceptMap(LCETypeAliasDeclaration.conceptId, typeAliasDecl),

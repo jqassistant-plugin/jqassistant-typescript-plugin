@@ -113,9 +113,9 @@ export class LCETypeFunctionParameter extends LCEConcept {
 }
 
 /**
- * Represents a type was previously declared as type parameter.
+ * Represents a reference to a type was previously declared as type parameter.
  */
-export class LCETypeParameter extends LCEType {
+export class LCETypeParameterReference extends LCEType {
     public static override conceptId = "type-parameter";
 
     /**

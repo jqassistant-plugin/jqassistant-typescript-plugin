@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class TypeNotIdentified {
+public class TypeNotIdentified extends Type {
 
     private String identifier;
 

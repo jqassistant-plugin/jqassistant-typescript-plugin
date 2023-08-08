@@ -1,4 +1,4 @@
-package org.jqassistant.plugin.typescript.impl.mapper;
+package org.jqassistant.plugin.typescript.impl.mapper.base;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.store.api.model.Descriptor;

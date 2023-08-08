@@ -1,26 +1,19 @@
 package org.jqassistant.plugin.typescript.impl;
 
-import java.io.IOException;
-
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
-import com.buschmais.jqassistant.plugin.common.api.model.DirectoryDescriptor;
-import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
-import com.buschmais.jqassistant.plugin.common.api.scanner.FileResolver;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
 import com.buschmais.jqassistant.plugin.json.api.model.JSONFileDescriptor;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jqassistant.plugin.typescript.api.TypescriptScope;
-import org.jqassistant.plugin.typescript.api.model.ModuleDescriptor;
 import org.jqassistant.plugin.typescript.api.model.ProjectDescriptor;
-import org.jqassistant.plugin.typescript.impl.model.Module;
+import org.jqassistant.plugin.typescript.impl.mapper.ProjectMapper;
 import org.jqassistant.plugin.typescript.impl.model.ScanResultCollection;
-import org.jqassistant.plugin.typescript.impl.ts.ModuleMapper;
-import org.jqassistant.plugin.typescript.impl.ts.ProjectMapper;
+
+import java.io.IOException;
 
 @ScannerPlugin.Requires(JSONFileDescriptor.class)
 public class TypescriptProjectScannerPlugin extends AbstractScannerPlugin<FileResource, ProjectDescriptor> {
@@ -36,7 +29,7 @@ public class TypescriptProjectScannerPlugin extends AbstractScannerPlugin<FileRe
     }
 
     @Override
-    public boolean accepts(FileResource fileResource, String path, Scope scope) throws IOException {
+    public boolean accepts(FileResource fileResource, String path, Scope scope) {
         return TypescriptScope.PROJECT.equals(scope) && path.endsWith(".json");
     }
 

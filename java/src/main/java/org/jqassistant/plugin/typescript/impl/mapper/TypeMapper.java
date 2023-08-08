@@ -1,0 +1,185 @@
+package org.jqassistant.plugin.typescript.impl.mapper;
+
+import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.core.scanner.api.ScannerContext;
+import org.jqassistant.plugin.typescript.api.model.*;
+import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
+import org.jqassistant.plugin.typescript.impl.model.*;
+import org.mapstruct.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+
+@Mapper
+public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
+
+    @Override
+    @SubclassMapping(source = TypePrimitive.class, target = TypePrimitiveDescriptor.class)
+    @SubclassMapping(source = TypeDeclared.class, target = TypeDeclaredDescriptor.class)
+    @SubclassMapping(source = TypeUnion.class, target = TypeUnionDescriptor.class)
+    @SubclassMapping(source = TypeIntersection.class, target = TypeIntersectionDescriptor.class)
+    @SubclassMapping(source = TypeObject.class, target = TypeObjectDescriptor.class)
+    @SubclassMapping(source = TypeFunction.class, target = TypeFunctionDescriptor.class)
+    @SubclassMapping(source = TypeParameterReference.class, target = TypeParameterReferenceDescriptor.class)
+    @SubclassMapping(source = TypeLiteral.class, target = TypeLiteralDescriptor.class)
+    @SubclassMapping(source = TypeTuple.class, target = TypeTupleDescriptor.class)
+    @SubclassMapping(source = TypeNotIdentified.class, target = TypeNotIdentifiedDescriptor.class)
+    TypeDescriptor toDescriptor(Type value, @Context Scanner scanner);
+
+    default List<TypeDescriptor> mapList(List<Type> value, @Context Scanner scanner) {
+        return value.stream()
+            .map(t -> toDescriptor(t, scanner))
+            .collect(Collectors.toList());
+    }
+
+    TypeParameterDeclarationDescriptor mapTypeParameterDeclaration(TypeParameterDeclaration value, @Context Scanner scanner);
+
+    List<TypeParameterDeclarationDescriptor> mapTypeParameterDeclarationList(List<TypeParameterDeclaration> value, @Context Scanner scanner);
+
+    TypePrimitiveDescriptor mapTypePrimitive(TypePrimitive value, @Context Scanner scanner);
+
+    default TypeDeclaredDescriptor mapTypeDeclared(TypeDeclared value, @Context Scanner scanner) {
+        if(value == null) {
+            return null;
+        }
+        ScannerContext scannerContext = scanner.getContext();
+        TypeDeclaredDescriptor descriptor = scannerContext.getStore().create(TypeDeclaredDescriptor.class);
+        descriptor.setReferencedFqn(value.getFqn());
+        for(int i = 0; i < value.getTypeArguments().size(); i++) {
+            Type arg = value.getTypeArguments().get(i);
+            TypeDescriptor argDescriptor = toDescriptor(arg, scanner);
+            TypeDeclaredHasTypeArgumentDescriptor relationDescriptor = scannerContext.getStore().create(descriptor, TypeDeclaredHasTypeArgumentDescriptor.class, argDescriptor);
+            relationDescriptor.setIndex(i);
+        }
+        return descriptor;
+    }
+
+    TypeUnionDescriptor mapTypeUnion(TypeUnion value, @Context Scanner scanner);
+
+    TypeIntersectionDescriptor mapTypeIntersection(TypeIntersection value, @Context Scanner scanner);
+
+    default TypeObjectDescriptor mapTypeObject(TypeObject value, @Context Scanner scanner) {
+        if(value == null) {
+            return null;
+        }
+        ScannerContext scannerContext = scanner.getContext();
+        TypeObjectDescriptor descriptor = scannerContext.getStore().create(TypeObjectDescriptor.class);
+        value.getMembers().entrySet().forEach(member ->
+            descriptor.getMembers().add(mapTypeObjectMember(member, scanner))
+        );
+        return descriptor;
+    }
+
+    default TypeObjectMemberDescriptor mapTypeObjectMember(Map.Entry<String, Type> value, @Context Scanner scanner) {
+        if(value == null) {
+            return null;
+        }
+        ScannerContext scannerContext = scanner.getContext();
+        TypeObjectMemberDescriptor descriptor = scannerContext.getStore().create(TypeObjectMemberDescriptor.class);
+        descriptor.setName(value.getKey());
+        descriptor.setType(toDescriptor(value.getValue(), scanner));
+        return descriptor;
+    }
+
+    TypeFunctionDescriptor mapTypeFunction(TypeFunction value, @Context Scanner scanner);
+
+    TypeFunctionParameterDescriptor mapTypeFunctionParameter(TypeFunctionParameter value, @Context Scanner scanner);
+
+    List<TypeFunctionParameterDescriptor> mapTypeFunctionParameterList(List<TypeFunctionParameter> value, @Context Scanner scanner);
+
+    @Mapping(target = "reference", ignore = true) // TODO: add reference resolution
+    TypeParameterReferenceDescriptor mapTypeParameterReference(TypeParameterReference value, @Context Scanner scanner);
+
+    TypeLiteralDescriptor mapTypeLiteral(TypeLiteral value, @Context Scanner scanner);
+
+    default TypeTupleDescriptor mapTypeTuple(TypeTuple value, @Context Scanner scanner) {
+        if(value == null) {
+            return null;
+        }
+        ScannerContext scannerContext = scanner.getContext();
+        TypeTupleDescriptor descriptor = scannerContext.getStore().create(TypeTupleDescriptor.class);
+        List<Type> types = value.getTypes();
+        for (int i = 0; i < types.size(); i++) {
+            Type item = types.get(i);
+            TypeDescriptor itemDescriptor = toDescriptor(item, scanner);
+            TypeTupleContainsDescriptor relationDescriptor = scannerContext.getStore().create(descriptor, TypeTupleContainsDescriptor.class, itemDescriptor);
+            relationDescriptor.setIndex(i);
+        }
+        return descriptor;
+    }
+
+    TypeNotIdentifiedDescriptor mapTypeNotIdentified(TypeNotIdentified value, @Context Scanner scanner);
+
+    @ObjectFactory
+    default TypeParameterDeclarationDescriptor resolveTypeParameterDeclaration(TypeParameterDeclaration value, @TargetType Class<TypeParameterDeclarationDescriptor> descriptorType, @Context Scanner scanner) {
+        return scanner.getContext()
+            .getStore()
+            .create(descriptorType);
+    }
+
+    @ObjectFactory
+    default TypePrimitiveDescriptor resolveTypePrimitive(TypePrimitive value, @TargetType Class<TypePrimitiveDescriptor> descriptorType, @Context Scanner scanner) {
+        return scanner.getContext()
+            .getStore()
+            .create(descriptorType);
+    }
+
+    @ObjectFactory
+    default TypeDeclaredDescriptor resolveTypeDeclared(TypeDeclared value, @TargetType Class<TypeDeclaredDescriptor> descriptorType, @Context Scanner scanner) {
+        return scanner.getContext()
+            .getStore()
+            .create(descriptorType);
+    }
+
+    @ObjectFactory
+    default TypeUnionDescriptor resolveTypeUnion(TypeUnion value, @TargetType Class<TypeUnionDescriptor> descriptorType, @Context Scanner scanner) {
+        return scanner.getContext()
+            .getStore()
+            .create(descriptorType);
+    }
+
+    @ObjectFactory
+    default TypeIntersectionDescriptor resolveTypeIntersection(TypeIntersection value, @TargetType Class<TypeIntersectionDescriptor> descriptorType, @Context Scanner scanner) {
+        return scanner.getContext()
+            .getStore()
+            .create(descriptorType);
+    }
+
+    @ObjectFactory
+    default TypeFunctionDescriptor resolveTypeFunction(TypeFunction value, @TargetType Class<TypeFunctionDescriptor> descriptorType, @Context Scanner scanner) {
+        return scanner.getContext()
+            .getStore()
+            .create(descriptorType);
+    }
+
+    @ObjectFactory
+    default TypeFunctionParameterDescriptor resolveTypeFunctionParameter(TypeFunctionParameter value, @TargetType Class<TypeFunctionParameterDescriptor> descriptorType, @Context Scanner scanner) {
+        return scanner.getContext()
+            .getStore()
+            .create(descriptorType);
+    }
+
+    @ObjectFactory
+    default TypeParameterReferenceDescriptor resolveTypeParameterReference(TypeParameterReference value, @TargetType Class<TypeParameterReferenceDescriptor> descriptorType, @Context Scanner scanner) {
+        return scanner.getContext()
+            .getStore()
+            .create(descriptorType);
+    }
+
+    @ObjectFactory
+    default TypeLiteralDescriptor resolveTypeLiteral(TypeLiteral value, @TargetType Class<TypeLiteralDescriptor> descriptorType, @Context Scanner scanner) {
+        return scanner.getContext()
+            .getStore()
+            .create(descriptorType);
+    }
+
+    @ObjectFactory
+    default TypeNotIdentifiedDescriptor resolveTypeNotIdentified(TypeNotIdentified value, @TargetType Class<TypeNotIdentifiedDescriptor> descriptorType, @Context Scanner scanner) {
+        return scanner.getContext()
+            .getStore()
+            .create(descriptorType);
+    }
+
+}
