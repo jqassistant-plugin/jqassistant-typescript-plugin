@@ -9,6 +9,7 @@ import {GlobalContext} from "./context";
 import {PathUtils} from "./path.utils";
 import {AstTraverser} from "./traversers/ast.traverser";
 import {Utils} from "./utils";
+import {POST_PROCESSORS} from "./features";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export async function processProject(projectRoot: string, readFile: Function = fs.readFileSync) {
@@ -24,8 +25,8 @@ export async function processProject(projectRoot: string, readFile: Function = f
     console.log("Analyzing " + fileList.length + " project files...");
     const startTime = process.hrtime();
 
+    // Traverse and process all individual project files
     const traverser = new AstTraverser();
-
     for (const file of fileList) {
         const code: string = readFile(file, "utf8");
         const {ast, services} = parseAndGenerateServices(code, {
@@ -47,12 +48,18 @@ export async function processProject(projectRoot: string, readFile: Function = f
 
         concepts = mergeConceptMaps(concepts, unifyConceptMap(traverser.traverse(globalContext), file.replace(globalContext.projectRootPath, ".")));
     }
+    const normalizedConcepts = unifyConceptMap(concepts, "").get("") ?? new Map();
+
+    // Post-process for project-wide concepts
+    for(const postProcessor of POST_PROCESSORS) {
+        postProcessor.postProcess(normalizedConcepts);
+    }
 
     const endTime = process.hrtime();
     console.log("Finished analyzing project files. Runtime: " + (endTime[0] - startTime[0]) + "s");
 
-    const normalizedConcepts = unifyConceptMap(concepts, "").get("");
 
+    // output JSON file
     if (normalizedConcepts) {
         const json = JSON.stringify(Object.fromEntries(normalizedConcepts), (_, value) => typeof value === 'bigint' ? value.toString() : value);
         let dirPath = path.join(projectRoot, "build");

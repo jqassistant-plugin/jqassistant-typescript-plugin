@@ -4,9 +4,7 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import org.jqassistant.plugin.typescript.api.model.FunctionDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.FunctionDeclaration;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -25,6 +23,11 @@ public interface FunctionDeclarationMapper extends DescriptorMapper<FunctionDecl
     @Mapping(source = "coordinates.endLine", target = "endLine")
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     FunctionDeclarationDescriptor toDescriptor(FunctionDeclaration value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void registerFqn(FunctionDeclaration type, @MappingTarget FunctionDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+    }
 
     List<FunctionDeclarationDescriptor> mapList(List<FunctionDeclaration> value, @Context Scanner scanner);
 }

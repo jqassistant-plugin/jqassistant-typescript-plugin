@@ -88,6 +88,7 @@ public class ModuleMapper {
             moduleDescriptor.getFunctionDeclarations().addAll(functionDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
             moduleDescriptor.getVariableDeclarations().addAll(variableDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
 
+            scanner.getContext().peek(FqnResolver.class).registerFqn(moduleDescriptor);
             result.add(moduleDescriptor);
         }
 

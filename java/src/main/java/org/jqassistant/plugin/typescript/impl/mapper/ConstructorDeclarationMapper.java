@@ -32,6 +32,8 @@ public interface ConstructorDeclarationMapper extends DescriptorMapper<Construct
         constructorDescriptor.getParameters().addAll(parameterMapper.mapList(value.getParameters(), scanner));
         constructorDescriptor.getParameters().addAll(parameterMapper.mapParameterPropertyList(value.getParameterProperties(), scanner));
 
+        scanner.getContext().peek(FqnResolver.class).registerFqn(constructorDescriptor);
+
         return constructorDescriptor;
     }
 

@@ -18,11 +18,18 @@ public class ProjectMapper {
         ProjectDescriptor result = scanner.getContext().getStore().addDescriptorType(fileDescriptor, ProjectDescriptor.class);
 
         ScannerContext context = scanner.getContext();
+
         context.push(FqnResolver.class, new FqnResolver());
 
         result.getModules().addAll(
             ModuleMapper.INSTANCE.map(scanResultCollection, scanner)
         );
+
+        result.getExternalModules().addAll(
+            ExternalModuleMapper.INSTANCE.map(scanResultCollection, scanner)
+        );
+
+
 
         context.pop(FqnResolver.class).resolveAll();
 

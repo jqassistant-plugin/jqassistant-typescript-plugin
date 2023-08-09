@@ -4,9 +4,7 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import org.jqassistant.plugin.typescript.api.model.TypeAliasDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.TypeAliasDeclaration;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -25,6 +23,11 @@ public interface TypeAliasDeclarationMapper extends DescriptorMapper<TypeAliasDe
     @Mapping(source = "coordinates.endLine", target = "endLine")
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     TypeAliasDeclarationDescriptor toDescriptor(TypeAliasDeclaration value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void registerFqn(TypeAliasDeclaration type, @MappingTarget TypeAliasDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+    }
 
     List<TypeAliasDeclarationDescriptor> mapList(List<TypeAliasDeclaration> value, @Context Scanner scanner);
 

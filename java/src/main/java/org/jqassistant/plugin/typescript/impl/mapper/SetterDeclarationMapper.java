@@ -4,9 +4,7 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import org.jqassistant.plugin.typescript.api.model.SetterDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.SetterDeclaration;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -23,6 +21,11 @@ public interface SetterDeclarationMapper extends DescriptorMapper<SetterDeclarat
     @Mapping(source = "methodName", target = "name")
     @Mapping(target = "fileName", ignore = true)
     SetterDeclarationDescriptor toDescriptor(SetterDeclaration value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void registerFqn(SetterDeclaration type, @MappingTarget SetterDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+    }
 
     List<SetterDeclarationDescriptor> mapList(List<SetterDeclaration> value, @Context Scanner scanner);
 

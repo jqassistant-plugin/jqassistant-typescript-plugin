@@ -36,4 +36,7 @@ public class ScanResultCollection {
     @JsonAlias("variable-declaration")
     private List<VariableDeclaration> variableDeclarations = new ArrayList<>();
 
+    @JsonAlias("external-module")
+    private List<ExternalModule> externalModules = new ArrayList<>();
+
 }

@@ -4,9 +4,7 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import org.jqassistant.plugin.typescript.api.model.PropertyDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.PropertyDeclaration;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -23,6 +21,11 @@ public interface PropertyDeclarationMapper extends DescriptorMapper<PropertyDecl
     @Mapping(source = "propertyName", target = "name")
     @Mapping(target = "fileName", ignore = true)
     PropertyDeclarationDescriptor toDescriptor(PropertyDeclaration value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void registerFqn(PropertyDeclaration type, @MappingTarget PropertyDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+    }
 
     List<PropertyDeclarationDescriptor> mapList(List<PropertyDeclaration> value, @Context Scanner scanner);
 }

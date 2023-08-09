@@ -4,9 +4,7 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import org.jqassistant.plugin.typescript.api.model.ClassDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.ClassDeclaration;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -26,6 +24,11 @@ public interface ClassDeclarationMapper extends DescriptorMapper<ClassDeclaratio
     @Mapping(source = "coordinates.endLine", target = "endLine")
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     ClassDeclarationDescriptor toDescriptor(ClassDeclaration type, @Context Scanner scanner);
+
+    @AfterMapping
+    default void registerFqn(ClassDeclaration type, @MappingTarget ClassDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+    }
 
     List<ClassDeclarationDescriptor> mapList(List<ClassDeclaration> value, @Context Scanner scanner);
 

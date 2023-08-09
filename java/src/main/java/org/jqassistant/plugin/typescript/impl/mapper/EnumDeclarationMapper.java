@@ -4,9 +4,7 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import org.jqassistant.plugin.typescript.api.model.EnumDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.EnumDeclaration;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -25,6 +23,11 @@ public interface EnumDeclarationMapper extends DescriptorMapper<EnumDeclaration,
     @Mapping(source = "coordinates.endLine", target = "endLine")
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     EnumDeclarationDescriptor toDescriptor(EnumDeclaration value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void registerFqn(EnumDeclaration type, @MappingTarget EnumDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+    }
 
     List<EnumDeclarationDescriptor> mapList(List<EnumDeclaration> value, @Context Scanner scanner);
 }

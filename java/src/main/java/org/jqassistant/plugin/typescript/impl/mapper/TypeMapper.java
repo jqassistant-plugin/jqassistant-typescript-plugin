@@ -53,6 +53,7 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
             TypeDeclaredHasTypeArgumentDescriptor relationDescriptor = scannerContext.getStore().create(descriptor, TypeDeclaredHasTypeArgumentDescriptor.class, argDescriptor);
             relationDescriptor.setIndex(i);
         }
+        scannerContext.peek(FqnResolver.class).registerRef(descriptor);
         return descriptor;
     }
 

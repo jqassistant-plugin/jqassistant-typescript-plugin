@@ -9,6 +9,8 @@
         <class>org.jqassistant.plugin.typescript.api.model.DecoratorDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.EnumDeclarationDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.EnumMemberDescriptor</class>
+        <class>org.jqassistant.plugin.typescript.api.model.ExternalDeclarationDescriptor</class>
+        <class>org.jqassistant.plugin.typescript.api.model.ExternalModuleDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.FunctionDeclarationDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.GetterDeclarationDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.InterfaceDeclarationDescriptor</class>

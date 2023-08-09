@@ -11,4 +11,7 @@ public interface ProjectDescriptor extends TypeScriptDescriptor {
     @Relation("CONTAINS")
     List<ModuleDescriptor> getModules();
 
+    @Relation("REFERENCES")
+    List<ExternalModuleDescriptor> getExternalModules();
+
 }

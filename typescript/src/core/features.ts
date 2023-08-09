@@ -107,6 +107,8 @@ import {
 } from "./traversers/type-parameter.traverser";
 import {VariableDeclarationTraverser, VariableDeclaratorTraverser} from "./traversers/variable-declaration.traverser";
 import {ModuleProcessor} from "./processors/typescript-module.processor";
+import {PostProcessor} from "./post-processor";
+import {ExternalDependenciesPostProcessor} from "./post-processors/external-dependencies.post-processor";
 
 /**
  * Central index of all traversers natively supported by the LCE.
@@ -227,4 +229,8 @@ export const PROCESSORS: Processor[] = [
     new TypeAliasDeclarationProcessor(),
     new VariableDeclarationProcessor(),
     new VariableDeclaratorProcessor(),
+];
+
+export const POST_PROCESSORS: PostProcessor[] = [
+    new ExternalDependenciesPostProcessor()
 ];

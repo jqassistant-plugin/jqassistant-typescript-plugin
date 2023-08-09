@@ -4,9 +4,7 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import org.jqassistant.plugin.typescript.api.model.MethodDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.MethodDeclaration;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -23,6 +21,11 @@ public interface MethodDeclarationMapper extends DescriptorMapper<MethodDeclarat
     @Mapping(source = "methodName", target = "name")
     @Mapping(target = "fileName", ignore = true)
     MethodDeclarationDescriptor toDescriptor(MethodDeclaration value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void registerFqn(MethodDeclaration type, @MappingTarget MethodDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+    }
 
     List<MethodDeclarationDescriptor> mapList(List<MethodDeclaration> value, @Context Scanner scanner);
 

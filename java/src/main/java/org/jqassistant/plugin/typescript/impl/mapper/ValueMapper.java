@@ -56,8 +56,13 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
 
     @Mapping(source = "fqn", target = "referencedFqn")
     @Mapping(target = "internal", ignore = true) // TODO: add internal property to JSON export
-    @Mapping(target = "reference", ignore = true) // TODO: add reference resolution
+    @Mapping(target = "reference", ignore = true)
     ValueDeclaredDescriptor mapValueDeclared(ValueDeclared value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void registerDeclaredRef(ValueDeclared type, @MappingTarget ValueDeclaredDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(FqnResolver.class).registerRef(target);
+    }
 
     ValueMemberDescriptor mapValueMember(ValueMember value, @Context Scanner scanner);
 

@@ -4,9 +4,7 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import org.jqassistant.plugin.typescript.api.model.VariableDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.VariableDeclaration;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -25,6 +23,11 @@ public interface VariableDeclarationMapper extends DescriptorMapper<VariableDecl
     @Mapping(source = "coordinates.endLine", target = "endLine")
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     VariableDeclarationDescriptor toDescriptor(VariableDeclaration value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void registerFqn(VariableDeclaration type, @MappingTarget VariableDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+    }
 
     List<VariableDeclarationDescriptor> mapList(List<VariableDeclaration> value, @Context Scanner scanner);
 }

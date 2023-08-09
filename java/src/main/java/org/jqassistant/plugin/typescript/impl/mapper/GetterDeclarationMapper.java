@@ -4,9 +4,7 @@ import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import org.jqassistant.plugin.typescript.api.model.GetterDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.GetterDeclaration;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -23,6 +21,11 @@ public interface GetterDeclarationMapper extends DescriptorMapper<GetterDeclarat
     @Mapping(source = "methodName", target = "name")
     @Mapping(target = "fileName", ignore = true)
     GetterDeclarationDescriptor toDescriptor(GetterDeclaration value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void registerFqn(GetterDeclaration type, @MappingTarget GetterDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+    }
 
     List<GetterDeclarationDescriptor> mapList(List<GetterDeclaration> value, @Context Scanner scanner);
 
