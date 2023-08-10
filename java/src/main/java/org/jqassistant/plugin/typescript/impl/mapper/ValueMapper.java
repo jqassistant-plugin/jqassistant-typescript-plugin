@@ -61,7 +61,6 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
     }
 
     @Mapping(source = "fqn", target = "referencedFqn")
-    @Mapping(target = "internal", ignore = true) // TODO: add internal property to JSON export
     @Mapping(target = "reference", ignore = true)
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)

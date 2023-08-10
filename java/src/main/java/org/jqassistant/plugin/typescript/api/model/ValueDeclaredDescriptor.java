@@ -9,9 +9,6 @@ public interface ValueDeclaredDescriptor extends ValueDescriptor {
     String getReferencedFqn();
     void setReferencedFqn(String referencedFqn);
 
-    Boolean getInternal();
-    void setInternal(Boolean internal);
-
     @Relation("REFERENCES")
     TypeScriptDescriptor getReference();
     void setReference(TypeScriptDescriptor reference);
