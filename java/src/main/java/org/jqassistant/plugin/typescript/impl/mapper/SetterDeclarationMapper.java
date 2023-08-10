@@ -20,6 +20,8 @@ public interface SetterDeclarationMapper extends DescriptorMapper<SetterDeclarat
     @Mapping(source = "staticc", target = "static")
     @Mapping(source = "methodName", target = "name")
     @Mapping(target = "fileName", ignore = true)
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     SetterDeclarationDescriptor toDescriptor(SetterDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

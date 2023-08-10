@@ -22,6 +22,8 @@ public interface FunctionDeclarationMapper extends DescriptorMapper<FunctionDecl
     @Mapping(source = "coordinates.startColumn", target = "startColumn")
     @Mapping(source = "coordinates.endLine", target = "endLine")
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     FunctionDeclarationDescriptor toDescriptor(FunctionDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

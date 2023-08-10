@@ -26,6 +26,8 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
     @SubclassMapping(source = ValueFunction.class, target = ValueFunctionDescriptor.class)
     @SubclassMapping(source = ValueClass.class, target = ValueClassDescriptor.class)
     @SubclassMapping(source = ValueComplex.class, target = ValueComplexDescriptor.class)
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     ValueDescriptor toDescriptor(Value value, @Context Scanner scanner);
 
     default List<ValueDescriptor> mapList(List<Value> value, @Context Scanner scanner) {
@@ -34,6 +36,8 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
                 .collect(Collectors.toList());
     }
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     ValueNullDescriptor mapValueNull(ValueNull value, @Context Scanner scanner);
 
     default ValueLiteralDescriptor mapValueLiteral(ValueLiteral value, @Context Scanner scanner) {
@@ -57,6 +61,8 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
     @Mapping(source = "fqn", target = "referencedFqn")
     @Mapping(target = "internal", ignore = true) // TODO: add internal property to JSON export
     @Mapping(target = "reference", ignore = true)
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     ValueDeclaredDescriptor mapValueDeclared(ValueDeclared value, @Context Scanner scanner);
 
     @AfterMapping
@@ -64,6 +70,8 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
         scanner.getContext().peek(FqnResolver.class).registerRef(target);
     }
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     ValueMemberDescriptor mapValueMember(ValueMember value, @Context Scanner scanner);
 
     default ValueObjectDescriptor mapValueObject(ValueObject value, @Context Scanner scanner) {
@@ -139,10 +147,16 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
         return descriptor;
     }
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     ValueFunctionDescriptor mapValueFunction(ValueFunction value, @Context Scanner scanner);
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     ValueClassDescriptor mapValueClass(ValueClass value, @Context Scanner scanner);
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     ValueComplexDescriptor mapValueComplex(ValueComplex value, @Context Scanner scanner);
 
     @ObjectFactory

@@ -20,6 +20,8 @@ public interface PropertyDeclarationMapper extends DescriptorMapper<PropertyDecl
     @Mapping(source = "staticc", target = "static")
     @Mapping(source = "propertyName", target = "name")
     @Mapping(target = "fileName", ignore = true)
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     PropertyDeclarationDescriptor toDescriptor(PropertyDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

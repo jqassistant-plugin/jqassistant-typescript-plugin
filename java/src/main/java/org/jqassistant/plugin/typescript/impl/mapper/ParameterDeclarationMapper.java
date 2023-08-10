@@ -25,6 +25,8 @@ public interface ParameterDeclarationMapper extends DescriptorMapper<ParameterDe
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     @Mapping(target = "fileName", ignore = true)
     @Mapping(target = "parameterProperty", ignore = true)
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     ParameterDeclarationDescriptor toDescriptor(ParameterDeclaration value, @Context Scanner scanner);
 
     List<ParameterDeclarationDescriptor> mapList(List<ParameterDeclaration> value, @Context Scanner scanner);

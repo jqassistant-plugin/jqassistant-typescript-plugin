@@ -19,6 +19,8 @@ public interface DecoratorMapper extends DescriptorMapper<Decorator, DecoratorDe
     @Mapping(source = "coordinates.endLine", target = "endLine")
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     @Mapping(target = "fileName", ignore = true)
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     DecoratorDescriptor toDescriptor(Decorator value, @Context Scanner scanner);
 
     List<DecoratorDescriptor> mapList(List<Decorator> value, @Context Scanner scanner);

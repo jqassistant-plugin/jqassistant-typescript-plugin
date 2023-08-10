@@ -22,6 +22,8 @@ public interface TypeAliasDeclarationMapper extends DescriptorMapper<TypeAliasDe
     @Mapping(source = "coordinates.startColumn", target = "startColumn")
     @Mapping(source = "coordinates.endLine", target = "endLine")
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypeAliasDeclarationDescriptor toDescriptor(TypeAliasDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

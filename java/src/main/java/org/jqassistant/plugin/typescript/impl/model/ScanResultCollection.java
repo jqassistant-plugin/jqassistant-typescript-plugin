@@ -39,4 +39,7 @@ public class ScanResultCollection {
     @JsonAlias("external-module")
     private List<ExternalModule> externalModules = new ArrayList<>();
 
+    @JsonAlias("dependency")
+    private List<Dependency> dependencies = new ArrayList<>();
+
 }

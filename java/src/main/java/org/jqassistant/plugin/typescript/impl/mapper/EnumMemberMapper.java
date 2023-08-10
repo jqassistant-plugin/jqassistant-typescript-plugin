@@ -18,6 +18,8 @@ public interface EnumMemberMapper extends DescriptorMapper<EnumMember, EnumMembe
     @Mapping(source = "coordinates.endLine", target = "endLine")
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     @Mapping(target = "fileName", ignore = true)
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     EnumMemberDescriptor toDescriptor(EnumMember value, @Context Scanner scanner);
 
     @AfterMapping

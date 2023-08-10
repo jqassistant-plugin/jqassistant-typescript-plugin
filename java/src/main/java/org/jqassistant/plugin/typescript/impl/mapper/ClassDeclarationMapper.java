@@ -23,6 +23,8 @@ public interface ClassDeclarationMapper extends DescriptorMapper<ClassDeclaratio
     @Mapping(source = "coordinates.startColumn", target = "startColumn")
     @Mapping(source = "coordinates.endLine", target = "endLine")
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     ClassDeclarationDescriptor toDescriptor(ClassDeclaration type, @Context Scanner scanner);
 
     @AfterMapping

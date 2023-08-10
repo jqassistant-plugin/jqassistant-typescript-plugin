@@ -29,7 +29,7 @@ public class ProjectMapper {
             ExternalModuleMapper.INSTANCE.map(scanResultCollection, scanner)
         );
 
-
+        DependencyResolver.resolve(scanner, scanResultCollection.getDependencies());
 
         context.pop(FqnResolver.class).resolveAll();
 

@@ -26,6 +26,8 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
     @SubclassMapping(source = TypeLiteral.class, target = TypeLiteralDescriptor.class)
     @SubclassMapping(source = TypeTuple.class, target = TypeTupleDescriptor.class)
     @SubclassMapping(source = TypeNotIdentified.class, target = TypeNotIdentifiedDescriptor.class)
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypeDescriptor toDescriptor(Type value, @Context Scanner scanner);
 
     default List<TypeDescriptor> mapList(List<Type> value, @Context Scanner scanner) {
@@ -34,10 +36,16 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
             .collect(Collectors.toList());
     }
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypeParameterDeclarationDescriptor mapTypeParameterDeclaration(TypeParameterDeclaration value, @Context Scanner scanner);
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     List<TypeParameterDeclarationDescriptor> mapTypeParameterDeclarationList(List<TypeParameterDeclaration> value, @Context Scanner scanner);
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypePrimitiveDescriptor mapTypePrimitive(TypePrimitive value, @Context Scanner scanner);
 
     default TypeDeclaredDescriptor mapTypeDeclared(TypeDeclared value, @Context Scanner scanner) {
@@ -57,8 +65,12 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
         return descriptor;
     }
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypeUnionDescriptor mapTypeUnion(TypeUnion value, @Context Scanner scanner);
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypeIntersectionDescriptor mapTypeIntersection(TypeIntersection value, @Context Scanner scanner);
 
     default TypeObjectDescriptor mapTypeObject(TypeObject value, @Context Scanner scanner) {
@@ -84,15 +96,25 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
         return descriptor;
     }
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypeFunctionDescriptor mapTypeFunction(TypeFunction value, @Context Scanner scanner);
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypeFunctionParameterDescriptor mapTypeFunctionParameter(TypeFunctionParameter value, @Context Scanner scanner);
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     List<TypeFunctionParameterDescriptor> mapTypeFunctionParameterList(List<TypeFunctionParameter> value, @Context Scanner scanner);
 
     @Mapping(target = "reference", ignore = true) // TODO: add reference resolution
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypeParameterReferenceDescriptor mapTypeParameterReference(TypeParameterReference value, @Context Scanner scanner);
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypeLiteralDescriptor mapTypeLiteral(TypeLiteral value, @Context Scanner scanner);
 
     default TypeTupleDescriptor mapTypeTuple(TypeTuple value, @Context Scanner scanner) {
@@ -111,6 +133,8 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
         return descriptor;
     }
 
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     TypeNotIdentifiedDescriptor mapTypeNotIdentified(TypeNotIdentified value, @Context Scanner scanner);
 
     @ObjectFactory

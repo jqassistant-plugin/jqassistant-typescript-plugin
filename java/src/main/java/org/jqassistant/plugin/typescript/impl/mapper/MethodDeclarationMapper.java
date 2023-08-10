@@ -20,6 +20,8 @@ public interface MethodDeclarationMapper extends DescriptorMapper<MethodDeclarat
     @Mapping(source = "staticc", target = "static")
     @Mapping(source = "methodName", target = "name")
     @Mapping(target = "fileName", ignore = true)
+    @Mapping(target = "dependents", ignore = true)
+    @Mapping(target = "dependencies", ignore = true)
     MethodDeclarationDescriptor toDescriptor(MethodDeclaration value, @Context Scanner scanner);
 
     @AfterMapping
