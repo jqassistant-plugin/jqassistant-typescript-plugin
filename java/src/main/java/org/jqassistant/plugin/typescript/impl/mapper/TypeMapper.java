@@ -28,6 +28,7 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
     @SubclassMapping(source = TypeNotIdentified.class, target = TypeNotIdentifiedDescriptor.class)
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     TypeDescriptor toDescriptor(Type value, @Context Scanner scanner);
 
     default List<TypeDescriptor> mapList(List<Type> value, @Context Scanner scanner) {
@@ -38,14 +39,17 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     TypeParameterDeclarationDescriptor mapTypeParameterDeclaration(TypeParameterDeclaration value, @Context Scanner scanner);
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     List<TypeParameterDeclarationDescriptor> mapTypeParameterDeclarationList(List<TypeParameterDeclaration> value, @Context Scanner scanner);
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     TypePrimitiveDescriptor mapTypePrimitive(TypePrimitive value, @Context Scanner scanner);
 
     default TypeDeclaredDescriptor mapTypeDeclared(TypeDeclared value, @Context Scanner scanner) {
@@ -67,10 +71,12 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     TypeUnionDescriptor mapTypeUnion(TypeUnion value, @Context Scanner scanner);
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     TypeIntersectionDescriptor mapTypeIntersection(TypeIntersection value, @Context Scanner scanner);
 
     default TypeObjectDescriptor mapTypeObject(TypeObject value, @Context Scanner scanner) {
@@ -98,23 +104,28 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     TypeFunctionDescriptor mapTypeFunction(TypeFunction value, @Context Scanner scanner);
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     TypeFunctionParameterDescriptor mapTypeFunctionParameter(TypeFunctionParameter value, @Context Scanner scanner);
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     List<TypeFunctionParameterDescriptor> mapTypeFunctionParameterList(List<TypeFunctionParameter> value, @Context Scanner scanner);
 
     @Mapping(target = "reference", ignore = true) // TODO: add reference resolution
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     TypeParameterReferenceDescriptor mapTypeParameterReference(TypeParameterReference value, @Context Scanner scanner);
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     TypeLiteralDescriptor mapTypeLiteral(TypeLiteral value, @Context Scanner scanner);
 
     default TypeTupleDescriptor mapTypeTuple(TypeTuple value, @Context Scanner scanner) {
@@ -135,6 +146,7 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     TypeNotIdentifiedDescriptor mapTypeNotIdentified(TypeNotIdentified value, @Context Scanner scanner);
 
     @ObjectFactory

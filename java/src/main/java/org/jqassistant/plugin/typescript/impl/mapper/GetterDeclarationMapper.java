@@ -22,6 +22,7 @@ public interface GetterDeclarationMapper extends DescriptorMapper<GetterDeclarat
     @Mapping(target = "fileName", ignore = true)
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     GetterDeclarationDescriptor toDescriptor(GetterDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

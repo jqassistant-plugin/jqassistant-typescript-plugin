@@ -26,4 +26,7 @@ public interface ModuleDescriptor extends TypeScriptDescriptor, NamedConceptDesc
     @Relation("DECLARES")
     List<VariableDeclarationDescriptor> getVariableDeclarations();
 
+    @Relation.Outgoing
+    List<ModuleExportsDescriptor> getExportedDeclarations();
+
 }

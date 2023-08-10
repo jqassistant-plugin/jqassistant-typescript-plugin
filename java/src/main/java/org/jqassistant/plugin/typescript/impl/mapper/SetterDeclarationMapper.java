@@ -22,6 +22,7 @@ public interface SetterDeclarationMapper extends DescriptorMapper<SetterDeclarat
     @Mapping(target = "fileName", ignore = true)
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     SetterDeclarationDescriptor toDescriptor(SetterDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

@@ -22,6 +22,7 @@ public interface PropertyDeclarationMapper extends DescriptorMapper<PropertyDecl
     @Mapping(target = "fileName", ignore = true)
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     PropertyDeclarationDescriptor toDescriptor(PropertyDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

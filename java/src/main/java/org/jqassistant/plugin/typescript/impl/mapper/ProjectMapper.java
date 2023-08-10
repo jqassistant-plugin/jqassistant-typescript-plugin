@@ -30,6 +30,7 @@ public class ProjectMapper {
         );
 
         DependencyResolver.resolve(scanner, scanResultCollection.getDependencies());
+        ExportDeclarationResolver.resolve(scanner, scanResultCollection.getExportDeclarations());
 
         context.pop(FqnResolver.class).resolveAll();
 

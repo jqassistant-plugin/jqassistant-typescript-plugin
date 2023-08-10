@@ -24,6 +24,7 @@ public interface EnumDeclarationMapper extends DescriptorMapper<EnumDeclaration,
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     EnumDeclarationDescriptor toDescriptor(EnumDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

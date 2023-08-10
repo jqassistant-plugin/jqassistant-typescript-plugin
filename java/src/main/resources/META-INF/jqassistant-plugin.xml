@@ -17,6 +17,7 @@
         <class>org.jqassistant.plugin.typescript.api.model.InterfaceDeclarationDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.MethodDeclarationDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.ModuleDescriptor</class>
+        <class>org.jqassistant.plugin.typescript.api.model.ModuleExportsDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.ParameterDeclarationDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.ProjectDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.PropertyDeclarationDescriptor</class>

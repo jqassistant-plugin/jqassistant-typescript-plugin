@@ -28,6 +28,7 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
     @SubclassMapping(source = ValueComplex.class, target = ValueComplexDescriptor.class)
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     ValueDescriptor toDescriptor(Value value, @Context Scanner scanner);
 
     default List<ValueDescriptor> mapList(List<Value> value, @Context Scanner scanner) {
@@ -38,6 +39,7 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     ValueNullDescriptor mapValueNull(ValueNull value, @Context Scanner scanner);
 
     default ValueLiteralDescriptor mapValueLiteral(ValueLiteral value, @Context Scanner scanner) {
@@ -63,6 +65,7 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
     @Mapping(target = "reference", ignore = true)
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     ValueDeclaredDescriptor mapValueDeclared(ValueDeclared value, @Context Scanner scanner);
 
     @AfterMapping
@@ -72,6 +75,7 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     ValueMemberDescriptor mapValueMember(ValueMember value, @Context Scanner scanner);
 
     default ValueObjectDescriptor mapValueObject(ValueObject value, @Context Scanner scanner) {
@@ -149,14 +153,17 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     ValueFunctionDescriptor mapValueFunction(ValueFunction value, @Context Scanner scanner);
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     ValueClassDescriptor mapValueClass(ValueClass value, @Context Scanner scanner);
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     ValueComplexDescriptor mapValueComplex(ValueComplex value, @Context Scanner scanner);
 
     @ObjectFactory

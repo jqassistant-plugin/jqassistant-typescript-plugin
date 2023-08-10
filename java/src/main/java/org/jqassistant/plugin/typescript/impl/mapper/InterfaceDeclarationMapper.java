@@ -24,6 +24,7 @@ public interface InterfaceDeclarationMapper extends DescriptorMapper<InterfaceDe
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     InterfaceDeclarationDescriptor toDescriptor(InterfaceDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

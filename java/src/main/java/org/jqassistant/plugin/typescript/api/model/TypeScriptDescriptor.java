@@ -17,4 +17,7 @@ public interface TypeScriptDescriptor extends Descriptor {
     @Relation.Outgoing
     List<DependsOnDescriptor> getDependencies();
 
+    @Relation.Incoming
+    List<ModuleExportsDescriptor> getExporters();
+
 }

@@ -24,6 +24,7 @@ public interface VariableDeclarationMapper extends DescriptorMapper<VariableDecl
     @Mapping(source = "coordinates.endColumn", target = "endColumn")
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     VariableDeclarationDescriptor toDescriptor(VariableDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

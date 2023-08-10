@@ -27,6 +27,7 @@ public interface ParameterDeclarationMapper extends DescriptorMapper<ParameterDe
     @Mapping(target = "parameterProperty", ignore = true)
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
+    @Mapping(target = "exporters", ignore = true)
     ParameterDeclarationDescriptor toDescriptor(ParameterDeclaration value, @Context Scanner scanner);
 
     List<ParameterDeclarationDescriptor> mapList(List<ParameterDeclaration> value, @Context Scanner scanner);
