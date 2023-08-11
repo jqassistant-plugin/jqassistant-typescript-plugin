@@ -3,7 +3,7 @@ import * as fs from "fs";
 import path from "path";
 import {TypeChecker} from "typescript";
 
-import {ConceptMap, mergeConceptMaps, singleEntryConceptMap, unifyConceptMap} from "./concept";
+import {ConceptMap, LCEConcept, mergeConceptMaps, singleEntryConceptMap, unifyConceptMap} from "./concept";
 import {LCEProject} from "./concepts/typescript-project.concept";
 import {GlobalContext} from "./context";
 import {PathUtils} from "./path.utils";
@@ -12,7 +12,7 @@ import {Utils} from "./utils";
 import {POST_PROCESSORS} from "./features";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export async function processProject(projectRoot: string, readFile: Function = fs.readFileSync) {
+export async function processProject(projectRoot: string, readFile: Function = fs.readFileSync): Promise<Map<string, LCEConcept[]>> {
     // TODO: take tsconfig.json into consideration (assumes projectRoot = path that contains tsconfig.json)
     // see https://www.typescriptlang.org/docs/handbook/project-references.html#what-is-a-project-reference
 
@@ -58,10 +58,25 @@ export async function processProject(projectRoot: string, readFile: Function = f
     const endTime = process.hrtime();
     console.log("Finished analyzing project files. Runtime: " + (endTime[0] - startTime[0]) + "s");
 
+    return normalizedConcepts;
+}
+
+export async function processAndOutputResult(projectRoot: string, readFile: Function = fs.readFileSync) {
+    // process project
+    const normalizedConcepts = await processProject(projectRoot, readFile);
 
     // output JSON file
     if (normalizedConcepts) {
-        const json = JSON.stringify(Object.fromEntries(normalizedConcepts), (_, value) => typeof value === 'bigint' ? value.toString() : value);
+        const json = JSON.stringify(Object.fromEntries(normalizedConcepts), (_, value) => {
+            if(typeof  value === 'bigint') {
+                return value.toString();
+            } else if(typeof value === 'object' && value instanceof Map) {
+                return Object.fromEntries(Array.from(value.entries()))
+            } else {
+                return value;
+            }
+
+        });
         let dirPath = path.join(projectRoot, "build");
         let filePath = path.join(dirPath, 'jqa-ts-output.json');
         fs.mkdir(dirPath, {recursive: true}, (errDir) => {

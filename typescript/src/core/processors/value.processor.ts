@@ -108,7 +108,7 @@ export class MemberValueProcessor extends Processor {
             const objects = getAndDeleteAllValueChildConcepts(MemberExpressionTraverser.OBJECT_PROP, childConcepts);
             const properties = getAndDeleteAllValueChildConcepts(MemberExpressionTraverser.PROPERTY_PROP, childConcepts);
             if (node.computed) {
-                // TDDO: handled computed member expressions
+                // TODO: handled computed member expressions
                 return singleEntryConceptMap(LCEValueComplex.conceptId, new LCEValueComplex("computed member expression"));
             }
             if (objects.length === 1 && properties.length === 1) {

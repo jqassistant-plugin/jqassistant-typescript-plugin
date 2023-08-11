@@ -1,33 +1,31 @@
-import { exec } from "child_process";
-import { auth as neo4jAuth, Driver, driver as neo4jDriver, Session } from "neo4j-driver";
-import path from "path";
-import { promisify } from "util";
+import {LCEDependency} from "../../src/core/concepts/dependency.concept";
+import {LCEConcept} from "../../src/core/concept";
 
-const asyncExec = promisify(exec);
+export function getDependenciesFromResult(result: Map<string, LCEConcept[]>): Map<string, Map<string, LCEDependency>> {
+    const dependencies: Map<string, Map<string, LCEDependency>>  = new Map();
+    for(const concept of (result.get(LCEDependency.conceptId) ?? [])) {
+        const dep: LCEDependency = concept as LCEDependency;
+        if(!dep.sourceFQN) {
+            throw new Error("Dependency has no source fqn " + JSON.stringify(dep));
+        }
+        if(!dep.fqn) {
+            throw new Error("Dependency has no target fqn " + JSON.stringify(dep));
+        }
+        if(dependencies.get(dep.sourceFQN)?.get(dep.fqn)) {
+            throw new Error("Two dependencies with same source and target FQN were returned: " + JSON.stringify(dep));
+        }
 
-/**
- * Prepares the database for the tests.
- * Sets up the reset mechanism.
- * @param sampleProjectPath path to the sample project (e.g. "language-concept-extractor/test/core/sample-project")
- */
-export async function prepareDB(sampleProjectPath: string) {
-    console.log("Preparing DB...");
-    const { stdout, stderr } = await asyncExec("cd .. && sh ./run-jqa.sh " + sampleProjectPath);
+        if(!dependencies.has(dep.sourceFQN)) {
+            dependencies.set(dep.sourceFQN, new Map());
+        }
+        dependencies.get(dep.sourceFQN)?.set(dep.fqn, dep);
+    }
+
+    return dependencies;
 }
 
-export function mockFiles(projectRoot: string, files: Map<string, string>): (file: string) => string {
-    return (file: string) => {
-        return files.get(file.replace(projectRoot, ".")) ?? "";
-    };
-}
-
-export function setupNeo4j(): { driver: Driver; session: Session } {
-    const driver = neo4jDriver("bolt://localhost:7687", neo4jAuth.basic("neo4j", "neo"));
-    const session = driver.session();
-    return { driver, session };
-}
-
-export function teardownNeo4j({ session, driver }: { session: Session; driver: Driver }) {
-    session.close();
-    driver.close();
+export function expectDependency(dependencies: Map<string, Map<string, LCEDependency>>, sourceFqn: string, targetFqn: string, cardinality: number) {
+    const dependency = dependencies.get(sourceFqn)?.get(targetFqn);
+    expect(dependency).not.toBeUndefined();
+    expect(dependency!.cardinality).toBe(cardinality);
 }
