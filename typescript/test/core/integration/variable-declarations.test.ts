@@ -5,7 +5,6 @@ import {
     LCETypeDeclared,
     LCETypeFunction,
     LCETypeIntersection,
-    LCETypeLiteral,
     LCETypeNotIdentified,
     LCETypeObject,
     LCETypePrimitive,
@@ -26,7 +25,15 @@ import {
 import {LCEModule} from "../../../src/core/concepts/typescript-module.concept";
 import {LCEExportDeclaration} from "../../../src/core/concepts/export-declaration.concept";
 import {LCEDependency} from "../../../src/core/concepts/dependency.concept";
-import {expectDependency, getDependenciesFromResult} from "../../utils/test-utils";
+import {
+    expectDeclaredType,
+    expectDependency,
+    expectLiteralType,
+    expectLiteralValue,
+    expectPrimitiveType,
+    expectTypeFunctionParameter,
+    getDependenciesFromResult
+} from "../../utils/test-utils";
 
 jest.setTimeout(30000);
 
@@ -73,9 +80,7 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vVarUninitialized");
             expect(decl.kind).toBe("var");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("any");
+            expectPrimitiveType(decl.type, "any");
 
             expect(decl.initValue).toBeUndefined();
         }
@@ -89,9 +94,7 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vLetUninitialized");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("any");
+            expectPrimitiveType(decl.type, "any");
 
             expect(decl.initValue).toBeUndefined();
         }
@@ -105,19 +108,8 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vVarInit");
             expect(decl.kind).toBe("var");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("number");
-
-            expect(decl.initValue).not.toBeNull();
-            if (decl.initValue) {
-                expect(decl.initValue.valueType).toBe("literal")
-                expect((decl.initValue as LCEValueLiteral).value).toBe(0);
-
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("number");
-            }
+            expectPrimitiveType(decl.type, "number");
+            expectLiteralValue(decl.initValue, 0, "number");
         }
     });
 
@@ -129,19 +121,8 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vLetInit");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("number");
-
-            expect(decl.initValue).not.toBeNull();
-            if (decl.initValue) {
-                expect(decl.initValue.valueType).toBe("literal")
-                expect((decl.initValue as LCEValueLiteral).value).toBe(0);
-
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("number");
-            }
+            expectPrimitiveType(decl.type, "number");
+            expectLiteralValue(decl.initValue, 0, "number");
         }
     });
 
@@ -153,19 +134,8 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vConstInit");
             expect(decl.kind).toBe("const");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("literal");
-            expect((decl.type as LCETypeLiteral).value).toBe(0);
-
-            expect(decl.initValue).not.toBeNull();
-            if (decl.initValue) {
-                expect(decl.initValue.valueType).toBe("literal")
-                expect((decl.initValue as LCEValueLiteral).value).toBe(0);
-
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("number");
-            }
+            expectLiteralType(decl.type, 0);
+            expectLiteralValue(decl.initValue, 0, "number");
         }
     });
 
@@ -178,19 +148,8 @@ describe("variable declarations test", () => {
                 expect((decl.variableName)).toBe("vMulti" + i);
                 expect(decl.kind).toBe("let");
 
-                expect(decl.type).not.toBeNull();
-                expect(decl.type.type).toBe("primitive");
-                expect((decl.type as LCETypePrimitive).name).toBe("number");
-
-                expect(decl.initValue).not.toBeNull();
-                if (decl.initValue) {
-                    expect(decl.initValue.valueType).toBe("literal")
-                    expect((decl.initValue as LCEValueLiteral).value).toBe(i);
-
-                    expect(decl.initValue.type).not.toBeNull();
-                    expect(decl.initValue.type.type).toBe("primitive");
-                    expect((decl.initValue.type as LCETypePrimitive).name).toBe("number");
-                }
+                expectPrimitiveType(decl.type, "number");
+                expectLiteralValue(decl.initValue, i, "number");
             }
         }
     });
@@ -203,19 +162,8 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vExported");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("number");
-
-            expect(decl.initValue).not.toBeNull();
-            if (decl.initValue) {
-                expect(decl.initValue.valueType).toBe("literal")
-                expect((decl.initValue as LCEValueLiteral).value).toBe(5);
-
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("number");
-            }
+            expectPrimitiveType(decl.type, "number");
+            expectLiteralValue(decl.initValue, 5, "number");
         }
 
         const exportDeclConcept = result.get(LCEExportDeclaration.conceptId)?.find(exp =>
@@ -240,18 +188,13 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vUndefined");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("any");
+            expectPrimitiveType(decl.type, "any");
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("null")
                 expect((decl.initValue as LCEValueNull).kind).toBe("undefined");
-
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("undefined");
+                expectPrimitiveType(decl.initValue.type, "undefined");
             }
         }
     });
@@ -264,18 +207,13 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vNull");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("any");
+            expectPrimitiveType(decl.type, "any");
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("null")
                 expect((decl.initValue as LCEValueNull).kind).toBe("null");
-
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("null");
+                expectPrimitiveType(decl.initValue.type, "null");
             }
         }
     });
@@ -288,19 +226,8 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vTrue");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("boolean");
-
-            expect(decl.initValue).not.toBeNull();
-            if (decl.initValue) {
-                expect(decl.initValue.valueType).toBe("literal")
-                expect((decl.initValue as LCEValueLiteral).value).toBe(true);
-
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("boolean");
-            }
+            expectPrimitiveType(decl.type, "boolean");
+            expectLiteralValue(decl.initValue, true, "boolean");
         }
     });
 
@@ -312,19 +239,8 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vFalse");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("boolean");
-
-            expect(decl.initValue).not.toBeNull();
-            if (decl.initValue) {
-                expect(decl.initValue.valueType).toBe("literal")
-                expect((decl.initValue as LCEValueLiteral).value).toBe(false);
-
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("boolean");
-            }
+            expectPrimitiveType(decl.type, "boolean");
+            expectLiteralValue(decl.initValue, false, "boolean");
         }
     });
 
@@ -336,19 +252,8 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vString");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("string");
-
-            expect(decl.initValue).not.toBeNull();
-            if (decl.initValue) {
-                expect(decl.initValue.valueType).toBe("literal")
-                expect((decl.initValue as LCEValueLiteral).value).toBe("1");
-
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("string");
-            }
+            expectPrimitiveType(decl.type, "string");
+            expectLiteralValue(decl.initValue, "1", "string");
         }
     });
 
@@ -366,12 +271,8 @@ describe("variable declarations test", () => {
             function checkObjectType(objectType: LCETypeObject) {
                 const typeMembers = (objectType as LCETypeObject).members;
                 expect([...typeMembers.entries()]).toHaveLength(2);
-                expect(typeMembers.get("a")).not.toBeNull();
-                expect(typeMembers.get("a")!.type).toBe("primitive");
-                expect((typeMembers.get("a")! as LCETypePrimitive).name).toBe("number");
-                expect(typeMembers.get("b")).not.toBeNull();
-                expect(typeMembers.get("b")!.type).toBe("primitive");
-                expect((typeMembers.get("b")! as LCETypePrimitive).name).toBe("string");
+                expectPrimitiveType(typeMembers.get("a"), "number");
+                expectPrimitiveType(typeMembers.get("b"), "string");
             }
 
             checkObjectType(decl.type as LCETypeObject);
@@ -381,16 +282,8 @@ describe("variable declarations test", () => {
                 expect(decl.initValue.valueType).toBe("object")
 
                 const valueMembers = (decl.initValue as LCEValueObject).members;
-                expect(valueMembers.get("a")).not.toBeNull();
-                expect(valueMembers.get("a")!.valueType).toBe("literal");
-                expect((valueMembers.get("a")! as LCEValueLiteral).value).toBe(1);
-                expect((valueMembers.get("a")!.type).type).toBe("primitive");
-                expect((valueMembers.get("a")!.type as LCETypePrimitive).name).toBe("number");
-                expect(valueMembers.get("b")).not.toBeNull();
-                expect(valueMembers.get("b")!.valueType).toBe("literal");
-                expect((valueMembers.get("b")! as LCEValueLiteral).value).toBe("2");
-                expect((valueMembers.get("b")!.type).type).toBe("primitive");
-                expect((valueMembers.get("b")!.type as LCETypePrimitive).name).toBe("string");
+                expectLiteralValue(valueMembers.get("a"), 1, "number");
+                expectLiteralValue(valueMembers.get("b"), "2", "string");
 
                 // TODO: change object value type behavior
                 // expect(decl.initValue.type).not.toBeNull();
@@ -408,13 +301,11 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vArray");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("declared");
-            expect((decl.type as LCETypeDeclared).fqn).toBe("Array");
+            expectDeclaredType(decl.type, "Array", false);
+
             const typeArgs = (decl.type as LCETypeDeclared).typeArguments;
             expect(typeArgs).toHaveLength(1);
-            expect(typeArgs[0].type).toBe("primitive");
-            expect((typeArgs[0] as LCETypePrimitive).name).toBe("number");
+            expectPrimitiveType(typeArgs[0], "number");
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
@@ -422,19 +313,13 @@ describe("variable declarations test", () => {
                 const arrayValue = decl.initValue as LCEValueArray;
                 expect(arrayValue.items).toHaveLength(3);
                 for(let i = 0; i < 3; i++) {
-                    expect(arrayValue.items[i].valueType).toBe("literal")
-                    expect((arrayValue.items[i] as LCEValueLiteral).value).toBe(i + 1);
-                    expect(arrayValue.items[i].type.type).toBe("primitive");
-                    expect((arrayValue.items[i].type as LCETypePrimitive).name).toBe("number");
+                    expectLiteralValue(arrayValue.items[i], i + 1, "number");
                 }
 
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("declared");
-                expect((decl.initValue.type as LCETypeDeclared).fqn).toBe("Array");
+                expectDeclaredType(decl.initValue.type, "Array", false);
                 const valueTypeArgs = (decl.initValue.type as LCETypeDeclared).typeArguments;
                 expect(valueTypeArgs).toHaveLength(1);
-                expect(valueTypeArgs[0].type).toBe("primitive");
-                expect((valueTypeArgs[0] as LCETypePrimitive).name).toBe("number");
+                expectPrimitiveType(valueTypeArgs[0], "number");
             }
         }
     });
@@ -451,33 +336,24 @@ describe("variable declarations test", () => {
             expect(decl.type.type).toBe("tuple");
             const tupleTypes = (decl.type as LCETypeTuple).types;
             expect(tupleTypes).toHaveLength(2);
-            expect(tupleTypes[0].type).toBe("primitive");
-            expect((tupleTypes[0] as LCETypePrimitive).name).toBe("number");
-            expect(tupleTypes[1].type).toBe("primitive");
-            expect((tupleTypes[1] as LCETypePrimitive).name).toBe("string");
+            expectPrimitiveType(tupleTypes[0], "number");
+            expectPrimitiveType(tupleTypes[1], "string");
+
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("array")
                 const arrayValue = decl.initValue as LCEValueArray;
                 expect(arrayValue.items).toHaveLength(2);
-                expect(arrayValue.items[0].valueType).toBe("literal")
-                expect((arrayValue.items[0] as LCEValueLiteral).value).toBe(1);
-                expect(arrayValue.items[0].type.type).toBe("primitive");
-                expect((arrayValue.items[0].type as LCETypePrimitive).name).toBe("number");
-                expect(arrayValue.items[1].valueType).toBe("literal")
-                expect((arrayValue.items[1] as LCEValueLiteral).value).toBe("2");
-                expect(arrayValue.items[1].type.type).toBe("primitive");
-                expect((arrayValue.items[1].type as LCETypePrimitive).name).toBe("string");
+                expectLiteralValue(arrayValue.items[0], 1, "number");
+                expectLiteralValue(arrayValue.items[1], "2", "string");
 
                 expect(decl.initValue.type).not.toBeNull();
                 expect(decl.initValue.type.type).toBe("tuple");
                 const valueTupleTypes = (decl.initValue.type as LCETypeTuple).types;
                 expect(valueTupleTypes).toHaveLength(2);
-                expect(valueTupleTypes[0].type).toBe("primitive");
-                expect((valueTupleTypes[0] as LCETypePrimitive).name).toBe("number");
-                expect(valueTupleTypes[1].type).toBe("primitive");
-                expect((valueTupleTypes[1] as LCETypePrimitive).name).toBe("string");
+                expectPrimitiveType(valueTupleTypes[0], "number");
+                expectPrimitiveType(valueTupleTypes[1], "string");
             }
         }
     });
@@ -494,16 +370,11 @@ describe("variable declarations test", () => {
             expect(decl.type.type).toBe("function");
 
             function checkFunctionType(funcType: LCETypeFunction) {
-                expect(funcType.returnType.type).toBe("primitive");
-                expect((funcType.returnType as LCETypePrimitive).name).toBe("string");
+                expectPrimitiveType(funcType.returnType, "string");
 
                 const params = funcType.parameters;
                 expect(params).toHaveLength(1);
-                expect(params[0].index).toBe(0);
-                expect(params[0].name).toBe("p1");
-                expect(params[0].optional).toBe(false);
-                expect(params[0].type.type).toBe("primitive");
-                expect((params[0].type as LCETypePrimitive).name).toBe("number");
+                expectTypeFunctionParameter(params, 0, "p1", false, "number");
 
                 expect(funcType.typeParameters).toHaveLength(0);
             }
@@ -530,16 +401,11 @@ describe("variable declarations test", () => {
             expect(decl.type.type).toBe("function");
 
             function checkFunctionType(funcType: LCETypeFunction) {
-                expect(funcType.returnType.type).toBe("primitive");
-                expect((funcType.returnType as LCETypePrimitive).name).toBe("string");
+                expectPrimitiveType(funcType.returnType, "string");
 
                 const params = funcType.parameters;
                 expect(params).toHaveLength(1);
-                expect(params[0].index).toBe(0);
-                expect(params[0].name).toBe("p1");
-                expect(params[0].optional).toBe(false);
-                expect(params[0].type.type).toBe("primitive");
-                expect((params[0].type as LCETypePrimitive).name).toBe("number");
+                expectTypeFunctionParameter(params, 0, "p1", false, "number");
 
                 expect(funcType.typeParameters).toHaveLength(0);
             }
@@ -599,12 +465,7 @@ describe("variable declarations test", () => {
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
-                expect(decl.initValue.valueType).toBe("literal")
-                expect((decl.initValue as LCEValueLiteral).value).toBe(1);
-
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("number");
+                expectLiteralValue(decl.initValue, 1, "number");
             }
         }
     });
@@ -628,27 +489,16 @@ describe("variable declarations test", () => {
             expect([...(intersecTypes[1] as LCETypeObject).members]).toHaveLength(1);
 
             intersecTypes.sort((a, b) => (a as LCETypeObject).members.keys().next().value.localeCompare((b as LCETypeObject).members.keys().next().value));
-            expect((intersecTypes[0] as LCETypeObject).members.get("a")!.type).toBe("primitive");
-            expect(((intersecTypes[0] as LCETypeObject).members.get("a")! as LCETypePrimitive).name).toBe("number");
-            expect((intersecTypes[1] as LCETypeObject).members.get("b")!.type).toBe("primitive");
-            expect(((intersecTypes[1] as LCETypeObject).members.get("b")! as LCETypePrimitive).name).toBe("string");
-
+            expectPrimitiveType((intersecTypes[0] as LCETypeObject).members.get("a"), "number");
+            expectPrimitiveType((intersecTypes[1] as LCETypeObject).members.get("b"), "string");
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
-                expect(decl.initValue.valueType).toBe("object")
+                expect(decl.initValue.valueType).toBe("object");
 
                 const valueMembers = (decl.initValue as LCEValueObject).members;
-                expect(valueMembers.get("a")).not.toBeNull();
-                expect(valueMembers.get("a")!.valueType).toBe("literal");
-                expect((valueMembers.get("a")! as LCEValueLiteral).value).toBe(1);
-                expect((valueMembers.get("a")!.type).type).toBe("primitive");
-                expect((valueMembers.get("a")!.type as LCETypePrimitive).name).toBe("number");
-                expect(valueMembers.get("b")).not.toBeNull();
-                expect(valueMembers.get("b")!.valueType).toBe("literal");
-                expect((valueMembers.get("b")! as LCEValueLiteral).value).toBe("a");
-                expect((valueMembers.get("b")!.type).type).toBe("primitive");
-                expect((valueMembers.get("b")!.type as LCETypePrimitive).name).toBe("string");
+                expectLiteralValue(valueMembers.get("a"), 1, "number");
+                expectLiteralValue(valueMembers.get("b"), "a", "string");
 
                 // TODO: decide how object value type should look like (currently: declared type)
                 // checkObjectType(decl.initValue.type as LCETypeObject);
@@ -667,9 +517,7 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vComplex");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("number");
+            expectPrimitiveType(decl.type, "number");
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
@@ -691,18 +539,14 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vRefDirect");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("string");
+            expectPrimitiveType(decl.type, "string");
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("declared")
                 expect((decl.initValue as LCEValueDeclared).fqn).toBe('"./src/main.ts".vString');
 
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("string");
+                expectPrimitiveType(decl.initValue.type, "string");
             }
         }
 
@@ -717,9 +561,7 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vRefMember");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("number");
+            expectPrimitiveType(decl.type, "number");
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
@@ -734,18 +576,14 @@ describe("variable declarations test", () => {
                 expect((parentValue as LCEValueDeclared).fqn).toBe('"./src/main.ts".vObject');
                 const parentTypeMembers = (parentValue.type as LCETypeObject).members;
                 expect([...parentTypeMembers.entries()]).toHaveLength(2);
-                expect(parentTypeMembers.get("a")).not.toBeNull();
-                expect(parentTypeMembers.get("a")!.type).toBe("primitive");
-                expect((parentTypeMembers.get("a")! as LCETypePrimitive).name).toBe("number");
-                expect(parentTypeMembers.get("b")).not.toBeNull();
-                expect(parentTypeMembers.get("b")!.type).toBe("primitive");
-                expect((parentTypeMembers.get("b")! as LCETypePrimitive).name).toBe("string");
+                expectPrimitiveType(parentTypeMembers.get("a"), "number");
+                expectPrimitiveType(parentTypeMembers.get("b"), "string");
 
                 const memberValue = (decl.initValue as LCEValueMember).member;
                 expect(memberValue.valueType).toBe("declared");
                 expect((memberValue as LCEValueDeclared).fqn).toBe("a");
-                expect(memberValue.type.type).toBe("primitive")
-                expect((memberValue.type as LCETypePrimitive).name).toBe("number");
+                expectPrimitiveType(memberValue.type, "number");
+
             }
         }
 
@@ -760,17 +598,13 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vRefCall");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("primitive");
-            expect((decl.type as LCETypePrimitive).name).toBe("string");
+            expectPrimitiveType(decl.type, "string");
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("call")
 
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("primitive");
-                expect((decl.initValue.type as LCETypePrimitive).name).toBe("string");
+                expectPrimitiveType(decl.initValue.type, "string");
 
                 const callee = (decl.initValue as LCEValueCall).callee;
                 expect(callee).not.toBeNull();
@@ -782,13 +616,10 @@ describe("variable declarations test", () => {
                 const funcType = callee.type as LCETypeFunction;
                 expect(funcType.returnType.type).toBe("primitive");
                 expect((funcType.returnType as LCETypePrimitive).name).toBe("string");
+
                 const params = funcType.parameters;
                 expect(params).toHaveLength(1);
-                expect(params[0].index).toBe(0);
-                expect(params[0].name).toBe("p1");
-                expect(params[0].optional).toBe(false);
-                expect(params[0].type.type).toBe("primitive");
-                expect((params[0].type as LCETypePrimitive).name).toBe("number");
+                expectTypeFunctionParameter(params, 0, "p1", false, "number");
                 expect(funcType.typeParameters).toHaveLength(0);
 
                 const args = (decl.initValue as LCEValueCall).args;
@@ -796,9 +627,7 @@ describe("variable declarations test", () => {
                 expect(args).toHaveLength(1);
                 expect(args[0].valueType).toBe("literal");
                 expect((args[0] as LCEValueLiteral).value).toBe(3);
-                expect(args[0].type).not.toBeNull();
-                expect(args[0].type.type).toBe("primitive");
-                expect((args[0].type as LCETypePrimitive).name).toBe("number");
+                expectPrimitiveType(args[0].type, "number");
 
                 expect((decl.initValue as LCEValueCall).typeArgs).toHaveLength(0);
             }
@@ -815,26 +644,15 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vInterfaceObj");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("declared");
-            expect((decl.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomInterface');
-            expect((decl.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+            expectDeclaredType(decl.type, '"./src/main.ts".CustomInterface');
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("object")
 
                 const valueMembers = (decl.initValue as LCEValueObject).members;
-                expect(valueMembers.get("x")).not.toBeNull();
-                expect(valueMembers.get("x")!.valueType).toBe("literal");
-                expect((valueMembers.get("x")! as LCEValueLiteral).value).toBe(1);
-                expect((valueMembers.get("x")!.type).type).toBe("primitive");
-                expect((valueMembers.get("x")!.type as LCETypePrimitive).name).toBe("number");
-                expect(valueMembers.get("y")).not.toBeNull();
-                expect(valueMembers.get("y")!.valueType).toBe("literal");
-                expect((valueMembers.get("y")! as LCEValueLiteral).value).toBe(2);
-                expect((valueMembers.get("y")!.type).type).toBe("primitive");
-                expect((valueMembers.get("y")!.type as LCETypePrimitive).name).toBe("number");
+                expectLiteralValue(valueMembers.get("x"), 1, "number");
+                expectLiteralValue(valueMembers.get("y"), 2, "number");
 
                 // TODO: change object value type behavior
                 // expect(decl.initValue.type).not.toBeNull();
@@ -856,10 +674,7 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vClassObj");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("declared");
-            expect((decl.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomClass');
-            expect((decl.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+            expectDeclaredType(decl.type, '"./src/main.ts".CustomClass');
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
@@ -884,26 +699,15 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vTypeObj");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("declared");
-            expect((decl.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomType');
-            expect((decl.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+            expectDeclaredType(decl.type, '"./src/main.ts".CustomType');
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("object")
 
                 const valueMembers = (decl.initValue as LCEValueObject).members;
-                expect(valueMembers.get("x")).not.toBeNull();
-                expect(valueMembers.get("x")!.valueType).toBe("literal");
-                expect((valueMembers.get("x")! as LCEValueLiteral).value).toBe(1);
-                expect((valueMembers.get("x")!.type).type).toBe("primitive");
-                expect((valueMembers.get("x")!.type as LCETypePrimitive).name).toBe("number");
-                expect(valueMembers.get("y")).not.toBeNull();
-                expect(valueMembers.get("y")!.valueType).toBe("literal");
-                expect((valueMembers.get("y")! as LCEValueLiteral).value).toBe(2);
-                expect((valueMembers.get("y")!.type).type).toBe("primitive");
-                expect((valueMembers.get("y")!.type as LCETypePrimitive).name).toBe("number");
+                expectLiteralValue(valueMembers.get("x"), 1, "number");
+                expectLiteralValue(valueMembers.get("y"), 2, "number");
 
                 // TODO: change object value type behavior
                 // expect(decl.initValue.type).not.toBeNull();
@@ -923,17 +727,11 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vEnum");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("declared");
-            expect((decl.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomEnum');
-            expect((decl.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+            expectDeclaredType(decl.type, '"./src/main.ts".CustomEnum');
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("declared");
-                expect((decl.initValue.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomEnum');
-                expect((decl.initValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+                expectDeclaredType(decl.initValue.type, '"./src/main.ts".CustomEnum');
 
                 expect(decl.initValue.valueType).toBe("member")
                 
@@ -946,9 +744,7 @@ describe("variable declarations test", () => {
                 const memberValue = (decl.initValue as LCEValueMember).member;
                 expect(memberValue.valueType).toBe("declared");
                 expect((memberValue as LCEValueDeclared).fqn).toBe('A');
-                expect(memberValue.type.type).toBe("declared");
-                expect((memberValue.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomEnum');
-                expect((memberValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+                expectDeclaredType(memberValue.type, '"./src/main.ts".CustomEnum');
             }
         }
 
@@ -964,26 +760,15 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vExtInterfaceObj");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("declared");
-            expect((decl.type as LCETypeDeclared).fqn).toBe('"./src/secondary.ts".ExternalCustomInterface');
-            expect((decl.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+            expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomInterface');
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("object")
 
                 const valueMembers = (decl.initValue as LCEValueObject).members;
-                expect(valueMembers.get("x")).not.toBeNull();
-                expect(valueMembers.get("x")!.valueType).toBe("literal");
-                expect((valueMembers.get("x")! as LCEValueLiteral).value).toBe(1);
-                expect((valueMembers.get("x")!.type).type).toBe("primitive");
-                expect((valueMembers.get("x")!.type as LCETypePrimitive).name).toBe("number");
-                expect(valueMembers.get("y")).not.toBeNull();
-                expect(valueMembers.get("y")!.valueType).toBe("literal");
-                expect((valueMembers.get("y")! as LCEValueLiteral).value).toBe(2);
-                expect((valueMembers.get("y")!.type).type).toBe("primitive");
-                expect((valueMembers.get("y")!.type as LCETypePrimitive).name).toBe("number");
+                expectLiteralValue(valueMembers.get("x"), 1, "number");
+                expectLiteralValue(valueMembers.get("y"), 2, "number");
 
                 // TODO: change object value type behavior
                 // expect(decl.initValue.type).not.toBeNull();
@@ -1005,10 +790,7 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vExtClassObj");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("declared");
-            expect((decl.type as LCETypeDeclared).fqn).toBe('"./src/secondary.ts".ExternalCustomClass');
-            expect((decl.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+            expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomClass');
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
@@ -1033,26 +815,15 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vExtTypeObj");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("declared");
-            expect((decl.type as LCETypeDeclared).fqn).toBe('"./src/secondary.ts".ExternalCustomType');
-            expect((decl.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+            expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomType');
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("object")
 
                 const valueMembers = (decl.initValue as LCEValueObject).members;
-                expect(valueMembers.get("x")).not.toBeNull();
-                expect(valueMembers.get("x")!.valueType).toBe("literal");
-                expect((valueMembers.get("x")! as LCEValueLiteral).value).toBe(1);
-                expect((valueMembers.get("x")!.type).type).toBe("primitive");
-                expect((valueMembers.get("x")!.type as LCETypePrimitive).name).toBe("number");
-                expect(valueMembers.get("y")).not.toBeNull();
-                expect(valueMembers.get("y")!.valueType).toBe("literal");
-                expect((valueMembers.get("y")! as LCEValueLiteral).value).toBe(2);
-                expect((valueMembers.get("y")!.type).type).toBe("primitive");
-                expect((valueMembers.get("y")!.type as LCETypePrimitive).name).toBe("number");
+                expectLiteralValue(valueMembers.get("x"), 1, "number");
+                expectLiteralValue(valueMembers.get("y"), 2, "number");
 
                 // TODO: change object value type behavior
                 // expect(decl.initValue.type).not.toBeNull();
@@ -1074,17 +845,11 @@ describe("variable declarations test", () => {
             expect((decl.variableName)).toBe("vExtEnum");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
-            expect(decl.type.type).toBe("declared");
-            expect((decl.type as LCETypeDeclared).fqn).toBe('"./src/secondary.ts".ExternalCustomEnum');
-            expect((decl.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+            expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomEnum');
 
             expect(decl.initValue).not.toBeNull();
             if (decl.initValue) {
-                expect(decl.initValue.type).not.toBeNull();
-                expect(decl.initValue.type.type).toBe("declared");
-                expect((decl.initValue.type as LCETypeDeclared).fqn).toBe('"./src/secondary.ts".ExternalCustomEnum');
-                expect((decl.initValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+                expectDeclaredType(decl.initValue.type, '"./src/secondary.ts".ExternalCustomEnum');
 
                 expect(decl.initValue.valueType).toBe("member")
 
@@ -1097,9 +862,7 @@ describe("variable declarations test", () => {
                 const memberValue = (decl.initValue as LCEValueMember).member;
                 expect(memberValue.valueType).toBe("declared");
                 expect((memberValue as LCEValueDeclared).fqn).toBe('A');
-                expect(memberValue.type.type).toBe("declared");
-                expect((memberValue.type as LCETypeDeclared).fqn).toBe('"./src/secondary.ts".ExternalCustomEnum');
-                expect((memberValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
+                expectDeclaredType(memberValue.type, '"./src/secondary.ts".ExternalCustomEnum');
             }
         }
 
