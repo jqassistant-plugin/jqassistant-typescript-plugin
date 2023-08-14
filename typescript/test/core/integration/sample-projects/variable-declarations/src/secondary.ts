@@ -1,5 +1,4 @@
 
-
 export class ExternalCustomClass {
     public x: number;
     public y: number;

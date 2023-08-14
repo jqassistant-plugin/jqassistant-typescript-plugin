@@ -99,6 +99,23 @@ describe("function declarations test", () => {
         expectDependency(dependencies, '"./src/main.ts".fReturnRef', '"./src/main.ts".CustomInterface', 1);
     });
 
+    test("simple function that returns interface instance of different module", async () => {
+        const decl = funDecls.get('"./src/main.ts".fReturnRefExt');
+        expect(decl).not.toBeNull();
+        if(decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect((decl.functionName)).toBe("fReturnRefExt");
+
+            expectDeclaredType(decl.returnType, '"./src/secondary.ts".ExternalCustomInterface');
+
+            expect(decl.parameters).toHaveLength(0);
+
+            expect(decl.typeParameters).toHaveLength(0);
+        }
+
+        expectDependency(dependencies, '"./src/main.ts".fReturnRefExt', '"./src/secondary.ts".ExternalCustomInterface', 1);
+    });
+
     test("exported empty function", async () => {
         const decl = funDecls.get('"./src/main.ts".fExported');
         expect(decl).not.toBeNull();
@@ -209,6 +226,25 @@ describe("function declarations test", () => {
         expectDependency(dependencies, '"./src/main.ts".fParamRef', '"./src/main.ts".CustomClass', 1);
     });
 
+    test("function with single parameter of referenced class type of different module", async () => {
+        const decl = funDecls.get('"./src/main.ts".fParamRefExt');
+        expect(decl).not.toBeNull();
+        if(decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect((decl.functionName)).toBe("fParamRefExt");
+
+            expectPrimitiveType(decl.returnType, "void");
+
+            expect(decl.parameters).toHaveLength(1);
+            expectFunctionParameter(decl.parameters, 0, "p1", false);
+            expectDeclaredType(decl.parameters[0]!.type, '"./src/secondary.ts".ExternalCustomClass');
+
+            expect(decl.typeParameters).toHaveLength(0);
+        }
+
+        expectDependency(dependencies, '"./src/main.ts".fParamRefExt', '"./src/secondary.ts".ExternalCustomClass', 1);
+    });
+
     test("generic function with single type parameter", async () => {
         const decl = funDecls.get('"./src/main.ts".fGeneric');
         expect(decl).not.toBeNull();
@@ -288,6 +324,29 @@ describe("function declarations test", () => {
             expectTypeParameterDeclaration(decl.typeParameters, 0, "T", false);
             expectDeclaredType(decl.typeParameters[0].constraint, '"./src/main.ts".CustomInterface');
         }
+
+        expectDependency(dependencies, '"./src/main.ts".fGenericConstraintRef', '"./src/main.ts".CustomInterface', 1);
+    });
+
+    test("generic function with type parameter constrained by type declaration of different module", async () => {
+        const decl = funDecls.get('"./src/main.ts".fGenericConstraintRefExt');
+        expect(decl).not.toBeNull();
+        if(decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect((decl.functionName)).toBe("fGenericConstraintRefExt");
+
+            expectPrimitiveType(decl.returnType, "void");
+
+            expect(decl.parameters).toHaveLength(1);
+            expectFunctionParameter(decl.parameters, 0, "p1", false);
+            expectTypeParameterReference(decl.parameters[0]!.type, "T");
+
+            expect(decl.typeParameters).toHaveLength(1);
+            expectTypeParameterDeclaration(decl.typeParameters, 0, "T", false);
+            expectDeclaredType(decl.typeParameters[0].constraint, '"./src/secondary.ts".ExternalCustomInterface');
+        }
+
+        expectDependency(dependencies, '"./src/main.ts".fGenericConstraintRefExt', '"./src/secondary.ts".ExternalCustomInterface', 1);
     });
 
     test("nested function", async () => {

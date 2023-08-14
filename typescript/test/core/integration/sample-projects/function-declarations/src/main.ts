@@ -1,6 +1,8 @@
 /* eslint-disable */
 
 // Sample Declarations to be used later
+import {ExternalCustomClass, ExternalCustomInterface} from "./secondary";
+
 class CustomClass {
     public x: number;
     public y: number;
@@ -38,6 +40,10 @@ function fReturnRef(): CustomInterface {
     return { x: 1, y: 2 };
 }
 
+function fReturnRefExt(): ExternalCustomInterface {
+    return { x: 1, y: 2 };
+}
+
 export function fExported() {}
 
 function fBodyRef() {
@@ -50,6 +56,7 @@ function fMultiParam(p1: number, p2: string, p3?: string) {}
 // function fParamDefault(p1: string = "") {} // TODO: enable this once default parameters are supported
 // function fSpread(...p1: number[]) {} // TODO: enable this once spread parameters are supported
 function fParamRef(p1: CustomClass) {}
+function fParamRefExt(p1: ExternalCustomClass) {}
 
 function fGeneric<T>(p1: T) {}
 function fGenericMulti<T, U>(p1: T, p2: U): U {
@@ -57,6 +64,7 @@ function fGenericMulti<T, U>(p1: T, p2: U): U {
 }
 function fGenericConstraint<T extends { x: number }>(p1: T) {}
 function fGenericConstraintRef<T extends CustomInterface>(p1: T) {}
+function fGenericConstraintRefExt<T extends ExternalCustomInterface>(p1: T) {}
 
 function fNested() {
     function nested() {}
