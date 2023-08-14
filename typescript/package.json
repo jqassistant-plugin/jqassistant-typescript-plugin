@@ -1,36 +1,53 @@
 {
-    "name": "language-concept-extractor",
-    "version": "1.0.0",
-    "description": "extracts language concepts from given TS project",
-    "main": "build/extractor.js",
-    "author": "Sebastian Wendorf",
-    "license": "MIT",
-    "private": true,
-    "dependencies": {
-        "@types/node": "^17.0.32",
-        "@typescript-eslint/eslint-plugin": "^5.30.7",
-        "@typescript-eslint/parser": "^5.30.7",
-        "eslint": "^8.20.0",
-        "eslint-config-standard": "^17.0.0",
-        "eslint-plugin-import": "^2.25.2",
-        "eslint-plugin-n": "^15.0.0",
-        "eslint-plugin-promise": "^6.0.0",
-        "json5": "^2.2.2",
-        "minimatch": "^5.1.0",
-        "readdirp": "^3.6.0",
-        "typescript": "^5.1.6"
-    },
-    "devDependencies": {
-        "@types/jest": "^28.1.8",
-        "@types/minimatch": "^3.0.5",
-        "eslint-config-prettier": "^8.5.0",
-        "jest": "^29.0.1",
-        "prettier": "2.7.1",
-        "ts-jest": "^29.1.1",
-        "ts-node": "^10.9.1"
-    },
-    "scripts": {
-        "start": "tsc && node build/extractor.js",
-        "test": "jest"
-    }
+  "name": "@jqassistant/ts-lce",
+  "version": "0.1.0",
+  "description": "Tool to extract language concepts from a TypeScript codebase and exports them to a JSON file.",
+  "main": "build/src/main.js",
+  "author": "BUSCHMAIS GbR",
+  "contributors": [
+    "Sebastian Wendorf"
+  ],
+  "repository": "https://github.com/jqassistant-plugin/jqassistant-typescript-plugin",
+  "homepage": "https://github.com/jqassistant-plugin/jqassistant-typescript-plugin/blob/main/typescript/README.md",
+  "license": "GNU GENERAL PUBLIC LICENSE",
+  "dependencies": {
+    "@types/node": "^17.0.32",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "eslint": "^8.20.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "json5": "^2.2.2",
+    "minimatch": "^5.1.0",
+    "readdirp": "^3.6.0",
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.8",
+    "@types/minimatch": "^3.0.5",
+    "eslint-config-prettier": "^8.5.0",
+    "jest": "^29.0.1",
+    "prettier": "2.7.1",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "bin": {
+    "jqa-ts-lce": "build/src/main.js"
+  },
+  "keywords": [
+    "cli",
+    "lce",
+    "jqa",
+    "jqassistant",
+    "typescript",
+    "ts",
+    "jqa-ts-lce",
+    "tool"
+  ]
 }

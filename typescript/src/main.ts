@@ -1,4 +1,6 @@
-import {processAndOutputResult} from "./core/extractor";
+#! /usr/bin/env node
+
+import { processAndOutputResult } from "./core/extractor";
 
 // TODO: plan how to handle extensions
 // initializeReactExtractor();
