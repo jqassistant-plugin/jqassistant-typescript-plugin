@@ -28,10 +28,10 @@ import {LCEDependency} from "../../../src/core/concepts/dependency.concept";
 import {
     expectDeclaredType,
     expectDependency,
+    expectFunctionParameter,
     expectLiteralType,
     expectLiteralValue,
     expectPrimitiveType,
-    expectTypeFunctionParameter,
     getDependenciesFromResult
 } from "../../utils/test-utils";
 
@@ -374,7 +374,7 @@ describe("variable declarations test", () => {
 
                 const params = funcType.parameters;
                 expect(params).toHaveLength(1);
-                expectTypeFunctionParameter(params, 0, "p1", false, "number");
+                expectFunctionParameter(params, 0, "p1", false, "number");
 
                 expect(funcType.typeParameters).toHaveLength(0);
             }
@@ -405,7 +405,7 @@ describe("variable declarations test", () => {
 
                 const params = funcType.parameters;
                 expect(params).toHaveLength(1);
-                expectTypeFunctionParameter(params, 0, "p1", false, "number");
+                expectFunctionParameter(params, 0, "p1", false, "number");
 
                 expect(funcType.typeParameters).toHaveLength(0);
             }
@@ -619,7 +619,7 @@ describe("variable declarations test", () => {
 
                 const params = funcType.parameters;
                 expect(params).toHaveLength(1);
-                expectTypeFunctionParameter(params, 0, "p1", false, "number");
+                expectFunctionParameter(params, 0, "p1", false, "number");
                 expect(funcType.typeParameters).toHaveLength(0);
 
                 const args = (decl.initValue as LCEValueCall).args;

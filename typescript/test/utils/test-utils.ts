@@ -5,9 +5,13 @@ import {
     LCETypeDeclared,
     LCETypeFunctionParameter,
     LCETypeLiteral,
+    LCETypeObject,
+    LCETypeParameterReference,
     LCETypePrimitive
 } from "../../src/core/concepts/type.concept";
 import {LCEValue, LCEValueLiteral} from "../../src/core/concepts/value.concept";
+import {LCEParameterDeclaration} from "../../src/core/concepts/method-declaration.concept";
+import {LCETypeParameterDeclaration} from "../../src/core/concepts/type-parameter.concept";
 
 export function getDependenciesFromResult(result: Map<string, LCEConcept[]>): Map<string, Map<string, LCEDependency>> {
     const dependencies: Map<string, Map<string, LCEDependency>>  = new Map();
@@ -83,6 +87,17 @@ export function expectDeclaredType(type: LCEType | undefined, fqn: string, check
 }
 
 /**
+ * Expect the provided type to be not null and of the specified type parameter reference variant.
+ */
+export function expectTypeParameterReference(type: LCEType | undefined, name: string) {
+    expect(type).not.toBeNull();
+    if(type) {
+        expect(type.type).toBe("type-parameter");
+        expect((type as LCETypeParameterReference).name).toBe(name);
+    }
+}
+
+/**
  * Expect the provided value (and its associated type) to be not null and of the specified literal variant.
  */
 export function expectLiteralValue(value: LCEValue | undefined, literalValue: any, primitiveType: string){
@@ -95,18 +110,18 @@ export function expectLiteralValue(value: LCEValue | undefined, literalValue: an
 }
 
 /**
- * Expects a parameter type to present in the provided parameter list.
- * @param params list of all parameter types of a function type
+ * Expects a parameter to present in the provided parameter list.
+ * @param params list of all parameter of a function or function type
  * @param index index of the parameter (position within the list as well as for checking the index value of the object)
  * @param name name of the parameter
- * @param optional optional property of the parameter type
+ * @param optional optional property value of the parameter to check
  * @param primitiveType optional: additional check of parameter type for the specified primitive type variant
  */
-export function expectTypeFunctionParameter(params: LCETypeFunctionParameter[] | undefined,
-                                            index: number,
-                                            name: string,
-                                            optional: boolean,
-                                            primitiveType: string | undefined = undefined) {
+export function expectFunctionParameter(params: LCETypeFunctionParameter[] | LCEParameterDeclaration[] | undefined,
+                                        index: number,
+                                        name: string,
+                                        optional: boolean,
+                                        primitiveType: string | undefined = undefined) {
     expect(params).not.toBeNull();
     const param = params![index];
     expect(param).not.toBeNull();
@@ -116,6 +131,24 @@ export function expectTypeFunctionParameter(params: LCETypeFunctionParameter[] |
         expect(param.optional).toBe(optional);
         if(primitiveType) {
             expectPrimitiveType(param.type, primitiveType);
+        }
+    }
+}
+
+export function expectTypeParameterDeclaration(typeParams: LCETypeParameterDeclaration[] | undefined,
+                                               index: number,
+                                               name: string,
+                                               checkEmptyConstraint: boolean = true) {
+    expect(typeParams).not.toBeNull();
+    const typeParam = typeParams![index];
+    expect(typeParam).not.toBeNull();
+    if(typeParam) {
+        expect(typeParam.index).toBe(index);
+        expect(typeParam.name).toBe(name);
+        if(checkEmptyConstraint) {
+            expect(typeParam.constraint).not.toBeNull();
+            expect(typeParam.constraint.type).toBe("object");
+            expect([...(typeParam.constraint as LCETypeObject).members.entries()]).toHaveLength(0);
         }
     }
 }
