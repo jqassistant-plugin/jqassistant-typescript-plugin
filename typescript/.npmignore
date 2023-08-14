@@ -4,7 +4,14 @@ test/
 build/test/
 node_modules/
 
-jqa-ts-output.json
+build/jest.config.js
+build/jqa-ts-output.json
+
+.eslintignore
+.eslintrc.cjs
+.prettierignore
+.prettierrc.json
+jest.config.js
 typescript.iml
 node-debug.log
 pom.xml
