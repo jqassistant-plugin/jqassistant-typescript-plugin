@@ -11,6 +11,11 @@ import java.util.List;
 @Mapper(uses = {TypeMapper.class, ParameterDeclarationMapper.class, DecoratorMapper.class})
 public interface MethodDeclarationMapper extends DescriptorMapper<MethodDeclaration, MethodDeclarationDescriptor> {
 
+    @BeforeMapping
+    default void before(MethodDeclaration value, @MappingTarget MethodDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(TypeParameterResolver.class).pushScope();
+    }
+
     @Override
     @Mapping(source = "coordinates.startLine", target = "startLine")
     @Mapping(source = "coordinates.startColumn", target = "startColumn")
@@ -26,8 +31,9 @@ public interface MethodDeclarationMapper extends DescriptorMapper<MethodDeclarat
     MethodDeclarationDescriptor toDescriptor(MethodDeclaration value, @Context Scanner scanner);
 
     @AfterMapping
-    default void registerFqn(MethodDeclaration type, @MappingTarget MethodDeclarationDescriptor target, @Context Scanner scanner) {
+    default void after(MethodDeclaration value, @MappingTarget MethodDeclarationDescriptor target, @Context Scanner scanner) {
         scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(TypeParameterResolver.class).popScope();
     }
 
     List<MethodDeclarationDescriptor> mapList(List<MethodDeclaration> value, @Context Scanner scanner);

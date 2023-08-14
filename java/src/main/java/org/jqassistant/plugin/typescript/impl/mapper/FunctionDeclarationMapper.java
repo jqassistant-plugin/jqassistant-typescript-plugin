@@ -15,6 +15,11 @@ public interface FunctionDeclarationMapper extends DescriptorMapper<FunctionDecl
 
     FunctionDeclarationMapper INSTANCE = getMapper(FunctionDeclarationMapper.class);
 
+    @BeforeMapping
+    default void init(FunctionDeclaration value, @MappingTarget FunctionDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(TypeParameterResolver.class).pushScope();
+    }
+
     @Override
     @Mapping(source = "functionName", target = "name")
     @Mapping(source = "coordinates.fileName", target = "fileName")
@@ -28,8 +33,9 @@ public interface FunctionDeclarationMapper extends DescriptorMapper<FunctionDecl
     FunctionDeclarationDescriptor toDescriptor(FunctionDeclaration value, @Context Scanner scanner);
 
     @AfterMapping
-    default void registerFqn(FunctionDeclaration type, @MappingTarget FunctionDeclarationDescriptor target, @Context Scanner scanner) {
+    default void teardown(FunctionDeclaration type, @MappingTarget FunctionDeclarationDescriptor target, @Context Scanner scanner) {
         scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(TypeParameterResolver.class).popScope();
     }
 
     List<FunctionDeclarationDescriptor> mapList(List<FunctionDeclaration> value, @Context Scanner scanner);

@@ -15,6 +15,11 @@ public interface ClassDeclarationMapper extends DescriptorMapper<ClassDeclaratio
 
     ClassDeclarationMapper INSTANCE = getMapper(ClassDeclarationMapper.class);
 
+    @BeforeMapping
+    default void before(ClassDeclaration value, @MappingTarget ClassDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(TypeParameterResolver.class).pushScope();
+    }
+
     @Override
     @Mapping(source = "className", target = "name")
     @Mapping(source = "abstractt", target = "abstract")
@@ -29,8 +34,9 @@ public interface ClassDeclarationMapper extends DescriptorMapper<ClassDeclaratio
     ClassDeclarationDescriptor toDescriptor(ClassDeclaration type, @Context Scanner scanner);
 
     @AfterMapping
-    default void registerFqn(ClassDeclaration type, @MappingTarget ClassDeclarationDescriptor target, @Context Scanner scanner) {
+    default void after(ClassDeclaration value, @MappingTarget ClassDeclarationDescriptor target, @Context Scanner scanner) {
         scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(TypeParameterResolver.class).popScope();
     }
 
     List<ClassDeclarationDescriptor> mapList(List<ClassDeclaration> value, @Context Scanner scanner);

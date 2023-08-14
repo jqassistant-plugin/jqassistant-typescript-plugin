@@ -15,6 +15,11 @@ public interface InterfaceDeclarationMapper extends DescriptorMapper<InterfaceDe
 
     InterfaceDeclarationMapper INSTANCE = getMapper(InterfaceDeclarationMapper.class);
 
+    @BeforeMapping
+    default void before(InterfaceDeclaration value, @MappingTarget InterfaceDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(TypeParameterResolver.class).pushScope();
+    }
+
     @Override
     @Mapping(source = "interfaceName", target = "name")
     @Mapping(source = "coordinates.fileName", target = "fileName")
@@ -28,8 +33,9 @@ public interface InterfaceDeclarationMapper extends DescriptorMapper<InterfaceDe
     InterfaceDeclarationDescriptor toDescriptor(InterfaceDeclaration value, @Context Scanner scanner);
 
     @AfterMapping
-    default void registerFqn(InterfaceDeclaration type, @MappingTarget InterfaceDeclarationDescriptor target, @Context Scanner scanner) {
+    default void after(InterfaceDeclaration type, @MappingTarget InterfaceDeclarationDescriptor target, @Context Scanner scanner) {
         scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(TypeParameterResolver.class).popScope();
     }
 
     List<InterfaceDeclarationDescriptor> mapList(List<InterfaceDeclaration> value, @Context Scanner scanner);

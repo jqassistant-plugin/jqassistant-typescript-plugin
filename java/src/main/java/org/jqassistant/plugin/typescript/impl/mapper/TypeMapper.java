@@ -42,6 +42,11 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
     @Mapping(target = "exporters", ignore = true)
     TypeParameterDeclarationDescriptor mapTypeParameterDeclaration(TypeParameterDeclaration value, @Context Scanner scanner);
 
+    @AfterMapping
+    default void registerTypeParameterDeclaration(TypeParameterDeclaration value, @MappingTarget TypeParameterDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(TypeParameterResolver.class).registerParameter(target);
+    }
+
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
     @Mapping(target = "exporters", ignore = true)
@@ -102,10 +107,20 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
         return descriptor;
     }
 
+    @BeforeMapping
+    default void before(TypeFunction value, @MappingTarget TypeFunctionDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(TypeParameterResolver.class).pushScope();
+    }
+
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
     @Mapping(target = "exporters", ignore = true)
     TypeFunctionDescriptor mapTypeFunction(TypeFunction value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void after(TypeFunction value, @MappingTarget TypeFunctionDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(TypeParameterResolver.class).popScope();
+    }
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
@@ -122,6 +137,11 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
     @Mapping(target = "dependencies", ignore = true)
     @Mapping(target = "exporters", ignore = true)
     TypeParameterReferenceDescriptor mapTypeParameterReference(TypeParameterReference value, @Context Scanner scanner);
+
+    @AfterMapping
+    default void resolveTypeParameterReferenceRef(TypeParameterReference value, @MappingTarget TypeParameterReferenceDescriptor target, @Context Scanner scanner) {
+        target.setReference(scanner.getContext().peek(TypeParameterResolver.class).resolveParameter(value.getName()));
+    }
 
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)

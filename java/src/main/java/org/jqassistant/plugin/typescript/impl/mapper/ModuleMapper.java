@@ -22,6 +22,8 @@ public class ModuleMapper {
         FileResolver fileResolver = scanner.getContext().peek(FileResolver.class);
         List<ModuleDescriptor> result = new ArrayList<>();
 
+        scanner.getContext().push(TypeParameterResolver.class, new TypeParameterResolver());
+
         Map<String, List<ClassDeclarationDescriptor>> classDeclarations = new HashMap<>();
         ClassDeclarationMapper.INSTANCE.mapList(scanResultCollection.getClassDeclarations(), scanner)
             .forEach(classDeclarationDescriptor -> {
@@ -91,6 +93,8 @@ public class ModuleMapper {
             scanner.getContext().peek(FqnResolver.class).registerFqn(moduleDescriptor);
             result.add(moduleDescriptor);
         }
+
+        scanner.getContext().pop(TypeParameterResolver.class);
 
         return result;
     }

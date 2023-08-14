@@ -15,6 +15,11 @@ public interface TypeAliasDeclarationMapper extends DescriptorMapper<TypeAliasDe
 
     TypeAliasDeclarationMapper INSTANCE = getMapper(TypeAliasDeclarationMapper.class);
 
+    @BeforeMapping
+    default void before(TypeAliasDeclaration value, @MappingTarget TypeAliasDeclarationDescriptor target, @Context Scanner scanner) {
+        scanner.getContext().peek(TypeParameterResolver.class).pushScope();
+    }
+
     @Override
     @Mapping(source = "typeAliasName", target = "name")
     @Mapping(source = "coordinates.fileName", target = "fileName")
@@ -28,8 +33,9 @@ public interface TypeAliasDeclarationMapper extends DescriptorMapper<TypeAliasDe
     TypeAliasDeclarationDescriptor toDescriptor(TypeAliasDeclaration value, @Context Scanner scanner);
 
     @AfterMapping
-    default void registerFqn(TypeAliasDeclaration type, @MappingTarget TypeAliasDeclarationDescriptor target, @Context Scanner scanner) {
+    default void after(TypeAliasDeclaration type, @MappingTarget TypeAliasDeclarationDescriptor target, @Context Scanner scanner) {
         scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(TypeParameterResolver.class).popScope();
     }
 
     List<TypeAliasDeclarationDescriptor> mapList(List<TypeAliasDeclaration> value, @Context Scanner scanner);
