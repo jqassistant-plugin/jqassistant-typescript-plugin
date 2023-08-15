@@ -1,5 +1,5 @@
-import {LCEDependency} from "../../src/core/concepts/dependency.concept";
-import {LCEConcept} from "../../src/core/concept";
+import { LCEDependency } from "../../src/core/concepts/dependency.concept";
+import { LCEConcept } from "../../src/core/concept";
 import {
     LCEType,
     LCETypeDeclared,
@@ -7,27 +7,30 @@ import {
     LCETypeLiteral,
     LCETypeObject,
     LCETypeParameterReference,
-    LCETypePrimitive
+    LCETypePrimitive,
+    LCETypeUnion,
 } from "../../src/core/concepts/type.concept";
-import {LCEValue, LCEValueLiteral} from "../../src/core/concepts/value.concept";
-import {LCEParameterDeclaration} from "../../src/core/concepts/method-declaration.concept";
-import {LCETypeParameterDeclaration} from "../../src/core/concepts/type-parameter.concept";
+import { LCEValue, LCEValueLiteral } from "../../src/core/concepts/value.concept";
+import { LCEMethodDeclaration, LCEParameterDeclaration } from "../../src/core/concepts/method-declaration.concept";
+import { LCETypeParameterDeclaration } from "../../src/core/concepts/type-parameter.concept";
+import { LCEPropertyDeclaration } from "../../src/core/concepts/property-declaration.concept";
+import { Visibility } from "../../src/core/concepts/visibility.concept";
 
 export function getDependenciesFromResult(result: Map<string, LCEConcept[]>): Map<string, Map<string, LCEDependency>> {
-    const dependencies: Map<string, Map<string, LCEDependency>>  = new Map();
-    for(const concept of (result.get(LCEDependency.conceptId) ?? [])) {
+    const dependencies: Map<string, Map<string, LCEDependency>> = new Map();
+    for (const concept of result.get(LCEDependency.conceptId) ?? []) {
         const dep: LCEDependency = concept as LCEDependency;
-        if(!dep.sourceFQN) {
+        if (!dep.sourceFQN) {
             throw new Error("Dependency has no source fqn " + JSON.stringify(dep));
         }
-        if(!dep.fqn) {
+        if (!dep.fqn) {
             throw new Error("Dependency has no target fqn " + JSON.stringify(dep));
         }
-        if(dependencies.get(dep.sourceFQN)?.get(dep.fqn)) {
+        if (dependencies.get(dep.sourceFQN)?.get(dep.fqn)) {
             throw new Error("Two dependencies with same source and target FQN were returned: " + JSON.stringify(dep));
         }
 
-        if(!dependencies.has(dep.sourceFQN)) {
+        if (!dependencies.has(dep.sourceFQN)) {
             dependencies.set(dep.sourceFQN, new Map());
         }
         dependencies.get(dep.sourceFQN)?.set(dep.fqn, dep);
@@ -57,6 +60,26 @@ export function expectPrimitiveType(type: LCEType | undefined, name: string) {
     if(type) {
         expect(type.type).toBe("primitive");
         expect((type as LCETypePrimitive).name).toBe(name);
+    }
+}
+
+/**
+ * Expect the provided type to be not null and a union of the specified primitive variant and undefined.
+ */
+export function expectOptionalPrimitiveType(type: LCEType | undefined, name: string) {
+    const types = ["undefined", name].sort();
+    expect(type).not.toBeNull();
+    if(type) {
+        expect(type).not.toBeNull();
+        expect(type.type).toBe("union");
+        const unionTypes = (type as LCETypeUnion).types;
+
+        expect(unionTypes).toHaveLength(2);
+        expect(unionTypes[0].type).toBe("primitive");
+        expect(unionTypes[1].type).toBe("primitive");
+        unionTypes.sort((a, b) => (a as LCETypePrimitive).name.localeCompare((b as LCETypePrimitive).name))
+        expect((unionTypes[0] as LCETypePrimitive).name).toBe(types[0]);
+        expect((unionTypes[1] as LCETypePrimitive).name).toBe(types[1]);
     }
 }
 
@@ -135,6 +158,13 @@ export function expectFunctionParameter(params: LCETypeFunctionParameter[] | LCE
     }
 }
 
+/**
+ * Expects a type parameter to present in the provided type parameter list.
+ * @param typeParams list of type parameter declarations
+ * @param index index of the type parameter (position within the list as well as for checking the index value of the object)
+ * @param name name of the type parameter
+ * @param checkEmptyConstraint (enabled by default): checks that the type parameter is constraint by an empty object type
+ */
 export function expectTypeParameterDeclaration(typeParams: LCETypeParameterDeclaration[] | undefined,
                                                index: number,
                                                name: string,
@@ -151,4 +181,70 @@ export function expectTypeParameterDeclaration(typeParams: LCETypeParameterDecla
             expect([...(typeParam.constraint as LCETypeObject).members.entries()]).toHaveLength(0);
         }
     }
+}
+
+
+/**
+ * Expects a property to present in the provided property list.
+ *
+ * @return property declaration object, if it was found in the list
+ */
+export function expectProperty(props: LCEPropertyDeclaration[] | undefined,
+                               fqn: string,
+                               name: string,
+                               optional: boolean,
+                               visibility: Visibility,
+                               readonly: boolean,
+                               override: boolean | undefined,
+                               abstract: boolean | undefined,
+                               isStatic: boolean | undefined,
+                               primitiveType?: string): LCEPropertyDeclaration {
+    expect(props).not.toBeNull();
+    const propDecl = props!.find(p => p.fqn === fqn);
+    expect(propDecl).not.toBeNull();
+    if(propDecl) {
+        expect(propDecl.propertyName).toBe(name);
+        expect(propDecl.optional).toBe(optional);
+        expect(propDecl.visibility).toBe(visibility);
+        expect(propDecl.readonly).toBe(readonly);
+        expect(propDecl.override).toBe(override);
+        expect(propDecl.abstract).toBe(abstract);
+        expect(propDecl.isStatic).toBe(isStatic);
+
+        if(primitiveType) {
+            expectPrimitiveType(propDecl.type, primitiveType);
+        }
+    }
+    return propDecl!;
+}
+
+/**
+ * Expects a method to present in the provided method list.
+ * Only performs basic checks: (type) parameters have to be checked manually.
+ *
+ * @return property declaration object, if it was found in the list
+ */
+export function expectMethod(methods: LCEMethodDeclaration[] | undefined,
+                               fqn: string,
+                               name: string,
+                               visibility: Visibility,
+                               override: boolean | undefined,
+                               abstract: boolean | undefined,
+                               isStatic: boolean | undefined,
+                               primitiveReturnType?: string): LCEMethodDeclaration {
+    expect(methods).not.toBeNull();
+    const methodDecl = methods!.find(p => p.fqn === fqn);
+    expect(methodDecl).not.toBeNull();
+    if(methodDecl) {
+        expect(methodDecl.methodName).toBe(name);
+        expect(methodDecl.visibility).toBe(visibility);
+        expect(methodDecl.override).toBe(override);
+        expect(methodDecl.abstract).toBe(abstract);
+        expect(methodDecl.isStatic).toBe(isStatic);
+
+        if(primitiveReturnType) {
+            expectPrimitiveType(methodDecl.returnType, primitiveReturnType);
+        }
+    }
+    return methodDecl!;
 }

@@ -1,6 +1,8 @@
 /* eslint-disable */
 
 // Sample Declarations to be used later
+import { ExternalCustomClass, ExternalCustomInterface } from "./secondary";
+
 class CustomClass {
     public x: number;
     public y: number;
@@ -14,6 +16,10 @@ class CustomClass {
 interface CustomInterface {
     x: number;
     y: number;
+}
+
+interface CustomInterface2 {
+    str: string;
 }
 
 type CustomType = {
@@ -81,7 +87,7 @@ class cGetterSetter {
 }
 
 class cParameterProperties {
-    constructor(public x: number, public y: number) {}
+    constructor(public x: number, other: string, public y: number) {}
 }
 
 class cStatic {
@@ -110,13 +116,33 @@ class cImplements implements CustomInterface {
     y: number = 2;
 }
 
-// TODO: Decorator samples
+class cImplementsMulti implements CustomInterface, CustomInterface2 {
+    x: number = 1;
+    y: number = 2;
+    str: string = "a";
+}
 
 class cRef {
     public x: CustomInterface = { x: 1, y: 2 };
 
     public method(): CustomClass {
         return new CustomClass(1, 2);
+    }
+}
+
+class cExtendsExt extends ExternalCustomClass {
+    override x: number = 42;
+}
+class cImplementsExt implements ExternalCustomInterface {
+    x: number = 1;
+    y: number = 2;
+}
+
+class cRefExt {
+    public x: ExternalCustomInterface = { x: 1, y: 2 };
+
+    public method(): ExternalCustomClass {
+        return new ExternalCustomClass(1, 2);
     }
 }
 
@@ -129,3 +155,4 @@ class cGeneric<T> {
     }
 }
 
+// TODO: Decorator samples

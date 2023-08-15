@@ -1,8 +1,8 @@
-import {processProject} from "../../../src/core/extractor";
-import {LCEConcept} from "../../../src/core/concept";
-import {LCETypeObject, LCETypePrimitive, LCETypeUnion} from "../../../src/core/concepts/type.concept";
-import {LCEModule} from "../../../src/core/concepts/typescript-module.concept";
-import {LCEDependency} from "../../../src/core/concepts/dependency.concept";
+import { processProject } from "../../../src/core/extractor";
+import { LCEConcept } from "../../../src/core/concept";
+import { LCETypeObject, LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
+import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
+import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import {
     expectDeclaredType,
     expectDependency,
@@ -10,10 +10,10 @@ import {
     expectPrimitiveType,
     expectTypeParameterDeclaration,
     expectTypeParameterReference,
-    getDependenciesFromResult
+    getDependenciesFromResult,
 } from "../../utils/test-utils";
-import {LCEFunctionDeclaration} from "../../../src/core/concepts/function-declaration.concept";
-import {LCEExportDeclaration} from "../../../src/core/concepts/export-declaration.concept";
+import { LCEFunctionDeclaration } from "../../../src/core/concepts/function-declaration.concept";
+import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 
 jest.setTimeout(30000);
 
@@ -57,7 +57,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fEmpty");
+            expect(decl.functionName).toBe("fEmpty");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -72,7 +72,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fReturn");
+            expect(decl.functionName).toBe("fReturn");
 
             expectPrimitiveType(decl.returnType, "number");
 
@@ -87,7 +87,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fReturnRef");
+            expect(decl.functionName).toBe("fReturnRef");
 
             expectDeclaredType(decl.returnType, '"./src/main.ts".CustomInterface');
 
@@ -104,7 +104,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fReturnRefExt");
+            expect(decl.functionName).toBe("fReturnRefExt");
 
             expectDeclaredType(decl.returnType, '"./src/secondary.ts".ExternalCustomInterface');
 
@@ -121,7 +121,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fExported");
+            expect(decl.functionName).toBe("fExported");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -149,7 +149,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fBodyRef");
+            expect(decl.functionName).toBe("fBodyRef");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -167,7 +167,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fParam");
+            expect(decl.functionName).toBe("fParam");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -183,7 +183,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fMultiParam");
+            expect(decl.functionName).toBe("fMultiParam");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -212,7 +212,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fParamRef");
+            expect(decl.functionName).toBe("fParamRef");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -231,7 +231,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fParamRefExt");
+            expect(decl.functionName).toBe("fParamRefExt");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -250,7 +250,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fGeneric");
+            expect(decl.functionName).toBe("fGeneric");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -268,7 +268,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fGenericMulti");
+            expect(decl.functionName).toBe("fGenericMulti");
 
             expectTypeParameterReference(decl.returnType, "U");
 
@@ -289,7 +289,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fGenericConstraint");
+            expect(decl.functionName).toBe("fGenericConstraint");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -312,7 +312,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fGenericConstraintRef");
+            expect(decl.functionName).toBe("fGenericConstraintRef");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -333,7 +333,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fGenericConstraintRefExt");
+            expect(decl.functionName).toBe("fGenericConstraintRefExt");
 
             expectPrimitiveType(decl.returnType, "void");
 
@@ -354,7 +354,7 @@ describe("function declarations test", () => {
         expect(decl).not.toBeNull();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect((decl.functionName)).toBe("fNested");
+            expect(decl.functionName).toBe("fNested");
 
             expectPrimitiveType(decl.returnType, "void");
 
