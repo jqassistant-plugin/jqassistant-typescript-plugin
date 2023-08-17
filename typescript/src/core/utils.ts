@@ -1,21 +1,21 @@
 import * as fs from "fs";
 import * as path from "path";
-import {match} from "minimatch";
+import { match } from "minimatch";
 import json5 from "json5";
 
 export class Utils {
     /**
      * Returns the paths for all project source files with a given ending inside a directory. (scans recursively)
-     * @param path path to the directory that shall be scanned
+     * @param projectPath path to the directory that shall be scanned
      * @param endings whitelist of endings of files that should
      * @param ignoredDirs directories that should not be scanned
      * @returns
      */
-    static getProjectSourceFileList(path: string): string[] {
+    static getProjectSourceFileList(projectPath: string): string[] {
         const tsconfig: {
             include?: string[];
-            exclude?: string[]
-        } = json5.parse(fs.readFileSync(path + "/tsconfig.json", "utf8"));
+            exclude?: string[];
+        } = json5.parse(fs.readFileSync(path.join(projectPath, "tsconfig.json"), "utf8"));
         const endings = [".ts", ".tsx"];
 
         const ignoredDirs = [".git", "node_modules"];
@@ -25,10 +25,10 @@ export class Utils {
         //     ignoredDirs.push("node_modules");
         // }
 
-        if (tsconfig.include) tsconfig.include = tsconfig.include.map((dirPattern) => path + "/" + dirPattern);
-        if (tsconfig.exclude) tsconfig.exclude = tsconfig.exclude.map((dirPattern) => path + "/" + dirPattern);
+        if (tsconfig.include) tsconfig.include = tsconfig.include.map((dirPattern) => path.join(projectPath, dirPattern));
+        if (tsconfig.exclude) tsconfig.exclude = tsconfig.exclude.map((dirPattern) => path.join(projectPath, dirPattern));
 
-        const allFiles = Utils.getAllFiles(path, [], ignoredDirs);
+        const allFiles = Utils.getAllFiles(projectPath, [], ignoredDirs);
         return allFiles.filter((file) => {
             let matched = false;
             let included = true;
@@ -64,10 +64,10 @@ export class Utils {
         const files = fs.readdirSync(dirPath);
 
         files.forEach(function (file) {
-            if (fs.statSync(dirPath + "/" + file).isDirectory() && !ignoredDirs.includes(file)) {
-                arrayOfFiles = Utils.getAllFiles(dirPath + "/" + file, arrayOfFiles, ignoredDirs);
+            if (fs.statSync(path.join(dirPath, file)).isDirectory() && !ignoredDirs.includes(file)) {
+                Utils.getAllFiles(path.join(dirPath, file), arrayOfFiles, ignoredDirs);
             } else {
-                arrayOfFiles.push(path.join(dirPath, "/", file));
+                arrayOfFiles.push(path.join(dirPath, file));
             }
         });
 

@@ -1,15 +1,15 @@
-import {parseAndGenerateServices} from "@typescript-eslint/typescript-estree";
+import { parseAndGenerateServices } from "@typescript-eslint/typescript-estree";
 import * as fs from "fs";
 import path from "path";
-import {TypeChecker} from "typescript";
+import { TypeChecker } from "typescript";
 
-import {ConceptMap, LCEConcept, mergeConceptMaps, singleEntryConceptMap, unifyConceptMap} from "./concept";
-import {LCEProject} from "./concepts/typescript-project.concept";
-import {GlobalContext} from "./context";
-import {PathUtils} from "./path.utils";
-import {AstTraverser} from "./traversers/ast.traverser";
-import {Utils} from "./utils";
-import {POST_PROCESSORS} from "./features";
+import { ConceptMap, LCEConcept, mergeConceptMaps, singleEntryConceptMap, unifyConceptMap } from "./concept";
+import { LCEProject } from "./concepts/typescript-project.concept";
+import { GlobalContext } from "./context";
+import { PathUtils } from "./path.utils";
+import { AstTraverser } from "./traversers/ast.traverser";
+import { Utils } from "./utils";
+import { POST_PROCESSORS } from "./features";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export async function processProject(projectRoot: string, readFile: Function = fs.readFileSync): Promise<Map<string, LCEConcept[]>> {
@@ -20,7 +20,7 @@ export async function processProject(projectRoot: string, readFile: Function = f
     const fileList = Utils.getProjectSourceFileList(projectRoot);
 
     // maps filenames to the extracted concepts from these files
-    let concepts: ConceptMap = singleEntryConceptMap(LCEProject.conceptId, new LCEProject(projectRoot));
+    let concepts: ConceptMap = singleEntryConceptMap(LCEProject.conceptId, new LCEProject(projectRoot.replace(/\\/g, "/")));
 
     console.log("Analyzing " + fileList.length + " project files...");
     const startTime = process.hrtime();
@@ -34,19 +34,22 @@ export async function processProject(projectRoot: string, readFile: Function = f
             range: true,
             tokens: false,
             filePath: file,
-            project: projectRoot + "/tsconfig.json",
+            project: path.join(projectRoot, "tsconfig.json"),
         });
+        if(!services.program) {
+            continue;
+        }
         const typeChecker: TypeChecker = services.program.getTypeChecker();
 
         const globalContext: GlobalContext = {
-            projectRootPath: projectRoot,
-            sourceFilePath: PathUtils.normalize(projectRoot, file),
+            projectRootPath: projectRoot.replace(/\\/g, "/"),
+            sourceFilePath: PathUtils.normalize(projectRoot, file).replace(/\\/g, "/"),
             ast: ast,
             services: services,
             typeChecker: typeChecker,
         };
 
-        concepts = mergeConceptMaps(concepts, unifyConceptMap(traverser.traverse(globalContext), file.replace(globalContext.projectRootPath, ".")));
+        concepts = mergeConceptMaps(concepts, unifyConceptMap(traverser.traverse(globalContext), globalContext.sourceFilePath));
     }
     const normalizedConcepts = unifyConceptMap(concepts, "").get("") ?? new Map();
 
