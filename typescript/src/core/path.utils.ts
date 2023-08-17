@@ -101,7 +101,9 @@ export class PathUtils {
     static normalizeTypeCheckerFQN(projectPath: string, tcFQN: string, sourceFilePath: string): string {
         // TODO: test for external node paths
         if (tcFQN.startsWith('"')) {
-            return this.toFQN(this.normalizeImportPath(projectPath, this.extractFQNPath(tcFQN))) + tcFQN.slice(tcFQN.lastIndexOf('"') + 1);
+            return this.toFQN(
+                this.normalizeImportPath(projectPath, this.extractFQNPath(tcFQN))) + tcFQN.slice(tcFQN.lastIndexOf('"') + 1
+            ).replace(/\\/g, "/");
         } else {
             return this.toFQN(sourceFilePath) + "." + tcFQN;
         }
