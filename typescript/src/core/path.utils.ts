@@ -101,9 +101,10 @@ export class PathUtils {
     static normalizeTypeCheckerFQN(projectPath: string, tcFQN: string, sourceFilePath: string): string {
         // TODO: test for external node paths
         if (tcFQN.startsWith('"')) {
-            return this.toFQN(
+            const normFqn = this.toFQN(
                 this.normalizeImportPath(projectPath, this.extractFQNPath(tcFQN))) + tcFQN.slice(tcFQN.lastIndexOf('"') + 1
-            ).replace(/\\/g, "/");
+            )
+            return normFqn.replace(/\\/g, "/"); // ensure Windows compatibility
         } else {
             return this.toFQN(sourceFilePath) + "." + tcFQN;
         }
@@ -113,7 +114,7 @@ export class PathUtils {
      * converts a path to a FQN path
      */
     static toFQN(path: string): string {
-        return '"' + path + '"';
+        return '"' + (path.replace(/\\/g, "/")) + '"';
     }
 
     /**
