@@ -1,36 +1,41 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
-import {ClassPropertyNameNonComputed, PropertyNameNonComputed} from "@typescript-eslint/types/dist/generated/ast-spec";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, mergeConceptMaps, singleEntryConceptMap} from "../concept";
-import {LCEDecorator} from "../concepts/decorator.concept";
+import { ClassPropertyNameNonComputed, PropertyNameNonComputed } from "@typescript-eslint/types/dist/generated/ast-spec";
+
+import { ConceptMap, mergeConceptMaps, singleEntryConceptMap } from "../concept";
+import { LCEDecorator } from "../concepts/decorator.concept";
 import {
     LCEConstructorDeclaration,
-    LCEGetterDeclaration,
     LCEMethodDeclaration,
     LCEParameterDeclaration,
     LCEParameterPropertyDeclaration,
-    LCESetterDeclaration,
 } from "../concepts/method-declaration.concept";
-import {LCEPropertyDeclaration} from "../concepts/property-declaration.concept";
-import {LCETypeFunction} from "../concepts/type.concept";
-import {ProcessingContext} from "../context";
-import {ExecutionCondition} from "../execution-condition";
-import {Processor} from "../processor";
-import {getAndDeleteChildConcepts, getChildConcepts, getParentPropIndex, getParentPropName} from "../processor.utils";
-import {IdentifierTraverser} from "../traversers/expression.traverser";
-import {MethodTraverser, ParameterPropertyTraverser} from "../traversers/method.traverser";
-import {PropertyTraverser} from "../traversers/property.traverser";
-import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
-import {parseClassPropertyType, parseMethodType} from "./type.utils";
-import {CodeCoordinateUtils} from "./code-coordinate.utils";
+import { LCEPropertyDeclaration } from "../concepts/property-declaration.concept";
+import { LCETypeFunction } from "../concepts/type.concept";
+import { ProcessingContext } from "../context";
+import { ExecutionCondition } from "../execution-condition";
+import { Processor } from "../processor";
+import { getAndDeleteChildConcepts, getChildConcepts, getParentPropIndex, getParentPropName } from "../processor.utils";
+import { IdentifierTraverser } from "../traversers/expression.traverser";
+import { MethodTraverser, ParameterPropertyTraverser } from "../traversers/method.traverser";
+import { PropertyTraverser } from "../traversers/property.traverser";
+import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
+import { parseClassPropertyType, parseMethodType } from "./type.utils";
+import { CodeCoordinateUtils } from "./code-coordinate.utils";
+import {
+    LCEAccessorProperty,
+    LCEAutoAccessorDeclaration,
+    LCEGetterDeclaration,
+    LCESetterDeclaration,
+} from "../concepts/accessor-declaration.concept";
 
 export class MethodProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.MethodDefinition, AST_NODE_TYPES.TSAbstractMethodDefinition, AST_NODE_TYPES.TSMethodSignature],
-        () => true
+        () => true,
     );
 
-    public override preChildrenProcessing({node, localContexts, globalContext}: ProcessingContext): void {
+    public override preChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext): void {
         if (
             (node.type === AST_NODE_TYPES.MethodDefinition ||
                 node.type === AST_NODE_TYPES.TSAbstractMethodDefinition ||
@@ -44,22 +49,24 @@ export class MethodProcessor extends Processor {
             DependencyResolutionProcessor.addScopeContext(localContexts, methodName);
             DependencyResolutionProcessor.createDependencyIndex(localContexts);
 
-            const functionType = parseMethodType({
-                globalContext,
-                localContexts,
-                node
-            }, node.parent, node, methodName, jsPrivate);
+            const functionType = parseMethodType(
+                {
+                    globalContext,
+                    localContexts,
+                    node,
+                },
+                node.parent,
+                node,
+                methodName,
+                jsPrivate,
+            );
             if (functionType) {
                 localContexts.currentContexts.set(MethodParameterProcessor.METHOD_TYPE_CONTEXT_ID, functionType);
             }
         }
     }
 
-    public override postChildrenProcessing({
-                                               node,
-                                               localContexts,
-                                               globalContext
-                                           }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
+    public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (
             (node.type === AST_NODE_TYPES.MethodDefinition ||
                 node.type === AST_NODE_TYPES.TSAbstractMethodDefinition ||
@@ -92,9 +99,9 @@ export class MethodProcessor extends Processor {
                                 visibility,
                                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                                 "override" in node ? node.override : undefined,
-                                inClass ? (node.type === AST_NODE_TYPES.TSAbstractMethodDefinition) : undefined,
-                                inClass ? (node.static ? node.static : false) : undefined
-                            )
+                                inClass ? node.type === AST_NODE_TYPES.TSAbstractMethodDefinition : undefined,
+                                inClass ? (node.static ? node.static : false) : undefined,
+                            ),
                         );
                     }
                 } else if (node.kind === "constructor") {
@@ -105,44 +112,49 @@ export class MethodProcessor extends Processor {
                             fqn,
                             getAndDeleteChildConcepts(MethodTraverser.PARAMETERS_PROP, LCEParameterDeclaration.conceptId, childConcepts),
                             getAndDeleteChildConcepts(MethodTraverser.PARAMETERS_PROP, LCEParameterPropertyDeclaration.conceptId, childConcepts),
-                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
-                        )
+                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
+                        ),
                     );
                 } else if (node.kind === "get") {
                     // getter
                     methodConcept = singleEntryConceptMap(
-                        LCEGetterDeclaration.conceptId,
-                        new LCEGetterDeclaration(
-                            methodName,
+                        LCEAccessorProperty.conceptId,
+                        new LCEAccessorProperty(
                             fqn,
-                            functionType.returnType,
-                            "decorators" in node
-                                ? getAndDeleteChildConcepts(MethodTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
-                                : [],
-                            visibility,
-                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
-                            "override" in node ? node.override : undefined,
-                            inClass ? (node.type === AST_NODE_TYPES.TSAbstractMethodDefinition) : undefined,
-                            inClass ? (node.static ? node.static : false) : undefined
-                        )
+                            methodName,
+                            new LCEGetterDeclaration(
+                                functionType.returnType,
+                                "decorators" in node
+                                    ? getAndDeleteChildConcepts(MethodTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
+                                    : [],
+                                visibility,
+                                CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
+                                "override" in node ? node.override : undefined,
+                                inClass ? node.type === AST_NODE_TYPES.TSAbstractMethodDefinition : undefined,
+                                inClass ? (node.static ? node.static : false) : undefined,
+                            ),
+                        ),
                     );
                 } else {
                     // setter
                     methodConcept = singleEntryConceptMap(
-                        LCESetterDeclaration.conceptId,
-                        new LCESetterDeclaration(
-                            methodName,
+                        LCEAccessorProperty.conceptId,
+                        new LCEAccessorProperty(
                             fqn,
-                            getAndDeleteChildConcepts(MethodTraverser.PARAMETERS_PROP, LCEParameterDeclaration.conceptId, childConcepts),
-                            "decorators" in node
-                                ? getAndDeleteChildConcepts(MethodTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
-                                : [],
-                            visibility,
-                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
-                            "override" in node ? node.override : undefined,
-                            inClass ? (node.type === AST_NODE_TYPES.TSAbstractMethodDefinition) : undefined,
-                            inClass ? (node.static ? node.static : false) : undefined
-                        )
+                            methodName,
+                            undefined,
+                            new LCESetterDeclaration(
+                                getAndDeleteChildConcepts(MethodTraverser.PARAMETERS_PROP, LCEParameterDeclaration.conceptId, childConcepts),
+                                "decorators" in node
+                                    ? getAndDeleteChildConcepts(MethodTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
+                                    : [],
+                                visibility,
+                                CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
+                                "override" in node ? node.override : undefined,
+                                inClass ? node.type === AST_NODE_TYPES.TSAbstractMethodDefinition : undefined,
+                                inClass ? (node.static ? node.static : false) : undefined,
+                            ),
+                        ),
                     );
                 }
                 return mergeConceptMaps(methodConcept, DependencyResolutionProcessor.getRegisteredDependencies(localContexts));
@@ -295,12 +307,72 @@ export class PropertyProcessor extends Processor {
     }
 }
 
+export class AutoAccessorDeclarationProcessor extends Processor {
+    public executionCondition: ExecutionCondition = new ExecutionCondition(
+        [AST_NODE_TYPES.AccessorProperty, AST_NODE_TYPES.TSAbstractAccessorProperty],
+        () => true
+    );
+
+    public override preChildrenProcessing({node, localContexts}: ProcessingContext): void {
+        if (
+            (node.type === AST_NODE_TYPES.AccessorProperty ||
+                node.type === AST_NODE_TYPES.TSAbstractAccessorProperty) &&
+            !node.computed
+        ) {
+            const [accessorPropertyName] = processMemberName(node.key);
+            DependencyResolutionProcessor.addScopeContext(localContexts, accessorPropertyName);
+            DependencyResolutionProcessor.createDependencyIndex(localContexts);
+        }
+    }
+
+    public override postChildrenProcessing({
+                                               node,
+                                               localContexts,
+                                               globalContext
+                                           }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
+        if (
+            (node.type === AST_NODE_TYPES.AccessorProperty ||
+                node.type === AST_NODE_TYPES.TSAbstractAccessorProperty) &&
+            !node.computed
+        ) {
+            const [accessorPropertyName, jsPrivate] = processMemberName(node.key);
+            const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
+            DependencyResolutionProcessor.registerDeclaration(localContexts, accessorPropertyName, fqn, true);
+            return mergeConceptMaps(
+                singleEntryConceptMap(
+                    LCEAccessorProperty.conceptId,
+                    new LCEAccessorProperty(
+                        fqn,
+                        accessorPropertyName,
+                        undefined,
+                        undefined,
+                        new LCEAutoAccessorDeclaration(
+                            parseClassPropertyType({globalContext, localContexts, node}, node.key),
+                            "decorators" in node
+                                ? getAndDeleteChildConcepts(PropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
+                                : [],
+                            jsPrivate ? "js_private" : node.accessibility ?? "public",
+                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
+                            node.override,
+                            node.type === AST_NODE_TYPES.TSAbstractAccessorProperty,
+                            node.static ? node.static : false
+                        )
+                    )
+                ),
+                DependencyResolutionProcessor.getRegisteredDependencies(localContexts)
+            );
+        }
+
+        return new Map();
+    }
+}
+
 /**
  * Returns the field or method name for a given non-computed class element.
  * Also returns if the element was declared private by using the # prefix
  */
 function processMemberName(name: ClassPropertyNameNonComputed | PropertyNameNonComputed): [string, boolean] {
-    let result = "";
+    let result: string;
     let jsPrivate = false;
 
     if (name.type === AST_NODE_TYPES.Identifier) {

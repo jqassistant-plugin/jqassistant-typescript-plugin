@@ -1,10 +1,10 @@
-import {LCEConcept, LCENamedConcept} from "../concept";
-import {LCEDecorator} from "./decorator.concept";
-import {LCEPropertyDeclaration} from "./property-declaration.concept";
-import {LCETypeParameterDeclaration} from "./type-parameter.concept";
-import {LCEType} from "./type.concept";
-import {Visibility} from "./visibility.concept";
-import {CodeCoordinates} from "./code-coordinate.concept";
+import { LCEConcept, LCENamedConcept } from "../concept";
+import { LCEDecorator } from "./decorator.concept";
+import { LCEPropertyDeclaration } from "./property-declaration.concept";
+import { LCETypeParameterDeclaration } from "./type-parameter.concept";
+import { LCEType } from "./type.concept";
+import { Visibility } from "./visibility.concept";
+import { CodeCoordinates } from "./code-coordinate.concept";
 
 export class LCEMethodDeclaration extends LCENamedConcept {
     public static override conceptId = "method-declaration";
@@ -75,38 +75,3 @@ export class LCEConstructorDeclaration extends LCENamedConcept {
     }
 }
 
-export class LCEGetterDeclaration extends LCENamedConcept {
-    public static override conceptId = "getter-declaration";
-
-    constructor(
-        public methodName: string,
-        fqn: string,
-        public returnType: LCEType,
-        public decorators: LCEDecorator[],
-        public visibility: Visibility,
-        public coordinates: CodeCoordinates,
-        public override?: boolean,
-        public abstract?: boolean,
-        public isStatic?: boolean
-    ) {
-        super(fqn);
-    }
-}
-
-export class LCESetterDeclaration extends LCENamedConcept {
-    public static override conceptId = "setter-declaration";
-
-    constructor(
-        public methodName: string,
-        fqn: string,
-        public parameters: LCEParameterDeclaration[],
-        public decorators: LCEDecorator[],
-        public visibility: Visibility,
-        public coordinates: CodeCoordinates,
-        public override?: boolean,
-        public abstract?: boolean,
-        public isStatic?: boolean
-    ) {
-        super(fqn);
-    }
-}

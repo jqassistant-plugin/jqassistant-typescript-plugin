@@ -3,12 +3,14 @@ import { LCEConcept } from "../../../src/core/concept";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import {
+    expectAccessorProperty,
     expectDeclaredType,
     expectDependency,
     expectFunctionParameter,
     expectLiteralType,
     expectMethod,
     expectOptionalPrimitiveType,
+    expectPrimitiveType,
     expectProperty,
     expectTypeParameterDeclaration,
     expectTypeParameterReference,
@@ -30,7 +32,7 @@ describe("class declarations test", () => {
         result = await processProject(projectRoot);
 
         if (!result.get(LCEClassDeclaration.conceptId)) {
-            throw new Error("Could not find function declarations in result data.");
+            throw new Error("Could not find class declarations in result data.");
         }
 
         for (const concept of result.get(LCEClassDeclaration.conceptId) ?? []) {
@@ -69,8 +71,7 @@ describe("class declarations test", () => {
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(0);
             expect(decl.methods).toHaveLength(0);
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -92,8 +93,7 @@ describe("class declarations test", () => {
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(0);
             expect(decl.methods).toHaveLength(0);
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
 
@@ -138,8 +138,7 @@ describe("class declarations test", () => {
             expectOptionalPrimitiveType(propB.type, "number");
 
             expect(decl.methods).toHaveLength(0);
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -171,8 +170,7 @@ describe("class declarations test", () => {
             expectProperty(decl.properties, '"./src/main.ts".cConstructor.y', "y", false, "public", false, false, false, false, "number");
 
             expect(decl.methods).toHaveLength(0);
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -212,15 +210,93 @@ describe("class declarations test", () => {
             expectFunctionParameter(methodA.parameters, 1, "p2", false, "string");
             expect(methodA.typeParameters).toHaveLength(0);
 
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
     });
 
-    test.skip("class with getters and setters", async () => {
-        // TODO: general improvements to getters and setters needed (maybe additional referenced property node?)
+    test("class with getters and setters", async () => {
+        const decl = classDecls.get('"./src/main.ts".cGetterSetter');
+        expect(decl).not.toBeNull();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.className).toBe("cGetterSetter");
+            expect(decl.abstract).toBe(false);
+
+            expect(decl.typeParameters).toHaveLength(0);
+
+            expect(decl.extendsClass).toBeUndefined();
+            expect(decl.implementsInterfaces).toHaveLength(0);
+
+            expect(decl.constr).toBeUndefined();
+            expect(decl.properties).toHaveLength(0);
+            expect(decl.methods).toHaveLength(0);
+
+            expect(decl.accessorProperties).toHaveLength(2);
+            const accX = expectAccessorProperty(decl.accessorProperties, '"./src/main.ts".cGetterSetter.x', "x");
+            expect(accX.autoAccessor).toBeUndefined();
+            expect(accX.getter).not.toBeNull();
+            expectPrimitiveType(accX.getter!.returnType, "number");
+            expect(accX.getter!.visibility).toBe("public");
+            expect(accX.getter!.decorators).toHaveLength(0);
+            expect(accX.getter!.override).toBe(false);
+            expect(accX.getter!.abstract).toBe(false);
+            expect(accX.getter!.isStatic).toBe(false);
+            expect(accX.setter).not.toBeNull();
+            expectFunctionParameter(accX.setter!.parameters, 0, "x", false, "number");
+            expect(accX.setter!.visibility).toBe("public");
+            expect(accX.setter!.decorators).toHaveLength(0);
+            expect(accX.setter!.override).toBe(false);
+            expect(accX.setter!.abstract).toBe(false);
+            expect(accX.setter!.isStatic).toBe(false);
+
+            const accY = expectAccessorProperty(decl.accessorProperties, '"./src/main.ts".cGetterSetter.y', "y");
+            expect(accY.getter).toBeUndefined();
+            expect(accY.autoAccessor).toBeUndefined();
+            expect(accY.setter).not.toBeNull();
+            expectFunctionParameter(accY.setter!.parameters, 0, "y", false, "number");
+            expect(accY.setter!.visibility).toBe("private");
+            expect(accY.setter!.decorators).toHaveLength(0);
+            expect(accY.setter!.override).toBe(false);
+            expect(accY.setter!.abstract).toBe(false);
+            expect(accY.setter!.isStatic).toBe(false);
+            
+            expect(decl.decorators).toHaveLength(0);
+        }
+    });
+
+    test("class with an auto accessor", async () => {
+        const decl = classDecls.get('"./src/main.ts".cAutoAccessor');
+        expect(decl).not.toBeNull();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.className).toBe("cAutoAccessor");
+            expect(decl.abstract).toBe(false);
+
+            expect(decl.typeParameters).toHaveLength(0);
+
+            expect(decl.extendsClass).toBeUndefined();
+            expect(decl.implementsInterfaces).toHaveLength(0);
+
+            expect(decl.constr).toBeUndefined();
+            expect(decl.properties).toHaveLength(0);
+            expect(decl.methods).toHaveLength(0);
+
+            expect(decl.accessorProperties).toHaveLength(1);
+            const accA = expectAccessorProperty(decl.accessorProperties, '"./src/main.ts".cAutoAccessor.a', "a");
+            expect(accA.getter).toBeUndefined();
+            expect(accA.setter).toBeUndefined();
+            expect(accA.autoAccessor).not.toBeNull();
+            expectPrimitiveType(accA.autoAccessor!.type, "number");
+            expect(accA.autoAccessor!.visibility).toBe("public");
+            expect(accA.autoAccessor!.decorators).toHaveLength(0);
+            expect(accA.autoAccessor!.override).toBe(false);
+            expect(accA.autoAccessor!.abstract).toBe(false);
+            expect(accA.autoAccessor!.isStatic).toBe(false);
+
+            expect(decl.decorators).toHaveLength(0);
+        }
     });
 
     test("class with parameter properties", async () => {
@@ -252,8 +328,7 @@ describe("class declarations test", () => {
 
             expect(decl.properties).toHaveLength(0);
             expect(decl.methods).toHaveLength(0);
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -283,8 +358,7 @@ describe("class declarations test", () => {
             expectFunctionParameter(method.parameters, 1, "y", false, "number");
             expect(method.typeParameters).toHaveLength(0);
 
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -320,8 +394,17 @@ describe("class declarations test", () => {
             expectFunctionParameter(nonAbstractMethod.parameters, 1, "y", false, "number");
             expect(nonAbstractMethod.typeParameters).toHaveLength(0);
 
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(1);
+            const accA = expectAccessorProperty(decl.accessorProperties, '"./src/main.ts".cAbstract.abstractAcc', "abstractAcc");
+            expect(accA.getter).toBeUndefined();
+            expect(accA.setter).toBeUndefined();
+            expect(accA.autoAccessor).not.toBeNull();
+            expectPrimitiveType(accA.autoAccessor!.type, "string");
+            expect(accA.autoAccessor!.visibility).toBe("public");
+            expect(accA.autoAccessor!.decorators).toHaveLength(0);
+            expect(accA.autoAccessor!.override).toBe(false);
+            expect(accA.autoAccessor!.abstract).toBe(true);
+            expect(accA.autoAccessor!.isStatic).toBe(false);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -346,8 +429,7 @@ describe("class declarations test", () => {
             expectProperty(decl.properties, '"./src/main.ts".cExtends.x', "x", false, "public", false, true, false, false, "number");
 
             expect(decl.methods).toHaveLength(0);
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -374,8 +456,7 @@ describe("class declarations test", () => {
             expectProperty(decl.properties, '"./src/main.ts".cImplements.y', "y", false, "public", false, false, false, false, "number");
 
             expect(decl.methods).toHaveLength(0);
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -405,8 +486,7 @@ describe("class declarations test", () => {
             expectProperty(decl.properties, '"./src/main.ts".cImplements.str', "str", false, "public", false, false, false, false, "string");
 
             expect(decl.methods).toHaveLength(0);
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -438,8 +518,7 @@ describe("class declarations test", () => {
             expect(method.typeParameters).toHaveLength(0);
             expectDependency(dependencies, '"./src/main.ts".cRef.method', '"./src/main.ts".CustomClass', 2);
 
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -464,8 +543,7 @@ describe("class declarations test", () => {
             expectProperty(decl.properties, '"./src/main.ts".cExtendsExt.x', "x", false, "public", false, true, false, false, "number");
 
             expect(decl.methods).toHaveLength(0);
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -492,8 +570,7 @@ describe("class declarations test", () => {
             expectProperty(decl.properties, '"./src/main.ts".cImplementsExt.y', "y", false, "public", false, false, false, false, "number");
 
             expect(decl.methods).toHaveLength(0);
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -525,8 +602,7 @@ describe("class declarations test", () => {
             expect(method.typeParameters).toHaveLength(0);
             expectDependency(dependencies, '"./src/main.ts".cRefExt.method', '"./src/secondary.ts".ExternalCustomClass', 2);
 
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }
@@ -567,8 +643,7 @@ describe("class declarations test", () => {
             expect(methodNested.typeParameters).toHaveLength(1);
             expectTypeParameterDeclaration(methodNested.typeParameters, 0,"U");
 
-            expect(decl.getters).toHaveLength(0);
-            expect(decl.setters).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
         }

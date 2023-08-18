@@ -15,6 +15,7 @@ import { LCEMethodDeclaration, LCEParameterDeclaration } from "../../src/core/co
 import { LCETypeParameterDeclaration } from "../../src/core/concepts/type-parameter.concept";
 import { LCEPropertyDeclaration } from "../../src/core/concepts/property-declaration.concept";
 import { Visibility } from "../../src/core/concepts/visibility.concept";
+import { LCEAccessorProperty } from "../../src/core/concepts/accessor-declaration.concept";
 
 export function getDependenciesFromResult(result: Map<string, LCEConcept[]>): Map<string, Map<string, LCEDependency>> {
     const dependencies: Map<string, Map<string, LCEDependency>> = new Map();
@@ -247,4 +248,16 @@ export function expectMethod(methods: LCEMethodDeclaration[] | undefined,
         }
     }
     return methodDecl!;
+}
+
+export function expectAccessorProperty(accessorProperties: LCEAccessorProperty[] | undefined,
+                                       fqn: string,
+                                       name: string): LCEAccessorProperty {
+    expect(accessorProperties).not.toBeNull();
+    const accProp = accessorProperties!.find(p => p.fqn === fqn);
+    expect(accProp).not.toBeNull();
+    if(accProp) {
+        expect(accProp.accessorName).toBe(name);
+    }
+    return accProp!;
 }

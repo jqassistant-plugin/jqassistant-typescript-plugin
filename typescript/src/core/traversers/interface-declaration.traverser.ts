@@ -1,10 +1,10 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, mergeConceptMaps} from "../concept";
-import {ProcessingContext} from "../context";
-import {ProcessorMap} from "../processor";
-import {Traverser} from "../traverser";
-import {runTraverserForNode, runTraverserForNodes} from "../traverser.utils";
+import { ConceptMap, mergeConceptMaps } from "../concept";
+import { ProcessingContext } from "../context";
+import { ProcessorMap } from "../processor";
+import { Traverser } from "../traverser";
+import { runTraverserForNode, runTraverserForNodes } from "../traverser.utils";
 
 export class InterfaceDeclarationTraverser extends Traverser {
     public static readonly TYPE_PARAMETERS_PROP = "type-parameters";
@@ -12,7 +12,7 @@ export class InterfaceDeclarationTraverser extends Traverser {
     public static readonly MEMBERS_PROP = "members";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSInterfaceDeclaration) {
@@ -24,7 +24,7 @@ export class InterfaceDeclarationTraverser extends Traverser {
                     },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
             }
             if (node.extends) {
@@ -35,15 +35,15 @@ export class InterfaceDeclarationTraverser extends Traverser {
                     },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
             }
             runTraverserForNodes(
                 node.body.body,
-                {parentPropName: InterfaceDeclarationTraverser.MEMBERS_PROP},
+                { parentPropName: InterfaceDeclarationTraverser.MEMBERS_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -60,9 +60,9 @@ export class InterfaceHeritageTraverser extends Traverser {
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSInterfaceHeritage) {
-            if (node.typeParameters) {
+            if (node.typeArguments) {
                 runTraverserForNodes(
-                    node.typeParameters.params,
+                    node.typeArguments.params,
                     {
                         parentPropName: InterfaceHeritageTraverser.TYPE_PARAMETERS_PROP,
                     },

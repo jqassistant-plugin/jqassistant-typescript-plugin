@@ -1,15 +1,11 @@
-import {LCENamedConcept} from "../concept";
-import {LCEDecorator} from "./decorator.concept";
-import {
-    LCEConstructorDeclaration,
-    LCEGetterDeclaration,
-    LCEMethodDeclaration,
-    LCESetterDeclaration
-} from "./method-declaration.concept";
-import {LCEPropertyDeclaration} from "./property-declaration.concept";
-import {LCETypeParameterDeclaration} from "./type-parameter.concept";
-import {LCETypeDeclared} from "./type.concept";
-import {CodeCoordinates} from "./code-coordinate.concept";
+import { LCENamedConcept } from "../concept";
+import { LCEDecorator } from "./decorator.concept";
+import { LCEConstructorDeclaration, LCEMethodDeclaration } from "./method-declaration.concept";
+import { LCEPropertyDeclaration } from "./property-declaration.concept";
+import { LCETypeParameterDeclaration } from "./type-parameter.concept";
+import { LCETypeDeclared } from "./type.concept";
+import { CodeCoordinates } from "./code-coordinate.concept";
+import { LCEAccessorProperty } from "./accessor-declaration.concept";
 
 export class LCEClassDeclaration extends LCENamedConcept {
     public static override conceptId = "class-declaration";
@@ -24,10 +20,9 @@ export class LCEClassDeclaration extends LCENamedConcept {
         public constr: LCEConstructorDeclaration | undefined,
         public properties: LCEPropertyDeclaration[],
         public methods: LCEMethodDeclaration[],
-        public getters: LCEGetterDeclaration[],
-        public setters: LCESetterDeclaration[],
+        public accessorProperties: LCEAccessorProperty[],
         public decorators: LCEDecorator[],
-        public coordinates: CodeCoordinates
+        public coordinates: CodeCoordinates,
     ) {
         super(fqn);
     }

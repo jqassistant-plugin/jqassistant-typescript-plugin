@@ -1,25 +1,25 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, mergeConceptMaps} from "../concept";
-import {ProcessingContext} from "../context";
-import {ProcessorMap} from "../processor";
-import {Traverser} from "../traverser";
-import {runTraverserForNode, runTraverserForNodes} from "../traverser.utils";
+import { ConceptMap, mergeConceptMaps } from "../concept";
+import { ProcessingContext } from "../context";
+import { ProcessorMap } from "../processor";
+import { Traverser } from "../traverser";
+import { runTraverserForNode, runTraverserForNodes } from "../traverser.utils";
 
 export class ArrayExpressionTraverser extends Traverser {
     public static readonly ELEMENTS_PROP = "elements";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.ArrayExpression) {
             runTraverserForNodes(
                 node.elements,
-                {parentPropName: ArrayExpressionTraverser.ELEMENTS_PROP},
+                { parentPropName: ArrayExpressionTraverser.ELEMENTS_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -173,9 +173,9 @@ export class CallExpressionTraverser extends Traverser {
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.CallExpression) {
-            if (node.typeParameters)
+            if (node.typeArguments)
                 runTraverserForNodes(
-                    node.typeParameters.params,
+                    node.typeArguments.params,
                     {
                         parentPropName: CallExpressionTraverser.TYPE_PARAMETERS_PROP,
                     },
@@ -362,9 +362,9 @@ export class NewExpressionTraverser extends Traverser {
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.NewExpression) {
-            if (node.typeParameters)
+            if (node.typeArguments)
                 runTraverserForNodes(
-                    node.typeParameters.params,
+                    node.typeArguments.params,
                     {
                         parentPropName: NewExpressionTraverser.TYPE_PARAMETERS_PROP,
                     },
@@ -470,9 +470,9 @@ export class TaggedTemplateExpressionTraverser extends Traverser {
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TaggedTemplateExpression) {
-            if (node.typeParameters)
+            if (node.typeArguments)
                 runTraverserForNodes(
-                    node.typeParameters.params,
+                    node.typeArguments.params,
                     {
                         parentPropName: TaggedTemplateExpressionTraverser.TYPE_PARAMETER_PROP,
                     },

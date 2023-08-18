@@ -1,32 +1,33 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
-import {Processor} from "./processor";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
+import { Processor } from "./processor";
 import {
     ClassDeclarationProcessor,
     ImplementsDeclarationProcessor,
     SuperClassDeclarationProcessor
 } from "./processors/class-declaration.processor";
 import {
+    AutoAccessorDeclarationProcessor,
     MethodParameterProcessor,
     MethodProcessor,
     PropertyProcessor
 } from "./processors/class-like-declaration.processor";
-import {DecoratorProcessor} from "./processors/decorator.processor";
-import {DependencyResolutionProcessor} from "./processors/dependency-resolution.processor";
-import {EnumDeclarationProcessor, EnumMemberProcessor} from "./processors/enum-declaration.processor";
-import {ExportDeclarationProcessor} from "./processors/export-declaration.processor";
-import {FunctionDeclarationProcessor, FunctionParameterProcessor} from "./processors/function-declaration.processor";
-import {ImportDeclarationProcessor} from "./processors/import-declaration.processor";
+import { DecoratorProcessor } from "./processors/decorator.processor";
+import { DependencyResolutionProcessor } from "./processors/dependency-resolution.processor";
+import { EnumDeclarationProcessor, EnumMemberProcessor } from "./processors/enum-declaration.processor";
+import { ExportDeclarationProcessor } from "./processors/export-declaration.processor";
+import { FunctionDeclarationProcessor, FunctionParameterProcessor } from "./processors/function-declaration.processor";
+import { ImportDeclarationProcessor } from "./processors/import-declaration.processor";
 import {
     DeclarationScopeProcessor,
     IdentifierDependencyProcessor,
     MemberExpressionDependencyProcessor,
-    ScopeProcessor,
+    ScopeProcessor
 } from "./processors/instructional-code.processor";
 import {
     InterfaceDeclarationProcessor,
     SuperInterfaceDeclarationProcessor
 } from "./processors/interface-declaration.processor";
-import {TypeAliasDeclarationProcessor} from "./processors/type-alias-declaration.processor";
+import { TypeAliasDeclarationProcessor } from "./processors/type-alias-declaration.processor";
 import {
     ArrayValueProcessor,
     CallValueProcessor,
@@ -37,17 +38,17 @@ import {
     LiteralValueProcessor,
     MemberValueProcessor,
     ObjectValueProcessor,
-    ObjectValuePropertyProcessor,
+    ObjectValuePropertyProcessor
 } from "./processors/value.processor";
-import {VariableDeclarationProcessor, VariableDeclaratorProcessor} from "./processors/variable-declaration.processor";
-import {SimpleTraverser, Traverser} from "./traverser";
-import {ClassTraverser, StaticBlockTraverser} from "./traversers/class.traverser";
-import {DecoratorTraverser} from "./traversers/decorator.traverser";
-import {EnumDeclarationTraverser, EnumMemberTraverser} from "./traversers/enum.traverser";
+import { VariableDeclarationProcessor, VariableDeclaratorProcessor } from "./processors/variable-declaration.processor";
+import { SimpleTraverser, Traverser } from "./traverser";
+import { ClassTraverser, StaticBlockTraverser } from "./traversers/class.traverser";
+import { DecoratorTraverser } from "./traversers/decorator.traverser";
+import { EnumDeclarationTraverser, EnumMemberTraverser } from "./traversers/enum.traverser";
 import {
     ExportAssignmentTraverser,
     ExportDefaultDeclarationTraverser,
-    ExportNamedDeclarationTraverser,
+    ExportNamedDeclarationTraverser
 } from "./traversers/export-declaration.traverser";
 import {
     ArrayExpressionTraverser,
@@ -75,13 +76,16 @@ import {
     TypeAssertionTraverser,
     UnaryExpressionTraverser,
     UpdateExpressionTraverser,
-    YieldExpressionTraverser,
+    YieldExpressionTraverser
 } from "./traversers/expression.traverser";
-import {FunctionTraverser} from "./traversers/function.traverser";
-import {InterfaceDeclarationTraverser, InterfaceHeritageTraverser} from "./traversers/interface-declaration.traverser";
-import {MethodTraverser, ParameterPropertyTraverser} from "./traversers/method.traverser";
-import {ProgramTraverser} from "./traversers/program.traverser";
-import {PropertyTraverser} from "./traversers/property.traverser";
+import { FunctionTraverser } from "./traversers/function.traverser";
+import {
+    InterfaceDeclarationTraverser,
+    InterfaceHeritageTraverser
+} from "./traversers/interface-declaration.traverser";
+import { MethodTraverser, ParameterPropertyTraverser } from "./traversers/method.traverser";
+import { ProgramTraverser } from "./traversers/program.traverser";
+import { AccessorPropertyTraverser, PropertyTraverser } from "./traversers/property.traverser";
 import {
     BlockStatementTraverser,
     DoWhileStatementTraverser,
@@ -97,24 +101,25 @@ import {
     ThrowStatementTraverser,
     TryStatementTraverser,
     WhileStatementTraverser,
-    WithStatementTraverser,
+    WithStatementTraverser
 } from "./traversers/statement.traverser";
-import {TypeAliasDeclarationTraverser} from "./traversers/type-alias-declaration.traverser";
+import { TypeAliasDeclarationTraverser } from "./traversers/type-alias-declaration.traverser";
 import {
     TypeParameterDeclarationTraverser,
     TypeParameterInstantiationTraverser,
-    TypeParameterTraverser,
+    TypeParameterTraverser
 } from "./traversers/type-parameter.traverser";
-import {VariableDeclarationTraverser, VariableDeclaratorTraverser} from "./traversers/variable-declaration.traverser";
-import {ModuleProcessor} from "./processors/typescript-module.processor";
-import {PostProcessor} from "./post-processor";
-import {ExternalDependenciesPostProcessor} from "./post-processors/external-dependencies.post-processor";
+import { VariableDeclarationTraverser, VariableDeclaratorTraverser } from "./traversers/variable-declaration.traverser";
+import { ModuleProcessor } from "./processors/typescript-module.processor";
+import { PostProcessor } from "./post-processor";
+import { ExternalDependenciesPostProcessor } from "./post-processors/external-dependencies.post-processor";
 
 /**
  * Central index of all traversers natively supported by the LCE.
  * Maps AST node types to their corresponding traverser.
  */
 export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
+    [AST_NODE_TYPES.AccessorProperty, new AccessorPropertyTraverser()],
     [AST_NODE_TYPES.ArrayExpression, new ArrayExpressionTraverser()],
     [AST_NODE_TYPES.ArrayPattern, new ArrayPatternTraverser()],
     [AST_NODE_TYPES.ArrowFunctionExpression, new ArrowFunctionExpressionTraverser()],
@@ -163,6 +168,7 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
     [AST_NODE_TYPES.TemplateLiteral, new TemplateLiteralTraverser()],
     [AST_NODE_TYPES.ThrowStatement, new ThrowStatementTraverser()],
     [AST_NODE_TYPES.TryStatement, new TryStatementTraverser()],
+    [AST_NODE_TYPES.TSAbstractAccessorProperty, new AccessorPropertyTraverser()],
     [AST_NODE_TYPES.TSAbstractMethodDefinition, new MethodTraverser()],
     [AST_NODE_TYPES.TSAbstractPropertyDefinition, new PropertyTraverser()],
     [AST_NODE_TYPES.TSAsExpression, new AsExpressionTraverser()],
@@ -191,11 +197,16 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
     [AST_NODE_TYPES.YieldExpression, new YieldExpressionTraverser()],
 ]);
 
+export const POST_PROCESSORS: PostProcessor[] = [
+    new ExternalDependenciesPostProcessor()
+];
+
 /**
  * Central index of all processors provided natively by the LCE.
  */
 export const PROCESSORS: Processor[] = [
     new ArrayValueProcessor(),
+    new AutoAccessorDeclarationProcessor(),
     new CallValueProcessor(),
     new ClassDeclarationProcessor(),
     new ClassValueProcessor(),
@@ -229,8 +240,4 @@ export const PROCESSORS: Processor[] = [
     new TypeAliasDeclarationProcessor(),
     new VariableDeclarationProcessor(),
     new VariableDeclaratorProcessor(),
-];
-
-export const POST_PROCESSORS: PostProcessor[] = [
-    new ExternalDependenciesPostProcessor()
 ];

@@ -1,7 +1,7 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, singleEntryConceptMap} from "../concept";
-import {LCEType} from "../concepts/type.concept";
+import { ConceptMap, singleEntryConceptMap } from "../concept";
+import { LCEType } from "../concepts/type.concept";
 import {
     LCEValue,
     LCEValueArray,
@@ -16,20 +16,20 @@ import {
     LCEValueObject,
     LCEValueObjectProperty,
 } from "../concepts/value.concept";
-import {ProcessingContext} from "../context";
-import {ExecutionCondition} from "../execution-condition";
-import {Processor} from "../processor";
-import {getAndDeleteAllValueChildConcepts, getAndDeleteChildConcepts, getParentPropName} from "../processor.utils";
+import { ProcessingContext } from "../context";
+import { ExecutionCondition } from "../execution-condition";
+import { Processor } from "../processor";
+import { getAndDeleteAllValueChildConcepts, getAndDeleteChildConcepts, getParentPropName } from "../processor.utils";
 import {
     ArrayExpressionTraverser,
     CallExpressionTraverser,
     MemberExpressionTraverser,
     ObjectExpressionTraverser,
 } from "../traversers/expression.traverser";
-import {PropertyTraverser} from "../traversers/property.traverser";
-import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
-import {parseESNodeType} from "./type.utils";
-import {VariableDeclaratorProcessor} from "./variable-declaration.processor";
+import { PropertyTraverser } from "../traversers/property.traverser";
+import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
+import { parseESNodeType } from "./type.utils";
+import { VariableDeclaratorProcessor } from "./variable-declaration.processor";
 
 export const VALUE_PROCESSING_FLAG = "value-processing";
 
@@ -222,7 +222,7 @@ export class CallValueProcessor extends Processor {
                     parseESNodeType({node, localContexts, globalContext}, node),
                     callee[0],
                     args,
-                    node.typeParameters?.params.map((param) => parseESNodeType({
+                    node.typeArguments?.params.map((param) => parseESNodeType({
                         node: param,
                         localContexts,
                         globalContext

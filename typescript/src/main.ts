@@ -7,5 +7,5 @@ import { processAndOutputResult } from "./core/extractor";
 if(process.argv[2]) {
     processAndOutputResult(process.argv[2]);
 } else {
-    console.log('Please provide project path (e.g. "jqa-ts-lce /path/to/my/project")');
+    processAndOutputResult(".");
 }

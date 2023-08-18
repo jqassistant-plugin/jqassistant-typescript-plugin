@@ -80,10 +80,10 @@ class cGetterSetter {
     private set y(y: number) {
         this.y = y;
     }
+}
 
-    private get y(): number {
-        return this.y;
-    }
+class cAutoAccessor {
+    accessor a: number = 4;
 }
 
 class cParameterProperties {
@@ -101,6 +101,7 @@ class cStatic {
 abstract class cAbstract {
     abstract abstractA: number;
     abstract abstractSum(x: number, y: number): number;
+    abstract accessor abstractAcc: string;
 
     nonAbstractA = 0;
     nonAbstractSum(x: number, y: number): number {

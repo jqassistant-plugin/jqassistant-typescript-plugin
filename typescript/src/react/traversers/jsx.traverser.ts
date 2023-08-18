@@ -1,9 +1,9 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
-import {ConceptMap, mergeConceptMaps} from "../../core/concept";
-import {ProcessingContext} from "../../core/context";
-import {ProcessorMap} from "../../core/processor";
-import {Traverser} from "../../core/traverser";
-import {runTraverserForNode, runTraverserForNodes} from "../../core/traverser.utils";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
+import { ConceptMap, mergeConceptMaps } from "../../core/concept";
+import { ProcessingContext } from "../../core/context";
+import { ProcessorMap } from "../../core/processor";
+import { Traverser } from "../../core/traverser";
+import { runTraverserForNode, runTraverserForNodes } from "../../core/traverser.utils";
 
 export class JSXElementTraverser extends Traverser {
     public static readonly CHILDREN_PROP = "children";
@@ -29,9 +29,9 @@ export class JSXOpeningElementTraverser extends Traverser {
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.JSXOpeningElement) {
-            if (node.typeParameters) {
+            if (node.typeArguments) {
                 runTraverserForNodes(
-                    node.typeParameters?.params,
+                    node.typeArguments?.params,
                     { parentPropName: JSXOpeningElementTraverser.TYPE_PARAMETERS_PROP },
                     processingContext,
                     processors,

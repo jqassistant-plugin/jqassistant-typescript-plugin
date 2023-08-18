@@ -1,7 +1,7 @@
-import {ParserServices} from "@typescript-eslint/parser";
-import {Node} from "@typescript-eslint/types/dist/generated/ast-spec";
-import {AST} from "@typescript-eslint/typescript-estree";
-import {TypeChecker} from "typescript";
+import { ParserServicesWithTypeInformation } from "@typescript-eslint/parser";
+import { Node } from "@typescript-eslint/types/dist/generated/ast-spec";
+import { AST } from "@typescript-eslint/typescript-estree";
+import { TypeChecker } from "typescript";
 
 /**
  * describes basic data structures provided to all Processors on a file level
@@ -17,7 +17,7 @@ export class GlobalContext {
             tsconfigRootDir: string;
             range: true;
         }>,
-        public services: ParserServices,
+        public services: ParserServicesWithTypeInformation,
         public typeChecker: TypeChecker
     ) {
     }
