@@ -25,8 +25,8 @@ export class Utils {
         //     ignoredDirs.push("node_modules");
         // }
 
-        if (tsconfig.include) tsconfig.include = tsconfig.include.map((dirPattern) => path.join(projectPath, dirPattern));
-        if (tsconfig.exclude) tsconfig.exclude = tsconfig.exclude.map((dirPattern) => path.join(projectPath, dirPattern));
+        if (tsconfig.include) tsconfig.include = tsconfig.include.map((dirPattern) => path.join(projectPath, dirPattern).replace(/\\/g, "/"));
+        if (tsconfig.exclude) tsconfig.exclude = tsconfig.exclude.map((dirPattern) => path.join(projectPath, dirPattern).replace(/\\/g, "/"));
 
         const allFiles = Utils.getAllFiles(projectPath, [], ignoredDirs);
         return allFiles.filter((file) => {
