@@ -1,12 +1,13 @@
 package org.jqassistant.plugin.typescript.impl.mapper;
 
+import java.util.List;
+
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.plugin.common.api.mapper.DescriptorMapper;
+
 import org.jqassistant.plugin.typescript.api.model.EnumMemberDescriptor;
-import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.EnumMember;
 import org.mapstruct.*;
-
-import java.util.List;
 
 @Mapper(uses = {ValueMapper.class})
 public interface EnumMemberMapper extends DescriptorMapper<EnumMember, EnumMemberDescriptor> {

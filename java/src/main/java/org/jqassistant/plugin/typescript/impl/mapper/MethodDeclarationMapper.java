@@ -1,15 +1,17 @@
 package org.jqassistant.plugin.typescript.impl.mapper;
 
+import java.util.List;
+
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.plugin.common.api.mapper.DescriptorMapper;
+
 import org.jqassistant.plugin.typescript.api.model.MethodDeclarationDescriptor;
-import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.MethodDeclaration;
 import org.mapstruct.*;
 
-import java.util.List;
-
 @Mapper(uses = {TypeMapper.class, ParameterDeclarationMapper.class, DecoratorMapper.class})
-public interface MethodDeclarationMapper extends DescriptorMapper<MethodDeclaration, MethodDeclarationDescriptor> {
+public interface MethodDeclarationMapper extends
+        DescriptorMapper<MethodDeclaration, MethodDeclarationDescriptor> {
 
     @BeforeMapping
     default void before(MethodDeclaration value, @MappingTarget MethodDeclarationDescriptor target, @Context Scanner scanner) {

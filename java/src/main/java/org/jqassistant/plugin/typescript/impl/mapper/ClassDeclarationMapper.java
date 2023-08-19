@@ -1,17 +1,19 @@
 package org.jqassistant.plugin.typescript.impl.mapper;
 
+import java.util.List;
+
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.plugin.common.api.mapper.DescriptorMapper;
+
 import org.jqassistant.plugin.typescript.api.model.ClassDeclarationDescriptor;
-import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.ClassDeclaration;
 import org.mapstruct.*;
-
-import java.util.List;
 
 import static org.mapstruct.factory.Mappers.getMapper;
 
 @Mapper(uses = {TypeMapper.class, PropertyDeclarationMapper.class, ConstructorDeclarationMapper.class, MethodDeclarationMapper.class, GetterDeclarationMapper.class, SetterDeclarationMapper.class, DecoratorMapper.class})
-public interface ClassDeclarationMapper extends DescriptorMapper<ClassDeclaration, ClassDeclarationDescriptor> {
+public interface ClassDeclarationMapper extends
+        DescriptorMapper<ClassDeclaration, ClassDeclarationDescriptor> {
 
     ClassDeclarationMapper INSTANCE = getMapper(ClassDeclarationMapper.class);
 

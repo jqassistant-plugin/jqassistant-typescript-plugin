@@ -1,17 +1,19 @@
 package org.jqassistant.plugin.typescript.impl.mapper;
 
+import java.util.List;
+
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.plugin.common.api.mapper.DescriptorMapper;
+
 import org.jqassistant.plugin.typescript.api.model.VariableDeclarationDescriptor;
-import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.VariableDeclaration;
 import org.mapstruct.*;
-
-import java.util.List;
 
 import static org.mapstruct.factory.Mappers.getMapper;
 
 @Mapper(uses = {TypeMapper.class, ValueMapper.class})
-public interface VariableDeclarationMapper extends DescriptorMapper<VariableDeclaration, VariableDeclarationDescriptor> {
+public interface VariableDeclarationMapper extends
+        DescriptorMapper<VariableDeclaration, VariableDeclarationDescriptor> {
 
     VariableDeclarationMapper INSTANCE = getMapper(VariableDeclarationMapper.class);
 

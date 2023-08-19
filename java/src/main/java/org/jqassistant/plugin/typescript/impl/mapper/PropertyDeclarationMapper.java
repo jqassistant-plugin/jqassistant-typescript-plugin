@@ -1,15 +1,17 @@
 package org.jqassistant.plugin.typescript.impl.mapper;
 
+import java.util.List;
+
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.plugin.common.api.mapper.DescriptorMapper;
+
 import org.jqassistant.plugin.typescript.api.model.PropertyDeclarationDescriptor;
-import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.PropertyDeclaration;
 import org.mapstruct.*;
 
-import java.util.List;
-
 @Mapper(uses = {DecoratorMapper.class, TypeMapper.class})
-public interface PropertyDeclarationMapper extends DescriptorMapper<PropertyDeclaration, PropertyDeclarationDescriptor> {
+public interface PropertyDeclarationMapper extends
+        DescriptorMapper<PropertyDeclaration, PropertyDeclarationDescriptor> {
 
     @Override
     @Mapping(source = "coordinates.startLine", target = "startLine")

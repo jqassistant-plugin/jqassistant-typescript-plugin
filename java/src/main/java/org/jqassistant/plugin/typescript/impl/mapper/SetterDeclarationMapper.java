@@ -1,15 +1,17 @@
 package org.jqassistant.plugin.typescript.impl.mapper;
 
+import java.util.List;
+
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
+import com.buschmais.jqassistant.plugin.common.api.mapper.DescriptorMapper;
+
 import org.jqassistant.plugin.typescript.api.model.SetterDeclarationDescriptor;
-import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.SetterDeclaration;
 import org.mapstruct.*;
 
-import java.util.List;
-
 @Mapper(uses = {TypeMapper.class, ParameterDeclarationMapper.class, DecoratorMapper.class})
-public interface SetterDeclarationMapper extends DescriptorMapper<SetterDeclaration, SetterDeclarationDescriptor> {
+public interface SetterDeclarationMapper extends
+        DescriptorMapper<SetterDeclaration, SetterDeclarationDescriptor> {
 
     @Override
     @Mapping(source = "coordinates.startLine", target = "startLine")

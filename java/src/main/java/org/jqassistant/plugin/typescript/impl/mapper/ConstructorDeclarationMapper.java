@@ -1,18 +1,20 @@
 package org.jqassistant.plugin.typescript.impl.mapper;
 
+import java.util.List;
+
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerContext;
+import com.buschmais.jqassistant.plugin.common.api.mapper.DescriptorMapper;
+
 import org.jqassistant.plugin.typescript.api.model.ConstructorDeclarationDescriptor;
-import org.jqassistant.plugin.typescript.impl.mapper.base.DescriptorMapper;
 import org.jqassistant.plugin.typescript.impl.model.ConstructorDeclaration;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import java.util.List;
-
 @Mapper(uses = {ParameterDeclarationMapper.class})
-public interface ConstructorDeclarationMapper extends DescriptorMapper<ConstructorDeclaration, ConstructorDeclarationDescriptor> {
+public interface ConstructorDeclarationMapper extends
+        DescriptorMapper<ConstructorDeclaration, ConstructorDeclarationDescriptor> {
 
     @Override
     default ConstructorDeclarationDescriptor toDescriptor(ConstructorDeclaration value, @Context Scanner scanner) {
