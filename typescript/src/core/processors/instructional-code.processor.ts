@@ -1,31 +1,27 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
-import {Identifier, Literal} from "@typescript-eslint/types/dist/generated/ast-spec";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
+import { Identifier, Literal } from "@typescript-eslint/types/dist/generated/ast-spec";
 
-import {ConceptMap} from "../concept";
-import {LCETypeDeclared} from "../concepts/type.concept";
-import {ProcessingContext} from "../context";
-import {ExecutionCondition} from "../execution-condition";
-import {Processor} from "../processor";
-import {getParentPropName} from "../processor.utils";
-import {ClassTraverser} from "../traversers/class.traverser";
-import {
-    ArrowFunctionExpressionTraverser,
-    MemberExpressionTraverser,
-    TaggedTemplateExpressionTraverser
-} from "../traversers/expression.traverser";
-import {FunctionTraverser} from "../traversers/function.traverser";
-import {MethodTraverser} from "../traversers/method.traverser";
-import {PropertyTraverser} from "../traversers/property.traverser";
-import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
-import {parseESNodeType} from "./type.utils";
+import { ConceptMap } from "../concept";
+import { LCETypeDeclared } from "../concepts/type.concept";
+import { ProcessingContext } from "../context";
+import { ExecutionCondition } from "../execution-condition";
+import { Processor } from "../processor";
+import { getParentPropName } from "../processor.utils";
+import { ClassTraverser } from "../traversers/class.traverser";
+import { ArrowFunctionExpressionTraverser, MemberExpressionTraverser, TaggedTemplateExpressionTraverser } from "../traversers/expression.traverser";
+import { FunctionTraverser } from "../traversers/function.traverser";
+import { MethodTraverser } from "../traversers/method.traverser";
+import { PropertyTraverser } from "../traversers/property.traverser";
+import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
+import { parseESNodeType } from "./type.utils";
 
 export class ScopeProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.BlockStatement, AST_NODE_TYPES.ForStatement, AST_NODE_TYPES.ForInStatement, AST_NODE_TYPES.ForOfStatement],
-        () => true
+        () => true,
     );
 
-    public override preChildrenProcessing({localContexts}: ProcessingContext): void {
+    public override preChildrenProcessing({ localContexts }: ProcessingContext): void {
         DependencyResolutionProcessor.addScopeContext(localContexts);
     }
 }
@@ -93,7 +89,8 @@ export class IdentifierDependencyProcessor extends Processor {
             ) &&
             node.parent?.type !== AST_NODE_TYPES.ArrayPattern &&
             node.parent?.type !== AST_NODE_TYPES.ObjectPattern &&
-            node.parent?.type !== AST_NODE_TYPES.ImportExpression
+            node.parent?.type !== AST_NODE_TYPES.ImportExpression &&
+            node.parent?.type !== AST_NODE_TYPES.TSInterfaceHeritage
     );
 
     override postChildrenProcessing({node, localContexts}: ProcessingContext): ConceptMap {

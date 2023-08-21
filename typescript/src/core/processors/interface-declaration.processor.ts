@@ -1,7 +1,6 @@
 import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
 import { ConceptMap, mergeConceptMaps, singleEntryConceptMap } from "../concept";
-import { LCEDependency } from "../concepts/dependency.concept";
 import { LCEInterfaceDeclaration } from "../concepts/interface-declaration.concept";
 import { LCEMethodDeclaration } from "../concepts/method-declaration.concept";
 import { LCEPropertyDeclaration } from "../concepts/property-declaration.concept";
@@ -10,8 +9,7 @@ import { ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getAndDeleteChildConcepts, getParentPropName } from "../processor.utils";
-import { ClassTraverser } from "../traversers/class.traverser";
-import { InterfaceDeclarationTraverser } from "../traversers/interface-declaration.traverser";
+import { InterfaceDeclarationTraverser, InterfaceHeritageTraverser } from "../traversers/interface-declaration.traverser";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
 import { parseClassLikeBaseType, parseClassLikeTypeParameters } from "./type.utils";
 import { CodeCoordinateUtils } from "./code-coordinate.utils";
@@ -86,7 +84,7 @@ export class SuperInterfaceDeclarationProcessor extends Processor {
         ({node, localContexts}) =>
             !!node.parent &&
             node.parent.type === AST_NODE_TYPES.TSInterfaceHeritage &&
-            getParentPropName(localContexts) === ClassTraverser.EXTENDS_PROP
+            getParentPropName(localContexts) === InterfaceHeritageTraverser.EXPRESSION_PROP
     );
 
     public override postChildrenProcessing({node, localContexts, globalContext}: ProcessingContext): ConceptMap {
@@ -97,15 +95,7 @@ export class SuperInterfaceDeclarationProcessor extends Processor {
                 globalContext
             }, node, node.parent.typeArguments?.params);
             if (superType) {
-                const typeConcept = singleEntryConceptMap(LCETypeDeclared.conceptId, superType);
-                const dependencyConcept = new LCEDependency(
-                    superType.fqn,
-                    "declaration",
-                    DependencyResolutionProcessor.constructScopeFQN(localContexts),
-                    "declaration",
-                    1
-                );
-                return mergeConceptMaps(singleEntryConceptMap(LCEDependency.conceptId, dependencyConcept), typeConcept);
+                return singleEntryConceptMap(LCETypeDeclared.conceptId, superType);
             }
         }
         return new Map();

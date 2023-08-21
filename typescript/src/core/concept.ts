@@ -13,7 +13,7 @@ export abstract class LCEConcept {
  * Base class for all language concepts that can be referred to by a name.
  */
 export abstract class LCENamedConcept extends LCEConcept {
-    constructor(public fqn: string) {
+    protected constructor(public fqn: string) {
         super();
     }
 }
@@ -75,7 +75,6 @@ export function unifyConceptMap(conceptMap: ConceptMap, commonKey: string): Conc
         } else {
             result.set(commonKey, vMap);
             innerMap = vMap;
-            continue;
         }
     }
     return result;
