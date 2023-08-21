@@ -2,17 +2,16 @@ package org.jqassistant.plugin.typescript.impl.mapper;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.plugin.common.api.mapper.DescriptorMapper;
-import org.jqassistant.plugin.typescript.api.model.SetterDeclarationDescriptor;
-import org.jqassistant.plugin.typescript.impl.model.SetterDeclaration;
+import org.jqassistant.plugin.typescript.api.model.AutoAccessorDeclarationDescriptor;
+import org.jqassistant.plugin.typescript.impl.model.AutoAccessorDeclaration;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(uses = {TypeMapper.class, ParameterDeclarationMapper.class, DecoratorMapper.class})
-public interface SetterDeclarationMapper extends
-        DescriptorMapper<SetterDeclaration, SetterDeclarationDescriptor> {
+@Mapper(uses = {TypeMapper.class, DecoratorMapper.class})
+public interface AutoAccessorDeclarationMapper extends DescriptorMapper<AutoAccessorDeclaration, AutoAccessorDeclarationDescriptor> {
 
     @Override
     @Mapping(source = "coordinates.startLine", target = "startLine")
@@ -25,8 +24,7 @@ public interface SetterDeclarationMapper extends
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
     @Mapping(target = "exporters", ignore = true)
-    SetterDeclarationDescriptor toDescriptor(SetterDeclaration value, @Context Scanner scanner);
+    AutoAccessorDeclarationDescriptor toDescriptor(AutoAccessorDeclaration value, @Context  Scanner scanner);
 
-    List<SetterDeclarationDescriptor> mapList(List<SetterDeclaration> value, @Context Scanner scanner);
-
+    List<AutoAccessorDeclarationDescriptor> mapList(List<AutoAccessorDeclaration> value, @Context Scanner scanner);
 }

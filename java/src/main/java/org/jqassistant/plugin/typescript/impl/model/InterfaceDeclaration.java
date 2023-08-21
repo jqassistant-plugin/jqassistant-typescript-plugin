@@ -22,9 +22,7 @@ public class InterfaceDeclaration extends NamedConcept {
 
     private List<MethodDeclaration> methods = new ArrayList<>();
 
-    private List<GetterDeclaration> getters = new ArrayList<>();
-
-    private List<SetterDeclaration> setters = new ArrayList<>();
+    private List<AccessorProperty> accessorProperties = new ArrayList<>();
 
     private CodeCoordinates coordinates;
 

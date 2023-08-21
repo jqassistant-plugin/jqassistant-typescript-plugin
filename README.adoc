@@ -39,7 +39,8 @@ The `DEPENDS_ON` relation can originate from:
 * `:Module`
 * `:Class`
 * `:Property`
-* `:Method` (including all subtypes)
+* `:Method`
+* `:AccessorProperty`
 * `:Interface`
 * `:TypeAlias`
 * `:Enum`
@@ -53,7 +54,8 @@ and can target one or more of the following nodes:
 * `:ExternalDeclaration`
 * `:Class`
 * `:Property`
-* `:Method` (including all subtypes)
+* `:Method`
+* `:AccessorProperty`
 * `:Interface`
 * `:TypeAlias`
 * `:Enum`

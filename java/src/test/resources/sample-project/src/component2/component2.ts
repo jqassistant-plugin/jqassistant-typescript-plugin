@@ -20,6 +20,8 @@ class Component2 {
   myProp8: [string, number] = ['a', 1];
   #mySuperPrivateProp: number = 10;
 
+  accessor someAutoAccessor = "xyz";
+
   constructor(
     protected readonly myProtectedReadonlyProp: number,
     private model?: Model2

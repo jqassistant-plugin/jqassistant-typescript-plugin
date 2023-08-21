@@ -6,10 +6,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 import java.util.List;
 
 @Label("Getter")
-public interface GetterDeclarationDescriptor extends TypeScriptDescriptor, NamedConceptDescriptor, CodeCoordinateDescriptor {
-
-    String getName();
-    void setName(String name);
+public interface GetterDeclarationDescriptor extends TypeScriptDescriptor, CodeCoordinateDescriptor {
 
     String getVisibility();
     void setVisibility(String visibility);

@@ -4,6 +4,8 @@
                     name="jQAssistant Typescript Plugin" id="jqassistant.plugin.typescript">
     <description>Provides a scanner for Typescript.</description>
     <model>
+        <class>org.jqassistant.plugin.typescript.api.model.AccessorPropertyDescriptor</class>
+        <class>org.jqassistant.plugin.typescript.api.model.AutoAccessorDeclarationDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.ClassDeclarationDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.ConstructorDeclarationDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.DecoratorDescriptor</class>

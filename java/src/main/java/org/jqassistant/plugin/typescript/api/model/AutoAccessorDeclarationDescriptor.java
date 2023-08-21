@@ -5,8 +5,8 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 import java.util.List;
 
-@Label("Setter")
-public interface SetterDeclarationDescriptor extends TypeScriptDescriptor, CodeCoordinateDescriptor {
+@Label("AutoAccessor")
+public interface AutoAccessorDeclarationDescriptor extends TypeScriptDescriptor, CodeCoordinateDescriptor {
 
     String getVisibility();
     void setVisibility(String visibility);
@@ -20,8 +20,9 @@ public interface SetterDeclarationDescriptor extends TypeScriptDescriptor, CodeC
     Boolean getOverride();
     void setOverride(Boolean override);
 
-    @Relation("HAS")
-    List<ParameterDeclarationDescriptor> getParameters();
+    @Relation("OF_TYPE")
+    TypeDescriptor getType();
+    void setType(TypeDescriptor type);
 
     @Relation("DECORATED_BY")
     List<DecoratorDescriptor> getDecorators();

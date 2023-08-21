@@ -35,10 +35,7 @@ public interface ClassDeclarationDescriptor extends TypeScriptDescriptor, NamedC
     List<MethodDeclarationDescriptor> getMethods();
 
     @Relation("DECLARES")
-    List<GetterDeclarationDescriptor> getGetters();
-
-    @Relation("DECLARES")
-    List<SetterDeclarationDescriptor> getSetters();
+    List<AccessorPropertyDescriptor> getAccessorProperties();
 
     @Relation("DECORATED_BY")
     List<DecoratorDescriptor> getDecorators();

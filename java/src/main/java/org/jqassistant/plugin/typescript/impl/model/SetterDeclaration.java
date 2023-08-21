@@ -11,9 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class SetterDeclaration extends NamedConcept {
-
-    private String methodName;
+public class SetterDeclaration {
 
     private List<ParameterDeclaration> parameters = new ArrayList<>();
 

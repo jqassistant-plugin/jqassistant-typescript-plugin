@@ -16,7 +16,7 @@ export class LCEInterfaceDeclaration extends LCENamedConcept {
         public extendsInterfaces: LCETypeDeclared[],
         public properties: LCEPropertyDeclaration[],
         public methods: LCEMethodDeclaration[],
-        public accessor: LCEAccessorProperty[],
+        public accessorProperties: LCEAccessorProperty[],
         public coordinates: CodeCoordinates,
     ) {
         super(fqn);

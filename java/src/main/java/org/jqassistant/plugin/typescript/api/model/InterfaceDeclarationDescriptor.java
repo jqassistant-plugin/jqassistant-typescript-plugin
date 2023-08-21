@@ -24,9 +24,6 @@ public interface InterfaceDeclarationDescriptor extends TypeScriptDescriptor, Na
     List<MethodDeclarationDescriptor> getMethods();
 
     @Relation("DECLARES")
-    List<GetterDeclarationDescriptor> getGetters();
-
-    @Relation("DECLARES")
-    List<SetterDeclarationDescriptor> getSetters();
+    List<AccessorPropertyDescriptor> getAccessorProperties();
 
 }

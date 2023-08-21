@@ -11,9 +11,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class GetterDeclaration {
+public class AutoAccessorDeclaration {
 
-    private Type returnType;
+    private Type type;
 
     private List<Decorator> decorators = new ArrayList<>();
 
