@@ -9,15 +9,15 @@ public interface AccessorPropertyDescriptor extends TypeScriptDescriptor, NamedC
     String getName();
     void setName(String name);
 
-    @Relation("DESCRIBED_BY")
+    @Relation("DESCRIBED_BY_GETTER")
     GetterDeclarationDescriptor getGetter();
     void setGetter(GetterDeclarationDescriptor getter);
 
-    @Relation("DESCRIBED_BY")
+    @Relation("DESCRIBED_BY_SETTER")
     SetterDeclarationDescriptor getSetter();
     void setSetter(SetterDeclarationDescriptor setter);
 
-    @Relation("DESCRIBED_BY")
+    @Relation("DESCRIBED_BY_AUTO_ACCESSOR")
     AutoAccessorDeclarationDescriptor getAutoAccessor();
     void setAutoAccessor(AutoAccessorDeclarationDescriptor autoAccessor);
 
