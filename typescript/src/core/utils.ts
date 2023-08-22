@@ -7,8 +7,6 @@ export class Utils {
     /**
      * Returns the paths for all project source files with a given ending inside a directory. (scans recursively)
      * @param projectPath path to the directory that shall be scanned
-     * @param endings whitelist of endings of files that should
-     * @param ignoredDirs directories that should not be scanned
      * @returns
      */
     static getProjectSourceFileList(projectPath: string): string[] {
@@ -33,10 +31,10 @@ export class Utils {
             let matched = false;
             let included = true;
             if (tsconfig.include) {
-                if (tsconfig.include.find((dirPattern) => match([file], dirPattern).length > 0 || file.startsWith(dirPattern))) {
+                if (tsconfig.include.find((dirPattern) => match([file], dirPattern).length > 0 || file.replace(/\\/g, "/").startsWith(dirPattern))) {
                     if (
                         tsconfig.exclude &&
-                        tsconfig.exclude.find((dirPattern) => match([file], dirPattern).length > 0 || file.startsWith(dirPattern))
+                        tsconfig.exclude.find((dirPattern) => match([file], dirPattern, {dot: true, }).length > 0 || file.replace(/\\/g, "/").startsWith(dirPattern))
                     ) {
                         included = false;
                     }
