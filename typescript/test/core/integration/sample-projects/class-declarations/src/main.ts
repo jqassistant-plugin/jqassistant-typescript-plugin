@@ -155,5 +155,3 @@ class cGeneric<T> {
         return p2;
     }
 }
-
-// TODO: Decorator samples

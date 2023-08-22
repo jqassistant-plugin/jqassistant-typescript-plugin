@@ -74,7 +74,7 @@ describe("variable declarations test", () => {
 
     test("var x;", async () => {
         const decl = varDecls.get('"./src/main.ts".vVarUninitialized');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vVarUninitialized");
@@ -88,7 +88,7 @@ describe("variable declarations test", () => {
 
     test("let x;", async () => {
         const decl = varDecls.get('"./src/main.ts".vLetUninitialized');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vLetUninitialized");
@@ -102,7 +102,7 @@ describe("variable declarations test", () => {
 
     test("var x = 0;", async () => {
         const decl = varDecls.get('"./src/main.ts".vVarInit');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vVarInit");
@@ -115,7 +115,7 @@ describe("variable declarations test", () => {
 
     test("let x = 0;", async () => {
         const decl = varDecls.get('"./src/main.ts".vLetInit');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vLetInit");
@@ -128,7 +128,7 @@ describe("variable declarations test", () => {
 
     test("const x = 0;", async () => {
         const decl = varDecls.get('"./src/main.ts".vConstInit');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vConstInit");
@@ -142,7 +142,7 @@ describe("variable declarations test", () => {
     test("let x1 = 1, x2 = 2;", async () => {
         for(let i = 1; i <= 2; i++) {
             const decl = varDecls.get('"./src/main.ts".vMulti' + i);
-            expect(decl).not.toBeNull();
+            expect(decl).toBeDefined();
             if(decl) {
                 expect(decl.coordinates.fileName).toBe(mainModule.path);
                 expect(decl.variableName).toBe("vMulti" + i);
@@ -156,7 +156,7 @@ describe("variable declarations test", () => {
 
     test("export let x = 5;", async () => {
         const decl = varDecls.get('"./src/main.ts".vExported');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vExported");
@@ -169,7 +169,7 @@ describe("variable declarations test", () => {
         const exportDeclConcept = result.get(LCEExportDeclaration.conceptId)?.find(exp =>
             (exp as LCEExportDeclaration).declFqn === '"./src/main.ts".vExported');
 
-        expect(exportDeclConcept).not.toBeNull();
+        expect(exportDeclConcept).toBeDefined();
         if(exportDeclConcept) {
             const exportDecl = exportDeclConcept as LCEExportDeclaration;
             expect(exportDecl.kind).toBe("value");
@@ -182,7 +182,7 @@ describe("variable declarations test", () => {
 
     test("let x = undefined;", async () => {
         const decl = varDecls.get('"./src/main.ts".vUndefined');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vUndefined");
@@ -190,7 +190,7 @@ describe("variable declarations test", () => {
 
             expectPrimitiveType(decl.type, "any");
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("null")
                 expect((decl.initValue as LCEValueNull).kind).toBe("undefined");
@@ -201,7 +201,7 @@ describe("variable declarations test", () => {
 
     test("let x = null;", async () => {
         const decl = varDecls.get('"./src/main.ts".vNull');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vNull");
@@ -209,7 +209,7 @@ describe("variable declarations test", () => {
 
             expectPrimitiveType(decl.type, "any");
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("null")
                 expect((decl.initValue as LCEValueNull).kind).toBe("null");
@@ -220,7 +220,7 @@ describe("variable declarations test", () => {
 
     test("let x = true;", async () => {
         const decl = varDecls.get('"./src/main.ts".vTrue');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vTrue");
@@ -233,7 +233,7 @@ describe("variable declarations test", () => {
 
     test("let x = false;", async () => {
         const decl = varDecls.get('"./src/main.ts".vFalse');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vFalse");
@@ -246,7 +246,7 @@ describe("variable declarations test", () => {
 
     test('let x = "1";', async () => {
         const decl = varDecls.get('"./src/main.ts".vString');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vString");
@@ -259,13 +259,13 @@ describe("variable declarations test", () => {
 
     test("let x = {...};", async () => {
         const decl = varDecls.get('"./src/main.ts".vObject');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vObject");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
+            expect(decl.type).toBeDefined();
             expect(decl.type.type).toBe("object");
 
             function checkObjectType(objectType: LCETypeObject) {
@@ -277,7 +277,7 @@ describe("variable declarations test", () => {
 
             checkObjectType(decl.type as LCETypeObject);
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("object")
 
@@ -286,7 +286,7 @@ describe("variable declarations test", () => {
                 expectLiteralValue(valueMembers.get("b"), "2", "string");
 
                 // TODO: change object value type behavior
-                // expect(decl.initValue.type).not.toBeNull();
+                // expect(decl.initValue.type).toBeDefined();
                 // expect(decl.initValue.type.type).toBe("object")
                 // checkObjectType(decl.initValue.type as LCETypeObject);
             }
@@ -295,7 +295,7 @@ describe("variable declarations test", () => {
 
     test("let x = [...];", async () => {
         const decl = varDecls.get('"./src/main.ts".vArray');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vArray");
@@ -307,7 +307,7 @@ describe("variable declarations test", () => {
             expect(typeArgs).toHaveLength(1);
             expectPrimitiveType(typeArgs[0], "number");
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("array")
                 const arrayValue = decl.initValue as LCEValueArray;
@@ -326,13 +326,13 @@ describe("variable declarations test", () => {
 
     test("let x: [number, string] = [...];", async () => {
         const decl = varDecls.get('"./src/main.ts".vTuple');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vTuple");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
+            expect(decl.type).toBeDefined();
             expect(decl.type.type).toBe("tuple");
             const tupleTypes = (decl.type as LCETypeTuple).types;
             expect(tupleTypes).toHaveLength(2);
@@ -340,7 +340,7 @@ describe("variable declarations test", () => {
             expectPrimitiveType(tupleTypes[1], "string");
 
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("array")
                 const arrayValue = decl.initValue as LCEValueArray;
@@ -348,7 +348,7 @@ describe("variable declarations test", () => {
                 expectLiteralValue(arrayValue.items[0], 1, "number");
                 expectLiteralValue(arrayValue.items[1], "2", "string");
 
-                expect(decl.initValue.type).not.toBeNull();
+                expect(decl.initValue.type).toBeDefined();
                 expect(decl.initValue.type.type).toBe("tuple");
                 const valueTupleTypes = (decl.initValue.type as LCETypeTuple).types;
                 expect(valueTupleTypes).toHaveLength(2);
@@ -360,13 +360,13 @@ describe("variable declarations test", () => {
 
     test("let x = function(...) {...}", async () => {
         const decl = varDecls.get('"./src/main.ts".vFunction');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vFunction");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
+            expect(decl.type).toBeDefined();
             expect(decl.type.type).toBe("function");
 
             function checkFunctionType(funcType: LCETypeFunction) {
@@ -380,7 +380,7 @@ describe("variable declarations test", () => {
             }
             checkFunctionType(decl.type as LCETypeFunction);
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("function")
                 expect((decl.initValue as LCEValueFunction).arrowFunction).toBe(false);
@@ -391,13 +391,13 @@ describe("variable declarations test", () => {
 
     test("let x = (...) => {...}", async () => {
         const decl = varDecls.get('"./src/main.ts".vArrowFunction');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vArrowFunction");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
+            expect(decl.type).toBeDefined();
             expect(decl.type.type).toBe("function");
 
             function checkFunctionType(funcType: LCETypeFunction) {
@@ -411,7 +411,7 @@ describe("variable declarations test", () => {
             }
             checkFunctionType(decl.type as LCETypeFunction);
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("function")
                 expect((decl.initValue as LCEValueFunction).arrowFunction).toBe(true);
@@ -422,22 +422,22 @@ describe("variable declarations test", () => {
 
     test("let x = class {...}", async () => {
         const decl = varDecls.get('"./src/main.ts".vClass');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vClass");
             expect(decl.kind).toBe("let");
 
             // TODO: variable with assigned class value: undefined variable type behavior
-            // expect(decl.type).not.toBeNull();
+            // expect(decl.type).toBeDefined();
             // expect(decl.type.type).toBe("primitive");
             // expect((decl.type as LCETypePrimitive).name).toBe("string");
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("class")
 
-                expect(decl.initValue.type).not.toBeNull();
+                expect(decl.initValue.type).toBeDefined();
                 expect(decl.initValue.type.type).toBe("not-identified");
                 expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe("class expression");
             }
@@ -446,13 +446,13 @@ describe("variable declarations test", () => {
 
     test("let x: number | string = 1;", async () => {
         const decl = varDecls.get('"./src/main.ts".vUnion');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vUnion");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
+            expect(decl.type).toBeDefined();
             expect(decl.type.type).toBe("union");
             const unionTypes = (decl.type as LCETypeUnion).types;
 
@@ -463,7 +463,7 @@ describe("variable declarations test", () => {
             expect((unionTypes[0] as LCETypePrimitive).name).toBe("number");
             expect((unionTypes[1] as LCETypePrimitive).name).toBe("string");
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expectLiteralValue(decl.initValue, 1, "number");
             }
@@ -472,13 +472,13 @@ describe("variable declarations test", () => {
 
     test("let x: {...} & {...} = {...};", async () => {
         const decl = varDecls.get('"./src/main.ts".vIntersection');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vIntersection");
             expect(decl.kind).toBe("let");
 
-            expect(decl.type).not.toBeNull();
+            expect(decl.type).toBeDefined();
             expect(decl.type.type).toBe("intersection");
             const intersecTypes = (decl.type as LCETypeIntersection).types;
 
@@ -492,7 +492,7 @@ describe("variable declarations test", () => {
             expectPrimitiveType((intersecTypes[0] as LCETypeObject).members.get("a"), "number");
             expectPrimitiveType((intersecTypes[1] as LCETypeObject).members.get("b"), "string");
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("object");
 
@@ -502,7 +502,7 @@ describe("variable declarations test", () => {
 
                 // TODO: decide how object value type should look like (currently: declared type)
                 // checkObjectType(decl.initValue.type as LCETypeObject);
-                // expect(decl.initValue.type).not.toBeNull();
+                // expect(decl.initValue.type).toBeDefined();
                 // expect(decl.initValue.type.type).toBe(???);
                 // expect((decl.initValue.type as LCEType???).x).toBe("x");
             }
@@ -511,7 +511,7 @@ describe("variable declarations test", () => {
 
     test("let x = 1 + 2;", async () => {
         const decl = varDecls.get('"./src/main.ts".vComplex');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vComplex");
@@ -519,12 +519,12 @@ describe("variable declarations test", () => {
 
             expectPrimitiveType(decl.type, "number");
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("complex")
                 expect((decl.initValue as LCEValueComplex).expression).toBe("1 + 2");
 
-                expect(decl.initValue.type).not.toBeNull();
+                expect(decl.initValue.type).toBeDefined();
                 expect(decl.initValue.type.type).toBe("not-identified");
                 expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe("complex");
             }
@@ -533,7 +533,7 @@ describe("variable declarations test", () => {
 
     test("let x = y;", async () => {
         const decl = varDecls.get('"./src/main.ts".vRefDirect');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vRefDirect");
@@ -541,7 +541,7 @@ describe("variable declarations test", () => {
 
             expectPrimitiveType(decl.type, "string");
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("declared")
                 expect((decl.initValue as LCEValueDeclared).fqn).toBe('"./src/main.ts".vString');
@@ -555,7 +555,7 @@ describe("variable declarations test", () => {
 
     test("let x = obj.a;", async () => {
         const decl = varDecls.get('"./src/main.ts".vRefMember');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vRefMember");
@@ -563,9 +563,9 @@ describe("variable declarations test", () => {
 
             expectPrimitiveType(decl.type, "number");
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
-                expect(decl.initValue.type).not.toBeNull();
+                expect(decl.initValue.type).toBeDefined();
                 expect(decl.initValue.type.type).toBe("primitive");
                 expect((decl.initValue.type as LCETypePrimitive).name).toBe("number");
 
@@ -592,7 +592,7 @@ describe("variable declarations test", () => {
 
     test("let x = fun(3);", async () => {
         const decl = varDecls.get('"./src/main.ts".vRefCall');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vRefCall");
@@ -600,18 +600,18 @@ describe("variable declarations test", () => {
 
             expectPrimitiveType(decl.type, "string");
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("call")
 
                 expectPrimitiveType(decl.initValue.type, "string");
 
                 const callee = (decl.initValue as LCEValueCall).callee;
-                expect(callee).not.toBeNull();
+                expect(callee).toBeDefined();
                 expect(callee.valueType).toBe("declared");
                 expect((callee as LCEValueDeclared).fqn).toBe('"./src/main.ts".vFunction')
 
-                expect(callee.type).not.toBeNull();
+                expect(callee.type).toBeDefined();
                 expect(callee.type.type).toBe("function");
                 const funcType = callee.type as LCETypeFunction;
                 expect(funcType.returnType.type).toBe("primitive");
@@ -623,7 +623,7 @@ describe("variable declarations test", () => {
                 expect(funcType.typeParameters).toHaveLength(0);
 
                 const args = (decl.initValue as LCEValueCall).args;
-                expect(args).not.toBeNull();
+                expect(args).toBeDefined();
                 expect(args).toHaveLength(1);
                 expect(args[0].valueType).toBe("literal");
                 expect((args[0] as LCEValueLiteral).value).toBe(3);
@@ -638,7 +638,7 @@ describe("variable declarations test", () => {
 
     test("let x: Interface = {...};", async () => {
         const decl = varDecls.get('"./src/main.ts".vInterfaceObj');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vInterfaceObj");
@@ -646,7 +646,7 @@ describe("variable declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/main.ts".CustomInterface');
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("object")
 
@@ -655,7 +655,7 @@ describe("variable declarations test", () => {
                 expectLiteralValue(valueMembers.get("y"), 2, "number");
 
                 // TODO: change object value type behavior
-                // expect(decl.initValue.type).not.toBeNull();
+                // expect(decl.initValue.type).toBeDefined();
                 // expect(decl.initValue.type.type).toBe("declared");
                 // expect((decl.initValue.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomInterface');
                 // expect((decl.initValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
@@ -668,7 +668,7 @@ describe("variable declarations test", () => {
 
     test("let x = new Class();", async () => {
         const decl = varDecls.get('"./src/main.ts".vClassObj');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vClassObj");
@@ -676,12 +676,12 @@ describe("variable declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/main.ts".CustomClass');
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("complex")
                 expect((decl.initValue as LCEValueComplex).expression).toBe("new CustomClass(1, 2)");
 
-                expect(decl.initValue.type).not.toBeNull();
+                expect(decl.initValue.type).toBeDefined();
                 expect(decl.initValue.type.type).toBe("not-identified");
                 expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe("complex");
             }
@@ -693,7 +693,7 @@ describe("variable declarations test", () => {
 
     test("let x: TypeAlias = {...};", async () => {
         const decl = varDecls.get('"./src/main.ts".vTypeObj');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vTypeObj");
@@ -701,7 +701,7 @@ describe("variable declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/main.ts".CustomType');
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("object")
 
@@ -710,7 +710,7 @@ describe("variable declarations test", () => {
                 expectLiteralValue(valueMembers.get("y"), 2, "number");
 
                 // TODO: change object value type behavior
-                // expect(decl.initValue.type).not.toBeNull();
+                // expect(decl.initValue.type).toBeDefined();
                 // expect(decl.initValue.type.type).toBe("declared");
                 // expect((decl.initValue.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomInterface');
                 // expect((decl.initValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
@@ -721,7 +721,7 @@ describe("variable declarations test", () => {
 
     test("let x: = Enum.MEMBER;", async () => {
         const decl = varDecls.get('"./src/main.ts".vEnum');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vEnum");
@@ -729,7 +729,7 @@ describe("variable declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/main.ts".CustomEnum');
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expectDeclaredType(decl.initValue.type, '"./src/main.ts".CustomEnum');
 
@@ -754,7 +754,7 @@ describe("variable declarations test", () => {
 
     test("let x: ExternalInterface = {...};", async () => {
         const decl = varDecls.get('"./src/main.ts".vExtInterfaceObj');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vExtInterfaceObj");
@@ -762,7 +762,7 @@ describe("variable declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomInterface');
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("object")
 
@@ -771,7 +771,7 @@ describe("variable declarations test", () => {
                 expectLiteralValue(valueMembers.get("y"), 2, "number");
 
                 // TODO: change object value type behavior
-                // expect(decl.initValue.type).not.toBeNull();
+                // expect(decl.initValue.type).toBeDefined();
                 // expect(decl.initValue.type.type).toBe("declared");
                 // expect((decl.initValue.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomInterface');
                 // expect((decl.initValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
@@ -784,7 +784,7 @@ describe("variable declarations test", () => {
 
     test("let x = new ExternalClass();", async () => {
         const decl = varDecls.get('"./src/main.ts".vExtClassObj');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vExtClassObj");
@@ -792,12 +792,12 @@ describe("variable declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomClass');
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("complex")
                 expect((decl.initValue as LCEValueComplex).expression).toBe("new ExternalCustomClass(1, 2)");
 
-                expect(decl.initValue.type).not.toBeNull();
+                expect(decl.initValue.type).toBeDefined();
                 expect(decl.initValue.type.type).toBe("not-identified");
                 expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe("complex");
             }
@@ -809,7 +809,7 @@ describe("variable declarations test", () => {
 
     test("let x: ExternalTypeAlias = {...};", async () => {
         const decl = varDecls.get('"./src/main.ts".vExtTypeObj');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vExtTypeObj");
@@ -817,7 +817,7 @@ describe("variable declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomType');
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("object")
 
@@ -826,7 +826,7 @@ describe("variable declarations test", () => {
                 expectLiteralValue(valueMembers.get("y"), 2, "number");
 
                 // TODO: change object value type behavior
-                // expect(decl.initValue.type).not.toBeNull();
+                // expect(decl.initValue.type).toBeDefined();
                 // expect(decl.initValue.type.type).toBe("declared");
                 // expect((decl.initValue.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomInterface');
                 // expect((decl.initValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
@@ -839,7 +839,7 @@ describe("variable declarations test", () => {
     // TODO: fix different handling of local and remote enum values and their types
     test.skip("let x: = ExternalEnum.MEMBER;", async () => {
         const decl = varDecls.get('"./src/main.ts".vExtEnum');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.variableName).toBe("vExtEnum");
@@ -847,7 +847,7 @@ describe("variable declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomEnum');
 
-            expect(decl.initValue).not.toBeNull();
+            expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expectDeclaredType(decl.initValue.type, '"./src/secondary.ts".ExternalCustomEnum');
 

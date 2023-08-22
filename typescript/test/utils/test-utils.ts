@@ -16,6 +16,7 @@ import { LCETypeParameterDeclaration } from "../../src/core/concepts/type-parame
 import { LCEPropertyDeclaration } from "../../src/core/concepts/property-declaration.concept";
 import { Visibility } from "../../src/core/concepts/visibility.concept";
 import { LCEAccessorProperty } from "../../src/core/concepts/accessor-declaration.concept";
+import { LCEModule } from "../../src/core/concepts/typescript-module.concept";
 
 export function getDependenciesFromResult(result: Map<string, LCEConcept[]>): Map<string, Map<string, LCEDependency>> {
     const dependencies: Map<string, Map<string, LCEDependency>> = new Map();
@@ -57,7 +58,7 @@ export function expectDependency(dependencies: Map<string, Map<string, LCEDepend
  * Expect the provided type to be not null and of the specified primitive variant.
  */
 export function expectPrimitiveType(type: LCEType | undefined, name: string) {
-    expect(type).not.toBeNull();
+    expect(type).toBeDefined();
     if(type) {
         expect(type.type).toBe("primitive");
         expect((type as LCETypePrimitive).name).toBe(name);
@@ -69,9 +70,9 @@ export function expectPrimitiveType(type: LCEType | undefined, name: string) {
  */
 export function expectOptionalPrimitiveType(type: LCEType | undefined, name: string) {
     const types = ["undefined", name].sort();
-    expect(type).not.toBeNull();
+    expect(type).toBeDefined();
     if(type) {
-        expect(type).not.toBeNull();
+        expect(type).toBeDefined();
         expect(type.type).toBe("union");
         const unionTypes = (type as LCETypeUnion).types;
 
@@ -88,7 +89,7 @@ export function expectOptionalPrimitiveType(type: LCEType | undefined, name: str
  * Expect the provided type to be not null and of the specified literal variant.
  */
 export function expectLiteralType(type: LCEType | undefined, value: any) {
-    expect(type).not.toBeNull();
+    expect(type).toBeDefined();
     if(type) {
         expect(type.type).toBe("literal");
         expect((type as LCETypeLiteral).value).toBe(value);
@@ -100,7 +101,7 @@ export function expectLiteralType(type: LCEType | undefined, value: any) {
  * Assumes by default that there are no specified type arguments. (can be turned off via `checkEmptyTypeArgs` parameter)
  */
 export function expectDeclaredType(type: LCEType | undefined, fqn: string, checkEmptyTypeArgs: boolean = true) {
-    expect(type).not.toBeNull();
+    expect(type).toBeDefined();
     if(type) {
         expect(type.type).toBe("declared");
         expect((type as LCETypeDeclared).fqn).toBe(fqn);
@@ -114,7 +115,7 @@ export function expectDeclaredType(type: LCEType | undefined, fqn: string, check
  * Expect the provided type to be not null and of the specified type parameter reference variant.
  */
 export function expectTypeParameterReference(type: LCEType | undefined, name: string) {
-    expect(type).not.toBeNull();
+    expect(type).toBeDefined();
     if(type) {
         expect(type.type).toBe("type-parameter");
         expect((type as LCETypeParameterReference).name).toBe(name);
@@ -125,7 +126,7 @@ export function expectTypeParameterReference(type: LCEType | undefined, name: st
  * Expect the provided value (and its associated type) to be not null and of the specified literal variant.
  */
 export function expectLiteralValue(value: LCEValue | undefined, literalValue: any, primitiveType: string){
-    expect(value).not.toBeNull();
+    expect(value).toBeDefined();
     if(value) {
         expect(value.valueType).toBe("literal");
         expect((value as LCEValueLiteral).value).toBe(literalValue);
@@ -146,9 +147,9 @@ export function expectFunctionParameter(params: LCETypeFunctionParameter[] | LCE
                                         name: string,
                                         optional: boolean,
                                         primitiveType: string | undefined = undefined) {
-    expect(params).not.toBeNull();
+    expect(params).toBeDefined();
     const param = params![index];
-    expect(param).not.toBeNull();
+    expect(param).toBeDefined();
     if(param) {
         expect(param.index).toBe(index);
         expect(param.name).toBe(name);
@@ -170,14 +171,14 @@ export function expectTypeParameterDeclaration(typeParams: LCETypeParameterDecla
                                                index: number,
                                                name: string,
                                                checkEmptyConstraint: boolean = true) {
-    expect(typeParams).not.toBeNull();
+    expect(typeParams).toBeDefined();
     const typeParam = typeParams![index];
-    expect(typeParam).not.toBeNull();
+    expect(typeParam).toBeDefined();
     if(typeParam) {
         expect(typeParam.index).toBe(index);
         expect(typeParam.name).toBe(name);
         if(checkEmptyConstraint) {
-            expect(typeParam.constraint).not.toBeNull();
+            expect(typeParam.constraint).toBeDefined();
             expect(typeParam.constraint.type).toBe("object");
             expect([...(typeParam.constraint as LCETypeObject).members.entries()]).toHaveLength(0);
         }
@@ -200,9 +201,9 @@ export function expectProperty(props: LCEPropertyDeclaration[] | undefined,
                                abstract: boolean | undefined,
                                isStatic: boolean | undefined,
                                primitiveType?: string): LCEPropertyDeclaration {
-    expect(props).not.toBeNull();
+    expect(props).toBeDefined();
     const propDecl = props!.find(p => p.fqn === fqn);
-    expect(propDecl).not.toBeNull();
+    expect(propDecl).toBeDefined();
     if(propDecl) {
         expect(propDecl.propertyName).toBe(name);
         expect(propDecl.optional).toBe(optional);
@@ -233,9 +234,9 @@ export function expectMethod(methods: LCEMethodDeclaration[] | undefined,
                                abstract: boolean | undefined,
                                isStatic: boolean | undefined,
                                primitiveReturnType?: string): LCEMethodDeclaration {
-    expect(methods).not.toBeNull();
+    expect(methods).toBeDefined();
     const methodDecl = methods!.find(p => p.fqn === fqn);
-    expect(methodDecl).not.toBeNull();
+    expect(methodDecl).toBeDefined();
     if(methodDecl) {
         expect(methodDecl.methodName).toBe(name);
         expect(methodDecl.visibility).toBe(visibility);
@@ -253,11 +254,23 @@ export function expectMethod(methods: LCEMethodDeclaration[] | undefined,
 export function expectAccessorProperty(accessorProperties: LCEAccessorProperty[] | undefined,
                                        fqn: string,
                                        name: string): LCEAccessorProperty {
-    expect(accessorProperties).not.toBeNull();
+    expect(accessorProperties).toBeDefined();
     const accProp = accessorProperties!.find(p => p.fqn === fqn);
-    expect(accProp).not.toBeNull();
+    expect(accProp).toBeDefined();
     if(accProp) {
         expect(accProp.accessorName).toBe(name);
     }
     return accProp!;
+}
+
+export function expectModule(modules: Map<string, LCEModule>, fqn: string, graphPath: string, present: boolean = true) {
+    const module = modules.get(fqn);
+    if(present) {
+        expect(module).toBeDefined();
+        if(module) {
+            expect(module.path).toBe(graphPath);
+        }
+    } else {
+        expect(module).toBeUndefined();
+    }
 }

@@ -14,5 +14,8 @@ target
 # TS
 **/node_modules/
 **/tmp/
-**/build/
+**/dist/
 **/jqassistant/store/
+
+# jQA
+**/.reports/jqa/

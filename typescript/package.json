@@ -2,7 +2,7 @@
   "name": "@jqassistant/ts-lce",
   "version": "0.4.0",
   "description": "Tool to extract language concepts from a TypeScript codebase and exports them to a JSON file.",
-  "main": "build/src/main.js",
+  "main": "dist/src/main.js",
   "author": "BUSCHMAIS GbR",
   "contributors": [
     "Sebastian Wendorf"
@@ -38,7 +38,7 @@
     "test": "jest"
   },
   "bin": {
-    "jqa-ts-lce": "build/src/main.js"
+    "jqa-ts-lce": "dist/src/main.js"
   },
   "keywords": [
     "cli",

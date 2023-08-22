@@ -17,4 +17,4 @@ Run the command:
 jqa-ts-lce <path-to-typescript-project>
 ```
 
-This will save the JSON report under `./build/jqa-ts-output.json` in the project directory.
+This will save the JSON report under `.reports/jqa/ts-output.json` in the project directory.

@@ -57,7 +57,7 @@ describe("class declarations test", () => {
 
     test("empty class", async () => {
         const decl = classDecls.get('"./src/main.ts".cEmpty');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cEmpty");
@@ -79,7 +79,7 @@ describe("class declarations test", () => {
 
     test("exported empty class", async () => {
         const decl = classDecls.get('"./src/main.ts".cExported');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cExported");
@@ -101,7 +101,7 @@ describe("class declarations test", () => {
                 .get(LCEExportDeclaration.conceptId)
                 ?.find((exp) => (exp as LCEExportDeclaration).declFqn === '"./src/main.ts".cExported');
 
-            expect(exportDeclConcept).not.toBeNull();
+            expect(exportDeclConcept).toBeDefined();
             if (exportDeclConcept) {
                 const exportDecl = exportDeclConcept as LCEExportDeclaration;
                 expect(exportDecl.kind).toBe("value");
@@ -115,7 +115,7 @@ describe("class declarations test", () => {
 
     test("class with properties", async () => {
         const decl = classDecls.get('"./src/main.ts".cProperties');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cProperties");
@@ -146,7 +146,7 @@ describe("class declarations test", () => {
 
     test("class with constructor", async () => {
         const decl = classDecls.get('"./src/main.ts".cConstructor');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cConstructor");
@@ -157,7 +157,7 @@ describe("class declarations test", () => {
             expect(decl.extendsClass).toBeUndefined();
             expect(decl.implementsInterfaces).toHaveLength(0);
 
-            expect(decl.constr).not.toBeNull();
+            expect(decl.constr).toBeDefined();
             if(decl.constr) {
                 expect(decl.constr.fqn).toBe('"./src/main.ts".cConstructor.constructor');
                 expect(decl.constr.parameters).toHaveLength(2);
@@ -178,7 +178,7 @@ describe("class declarations test", () => {
 
     test("class with methods", async () => {
         const decl = classDecls.get('"./src/main.ts".cMethods');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cMethods");
@@ -218,7 +218,7 @@ describe("class declarations test", () => {
 
     test("class with getters and setters", async () => {
         const decl = classDecls.get('"./src/main.ts".cGetterSetter');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cGetterSetter");
@@ -236,14 +236,14 @@ describe("class declarations test", () => {
             expect(decl.accessorProperties).toHaveLength(2);
             const accX = expectAccessorProperty(decl.accessorProperties, '"./src/main.ts".cGetterSetter.x', "x");
             expect(accX.autoAccessor).toBeUndefined();
-            expect(accX.getter).not.toBeNull();
+            expect(accX.getter).toBeDefined();
             expectPrimitiveType(accX.getter!.returnType, "number");
             expect(accX.getter!.visibility).toBe("public");
             expect(accX.getter!.decorators).toHaveLength(0);
             expect(accX.getter!.override).toBe(false);
             expect(accX.getter!.abstract).toBe(false);
             expect(accX.getter!.isStatic).toBe(false);
-            expect(accX.setter).not.toBeNull();
+            expect(accX.setter).toBeDefined();
             expectFunctionParameter(accX.setter!.parameters, 0, "x", false, "number");
             expect(accX.setter!.visibility).toBe("public");
             expect(accX.setter!.decorators).toHaveLength(0);
@@ -254,7 +254,7 @@ describe("class declarations test", () => {
             const accY = expectAccessorProperty(decl.accessorProperties, '"./src/main.ts".cGetterSetter.y', "y");
             expect(accY.getter).toBeUndefined();
             expect(accY.autoAccessor).toBeUndefined();
-            expect(accY.setter).not.toBeNull();
+            expect(accY.setter).toBeDefined();
             expectFunctionParameter(accY.setter!.parameters, 0, "y", false, "number");
             expect(accY.setter!.visibility).toBe("private");
             expect(accY.setter!.decorators).toHaveLength(0);
@@ -268,7 +268,7 @@ describe("class declarations test", () => {
 
     test("class with an auto accessor", async () => {
         const decl = classDecls.get('"./src/main.ts".cAutoAccessor');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cAutoAccessor");
@@ -287,7 +287,7 @@ describe("class declarations test", () => {
             const accA = expectAccessorProperty(decl.accessorProperties, '"./src/main.ts".cAutoAccessor.a', "a");
             expect(accA.getter).toBeUndefined();
             expect(accA.setter).toBeUndefined();
-            expect(accA.autoAccessor).not.toBeNull();
+            expect(accA.autoAccessor).toBeDefined();
             expectPrimitiveType(accA.autoAccessor!.type, "number");
             expect(accA.autoAccessor!.visibility).toBe("public");
             expect(accA.autoAccessor!.decorators).toHaveLength(0);
@@ -301,7 +301,7 @@ describe("class declarations test", () => {
 
     test("class with parameter properties", async () => {
         const decl = classDecls.get('"./src/main.ts".cParameterProperties');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cParameterProperties");
@@ -312,7 +312,7 @@ describe("class declarations test", () => {
             expect(decl.extendsClass).toBeUndefined();
             expect(decl.implementsInterfaces).toHaveLength(0);
 
-            expect(decl.constr).not.toBeNull();
+            expect(decl.constr).toBeDefined();
             if(decl.constr) {
                 expect(decl.constr.fqn).toBe('"./src/main.ts".cParameterProperties.constructor');
                 expect(decl.constr.parameters).toHaveLength(3);
@@ -336,7 +336,7 @@ describe("class declarations test", () => {
 
     test("class with static members", async () => {
         const decl = classDecls.get('"./src/main.ts".cStatic');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cStatic");
@@ -366,7 +366,7 @@ describe("class declarations test", () => {
 
     test("abstract class", async () => {
         const decl = classDecls.get('"./src/main.ts".cAbstract');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cAbstract");
@@ -398,7 +398,7 @@ describe("class declarations test", () => {
             const accA = expectAccessorProperty(decl.accessorProperties, '"./src/main.ts".cAbstract.abstractAcc', "abstractAcc");
             expect(accA.getter).toBeUndefined();
             expect(accA.setter).toBeUndefined();
-            expect(accA.autoAccessor).not.toBeNull();
+            expect(accA.autoAccessor).toBeDefined();
             expectPrimitiveType(accA.autoAccessor!.type, "string");
             expect(accA.autoAccessor!.visibility).toBe("public");
             expect(accA.autoAccessor!.decorators).toHaveLength(0);
@@ -412,7 +412,7 @@ describe("class declarations test", () => {
 
     test("class extending another class", async () => {
         const decl = classDecls.get('"./src/main.ts".cExtends');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cExtends");
@@ -437,7 +437,7 @@ describe("class declarations test", () => {
 
     test("class implementing an interface", async () => {
         const decl = classDecls.get('"./src/main.ts".cImplements');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cImplements");
@@ -464,7 +464,7 @@ describe("class declarations test", () => {
 
     test("class implementing multiple interfaces", async () => {
         const decl = classDecls.get('"./src/main.ts".cImplementsMulti');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cImplementsMulti");
@@ -481,9 +481,9 @@ describe("class declarations test", () => {
 
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(3);
-            expectProperty(decl.properties, '"./src/main.ts".cImplements.x', "x", false, "public", false, false, false, false, "number");
-            expectProperty(decl.properties, '"./src/main.ts".cImplements.y', "y", false, "public", false, false, false, false, "number");
-            expectProperty(decl.properties, '"./src/main.ts".cImplements.str', "str", false, "public", false, false, false, false, "string");
+            expectProperty(decl.properties, '"./src/main.ts".cImplementsMulti.x', "x", false, "public", false, false, false, false, "number");
+            expectProperty(decl.properties, '"./src/main.ts".cImplementsMulti.y', "y", false, "public", false, false, false, false, "number");
+            expectProperty(decl.properties, '"./src/main.ts".cImplementsMulti.str', "str", false, "public", false, false, false, false, "string");
 
             expect(decl.methods).toHaveLength(0);
             expect(decl.accessorProperties).toHaveLength(0);
@@ -494,7 +494,7 @@ describe("class declarations test", () => {
 
     test("class with dependencies", async () => {
         const decl = classDecls.get('"./src/main.ts".cRef');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cRef");
@@ -526,7 +526,7 @@ describe("class declarations test", () => {
 
     test("class extending a class of another module", async () => {
         const decl = classDecls.get('"./src/main.ts".cExtendsExt');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cExtendsExt");
@@ -551,7 +551,7 @@ describe("class declarations test", () => {
 
     test("class implementing an interface of another module", async () => {
         const decl = classDecls.get('"./src/main.ts".cImplementsExt');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cImplementsExt");
@@ -578,7 +578,7 @@ describe("class declarations test", () => {
 
     test("class with dependencies to another module", async () => {
         const decl = classDecls.get('"./src/main.ts".cRefExt');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cRefExt");
@@ -610,7 +610,7 @@ describe("class declarations test", () => {
 
     test("class with type parameters", async () => {
         const decl = classDecls.get('"./src/main.ts".cGeneric');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.className).toBe("cGeneric");

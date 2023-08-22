@@ -56,7 +56,7 @@ describe("interface declarations test", () => {
 
     test("empty interface", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iEmpty');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iEmpty");
@@ -73,7 +73,7 @@ describe("interface declarations test", () => {
 
     test("exported empty interface", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iExported');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iExported");
@@ -90,7 +90,7 @@ describe("interface declarations test", () => {
                 .get(LCEExportDeclaration.conceptId)
                 ?.find((exp) => (exp as LCEExportDeclaration).declFqn === '"./src/main.ts".iExported');
 
-            expect(exportDeclConcept).not.toBeNull();
+            expect(exportDeclConcept).toBeDefined();
             if (exportDeclConcept) {
                 const exportDecl = exportDeclConcept as LCEExportDeclaration;
                 expect(exportDecl.kind).toBe("type");
@@ -104,7 +104,7 @@ describe("interface declarations test", () => {
 
     test("interface with properties", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iProperties');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iProperties");
@@ -126,7 +126,7 @@ describe("interface declarations test", () => {
 
     test("interface with methods", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iMethods');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iMethods");
@@ -152,7 +152,7 @@ describe("interface declarations test", () => {
 
     test("interface with getters and setters", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iGetterSetter');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iGetterSetter");
@@ -167,14 +167,14 @@ describe("interface declarations test", () => {
             expect(decl.accessorProperties).toHaveLength(2);
             const accX = expectAccessorProperty(decl.accessorProperties, '"./src/main.ts".iGetterSetter.x', "x");
             expect(accX.autoAccessor).toBeUndefined();
-            expect(accX.getter).not.toBeNull();
+            expect(accX.getter).toBeDefined();
             expectPrimitiveType(accX.getter!.returnType, "number");
             expect(accX.getter!.visibility).toBe("public");
             expect(accX.getter!.decorators).toHaveLength(0);
             expect(accX.getter!.override).toBeUndefined();
             expect(accX.getter!.abstract).toBeUndefined();
             expect(accX.getter!.isStatic).toBeUndefined();
-            expect(accX.setter).not.toBeNull();
+            expect(accX.setter).toBeDefined();
             expectFunctionParameter(accX.setter!.parameters, 0, "x", false, "number");
             expect(accX.setter!.visibility).toBe("public");
             expect(accX.setter!.decorators).toHaveLength(0);
@@ -185,7 +185,7 @@ describe("interface declarations test", () => {
             const accY = expectAccessorProperty(decl.accessorProperties, '"./src/main.ts".iGetterSetter.y', "y");
             expect(accY.getter).toBeUndefined();
             expect(accY.autoAccessor).toBeUndefined();
-            expect(accY.setter).not.toBeNull();
+            expect(accY.setter).toBeDefined();
             expectFunctionParameter(accY.setter!.parameters, 0, "y", false, "number");
             expect(accY.setter!.visibility).toBe("public");
             expect(accY.setter!.decorators).toHaveLength(0);
@@ -197,7 +197,7 @@ describe("interface declarations test", () => {
 
     test("interface extending another interface", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iExtends');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iExtends");
@@ -218,7 +218,7 @@ describe("interface declarations test", () => {
 
     test("interface extending multiple other interfaces", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iExtendsMulti');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iExtendsMulti");
@@ -232,7 +232,7 @@ describe("interface declarations test", () => {
             expectDependency(dependencies,'"./src/main.ts".iExtendsMulti', '"./src/main.ts".CustomInterface2', 1);
 
             expect(decl.properties).toHaveLength(1);
-            expectProperty(decl.properties, '"./src/main.ts".iExtends.newProp', "newProp", false, "public", false, undefined, undefined, undefined, "string");
+            expectProperty(decl.properties, '"./src/main.ts".iExtendsMulti.newProp', "newProp", false, "public", false, undefined, undefined, undefined, "string");
 
             expect(decl.methods).toHaveLength(0);
             expect(decl.accessorProperties).toHaveLength(0);
@@ -241,7 +241,7 @@ describe("interface declarations test", () => {
 
     test("interface with dependencies", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iRef');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iRef");
@@ -268,7 +268,7 @@ describe("interface declarations test", () => {
 
     test("interface extending an interface of another module", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iExtendsExt');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iExtendsExt");
@@ -288,7 +288,7 @@ describe("interface declarations test", () => {
 
     test("interface with dependencies to another module", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iRefExt');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iRefExt");
@@ -315,7 +315,7 @@ describe("interface declarations test", () => {
 
     test("interface with type parameters", async () => {
         const decl = interfaceDecls.get('"./src/main.ts".iGeneric');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.interfaceName).toBe("iGeneric");

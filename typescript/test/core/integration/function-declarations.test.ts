@@ -31,7 +31,7 @@ describe("function declarations test", () => {
         if(!result.get(LCEFunctionDeclaration.conceptId)) {
             throw new Error("Could not find function declarations in result data.")
         }
-
+        
         for(const concept of (result.get(LCEFunctionDeclaration.conceptId) ?? [])) {
             const funDecl: LCEFunctionDeclaration = concept as LCEFunctionDeclaration;
             if(!funDecl.fqn) {
@@ -54,7 +54,7 @@ describe("function declarations test", () => {
 
     test("empty function", async () => {
         const decl = funDecls.get('"./src/main.ts".fEmpty');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fEmpty");
@@ -69,7 +69,7 @@ describe("function declarations test", () => {
 
     test("simple function that returns number", async () => {
         const decl = funDecls.get('"./src/main.ts".fReturn');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fReturn");
@@ -84,7 +84,7 @@ describe("function declarations test", () => {
 
     test("simple function that returns interface instance", async () => {
         const decl = funDecls.get('"./src/main.ts".fReturnRef');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fReturnRef");
@@ -101,7 +101,7 @@ describe("function declarations test", () => {
 
     test("simple function that returns interface instance of different module", async () => {
         const decl = funDecls.get('"./src/main.ts".fReturnRefExt');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fReturnRefExt");
@@ -118,7 +118,7 @@ describe("function declarations test", () => {
 
     test("exported empty function", async () => {
         const decl = funDecls.get('"./src/main.ts".fExported');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fExported");
@@ -132,7 +132,7 @@ describe("function declarations test", () => {
             const exportDeclConcept = result.get(LCEExportDeclaration.conceptId)?.find(exp =>
                 (exp as LCEExportDeclaration).declFqn === '"./src/main.ts".fExported');
 
-            expect(exportDeclConcept).not.toBeNull();
+            expect(exportDeclConcept).toBeDefined();
             if(exportDeclConcept) {
                 const exportDecl = exportDeclConcept as LCEExportDeclaration;
                 expect(exportDecl.kind).toBe("value");
@@ -146,7 +146,7 @@ describe("function declarations test", () => {
 
     test("function with dependencies in body", async () => {
         const decl = funDecls.get('"./src/main.ts".fBodyRef');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fBodyRef");
@@ -164,7 +164,7 @@ describe("function declarations test", () => {
 
     test("function with single parameter", async () => {
         const decl = funDecls.get('"./src/main.ts".fParam');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fParam");
@@ -180,7 +180,7 @@ describe("function declarations test", () => {
 
     test("function with multiple parameters", async () => {
         const decl = funDecls.get('"./src/main.ts".fMultiParam');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fMultiParam");
@@ -192,7 +192,7 @@ describe("function declarations test", () => {
             expectFunctionParameter(decl.parameters, 1, "p2", false, "string");
             expectFunctionParameter(decl.parameters, 2, "p3", true);
 
-            expect(decl.parameters[2].type).not.toBeNull();
+            expect(decl.parameters[2].type).toBeDefined();
             expect(decl.parameters[2].type.type).toBe("union");
             const unionTypes = (decl.parameters[2].type as LCETypeUnion).types;
 
@@ -209,7 +209,7 @@ describe("function declarations test", () => {
 
     test("function with single parameter of referenced class type", async () => {
         const decl = funDecls.get('"./src/main.ts".fParamRef');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fParamRef");
@@ -228,7 +228,7 @@ describe("function declarations test", () => {
 
     test("function with single parameter of referenced class type of different module", async () => {
         const decl = funDecls.get('"./src/main.ts".fParamRefExt');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fParamRefExt");
@@ -247,7 +247,7 @@ describe("function declarations test", () => {
 
     test("generic function with single type parameter", async () => {
         const decl = funDecls.get('"./src/main.ts".fGeneric');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fGeneric");
@@ -265,7 +265,7 @@ describe("function declarations test", () => {
 
     test("generic function with multiple type parameters", async () => {
         const decl = funDecls.get('"./src/main.ts".fGenericMulti');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fGenericMulti");
@@ -286,7 +286,7 @@ describe("function declarations test", () => {
 
     test("generic function with constrained type parameter", async () => {
         const decl = funDecls.get('"./src/main.ts".fGenericConstraint');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fGenericConstraint");
@@ -299,7 +299,7 @@ describe("function declarations test", () => {
 
             expect(decl.typeParameters).toHaveLength(1);
             expectTypeParameterDeclaration(decl.typeParameters, 0, "T", false);
-            expect(decl.typeParameters[0].constraint).not.toBeNull();
+            expect(decl.typeParameters[0].constraint).toBeDefined();
             expect(decl.typeParameters[0].constraint.type).toBe("object");
             const constraint = decl.typeParameters[0].constraint as LCETypeObject;
             expect([...constraint.members.entries()]).toHaveLength(1);
@@ -309,7 +309,7 @@ describe("function declarations test", () => {
 
     test("generic function with type parameter constrained by type declaration", async () => {
         const decl = funDecls.get('"./src/main.ts".fGenericConstraintRef');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fGenericConstraintRef");
@@ -330,7 +330,7 @@ describe("function declarations test", () => {
 
     test("generic function with type parameter constrained by type declaration of different module", async () => {
         const decl = funDecls.get('"./src/main.ts".fGenericConstraintRefExt');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fGenericConstraintRefExt");
@@ -351,7 +351,7 @@ describe("function declarations test", () => {
 
     test("nested function", async () => {
         const decl = funDecls.get('"./src/main.ts".fNested');
-        expect(decl).not.toBeNull();
+        expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.functionName).toBe("fNested");

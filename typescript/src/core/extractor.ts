@@ -79,9 +79,9 @@ export async function processAndOutputResult(projectRoot: string, readFile: Func
                 return value;
             }
 
-        });
-        let dirPath = path.join(projectRoot, "build");
-        let filePath = path.join(dirPath, 'jqa-ts-output.json');
+        }, 2);
+        let dirPath = path.join(projectRoot, ".reports", "jqa");
+        let filePath = path.join(dirPath, 'ts-output.json');
         fs.mkdir(dirPath, {recursive: true}, (errDir) => {
             if (errDir) {
                 console.log("Could not create directory: " + dirPath);
