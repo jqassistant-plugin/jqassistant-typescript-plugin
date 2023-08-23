@@ -7,9 +7,9 @@ jqassistant:
     include:
       files:
         -
-        - typescript:project::build/jqa-ts-output.json
+        - typescript:project::.reports/jqa/ts-output.json
     properties:
       file.exclude:
         - /node_modules/**
-        - /build/**
+        - /dist/**
         - /jqassistant/**
