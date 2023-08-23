@@ -4,6 +4,7 @@ import { LCEModule } from "../../../src/core/concepts/typescript-module.concept"
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import {
     expectDeclaredType,
+    expectDependency,
     expectFunctionParameter,
     expectFunctionType,
     expectLiteralType,
@@ -107,6 +108,8 @@ describe("type alias declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/main.ts".CustomClass');
         }
+
+        expectDependency(dependencies, '"./src/main.ts".tDeclaredClass', '"./src/main.ts".CustomClass', 1);
     });
 
     test("type alias of interface", async () => {
@@ -120,6 +123,8 @@ describe("type alias declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/main.ts".CustomInterface');
         }
+
+        expectDependency(dependencies, '"./src/main.ts".tDeclaredInterface', '"./src/main.ts".CustomInterface', 1);
     });
 
     test("type alias of type alias", async () => {
@@ -133,6 +138,9 @@ describe("type alias declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/main.ts".CustomType');
         }
+
+        expectDependency(dependencies, '"./src/main.ts".tDeclaredTypeAlias', '"./src/main.ts".CustomType', 1);
+
     });
 
     test("type alias of enum", async () => {
@@ -146,6 +154,8 @@ describe("type alias declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/main.ts".CustomEnum');
         }
+
+        expectDependency(dependencies, '"./src/main.ts".tDeclaredEnum', '"./src/main.ts".CustomEnum', 1);
     });
 
     test("type alias of class with type arguments", async () => {
@@ -176,6 +186,8 @@ describe("type alias declarations test", () => {
 
             expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomClass');
         }
+
+        expectDependency(dependencies, '"./src/main.ts".tDeclaredExternal', '"./src/secondary.ts".ExternalCustomClass', 1);
     });
 
     test("type alias of union type", async () => {
@@ -194,6 +206,8 @@ describe("type alias declarations test", () => {
             expectPrimitiveType(unionTypes[0], "string");
             expectDeclaredType(unionTypes[1], '"./src/main.ts".CustomInterface');
         }
+
+        expectDependency(dependencies, '"./src/main.ts".tUnion', '"./src/main.ts".CustomInterface', 1);
     });
 
     test("type alias of intersection type", async () => {
@@ -213,6 +227,8 @@ describe("type alias declarations test", () => {
             expectObjectTypeMember(objectType, "z", false, false, "number");
             expectDeclaredType(intersectionTypes[1], '"./src/main.ts".CustomType');
         }
+
+        expectDependency(dependencies, '"./src/main.ts".tIntersection', '"./src/main.ts".CustomType', 1);
     });
 
     test("type alias of object type", async () => {
@@ -238,6 +254,8 @@ describe("type alias declarations test", () => {
             const methodType = expectFunctionType(memMethod.type, 1, "number");
             expectFunctionParameter(methodType.parameters, 0, "px", false, "string");
         }
+
+        expectDependency(dependencies, '"./src/main.ts".tObject', '"./src/main.ts".CustomType', 1);
     });
 
     test("type alias of exported object type", async () => {
@@ -253,6 +271,8 @@ describe("type alias declarations test", () => {
             const memX = expectObjectTypeMember(oType, "x", false, false);
             expectDeclaredType(memX.type, '"./src/main.ts".CustomType');
         }
+
+        expectDependency(dependencies, '"./src/main.ts".tObjectExported', '"./src/main.ts".CustomType', 1);
     });
 
     test("type alias of function type", async () => {
@@ -340,6 +360,8 @@ describe("type alias declarations test", () => {
             const memValue = expectObjectTypeMember(oType, "value", false, false);
             expectTypeParameterReference(memValue.type, "V");
         }
+
+        expectDependency(dependencies, '"./src/main.ts".tGeneric', '"./src/main.ts".CustomType', 1);
     });
 
     test("type alias of template literal type", async () => {
