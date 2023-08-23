@@ -77,42 +77,6 @@ describe("class declarations test", () => {
         }
     });
 
-    test("exported empty class", async () => {
-        const decl = classDecls.get('"./src/main.ts".cExported');
-        expect(decl).toBeDefined();
-        if (decl) {
-            expect(decl.coordinates.fileName).toBe(mainModule.path);
-            expect(decl.className).toBe("cExported");
-            expect(decl.abstract).toBe(false);
-
-            expect(decl.typeParameters).toHaveLength(0);
-
-            expect(decl.extendsClass).toBeUndefined();
-            expect(decl.implementsInterfaces).toHaveLength(0);
-
-            expect(decl.constr).toBeUndefined();
-            expect(decl.properties).toHaveLength(0);
-            expect(decl.methods).toHaveLength(0);
-            expect(decl.accessorProperties).toHaveLength(0);
-
-            expect(decl.decorators).toHaveLength(0);
-
-            const exportDeclConcept = result
-                .get(LCEExportDeclaration.conceptId)
-                ?.find((exp) => (exp as LCEExportDeclaration).declFqn === '"./src/main.ts".cExported');
-
-            expect(exportDeclConcept).toBeDefined();
-            if (exportDeclConcept) {
-                const exportDecl = exportDeclConcept as LCEExportDeclaration;
-                expect(exportDecl.kind).toBe("value");
-                expect(exportDecl.identifier).toBe("cExported");
-                expect(exportDecl.alias).toBeUndefined();
-                expect(exportDecl.isDefault).toBe(false);
-                expect(exportDecl.sourceFilePath).toBe(mainModule.fqn);
-            }
-        }
-    });
-
     test("class with properties", async () => {
         const decl = classDecls.get('"./src/main.ts".cProperties');
         expect(decl).toBeDefined();
@@ -361,6 +325,56 @@ describe("class declarations test", () => {
             expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);
+        }
+    });
+
+    test("exported class", async () => {
+        const decl = classDecls.get('"./src/main.ts".cExported');
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.className).toBe("cExported");
+            expect(decl.abstract).toBe(false);
+
+            expect(decl.typeParameters).toHaveLength(0);
+
+            expect(decl.extendsClass).toBeUndefined();
+            expect(decl.implementsInterfaces).toHaveLength(0);
+
+            expect(decl.constr).toBeDefined();
+            if(decl.constr) {
+                expect(decl.constr.fqn).toBe('"./src/main.ts".cExported.constructor');
+                expect(decl.constr.parameters).toHaveLength(0);
+                expect(decl.constr.parameterProperties).toHaveLength(0);
+            }
+            expect(decl.properties).toHaveLength(3);
+            expectProperty(decl.properties, '"./src/main.ts".cExported._x', "_x", false, "private", false, false, false, false, "number");
+            expectProperty(decl.properties, '"./src/main.ts".cExported.pub', "pub", false, "public", false, false, false, false, "string");
+            expectProperty(decl.properties, '"./src/main.ts".cExported.STATIC', "STATIC", false, "public", false, false, false, true, "number");
+
+            expect(decl.methods).toHaveLength(1);
+            const method = expectMethod(decl.methods, '"./src/main.ts".cExported.method', "method", "public", false, false, false, "string");
+            expect(method.parameters).toHaveLength(1);
+            expectFunctionParameter(method.parameters, 0, "p1", false, "number");
+            expect(method.typeParameters).toHaveLength(0);
+
+            expect(decl.accessorProperties).toHaveLength(0);
+
+            expect(decl.decorators).toHaveLength(0);
+
+            const exportDeclConcept = result
+                .get(LCEExportDeclaration.conceptId)
+                ?.find((exp) => (exp as LCEExportDeclaration).declFqn === '"./src/main.ts".cExported');
+
+            expect(exportDeclConcept).toBeDefined();
+            if (exportDeclConcept) {
+                const exportDecl = exportDeclConcept as LCEExportDeclaration;
+                expect(exportDecl.kind).toBe("value");
+                expect(exportDecl.identifier).toBe("cExported");
+                expect(exportDecl.alias).toBeUndefined();
+                expect(exportDecl.isDefault).toBe(false);
+                expect(exportDecl.sourceFilePath).toBe(mainModule.fqn);
+            }
         }
     });
 

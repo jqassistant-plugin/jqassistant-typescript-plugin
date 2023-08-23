@@ -34,7 +34,6 @@ enum CustomEnum {
 
 // Class declarations
 class cEmpty {}
-export class cExported {}
 
 class cProperties {
     private x = 1;
@@ -96,6 +95,23 @@ class cStatic {
     static staticSum(x: number, y: number): number {
         return x + y;
     }
+}
+
+export class cExported {
+    static STATIC = 5;
+
+    private _x: number;
+
+    public pub: string = "abc";
+
+    constructor() {
+        this._x = 1;
+    }
+
+    public method(p1: number): string {
+        return p1 + "x";
+    }
+
 }
 
 abstract class cAbstract {
