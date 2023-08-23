@@ -19,6 +19,7 @@ import { LCEPropertyDeclaration } from "../../src/core/concepts/property-declara
 import { Visibility } from "../../src/core/concepts/visibility.concept";
 import { LCEAccessorProperty } from "../../src/core/concepts/accessor-declaration.concept";
 import { LCEModule } from "../../src/core/concepts/typescript-module.concept";
+import { LCEEnumDeclaration } from "../../src/core/concepts/enum-declaration.concept";
 
 export function getDependenciesFromResult(result: Map<string, LCEConcept[]>): Map<string, Map<string, LCEDependency>> {
     const dependencies: Map<string, Map<string, LCEDependency>> = new Map();
@@ -310,6 +311,16 @@ export function expectAccessorProperty(accessorProperties: LCEAccessorProperty[]
         expect(accProp.accessorName).toBe(name);
     }
     return accProp!;
+}
+
+/**
+ * Expect that the given enum declaration has a certain member.
+ */
+export function expectEnumMember(enumDecl: LCEEnumDeclaration, name: string, fqn: string) {
+    const member = enumDecl.members.find(mem => mem.enumMemberName === name);
+    expect(member).toBeDefined();
+    expect(member!.fqn).toBe(fqn);
+    return member!;
 }
 
 export function expectModule(modules: Map<string, LCEModule>, fqn: string, graphPath: string, present: boolean = true) {
