@@ -1,11 +1,11 @@
 target/
 src/
 test/
-build/test/
+dist/test/
 node_modules/
 
-build/jest.config.js
-build/jqa-ts-output.json
+dist/jest.config.js
+.reports/jqa/ts-output.json
 
 .eslintignore
 .eslintrc.cjs
