@@ -7,16 +7,13 @@ import org.jqassistant.plugin.typescript.api.TypescriptScope;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TypescriptProjectScannerIT  extends AbstractPluginIT {
 
     @Test
     @TestStore(type = TestStore.Type.REMOTE)
     public void testScanReportFileDescriptor() {
-        File file = ClasspathResource.getFile(TypescriptProjectScannerIT.class, "/sample-project/build/jqa-ts-output.json");
+        File file = ClasspathResource.getFile(TypescriptProjectScannerIT.class, "/sample-project/.reports/jqa/ts-output.json");
         Descriptor descriptor = getScanner().scan(file, file.getAbsolutePath(), TypescriptScope.PROJECT);
         store.beginTransaction();
 

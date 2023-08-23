@@ -1,16 +1,14 @@
 package org.jqassistant.plugin.typescript.impl.mapper;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerContext;
 import com.buschmais.jqassistant.plugin.common.api.mapper.DescriptorMapper;
-
 import org.jqassistant.plugin.typescript.api.model.*;
 import org.jqassistant.plugin.typescript.impl.model.*;
 import org.mapstruct.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Mapper
@@ -91,20 +89,22 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
         }
         ScannerContext scannerContext = scanner.getContext();
         TypeObjectDescriptor descriptor = scannerContext.getStore().create(TypeObjectDescriptor.class);
-        value.getMembers().entrySet().forEach(member ->
+        value.getMembers().forEach(member ->
             descriptor.getMembers().add(mapTypeObjectMember(member, scanner))
         );
         return descriptor;
     }
 
-    default TypeObjectMemberDescriptor mapTypeObjectMember(Map.Entry<String, Type> value, @Context Scanner scanner) {
+    default TypeObjectMemberDescriptor mapTypeObjectMember(TypeObjectMember value, @Context Scanner scanner) {
         if(value == null) {
             return null;
         }
         ScannerContext scannerContext = scanner.getContext();
         TypeObjectMemberDescriptor descriptor = scannerContext.getStore().create(TypeObjectMemberDescriptor.class);
-        descriptor.setName(value.getKey());
-        descriptor.setType(toDescriptor(value.getValue(), scanner));
+        descriptor.setName(value.getName());
+        descriptor.setOptional(value.getOptional());
+        descriptor.setReadonly(value.getReadonly());
+        descriptor.setType(toDescriptor(value.getType(), scanner));
         return descriptor;
     }
 

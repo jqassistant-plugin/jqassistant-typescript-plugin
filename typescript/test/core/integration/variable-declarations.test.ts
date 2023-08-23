@@ -2,6 +2,7 @@ import { processProject } from "../../../src/core/extractor";
 import { LCEConcept } from "../../../src/core/concept";
 import { LCEVariableDeclaration } from "../../../src/core/concepts/variable-declaration.concept";
 import {
+    LCEType,
     LCETypeDeclared,
     LCETypeFunction,
     LCETypeIntersection,
@@ -31,6 +32,8 @@ import {
     expectFunctionParameter,
     expectLiteralType,
     expectLiteralValue,
+    expectObjectType,
+    expectObjectTypeMember,
     expectPrimitiveType,
     getDependenciesFromResult,
 } from "../../utils/test-utils";
@@ -268,14 +271,13 @@ describe("variable declarations test", () => {
             expect(decl.type).toBeDefined();
             expect(decl.type.type).toBe("object");
 
-            function checkObjectType(objectType: LCETypeObject) {
-                const typeMembers = (objectType as LCETypeObject).members;
-                expect([...typeMembers.entries()]).toHaveLength(2);
-                expectPrimitiveType(typeMembers.get("a"), "number");
-                expectPrimitiveType(typeMembers.get("b"), "string");
+            function checkObjectType(type: LCEType) {
+                const oType = expectObjectType(type, 2);
+                expectObjectTypeMember(oType, "a", false, false, "number");
+                expectObjectTypeMember(oType, "b", false, false, "string");
             }
 
-            checkObjectType(decl.type as LCETypeObject);
+            checkObjectType(decl.type);
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
@@ -488,9 +490,11 @@ describe("variable declarations test", () => {
             expect(intersecTypes[1].type).toBe("object");
             expect([...(intersecTypes[1] as LCETypeObject).members]).toHaveLength(1);
 
-            intersecTypes.sort((a, b) => (a as LCETypeObject).members.keys().next().value.localeCompare((b as LCETypeObject).members.keys().next().value));
-            expectPrimitiveType((intersecTypes[0] as LCETypeObject).members.get("a"), "number");
-            expectPrimitiveType((intersecTypes[1] as LCETypeObject).members.get("b"), "string");
+            intersecTypes.sort((a, b) => (a as LCETypeObject).members[0].name.localeCompare((b as LCETypeObject).members[0].name));
+            const aOType = expectObjectType(intersecTypes[0], 1);
+            expectObjectTypeMember(aOType, "a", false, false, "number");
+            const bOType = expectObjectType(intersecTypes[1], 1);
+            expectObjectTypeMember(bOType, "b", false, false, "string");
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
@@ -574,10 +578,9 @@ describe("variable declarations test", () => {
                 const parentValue = (decl.initValue as LCEValueMember).parent;
                 expect(parentValue.valueType).toBe("declared");
                 expect((parentValue as LCEValueDeclared).fqn).toBe('"./src/main.ts".vObject');
-                const parentTypeMembers = (parentValue.type as LCETypeObject).members;
-                expect([...parentTypeMembers.entries()]).toHaveLength(2);
-                expectPrimitiveType(parentTypeMembers.get("a"), "number");
-                expectPrimitiveType(parentTypeMembers.get("b"), "string");
+                const oType = expectObjectType(parentValue.type, 2);
+                expectObjectTypeMember(oType, "a", false, false, "number");
+                expectObjectTypeMember(oType, "b", false, false, "string");
 
                 const memberValue = (decl.initValue as LCEValueMember).member;
                 expect(memberValue.valueType).toBe("declared");

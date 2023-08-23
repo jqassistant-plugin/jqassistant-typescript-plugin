@@ -8,6 +8,12 @@ public interface TypeObjectMemberDescriptor extends TypeDescriptor {
     String getName();
     void setName(String name);
 
+    Boolean getOptional();
+    void setOptional(Boolean optional);
+
+    Boolean getReadonly();
+    void setReadonly(Boolean readonly);
+
     @Relation("OF_TYPE")
     TypeDescriptor getType();
     void setType(TypeDescriptor type);

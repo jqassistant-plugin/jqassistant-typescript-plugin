@@ -32,7 +32,7 @@ enum CustomEnum {
     B = 2,
 }
 
-// Class declarations
+// Interface declarations
 interface iEmpty {}
 export interface iExported {}
 

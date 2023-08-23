@@ -1,12 +1,14 @@
 import { processProject } from "../../../src/core/extractor";
 import { LCEConcept } from "../../../src/core/concept";
-import { LCETypeObject, LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
+import { LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import {
     expectDeclaredType,
     expectDependency,
     expectFunctionParameter,
+    expectObjectType,
+    expectObjectTypeMember,
     expectPrimitiveType,
     expectTypeParameterDeclaration,
     expectTypeParameterReference,
@@ -300,10 +302,8 @@ describe("function declarations test", () => {
             expect(decl.typeParameters).toHaveLength(1);
             expectTypeParameterDeclaration(decl.typeParameters, 0, "T", false);
             expect(decl.typeParameters[0].constraint).toBeDefined();
-            expect(decl.typeParameters[0].constraint.type).toBe("object");
-            const constraint = decl.typeParameters[0].constraint as LCETypeObject;
-            expect([...constraint.members.entries()]).toHaveLength(1);
-            expectPrimitiveType(constraint.members.get("x"), "number");
+            const constraint = expectObjectType(decl.typeParameters[0].constraint, 1);
+            expectObjectTypeMember(constraint, "x", false, false, "number");
         }
     });
 

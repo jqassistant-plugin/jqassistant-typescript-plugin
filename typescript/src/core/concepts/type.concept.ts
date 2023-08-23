@@ -1,5 +1,5 @@
-import {LCEConcept} from "../concept";
-import {LCETypeParameterDeclaration} from "./type-parameter.concept";
+import { LCEConcept } from "../concept";
+import { LCETypeParameterDeclaration } from "./type-parameter.concept";
 
 /** Base class for all types. */
 export abstract class LCEType extends LCEConcept {
@@ -75,8 +75,28 @@ export class LCETypeObject extends LCEType {
     /**
      * @param members members of the object type
      */
-    constructor(public members: Map<string, LCEType>) {
+    constructor(public members: LCETypeObjectMember[]) {
         super("object");
+    }
+}
+
+/**
+ * Represents a member of an object type (e.g. the `x: string` in `{x: string, y: number}`)
+ */
+export class LCETypeObjectMember extends LCEConcept {
+    public static override conceptId = "object-type-member";
+
+    /**
+     * @param name name of the object member
+     * @param type type of the member
+     * @param optional indicates whether the member is optional
+     * @param readonly indicates whether the member is read-only
+     */
+    constructor(public name: string,
+                public type: LCEType,
+                public optional: boolean,
+                public readonly: boolean) {
+        super();
     }
 }
 
@@ -89,6 +109,7 @@ export class LCETypeFunction extends LCEType {
     /**
      * @param returnType return type of the function
      * @param parameters map of parameter names and their respective types
+     * @param typeParameters list of type parameters declared by the function type
      */
     constructor(public returnType: LCEType, public parameters: LCETypeFunctionParameter[], public typeParameters: LCETypeParameterDeclaration[]) {
         super("function");

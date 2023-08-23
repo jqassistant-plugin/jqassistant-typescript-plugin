@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
 public class TypeObject extends Type {
 
-    Map<String, Type> members = new HashMap<>();
+    private List<TypeObjectMember> members = new ArrayList<>();
 
 }

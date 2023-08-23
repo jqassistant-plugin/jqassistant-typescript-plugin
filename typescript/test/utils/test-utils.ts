@@ -3,9 +3,11 @@ import { LCEConcept } from "../../src/core/concept";
 import {
     LCEType,
     LCETypeDeclared,
+    LCETypeFunction,
     LCETypeFunctionParameter,
     LCETypeLiteral,
     LCETypeObject,
+    LCETypeObjectMember,
     LCETypeParameterReference,
     LCETypePrimitive,
     LCETypeUnion,
@@ -66,7 +68,7 @@ export function expectPrimitiveType(type: LCEType | undefined, name: string) {
 }
 
 /**
- * Expect the provided type to be not null and a union of the specified primitive variant and undefined.
+ * Expect the provided type to be not null and a union of the specified primitive variant and `undefined`.
  */
 export function expectOptionalPrimitiveType(type: LCEType | undefined, name: string) {
     const types = ["undefined", name].sort();
@@ -109,6 +111,7 @@ export function expectDeclaredType(type: LCEType | undefined, fqn: string, check
             expect((type as LCETypeDeclared).typeArguments).toHaveLength(0);
         }
     }
+    return type as LCETypeDeclared;
 }
 
 /**
@@ -120,6 +123,52 @@ export function expectTypeParameterReference(type: LCEType | undefined, name: st
         expect(type.type).toBe("type-parameter");
         expect((type as LCETypeParameterReference).name).toBe(name);
     }
+}
+
+/**
+ * Expect the provided type to be not null and a function type with the specified number of parameters.
+ * Optionally checks if the function returns a certain primitive type.
+ * By default, checks that there are no defined type parameters
+ */
+export function expectFunctionType(funType: LCEType | undefined, paramCount: number, primitiveReturnType?: string, checkEmptyTypeParams: boolean = true): LCETypeFunction {
+    expect(funType).toBeDefined();
+    expect(funType!.type).toBe("function");
+    expect((funType as LCETypeFunction).parameters).toBeDefined();
+    expect((funType as LCETypeFunction).parameters).toHaveLength(paramCount);
+    if(primitiveReturnType) {
+        expectPrimitiveType((funType as LCETypeFunction).returnType, primitiveReturnType);
+    }
+    if(checkEmptyTypeParams) {
+        expect((funType as LCETypeFunction).typeParameters).toHaveLength(0);
+    }
+    return funType! as LCETypeFunction;
+}
+
+/**
+ * Expect the provided type to be not null and an object type with the specified number of members.
+ */
+export function expectObjectType(objectType: LCEType | undefined, memberCount: number) {
+    expect(objectType).toBeDefined();
+    expect(objectType!.type).toBe("object");
+    expect((objectType! as LCETypeObject).members).toBeDefined();
+    expect((objectType! as LCETypeObject).members).toHaveLength(memberCount);
+    return objectType! as LCETypeObject;
+}
+
+/**
+ * Expects a member in the provided object type.
+ * Optionally checks if the member is of a certain primitive type.
+ */
+export function expectObjectTypeMember(objectType: LCETypeObject, name: string, optional: boolean = false, readonly: boolean = false, primitiveType?: string): LCETypeObjectMember {
+    let member = objectType.members.find(mem => mem.name === name);
+    expect(member).toBeDefined();
+    const tom = member! as LCETypeObjectMember;
+    expect(tom.optional).toBe(optional);
+    expect(tom.readonly).toBe(readonly);
+    if(primitiveType) {
+        expectPrimitiveType(tom.type, primitiveType);
+    }
+    return member!;
 }
 
 /**

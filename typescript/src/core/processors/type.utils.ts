@@ -15,21 +15,23 @@ import {
     TSInterfaceHeritage,
     TSMethodSignatureNonComputedName,
     TSTypeAliasDeclaration,
-    TypeNode,
+    TypeNode
 } from "@typescript-eslint/types/dist/generated/ast-spec";
-import {
+import ts, {
     isTypeParameterDeclaration,
     Node,
+    ObjectType,
     ParameterDeclaration,
+    PropertySignature,
     PseudoBigInt,
     Signature,
     SignatureKind,
     Symbol,
     Type,
-    TypeReference,
+    TypeReference
 } from "typescript";
 
-import {LCETypeParameterDeclaration} from "../concepts/type-parameter.concept";
+import { LCETypeParameterDeclaration } from "../concepts/type-parameter.concept";
 import {
     LCEType,
     LCETypeDeclared,
@@ -39,14 +41,15 @@ import {
     LCETypeLiteral,
     LCETypeNotIdentified,
     LCETypeObject,
+    LCETypeObjectMember,
     LCETypeParameterReference,
     LCETypePrimitive,
     LCETypeTuple,
-    LCETypeUnion,
+    LCETypeUnion
 } from "../concepts/type.concept";
-import {ProcessingContext} from "../context";
-import {PathUtils} from "../path.utils";
-import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
+import { ProcessingContext } from "../context";
+import { PathUtils } from "../path.utils";
+import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
 
 /**
  * Returns the type for a given class property (with a non-computed name)
@@ -204,7 +207,7 @@ export function parseClassLikeTypeParameters(
             constraintType = parseType(processingContext, tc.getTypeAtLocation(typeParamDecl.constraint), typeParamDecl);
         } else {
             // if no constraint is found, return empty object type (unconstrained)
-            constraintType = new LCETypeObject(new Map());
+            constraintType = new LCETypeObject([]);
         }
 
         result.push(new LCETypeParameterDeclaration(name, i, constraintType));
@@ -237,7 +240,7 @@ export function parseTypeAliasTypeParameters(processingContext: ProcessingContex
             constraintType = parseType(processingContext, tc.getTypeAtLocation(typeParamDecl.constraint), typeParamDecl);
         } else {
             // if no constraint is found, return empty object type (unconstrained)
-            constraintType = new LCETypeObject(new Map());
+            constraintType = new LCETypeObject([]);
         }
 
         result.push(new LCETypeParameterDeclaration(name, i, constraintType));
@@ -290,7 +293,16 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
     const globalContext = processingContext.globalContext;
     const tc = globalContext.typeChecker;
 
-    const symbol = type.aliasSymbol ? type.aliasSymbol : type.symbol ? type.symbol : undefined;
+    let symbol: ts.Symbol | undefined;
+    if (type.aliasSymbol && (!excludedFQN || !tc.getFullyQualifiedName(type.aliasSymbol).endsWith(excludedFQN))) {
+        symbol = type.aliasSymbol;
+    } else {
+        if (type.symbol) {
+            symbol = type.symbol;
+        } else {
+            symbol = undefined;
+        }
+    }
     const fqn = symbol ? tc.getFullyQualifiedName(symbol) : undefined;
 
     if ((!fqn || fqn === "(Anonymous function)" || fqn.startsWith("__type") || fqn === excludedFQN) && !isPrimitiveType(tc.typeToString(type))) {
@@ -410,10 +422,21 @@ function parseAnonymousType(
     } else if (type.symbol?.members) {
         // anonymous object type
         // TODO: test for methods, callables, index signatures, etc.
-        const members: Map<string, LCEType> = new Map();
+        const members: LCETypeObjectMember[] = [];
         for (const prop of type.getProperties()) {
-            const propType = tc.getTypeOfSymbolAtLocation(prop, node);
-            members.set(prop.name, parseType(processingContext, propType, node, excludedFQN, ignoreDependencies));
+            if(prop.valueDeclaration) {
+                const propSignature = prop.valueDeclaration as PropertySignature
+                const optional = !!propSignature.questionToken;
+                const readonly = !!propSignature.modifiers && propSignature.modifiers.some(mod => mod.kind === ts.SyntaxKind.ReadonlyKeyword);
+
+                const propType = tc.getTypeOfSymbolAtLocation(prop, node);
+                members.push(new LCETypeObjectMember(
+                    prop.name,
+                    parseType(processingContext, propType, node, excludedFQN, ignoreDependencies),
+                    optional,
+                    readonly
+                ));
+            }
         }
         return new LCETypeObject(members);
     } else if (type.isLiteral()) {
@@ -426,7 +449,9 @@ function parseAnonymousType(
     } else if (tc.typeToString(type) === "false") {
         // boolean false literal
         return new LCETypeLiteral(false);
-    } else if (tc.typeToString(type).startsWith("[")) {
+    } else if((type.flags & ts.TypeFlags.Object) &&
+        ((type as ObjectType).objectFlags & ts.ObjectFlags.Reference) &&
+        ((type as TypeReference).target.objectFlags & ts.ObjectFlags.Tuple)) {
         // tuple type
         const typeArgs = tc.getTypeArguments(type as TypeReference);
         const types: LCEType[] = [];
@@ -465,7 +490,7 @@ function parseFunctionTypeParameters(processingContext: ProcessingContext, signa
                 constraintType = parseType(processingContext, constraint, node);
             } else {
                 // if no constraint is found, return empty object type (unconstrained)
-                constraintType = new LCETypeObject(new Map());
+                constraintType = new LCETypeObject([]);
             }
 
             result.push(new LCETypeParameterDeclaration(name, i, constraintType));
