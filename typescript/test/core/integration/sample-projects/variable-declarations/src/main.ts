@@ -1,7 +1,13 @@
 /* eslint-disable */
 
 // Sample Declarations to be used later
-import {ExternalCustomClass, ExternalCustomEnum, ExternalCustomInterface, ExternalCustomType} from "./secondary";
+import {
+    ExternalCustomClass,
+    ExternalCustomEnum,
+    ExternalCustomInterface,
+    ExternalCustomType,
+    ExtStringTypeAlias
+} from "./secondary";
 
 class CustomClass {
     public x: number;
@@ -67,3 +73,4 @@ let vExtInterfaceObj: ExternalCustomInterface = { x: 1, y: 2 };
 let vExtClassObj = new ExternalCustomClass(1, 2);
 let vExtTypeObj: ExternalCustomType = { x: 1, y: 2 };
 let vExtEnum = ExternalCustomEnum.A;
+let vExtStringTypeAlias: ExtStringTypeAlias;

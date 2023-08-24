@@ -28,7 +28,8 @@ import ts, {
     SignatureKind,
     Symbol,
     Type,
-    TypeReference
+    TypeReference,
+    TypeReferenceNode
 } from "typescript";
 
 import { LCETypeParameterDeclaration } from "../concepts/type-parameter.concept";
@@ -294,18 +295,36 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
     const tc = globalContext.typeChecker;
 
     let symbol: ts.Symbol | undefined;
+    let fqn: string | undefined;
     if (type.aliasSymbol && (!excludedFQN || !tc.getFullyQualifiedName(type.aliasSymbol).endsWith(excludedFQN))) {
         symbol = type.aliasSymbol;
     } else {
         if (type.symbol) {
             symbol = type.symbol;
         } else {
+            // if no symbol is to be found, try to extract TypeName from Node (e.g. "SomeAlias" from "let x: SomeAlias;")
+            let nodeToAnalyze = node;
+            if(node.kind & ts.SyntaxKind.Identifier) {
+                // if node is just plain identifier, try to extract type name from parent node
+                nodeToAnalyze = node.parent;
+            }
+            if("type" in nodeToAnalyze) {
+                const nodeType: ts.TypeNode = nodeToAnalyze.type as ts.TypeNode;
+                if (nodeType && (nodeType.kind & ts.SyntaxKind.TypeReference)) {
+                    const typeName = (nodeType as TypeReferenceNode).typeName;
+                    if(typeName && (typeName.kind & ts.SyntaxKind.Identifier)) {
+                        fqn = (typeName as ts.Identifier).escapedText.toString();
+                    }
+                }
+            }
             symbol = undefined;
         }
     }
-    const fqn = symbol ? tc.getFullyQualifiedName(symbol) : undefined;
+    if(!fqn) {
+        fqn = symbol ? tc.getFullyQualifiedName(symbol) : undefined;
+    }
 
-    if ((!fqn || fqn === "(Anonymous function)" || fqn.startsWith("__type") || fqn === excludedFQN) && !isPrimitiveType(tc.typeToString(type))) {
+    if ((!fqn || fqn === "(Anonymous function)" || fqn.startsWith("__type") || fqn.startsWith("__object") || fqn === excludedFQN) && !isPrimitiveType(tc.typeToString(type))) {
         // TODO: handle recursive types like `_DeepPartialObject`
         if (type.aliasSymbol?.getName() === "_DeepPartialObject") return new LCETypeNotIdentified("DeepPartialObject is not supported");
 
@@ -324,6 +343,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
         // primitive type
         return new LCETypePrimitive(tc.typeToString(type));
     } else {
+        fqn = fqn!;
         // declared type
 
         // normalize TypeChecker FQN and determine if type is part of the project
@@ -340,12 +360,18 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
             // Standard Library fqn (e.g. 'Array') -> keep name
             normalizedFQN = fqn;
         } else if (isExternal) {
-            // Node fqn -> set node path in quotes
-            if (fqn.includes(".")) {
-                // node reference (e.g. "path.ParsedPath") -> set node path in quotes
-                normalizedFQN = PathUtils.toFQN(fqn.slice(0, fqn.lastIndexOf("."))) + fqn.slice(fqn.lastIndexOf("."));
+            if(fqn.startsWith('"')) {
+                // path that *probably* points to node modules
+                // -> resolve absolute path
+                normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, fqn, globalContext.sourceFilePath);
             } else {
-                normalizedFQN = PathUtils.toFQN(fqn);
+                // Node fqn -> set node path in quotes
+                if (fqn.includes(".")) {
+                    // node reference (e.g. "path.ParsedPath") -> set node path in quotes
+                    normalizedFQN = PathUtils.toFQN(fqn.slice(0, fqn.lastIndexOf("."))) + fqn.slice(fqn.lastIndexOf("."));
+                } else {
+                    normalizedFQN = PathUtils.toFQN(fqn);
+                }
             }
         } else if (fqn.startsWith('"')) {
             // FQN with specified module path (e.g. '"/home/../src/MyModule".MyClass') -> normalize module path

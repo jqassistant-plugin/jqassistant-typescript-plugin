@@ -839,6 +839,22 @@ describe("variable declarations test", () => {
         expectDependency(dependencies, '"./src/main.ts".vExtTypeObj', '"./src/secondary.ts".ExternalCustomType', 1);
     });
 
+    test("let x: ExternalStringTypeAlias;", async () => {
+        const decl = varDecls.get('"./src/main.ts".vExtStringTypeAlias');
+        expect(decl).toBeDefined();
+        if(decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.variableName).toBe("vExtStringTypeAlias");
+            expect(decl.kind).toBe("let");
+
+            expectDeclaredType(decl.type, '"./src/secondary.ts".ExtStringTypeAlias');
+
+            expect(decl.initValue).toBeUndefined();
+        }
+
+        expectDependency(dependencies, '"./src/main.ts".vExtStringTypeAlias', '"./src/secondary.ts".ExtStringTypeAlias', 1);
+    });
+
     // TODO: fix different handling of local and remote enum values and their types
     test.skip("let x: = ExternalEnum.MEMBER;", async () => {
         const decl = varDecls.get('"./src/main.ts".vExtEnum');

@@ -12,7 +12,7 @@ import {
     LCETypePrimitive,
     LCETypeUnion,
 } from "../../src/core/concepts/type.concept";
-import { LCEValue, LCEValueLiteral } from "../../src/core/concepts/value.concept";
+import { LCEValue, LCEValueDeclared, LCEValueLiteral, LCEValueObject } from "../../src/core/concepts/value.concept";
 import { LCEMethodDeclaration, LCEParameterDeclaration } from "../../src/core/concepts/method-declaration.concept";
 import { LCETypeParameterDeclaration } from "../../src/core/concepts/type-parameter.concept";
 import { LCEPropertyDeclaration } from "../../src/core/concepts/property-declaration.concept";
@@ -53,7 +53,7 @@ export function getDependenciesFromResult(result: Map<string, LCEConcept[]>): Ma
  */
 export function expectDependency(dependencies: Map<string, Map<string, LCEDependency>>, sourceFqn: string, targetFqn: string, cardinality: number) {
     const dependency = dependencies.get(sourceFqn)?.get(targetFqn);
-    expect(dependency).not.toBeUndefined();
+    expect(dependency).toBeDefined();
     expect(dependency!.cardinality).toBe(cardinality);
 }
 
@@ -177,11 +177,31 @@ export function expectObjectTypeMember(objectType: LCETypeObject, name: string, 
  */
 export function expectLiteralValue(value: LCEValue | undefined, literalValue: any, primitiveType: string){
     expect(value).toBeDefined();
-    if(value) {
-        expect(value.valueType).toBe("literal");
-        expect((value as LCEValueLiteral).value).toBe(literalValue);
-        expectPrimitiveType(value.type, primitiveType);
-    }
+    expect(value!.valueType).toBe("literal");
+    expect((value! as LCEValueLiteral).value).toBe(literalValue);
+    expectPrimitiveType(value!.type, primitiveType);
+    return value! as LCEValueLiteral;
+}
+
+/**
+ * Expect the provided value to be not null and of the specified declared variant.
+ */
+export function expectDeclaredValue(value: LCEValue | undefined, fqn: string) {
+    expect(value).toBeDefined();
+    expect(value!.valueType).toBe("declared");
+    expect((value! as LCEValueDeclared).fqn).toBe(fqn);
+    return value! as LCEValueDeclared;
+}
+
+/**
+ * Expect the provided value to be not null and an object value with the specified number of members.
+ */
+export function expectObjectValue(value: LCEValue | undefined, memberCount: number) {
+    expect(value).toBeDefined();
+    expect(value!.valueType).toBe("object");
+    expect((value! as LCEValueObject).members).toBeDefined();
+    expect([...(value! as LCEValueObject).members.entries()]).toHaveLength(memberCount);
+    return value! as LCEValueObject;
 }
 
 /**

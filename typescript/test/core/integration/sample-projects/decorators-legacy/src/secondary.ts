@@ -23,5 +23,3 @@ export enum ExternalCustomEnum {
     A = 1,
     B = 2,
 }
-
-export type ExtStringTypeAlias = string;
