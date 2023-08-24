@@ -12,7 +12,7 @@ import { Utils } from "./utils";
 import { POST_PROCESSORS } from "./features";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export async function processProject(projectRoot: string, readFile: Function = fs.readFileSync): Promise<Map<string, LCEConcept[]>> {
+export async function processProject(projectRoot: string): Promise<Map<string, LCEConcept[]>> {
     // TODO: take tsconfig.json into consideration (assumes projectRoot = path that contains tsconfig.json)
     // see https://www.typescriptlang.org/docs/handbook/project-references.html#what-is-a-project-reference
 
@@ -24,11 +24,17 @@ export async function processProject(projectRoot: string, readFile: Function = f
 
     console.log("Analyzing " + fileList.length + " project files...");
     const startTime = process.hrtime();
+    let fileReadingTime = 0;
 
     // Traverse and process all individual project files
     const traverser = new AstTraverser();
     for (const file of fileList) {
-        const code: string = readFile(file, "utf8");
+
+        const frStartTime = process.hrtime();
+        const code: string = fs.readFileSync(file, "utf8");
+        const frEndTime = process.hrtime();
+        fileReadingTime += (frEndTime[0] + frEndTime[1]/10**9) - (frStartTime[0] + frStartTime[1]/10**9);
+
         const {ast, services} = parseAndGenerateServices(code, {
             loc: true,
             range: true,
@@ -59,14 +65,16 @@ export async function processProject(projectRoot: string, readFile: Function = f
     }
 
     const endTime = process.hrtime();
-    console.log("Finished analyzing project files. Runtime: " + (endTime[0] - startTime[0]) + "s");
+    const diffTime = (endTime[0] + endTime[1]/10**9) - (startTime[0] + startTime[1]/10**9);
+    console.log("Finished analyzing project files.");
+    console.log("Runtime: " + diffTime.toFixed(3) + "s (" + fileReadingTime.toFixed(3) + "s reading files)");
 
     return normalizedConcepts;
 }
 
-export async function processAndOutputResult(projectRoot: string, readFile: Function = fs.readFileSync) {
+export async function processAndOutputResult(projectRoot: string, options: ExtractorOptions) {
     // process project
-    const normalizedConcepts = await processProject(projectRoot, readFile);
+    const normalizedConcepts = await processProject(projectRoot);
 
     // output JSON file
     if (normalizedConcepts) {
@@ -79,7 +87,7 @@ export async function processAndOutputResult(projectRoot: string, readFile: Func
                 return value;
             }
 
-        }, 2);
+        }, options.prettyPrint ? 2 : undefined);
         let dirPath = path.join(projectRoot, ".reports", "jqa");
         let filePath = path.join(dirPath, 'ts-output.json');
         fs.mkdir(dirPath, {recursive: true}, (errDir) => {
@@ -97,4 +105,8 @@ export async function processAndOutputResult(projectRoot: string, readFile: Func
         })
 
     }
+}
+
+export interface ExtractorOptions {
+    prettyPrint?: boolean;
 }
