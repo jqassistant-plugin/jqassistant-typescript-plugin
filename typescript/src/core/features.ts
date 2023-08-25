@@ -113,6 +113,14 @@ import { VariableDeclarationTraverser, VariableDeclaratorTraverser } from "./tra
 import { ModuleProcessor } from "./processors/typescript-module.processor";
 import { PostProcessor } from "./post-processor";
 import { ExternalDependenciesPostProcessor } from "./post-processors/external-dependencies.post-processor";
+import {
+    JSXAttributeTraverser,
+    JSXElementTraverser,
+    JSXExpressionContainerTraverser,
+    JSXOpeningElementTraverser,
+    JSXSpreadAttributeTraverser,
+    JSXSpreadChildTraverser
+} from "./traversers/jsx.traverser";
 
 /**
  * Central index of all traversers natively supported by the LCE.
@@ -147,6 +155,13 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
     [AST_NODE_TYPES.IfStatement, new IfStatementTraverser()],
     [AST_NODE_TYPES.ImportDeclaration, new SimpleTraverser()],
     [AST_NODE_TYPES.ImportExpression, new ImportExpressionTraverser()],
+    [AST_NODE_TYPES.JSXElement, new JSXElementTraverser()],
+    [AST_NODE_TYPES.JSXEmptyExpression, new SimpleTraverser()],
+    [AST_NODE_TYPES.JSXOpeningElement, new JSXOpeningElementTraverser()],
+    [AST_NODE_TYPES.JSXAttribute, new JSXAttributeTraverser()],
+    [AST_NODE_TYPES.JSXSpreadAttribute, new JSXSpreadAttributeTraverser()],
+    [AST_NODE_TYPES.JSXSpreadChild, new JSXSpreadChildTraverser()],
+    [AST_NODE_TYPES.JSXExpressionContainer, new JSXExpressionContainerTraverser()],
     [AST_NODE_TYPES.LabeledStatement, new LabeledStatementTraverser()],
     [AST_NODE_TYPES.Literal, new SimpleTraverser()],
     [AST_NODE_TYPES.LogicalExpression, new LogicalExpressionTraverser()],

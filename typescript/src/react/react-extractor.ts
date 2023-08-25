@@ -1,27 +1,8 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
-
-import {PROCESSORS, TRAVERSERS} from "../core/features";
-import {SimpleTraverser} from "../core/traverser";
-import {ReactHookProcessor} from "./processors/react-hook.processor";
-import {
-    JSXAttributeTraverser,
-    JSXElementTraverser,
-    JSXExpressionContainerTraverser,
-    JSXOpeningElementTraverser,
-    JSXSpreadAttributeTraverser,
-    JSXSpreadChildTraverser,
-} from "./traversers/jsx.traverser";
+import { PROCESSORS } from "../core/features";
+import { ReactHookProcessor } from "./processors/react-hook.processor";
 
 export function initializeReactExtractor() {
     console.log("Initializing React Extractor...");
-
-    TRAVERSERS.set(AST_NODE_TYPES.JSXElement, new JSXElementTraverser());
-    TRAVERSERS.set(AST_NODE_TYPES.JSXEmptyExpression, new SimpleTraverser());
-    TRAVERSERS.set(AST_NODE_TYPES.JSXOpeningElement, new JSXOpeningElementTraverser());
-    TRAVERSERS.set(AST_NODE_TYPES.JSXAttribute, new JSXAttributeTraverser());
-    TRAVERSERS.set(AST_NODE_TYPES.JSXSpreadAttribute, new JSXSpreadAttributeTraverser());
-    TRAVERSERS.set(AST_NODE_TYPES.JSXSpreadChild, new JSXSpreadChildTraverser());
-    TRAVERSERS.set(AST_NODE_TYPES.JSXExpressionContainer, new JSXExpressionContainerTraverser());
 
     PROCESSORS.push(new ReactHookProcessor());
 }
