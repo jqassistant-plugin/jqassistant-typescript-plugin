@@ -2,6 +2,8 @@
 
 // Sample Declarations to be used later
 
+import { dClassArgsExternal } from "./secondary";
+
 class CustomClass {
     public x: number;
     public y: number;
@@ -48,6 +50,42 @@ function dClassObjectArg(arg: {mem1: number, mem2: string}): ClassDecorator {
     }
 }
 
+const dMethodMarker: MethodDecorator = (target, key, descriptor) => {
+    return descriptor;
+}
+
+function dMethodArgs(arg1: number, arg2: string): MethodDecorator {
+    return (target, key, descriptor) => {
+        return descriptor;
+    }
+}
+
+function dMethodObjectArg(arg: {mem1: number, mem2: string}): MethodDecorator {
+    return (target, key, descriptor) => {
+        return descriptor;
+    }
+}
+
+const dPropertyMarker: PropertyDecorator = (target, key) => {}
+
+function dPropertyArgs(arg1: number, arg2: string): PropertyDecorator {
+    return (target, key) => {}
+}
+
+function dPropertyObjectArg(arg: {mem1: number, mem2: string}): PropertyDecorator {
+    return (target, key) => {}
+}
+
+const dParameterMarker: ParameterDecorator = (target, key, index) => {}
+
+function dParameterArgs(arg1: number, arg2: string): ParameterDecorator {
+    return (target, key, index) => {}
+}
+
+function dParameterObjectArg(arg: {mem1: number, mem2: string}): ParameterDecorator {
+    return (target, key, index) => {}
+}
+
 // Class declarations with applied decorators
 @dClassMarker
 class cMarker {}
@@ -61,3 +99,36 @@ class cClassObjectArg {}
 @dClassMarker
 @dClassArgs(1, "a")
 class cClassMulti {}
+
+@dClassArgsExternal(3, "wow")
+class cClassArgExt {}
+
+class cMethodDecorators {
+    @dMethodMarker
+    method1() {}
+
+    @dMethodArgs(42, "hello")
+    method2() {}
+
+    @dMethodObjectArg({ mem1: 100, mem2: "world" })
+    method3() {}
+}
+
+class cPropertyDecorators {
+    @dPropertyMarker
+    property1: number = 1;
+
+    @dPropertyArgs(5, "abc")
+    property2: number = 2;
+
+    @dPropertyObjectArg({ mem1: 1, mem2: "xyz" })
+    property3: number = 3;
+}
+
+class cParameterDecorators {
+    method(
+        @dParameterMarker param1: number,
+        @dParameterArgs(10, "param2") param2: string,
+        @dParameterObjectArg({ mem1: 20, mem2: "param3" }) param3: any
+    ) {}
+}

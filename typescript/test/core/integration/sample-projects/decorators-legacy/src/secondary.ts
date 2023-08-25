@@ -23,3 +23,9 @@ export enum ExternalCustomEnum {
     A = 1,
     B = 2,
 }
+
+export function dClassArgsExternal(arg1: number, arg2: string): ClassDecorator {
+    return (constr) => {
+        return constr;
+    }
+}
