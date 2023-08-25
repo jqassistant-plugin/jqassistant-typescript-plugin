@@ -13,6 +13,7 @@ target
 
 # TS
 **/node_modules/
+!/typescript/test/core/integration/sample-projects/node-dependencies/node_modules/
 **/tmp/
 **/dist/
 **/jqassistant/store/
