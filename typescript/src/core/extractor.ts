@@ -2,6 +2,7 @@ import { parseAndGenerateServices } from "@typescript-eslint/typescript-estree";
 import * as fs from "fs";
 import path from "path";
 import { TypeChecker } from "typescript";
+import { Presets, SingleBar } from "cli-progress";
 
 import { ConceptMap, LCEConcept, mergeConceptMaps, singleEntryConceptMap, unifyConceptMap } from "./concept";
 import { LCEProject } from "./concepts/typescript-project.concept";
@@ -25,10 +26,14 @@ export async function processProject(projectRoot: string): Promise<Map<string, L
     console.log("Analyzing " + fileList.length + " project files...");
     const startTime = process.hrtime();
     let fileReadingTime = 0;
+    const progressBar = new SingleBar({}, Presets.shades_classic);
+    progressBar.start(fileList.length, 0);
 
     // Traverse and process all individual project files
     const traverser = new AstTraverser();
-    for (const file of fileList) {
+    for (let i = 0; i < fileList.length; i++){
+        progressBar.update(i+1);
+        const file = fileList[i];
 
         const frStartTime = process.hrtime();
         const code: string = fs.readFileSync(file, "utf8");
@@ -57,9 +62,11 @@ export async function processProject(projectRoot: string): Promise<Map<string, L
 
         concepts = mergeConceptMaps(concepts, unifyConceptMap(traverser.traverse(globalContext), globalContext.sourceFilePath));
     }
+    progressBar.stop();
     const normalizedConcepts = unifyConceptMap(concepts, "").get("") ?? new Map();
 
     // Post-process for project-wide concepts
+    console.log("Post-Processing Results...")
     for(const postProcessor of POST_PROCESSORS) {
         postProcessor.postProcess(normalizedConcepts);
     }
