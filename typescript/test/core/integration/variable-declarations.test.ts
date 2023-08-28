@@ -856,6 +856,8 @@ describe("variable declarations test", () => {
     });
 
     // TODO: fix different handling of local and remote enum values and their types
+    // Local Enum values show correct behavior
+    // NOTE: The fix would require manually changing the external FQN determined by the TS TypeChecker in type.utils.ts
     test.skip("let x: = ExternalEnum.MEMBER;", async () => {
         const decl = varDecls.get('"./src/main.ts".vExtEnum');
         expect(decl).toBeDefined();

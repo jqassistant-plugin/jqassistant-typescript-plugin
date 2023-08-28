@@ -391,6 +391,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
         for (let i = 0; i < tc.getTypeArguments(type as TypeReference).length; i++){
             const ta = tc.getTypeArguments(type as TypeReference)[i];
             if("typeArguments" in node && node.typeArguments) {
+                // if type argument child node is available, pass it on
                 typeArguments.push(parseType(processingContext, ta, (node.typeArguments as Node[]).at(i) ?? node, excludedFQN, ignoreDependencies))
             } else {
                 typeArguments.push(parseType(processingContext, ta, node, excludedFQN, ignoreDependencies));
