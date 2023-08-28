@@ -387,9 +387,15 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
             return parseAnonymousType(processingContext, type, node, symbol, excludedFQN, ignoreDependencies);
         }
 
-        const typeArguments: LCEType[] = tc
-            .getTypeArguments(type as TypeReference)
-            .map((t) => parseType(processingContext, t, node, excludedFQN, ignoreDependencies));
+        const typeArguments: LCEType[] = [];
+        for (let i = 0; i < tc.getTypeArguments(type as TypeReference).length; i++){
+            const ta = tc.getTypeArguments(type as TypeReference)[i];
+            if("typeArguments" in node && node.typeArguments) {
+                typeArguments.push(parseType(processingContext, ta, (node.typeArguments as Node[]).at(i) ?? node, excludedFQN, ignoreDependencies))
+            } else {
+                typeArguments.push(parseType(processingContext, ta, node, excludedFQN, ignoreDependencies));
+            }
+        }
 
         // TODO: handle locally defined (non-)anonymous types (e.g. with class expressios)
 
