@@ -99,7 +99,6 @@ export class PathUtils {
      * @returns normalized FQN with relative/node module path
      */
     static normalizeTypeCheckerFQN(projectPath: string, tcFQN: string, sourceFilePath: string): string {
-        // TODO: test for external node paths
         if (tcFQN.startsWith('"')) {
             const normFqn = this.toFQN(
                 this.normalizeImportPath(projectPath, this.extractFQNPath(tcFQN))) + tcFQN.slice(tcFQN.lastIndexOf('"') + 1

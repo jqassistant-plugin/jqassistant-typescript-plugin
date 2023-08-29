@@ -14,7 +14,8 @@ export class Utils {
             include?: string[];
             exclude?: string[];
         } = json5.parse(fs.readFileSync(path.join(projectPath, "tsconfig.json"), "utf8"));
-        const endings = [".ts", ".tsx"];
+        // TODO: check CommonJS compatibility (.cts) + check package.json for type field
+        const endings = [".ts", ".tsx", ".mts"];
 
         const ignoredDirs = [".git", "node_modules"];
 
@@ -34,7 +35,9 @@ export class Utils {
                 if (tsconfig.include.find((dirPattern) => match([file], dirPattern).length > 0 || file.replace(/\\/g, "/").startsWith(dirPattern))) {
                     if (
                         tsconfig.exclude &&
-                        tsconfig.exclude.find((dirPattern) => match([file], dirPattern, {dot: true, }).length > 0 || file.replace(/\\/g, "/").startsWith(dirPattern))
+                        tsconfig.exclude.find(
+                            (dirPattern) => match([file], dirPattern, { dot: true }).length > 0 || file.replace(/\\/g, "/").startsWith(dirPattern),
+                        )
                     ) {
                         included = false;
                     }

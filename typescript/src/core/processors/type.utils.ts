@@ -347,7 +347,6 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
         // declared type
 
         // normalize TypeChecker FQN and determine if type is part of the project
-        // TODO: further testing needed
         const sourceFile = symbol?.valueDeclaration?.getSourceFile() ?? symbol?.declarations?.find((d) => !!d.getSourceFile())?.getSourceFile();
         const isStandardLibrary = !!sourceFile && globalContext.services.program.isSourceFileDefaultLibrary(sourceFile);
         const isExternal = !!sourceFile && globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile);
@@ -398,7 +397,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
             }
         }
 
-        // TODO: handle locally defined (non-)anonymous types (e.g. with class expressios)
+        // TODO: handle locally defined (non-)anonymous types (e.g. with class expressions)
 
         if (!ignoreDependencies && !isStandardLibrary)
             DependencyResolutionProcessor.registerDependency(processingContext.localContexts, normalizedFQN, scheduleFqnResolution);

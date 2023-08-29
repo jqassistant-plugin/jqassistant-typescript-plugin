@@ -14,9 +14,6 @@ import { POST_PROCESSORS } from "./features";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export async function processProject(projectRoot: string): Promise<Map<string, LCEConcept[]>> {
-    // TODO: take tsconfig.json into consideration (assumes projectRoot = path that contains tsconfig.json)
-    // see https://www.typescriptlang.org/docs/handbook/project-references.html#what-is-a-project-reference
-
     projectRoot = path.resolve(projectRoot);
     const fileList = Utils.getProjectSourceFileList(projectRoot);
 
