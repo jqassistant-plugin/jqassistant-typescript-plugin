@@ -20,6 +20,7 @@ import { Visibility } from "../../src/core/concepts/visibility.concept";
 import { LCEAccessorProperty } from "../../src/core/concepts/accessor-declaration.concept";
 import { LCEModule } from "../../src/core/concepts/typescript-module.concept";
 import { LCEEnumDeclaration } from "../../src/core/concepts/enum-declaration.concept";
+import { LCEExportDeclaration } from "../../src/core/concepts/export-declaration.concept";
 
 export function getDependenciesFromResult(result: Map<string, LCEConcept[]>): Map<string, Map<string, LCEDependency>> {
     const dependencies: Map<string, Map<string, LCEDependency>> = new Map();
@@ -353,4 +354,11 @@ export function expectModule(modules: Map<string, LCEModule>, fqn: string, graph
     } else {
         expect(module).toBeUndefined();
     }
+}
+
+export function expectExport(exports: LCEExportDeclaration[], fqn: string, identifier: string, alias?: string) {
+    const exp = exports.find(e => e.declFqn === fqn);
+    expect(exp).toBeDefined();
+    expect(exp!.identifier).toBe(identifier);
+    expect(exp!.alias).toBe(alias);
 }

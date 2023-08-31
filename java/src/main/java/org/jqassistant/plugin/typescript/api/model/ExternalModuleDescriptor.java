@@ -8,7 +8,7 @@ import java.util.List;
 @Label("ExternalModule")
 public interface ExternalModuleDescriptor extends TypeScriptDescriptor, NamedConceptDescriptor {
 
-    @Relation("DECLARES")
-    List<ExternalDeclarationDescriptor> getDeclarations();
+    @Relation.Outgoing
+    List<ExternalModuleExportsDescriptor> getExportedDeclarations();
 
 }

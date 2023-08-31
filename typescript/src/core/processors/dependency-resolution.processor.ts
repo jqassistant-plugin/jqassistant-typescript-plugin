@@ -1,13 +1,13 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, createConceptMap, LCENamedConcept, mergeConceptMaps, singleEntryConceptMap} from "../concept";
-import {LCEDependency} from "../concepts/dependency.concept";
-import {LocalContexts, ProcessingContext} from "../context";
-import {ExecutionCondition} from "../execution-condition";
-import {PathUtils} from "../path.utils";
-import {Processor} from "../processor";
-import {getAndDeleteChildConcepts} from "../processor.utils";
-import {ProgramTraverser} from "../traversers/program.traverser";
+import { ConceptMap, createConceptMap, LCENamedConcept, mergeConceptMaps, singleEntryConceptMap } from "../concept";
+import { LCEDependency } from "../concepts/dependency.concept";
+import { LocalContexts, ProcessingContext } from "../context";
+import { ExecutionCondition } from "../execution-condition";
+import { PathUtils } from "../path.utils";
+import { Processor } from "../processor";
+import { getAndDeleteChildConcepts } from "../processor.utils";
+import { ProgramTraverser } from "../traversers/program.traverser";
 
 /**
  * Maps namespace identifier and local name to FQN for all global and local declarations made within the current file.
@@ -103,7 +103,7 @@ export class DependencyResolutionProcessor extends Processor {
         for (const dep of dependencies) {
             if (!dep.fqn) continue;
 
-            if (!dep.fqn.startsWith('"') || dep.fqn.startsWith(dep.sourceFQN)) continue; // skip invalid FQNs and dependencies on own scope
+            if ((!dep.fqn.startsWith('"') && dep.targetType !== "module") || dep.fqn.startsWith(dep.sourceFQN)) continue; // skip invalid FQNs and dependencies on own scope
 
             if (!depIndex.has(dep.sourceFQN)) {
                 depIndex.set(dep.sourceFQN, new Map([[dep.fqn, dep]]));

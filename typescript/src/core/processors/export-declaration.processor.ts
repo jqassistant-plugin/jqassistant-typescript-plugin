@@ -1,34 +1,27 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, getAndCastConcepts, LCEConcept, mergeConceptMaps, singleEntryConceptMap} from "../concept";
-import {LCEClassDeclaration} from "../concepts/class-declaration.concept";
-import {LCEEnumDeclaration} from "../concepts/enum-declaration.concept";
-import {LCEExportDeclaration} from "../concepts/export-declaration.concept";
-import {LCEFunctionDeclaration} from "../concepts/function-declaration.concept";
-import {LCEInterfaceDeclaration} from "../concepts/interface-declaration.concept";
-import {LCETypeAliasDeclaration} from "../concepts/type-alias-declaration.concept";
-import {LCEVariableDeclaration} from "../concepts/variable-declaration.concept";
-import {ProcessingContext} from "../context";
-import {ExecutionCondition} from "../execution-condition";
-import {PathUtils} from "../path.utils";
-import {Processor} from "../processor";
-import {
-    ExportDefaultDeclarationTraverser,
-    ExportNamedDeclarationTraverser
-} from "../traversers/export-declaration.traverser";
-import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
+import { ConceptMap, getAndCastConcepts, LCEConcept, mergeConceptMaps, singleEntryConceptMap } from "../concept";
+import { LCEClassDeclaration } from "../concepts/class-declaration.concept";
+import { LCEEnumDeclaration } from "../concepts/enum-declaration.concept";
+import { LCEExportDeclaration } from "../concepts/export-declaration.concept";
+import { LCEFunctionDeclaration } from "../concepts/function-declaration.concept";
+import { LCEInterfaceDeclaration } from "../concepts/interface-declaration.concept";
+import { LCETypeAliasDeclaration } from "../concepts/type-alias-declaration.concept";
+import { LCEVariableDeclaration } from "../concepts/variable-declaration.concept";
+import { ProcessingContext } from "../context";
+import { ExecutionCondition } from "../execution-condition";
+import { PathUtils } from "../path.utils";
+import { Processor } from "../processor";
+import { ExportDefaultDeclarationTraverser, ExportNamedDeclarationTraverser } from "../traversers/export-declaration.traverser";
+import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
 
 export class ExportDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.ExportAllDeclaration, AST_NODE_TYPES.ExportDefaultDeclaration, AST_NODE_TYPES.ExportNamedDeclaration],
-        () => true
+        () => true,
     );
 
-    public override postChildrenProcessing({
-                                               node,
-                                               localContexts,
-                                               globalContext
-                                           }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
+    public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         const concepts: ConceptMap[] = [];
         if (node.type === AST_NODE_TYPES.ExportNamedDeclaration) {
             let inProject, source;
@@ -52,9 +45,9 @@ export class ExportDeclarationProcessor extends Processor {
                                 undefined,
                                 false,
                                 node.exportKind,
-                                globalContext.sourceFilePath
-                            )
-                        )
+                                globalContext.sourceFilePath,
+                            ),
+                        ),
                     );
                 }
             } else {
@@ -73,9 +66,9 @@ export class ExportDeclarationProcessor extends Processor {
                                 inProject,
                                 specifier.exported.name === "default",
                                 node.exportKind,
-                                globalContext.sourceFilePath
-                            )
-                        )
+                                globalContext.sourceFilePath,
+                            ),
+                        ),
                     );
                 }
             }
@@ -94,9 +87,9 @@ export class ExportDeclarationProcessor extends Processor {
                             undefined,
                             true,
                             node.exportKind,
-                            globalContext.sourceFilePath
-                        )
-                    )
+                            globalContext.sourceFilePath,
+                        ),
+                    ),
                 );
             }
         } else if (node.type === AST_NODE_TYPES.ExportAllDeclaration && node.source) {
@@ -105,8 +98,17 @@ export class ExportDeclarationProcessor extends Processor {
             concepts.push(
                 singleEntryConceptMap(
                     LCEExportDeclaration.conceptId,
-                    new LCEExportDeclaration("*", node.exported?.name, undefined, source, inProject, false, "namespace", globalContext.sourceFilePath)
-                )
+                    new LCEExportDeclaration(
+                        "*",
+                        node.exported?.name,
+                        DependencyResolutionProcessor.constructScopeFQN(localContexts),
+                        source,
+                        inProject,
+                        false,
+                        "namespace",
+                        globalContext.sourceFilePath,
+                    ),
+                ),
             );
         }
 

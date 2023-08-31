@@ -63,7 +63,6 @@ type tObject = {
     method(px: string): number;
 };
 
-
 export type tObjectExported = {
   x: CustomType;
 };

@@ -304,15 +304,15 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
         } else {
             // if no symbol is to be found, try to extract TypeName from Node (e.g. "SomeAlias" from "let x: SomeAlias;")
             let nodeToAnalyze = node;
-            if(node.kind & ts.SyntaxKind.Identifier) {
+            if(node.kind === ts.SyntaxKind.Identifier) {
                 // if node is just plain identifier, try to extract type name from parent node
                 nodeToAnalyze = node.parent;
             }
             if("type" in nodeToAnalyze) {
                 const nodeType: ts.TypeNode = nodeToAnalyze.type as ts.TypeNode;
-                if (nodeType && (nodeType.kind & ts.SyntaxKind.TypeReference)) {
+                if (nodeType && (nodeType.kind === ts.SyntaxKind.TypeReference)) {
                     const typeName = (nodeType as TypeReferenceNode).typeName;
-                    if(typeName && (typeName.kind & ts.SyntaxKind.Identifier)) {
+                    if(typeName && (typeName.kind === ts.SyntaxKind.Identifier)) {
                         fqn = (typeName as ts.Identifier).escapedText.toString();
                     }
                 }
@@ -365,20 +365,35 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
                 normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, fqn, globalContext.sourceFilePath);
             } else {
                 // Node fqn -> set node path in quotes
-                if (fqn.includes(".")) {
-                    // node reference (e.g. "path.ParsedPath") -> set node path in quotes
-                    normalizedFQN = PathUtils.toFQN(fqn.slice(0, fqn.lastIndexOf("."))) + fqn.slice(fqn.lastIndexOf("."));
-                } else {
-                    normalizedFQN = PathUtils.toFQN(fqn);
-                }
+                normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, `"${sourceFile.fileName}".${fqn}`, globalContext.sourceFilePath);
+                // if (fqn.includes(".")) {
+                //     // node reference (e.g. "path.ParsedPath") -> set node path in quotes
+                //     normalizedFQN = PathUtils.toFQN(fqn.slice(0, fqn.lastIndexOf("."))) + fqn.slice(fqn.lastIndexOf("."));
+                // } else {
+                //     normalizedFQN = PathUtils.toFQN(fqn);
+                // }
             }
         } else if (fqn.startsWith('"')) {
             // FQN with specified module path (e.g. '"/home/../src/MyModule".MyClass') -> normalize module path
             normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, fqn, globalContext.sourceFilePath);
         } else {
-            // internal name (e.g. "InternalClass") -> resolve later
+            // plain name (e.g. "SomeClass")
             normalizedFQN = fqn;
-            scheduleFqnResolution = true;
+
+            // try to get source node for symbol and extract path
+            if(symbol && symbol.declarations && symbol.declarations.length === 1) {
+                const fileName = sourceFile?.fileName;
+                if(fileName) {
+                    fqn = `"${fileName}".${fqn}`;
+                    normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, fqn, globalContext.sourceFilePath);
+                } else {
+                    // could not resolve via parent node -> try to resolve later
+                    scheduleFqnResolution = true;
+                }
+            } else {
+                // could not resolve via parent node -> try to resolve later
+                scheduleFqnResolution = true;
+            }
         }
 
         if (normalizedFQN === excludedFQN) {

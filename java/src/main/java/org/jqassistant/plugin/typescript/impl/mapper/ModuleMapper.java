@@ -80,18 +80,20 @@ public class ModuleMapper {
 
         for(Module module : scanResultCollection.getModules()) {
             FileDescriptor fileDescriptor = fileResolver.match(module.getPath(), FileDescriptor.class, scanner.getContext());
-            ModuleDescriptor moduleDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, ModuleDescriptor.class);
-            moduleDescriptor.setFqn(module.getFqn());
+            if(fileDescriptor != null) { // only represent modules in the graph that were previously scanned in the file system
+                ModuleDescriptor moduleDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, ModuleDescriptor.class);
+                moduleDescriptor.setFqn(module.getFqn());
 
-            moduleDescriptor.getTypeAliasDeclarations().addAll(typeAliasDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
-            moduleDescriptor.getClassDeclarations().addAll(classDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
-            moduleDescriptor.getInterfaceDeclarations().addAll(interfaceDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
-            moduleDescriptor.getEnumDeclarations().addAll(enumDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
-            moduleDescriptor.getFunctionDeclarations().addAll(functionDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
-            moduleDescriptor.getVariableDeclarations().addAll(variableDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
+                moduleDescriptor.getTypeAliasDeclarations().addAll(typeAliasDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
+                moduleDescriptor.getClassDeclarations().addAll(classDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
+                moduleDescriptor.getInterfaceDeclarations().addAll(interfaceDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
+                moduleDescriptor.getEnumDeclarations().addAll(enumDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
+                moduleDescriptor.getFunctionDeclarations().addAll(functionDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
+                moduleDescriptor.getVariableDeclarations().addAll(variableDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
 
-            scanner.getContext().peek(FqnResolver.class).registerFqn(moduleDescriptor);
-            result.add(moduleDescriptor);
+                scanner.getContext().peek(FqnResolver.class).registerFqn(moduleDescriptor);
+                result.add(moduleDescriptor);
+            }
         }
 
         scanner.getContext().pop(TypeParameterResolver.class);

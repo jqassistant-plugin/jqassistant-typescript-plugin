@@ -121,6 +121,7 @@ import {
     JSXSpreadAttributeTraverser,
     JSXSpreadChildTraverser
 } from "./traversers/jsx.traverser";
+import { ExportsPostProcessor } from "./post-processors/exports.post-processor";
 
 /**
  * Central index of all traversers natively supported by the LCE.
@@ -213,7 +214,8 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
 ]);
 
 export const POST_PROCESSORS: PostProcessor[] = [
-    new ExternalDependenciesPostProcessor()
+    new ExternalDependenciesPostProcessor(),
+    new ExportsPostProcessor(),
 ];
 
 /**

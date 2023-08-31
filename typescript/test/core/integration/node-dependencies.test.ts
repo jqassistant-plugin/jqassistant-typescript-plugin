@@ -16,15 +16,12 @@ describe("Node.js dependencies test", () => {
     });
 
     test("main module dependencies", async () => {
-        expectDependency(deps, './src/main.ts', '"cowsay".think', 1);
-        expectDependency(deps, './src/main.ts', '"./src/secondary.ts".ExternalCustomClass', 1);
         expectDependency(deps, '"./src/main.ts".CustomClass.saySthExternal', '"./src/secondary.ts".ExternalCustomClass', 1);
         expectDependency(deps, '"./src/main.ts".CustomClass.saySthExternal', '"./src/secondary.ts".ExternalCustomClass.saySth', 1);
-        expectDependency(deps, '"./src/main.ts".OtherClass.thinkSth', '"cowsay".think', 1);
+        expectDependency(deps, '"./src/main.ts".OtherClass.thinkSth', '"./node_modules/cowsay/index.js".think', 1);
     });
 
     test("secondary module dependencies", async () => {
-        expectDependency(deps, './src/secondary.ts', '"cowsay".say', 1);
-        expectDependency(deps, '"./src/secondary.ts".ExternalCustomClass.saySth', '"cowsay".say', 2);
+        expectDependency(deps, '"./src/secondary.ts".ExternalCustomClass.saySth', '"./node_modules/cowsay/index.js".say', 2);
     });
 });

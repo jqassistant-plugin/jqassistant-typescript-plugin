@@ -65,7 +65,7 @@ export async function processProject(projectRoot: string): Promise<Map<string, L
     // Post-process for project-wide concepts
     console.log("Post-Processing Results...")
     for(const postProcessor of POST_PROCESSORS) {
-        postProcessor.postProcess(normalizedConcepts);
+        postProcessor.postProcess(normalizedConcepts, projectRoot.replace(/\\/g, "/"),);
     }
 
     const endTime = process.hrtime();

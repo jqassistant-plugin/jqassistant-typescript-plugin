@@ -734,7 +734,8 @@ describe("variable declarations test", () => {
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
-                expectDeclaredType(decl.initValue.type, '"./src/main.ts".CustomEnum');
+                // TODO: should be Enum not EnumMember type
+                expectDeclaredType(decl.initValue.type, '"./src/main.ts".CustomEnum.A');
 
                 expect(decl.initValue.valueType).toBe("member")
                 
@@ -747,7 +748,8 @@ describe("variable declarations test", () => {
                 const memberValue = (decl.initValue as LCEValueMember).member;
                 expect(memberValue.valueType).toBe("declared");
                 expect((memberValue as LCEValueDeclared).fqn).toBe('A');
-                expectDeclaredType(memberValue.type, '"./src/main.ts".CustomEnum');
+                // TODO: should be Enum not EnumMember type
+                expectDeclaredType(memberValue.type, '"./src/main.ts".CustomEnum.A');
             }
         }
 

@@ -17,7 +17,7 @@ export class PathUtils {
     static getPathType(path: string): PathType {
         if (p.isAbsolute(path)) {
             return "absolute";
-        } else if (path.startsWith(".")) {
+        } else if (path.startsWith(".") && !path.startsWith("./node_modules")) {
             return "relative";
         } else {
             return "node";
