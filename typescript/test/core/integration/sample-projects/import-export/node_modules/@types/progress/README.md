@@ -1,0 +1,16 @@
+# Installation
+> `npm install --save @types/progress`
+
+# Summary
+This package contains type definitions for node-progress (https://github.com/visionmedia/node-progress).
+
+# Details
+Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/progress.
+
+### Additional Details
+ * Last updated: Wed, 04 Aug 2021 14:01:23 GMT
+ * Dependencies: [@types/node](https://npmjs.com/package/@types/node)
+ * Global values: `ProgressBar`
+
+# Credits
+These definitions were written by [Sebastian Lenz](https://github.com/sebastian-lenz).

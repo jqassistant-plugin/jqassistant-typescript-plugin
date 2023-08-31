@@ -1,0 +1,27 @@
+{
+    "name": "@types/progress",
+    "version": "2.0.5",
+    "description": "TypeScript definitions for node-progress",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/progress",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Sebastian Lenz",
+            "url": "https://github.com/sebastian-lenz",
+            "githubUsername": "sebastian-lenz"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/progress"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/node": "*"
+    },
+    "typesPublisherContentHash": "93f01418c0b903e656235808047bb8d1ba39b0db698c093d9900002b32ebac2d",
+    "typeScriptVersion": "3.6"
+}
