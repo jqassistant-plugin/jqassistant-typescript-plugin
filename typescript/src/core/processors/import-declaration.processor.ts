@@ -3,9 +3,10 @@ import { AST_NODE_TYPES } from "@typescript-eslint/types";
 import { ConceptMap, mergeConceptMaps } from "../concept";
 import { ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
-import { PathUtils } from "../path.utils";
+import { PathUtils } from "../utils/path.utils";
 import { Processor } from "../processor";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
+import { NodeUtils } from "../utils/node.utils";
 
 export class ImportDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.ImportDeclaration], () => true);
@@ -37,8 +38,13 @@ export class ImportDeclarationProcessor extends Processor {
                     // resolve node package names to the appropriate paths
                     try {
                         const resolvedModulePath = require.resolve(PathUtils.extractFQNPath(target), { paths: [globalContext.projectRootPath] });
-                        const targetDeclName = target.replace(/".*"\./, "");
-                        target = `"${PathUtils.normalize(globalContext.projectRootPath, resolvedModulePath)}".${targetDeclName}`;
+                        const targetDeclName = PathUtils.extractFQNIdentifier(target);
+                        const packageName = NodeUtils.getPackageNameForPath(globalContext.projectRootPath, resolvedModulePath);
+                        if (packageName) {
+                            target = `"${packageName}".${targetDeclName}`;
+                        } else {
+                            target = `"${PathUtils.normalize(globalContext.projectRootPath, resolvedModulePath)}".${targetDeclName}`;
+                        }
                     } catch (e) {
                         console.log(`Error resolving import path for: ${PathUtils.extractFQNPath(target)}`);
                     }

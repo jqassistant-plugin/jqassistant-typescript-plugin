@@ -49,8 +49,9 @@ import {
     LCETypeUnion
 } from "../concepts/type.concept";
 import { ProcessingContext } from "../context";
-import { PathUtils } from "../path.utils";
+import { PathUtils } from "../utils/path.utils";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
+import { NodeUtils } from "../utils/node.utils";
 
 /**
  * Returns the type for a given class property (with a non-computed name)
@@ -362,10 +363,20 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
             if(fqn.startsWith('"')) {
                 // path that *probably* points to node modules
                 // -> resolve absolute path
-                normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, fqn, globalContext.sourceFilePath);
+                const packageName = NodeUtils.getPackageNameForPath(globalContext.projectRootPath, PathUtils.extractFQNPath(fqn));
+                if(packageName) {
+                    normalizedFQN = `"${packageName}".${PathUtils.extractFQNIdentifier(fqn)}`;
+                } else {
+                    normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, fqn, globalContext.sourceFilePath);
+                }
             } else {
                 // Node fqn -> set node path in quotes
-                normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, `"${sourceFile.fileName}".${fqn}`, globalContext.sourceFilePath);
+                const packageName = NodeUtils.getPackageNameForPath(globalContext.projectRootPath, sourceFile.fileName);
+                if(packageName) {
+                    normalizedFQN = normalizedFQN = `"${packageName}".${fqn}`;
+                } else {
+                    normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, `"${sourceFile.fileName}".${fqn}`, globalContext.sourceFilePath);
+                }
                 // if (fqn.includes(".")) {
                 //     // node reference (e.g. "path.ParsedPath") -> set node path in quotes
                 //     normalizedFQN = PathUtils.toFQN(fqn.slice(0, fqn.lastIndexOf("."))) + fqn.slice(fqn.lastIndexOf("."));

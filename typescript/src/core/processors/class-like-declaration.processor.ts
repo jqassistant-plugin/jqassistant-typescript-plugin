@@ -15,7 +15,7 @@ import { LCETypeFunction } from "../concepts/type.concept";
 import { ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
-import { getAndDeleteChildConcepts, getChildConcepts, getParentPropIndex, getParentPropName } from "../processor.utils";
+import { getAndDeleteChildConcepts, getChildConcepts, getParentPropIndex, getParentPropName } from "../utils/processor.utils";
 import { IdentifierTraverser } from "../traversers/expression.traverser";
 import { MethodTraverser, ParameterPropertyTraverser } from "../traversers/method.traverser";
 import { PropertyTraverser } from "../traversers/property.traverser";

@@ -6,7 +6,7 @@ import { LCETypeDeclared } from "../concepts/type.concept";
 import { ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
-import { getParentPropName } from "../processor.utils";
+import { getParentPropName } from "../utils/processor.utils";
 import { ClassTraverser } from "../traversers/class.traverser";
 import { ArrowFunctionExpressionTraverser, MemberExpressionTraverser, TaggedTemplateExpressionTraverser } from "../traversers/expression.traverser";
 import { FunctionTraverser } from "../traversers/function.traverser";

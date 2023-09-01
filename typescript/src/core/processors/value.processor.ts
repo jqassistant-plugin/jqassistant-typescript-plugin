@@ -19,7 +19,7 @@ import {
 import { ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
-import { getAndDeleteAllValueChildConcepts, getAndDeleteChildConcepts, getParentPropName } from "../processor.utils";
+import { getAndDeleteAllValueChildConcepts, getAndDeleteChildConcepts, getParentPropName } from "../utils/processor.utils";
 import {
     ArrayExpressionTraverser,
     CallExpressionTraverser,

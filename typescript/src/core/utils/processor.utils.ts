@@ -1,7 +1,7 @@
-import {ConceptMap, LCEConcept} from "./concept";
-import {LCEValue, valueConceptIds} from "./concepts/value.concept";
-import {LocalContexts} from "./context";
-import {Traverser, TraverserContext} from "./traverser";
+import { ConceptMap, LCEConcept } from "../concept";
+import { LCEValue, valueConceptIds } from "../concepts/value.concept";
+import { LocalContexts } from "../context";
+import { Traverser, TraverserContext } from "../traverser";
 
 export function getAndDeleteChildConcepts<T extends LCEConcept>(propName: string, conceptId: string, childConcepts: ConceptMap): T[] {
     const propConcepts = childConcepts.get(propName);

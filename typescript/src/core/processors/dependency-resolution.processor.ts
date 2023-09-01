@@ -4,9 +4,9 @@ import { ConceptMap, createConceptMap, LCENamedConcept, mergeConceptMaps, single
 import { LCEDependency } from "../concepts/dependency.concept";
 import { LocalContexts, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
-import { PathUtils } from "../path.utils";
+import { PathUtils } from "../utils/path.utils";
 import { Processor } from "../processor";
-import { getAndDeleteChildConcepts } from "../processor.utils";
+import { getAndDeleteChildConcepts } from "../utils/processor.utils";
 import { ProgramTraverser } from "../traversers/program.traverser";
 
 /**

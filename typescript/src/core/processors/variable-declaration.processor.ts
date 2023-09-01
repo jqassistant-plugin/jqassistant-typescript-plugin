@@ -1,22 +1,22 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, mergeConceptMaps, singleEntryConceptMap} from "../concept";
-import {LCEValue, LCEValueComplex} from "../concepts/value.concept";
-import {LCEVariableDeclaration} from "../concepts/variable-declaration.concept";
-import {ProcessingContext} from "../context";
-import {ExecutionCondition} from "../execution-condition";
-import {Processor} from "../processor";
-import {getAndDeleteAllValueChildConcepts} from "../processor.utils";
-import {VariableDeclaratorTraverser} from "../traversers/variable-declaration.traverser";
-import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
-import {parseESNodeType} from "./type.utils";
-import {VALUE_PROCESSING_FLAG} from "./value.processor";
-import {CodeCoordinateUtils} from "./code-coordinate.utils";
+import { ConceptMap, mergeConceptMaps, singleEntryConceptMap } from "../concept";
+import { LCEValue, LCEValueComplex } from "../concepts/value.concept";
+import { LCEVariableDeclaration } from "../concepts/variable-declaration.concept";
+import { ProcessingContext } from "../context";
+import { ExecutionCondition } from "../execution-condition";
+import { Processor } from "../processor";
+import { getAndDeleteAllValueChildConcepts } from "../utils/processor.utils";
+import { VariableDeclaratorTraverser } from "../traversers/variable-declaration.traverser";
+import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
+import { parseESNodeType } from "./type.utils";
+import { VALUE_PROCESSING_FLAG } from "./value.processor";
+import { CodeCoordinateUtils } from "./code-coordinate.utils";
 
 export class VariableDeclarationProcessor extends Processor {
     public static readonly VARIABLE_DECLARATION_KIND_CONTEXT = "variable-declaration-type";
 
-    public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.VariableDeclaration], ({node}) => {
+    public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.VariableDeclaration], ({ node }) => {
         return (
             !!node.parent &&
             (node.parent.type === AST_NODE_TYPES.ExportNamedDeclaration ||
@@ -25,7 +25,7 @@ export class VariableDeclarationProcessor extends Processor {
         );
     });
 
-    public override preChildrenProcessing({localContexts, node}: ProcessingContext): void {
+    public override preChildrenProcessing({ localContexts, node }: ProcessingContext): void {
         if (node.type === AST_NODE_TYPES.VariableDeclaration) {
             localContexts.currentContexts.set(VariableDeclarationProcessor.VARIABLE_DECLARATION_KIND_CONTEXT, node.kind);
         }

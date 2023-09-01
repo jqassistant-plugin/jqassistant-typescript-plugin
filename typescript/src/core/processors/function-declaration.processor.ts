@@ -1,20 +1,20 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, mergeConceptMaps, singleEntryConceptMap} from "../concept";
-import {LCEDecorator} from "../concepts/decorator.concept";
-import {LCEFunctionDeclaration} from "../concepts/function-declaration.concept";
-import {LCEParameterDeclaration} from "../concepts/method-declaration.concept";
-import {LCETypeParameterDeclaration} from "../concepts/type-parameter.concept";
-import {LCETypeFunction} from "../concepts/type.concept";
-import {ProcessingContext} from "../context";
-import {ExecutionCondition} from "../execution-condition";
-import {Processor} from "../processor";
-import {getAndDeleteChildConcepts, getParentPropIndex} from "../processor.utils";
-import {IdentifierTraverser} from "../traversers/expression.traverser";
-import {FunctionTraverser} from "../traversers/function.traverser";
-import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
-import {parseFunctionType} from "./type.utils";
-import {CodeCoordinateUtils} from "./code-coordinate.utils";
+import { ConceptMap, mergeConceptMaps, singleEntryConceptMap } from "../concept";
+import { LCEDecorator } from "../concepts/decorator.concept";
+import { LCEFunctionDeclaration } from "../concepts/function-declaration.concept";
+import { LCEParameterDeclaration } from "../concepts/method-declaration.concept";
+import { LCETypeParameterDeclaration } from "../concepts/type-parameter.concept";
+import { LCETypeFunction } from "../concepts/type.concept";
+import { ProcessingContext } from "../context";
+import { ExecutionCondition } from "../execution-condition";
+import { Processor } from "../processor";
+import { getAndDeleteChildConcepts, getParentPropIndex } from "../utils/processor.utils";
+import { IdentifierTraverser } from "../traversers/expression.traverser";
+import { FunctionTraverser } from "../traversers/function.traverser";
+import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
+import { parseFunctionType } from "./type.utils";
+import { CodeCoordinateUtils } from "./code-coordinate.utils";
 
 export class FunctionDeclarationProcessor extends Processor {
     /** is used to provide an LCETypeFunction object of the currently traversed function */
@@ -22,24 +22,24 @@ export class FunctionDeclarationProcessor extends Processor {
 
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.FunctionDeclaration, AST_NODE_TYPES.TSDeclareFunction],
-        ({node}) => {
+        ({ node }) => {
             return (
                 !!node.parent &&
                 (node.parent.type === AST_NODE_TYPES.ExportNamedDeclaration ||
                     node.parent.type === AST_NODE_TYPES.ExportDefaultDeclaration ||
                     node.parent.type === AST_NODE_TYPES.Program)
             );
-        }
+        },
     );
 
-    public override preChildrenProcessing({node, localContexts, globalContext}: ProcessingContext): void {
+    public override preChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext): void {
         if (node.type === AST_NODE_TYPES.FunctionDeclaration || node.type === AST_NODE_TYPES.TSDeclareFunction) {
             if (node.id) {
                 DependencyResolutionProcessor.addScopeContext(localContexts, node.id.name);
                 DependencyResolutionProcessor.createDependencyIndex(localContexts);
             }
 
-            const functionType = parseFunctionType({globalContext, localContexts, node}, node);
+            const functionType = parseFunctionType({ globalContext, localContexts, node }, node);
             if (functionType) {
                 localContexts.currentContexts.set(FunctionDeclarationProcessor.FUNCTION_TYPE_CONTEXT_ID, functionType);
                 if (node.id) {
@@ -50,11 +50,7 @@ export class FunctionDeclarationProcessor extends Processor {
         }
     }
 
-    public override postChildrenProcessing({
-                                               node,
-                                               localContexts,
-                                               globalContext
-                                           }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
+    public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (node.type === AST_NODE_TYPES.FunctionDeclaration || node.type === AST_NODE_TYPES.TSDeclareFunction) {
             // TODO: handle overloads
             const functionType = localContexts.currentContexts.get(FunctionDeclarationProcessor.FUNCTION_TYPE_CONTEXT_ID) as
@@ -74,10 +70,10 @@ export class FunctionDeclarationProcessor extends Processor {
                             getAndDeleteChildConcepts(FunctionTraverser.PARAMETERS_PROP, LCEParameterDeclaration.conceptId, childConcepts),
                             returnType,
                             typeParameters,
-                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true)
-                        )
+                            CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true),
+                        ),
                     ),
-                    DependencyResolutionProcessor.getRegisteredDependencies(localContexts)
+                    DependencyResolutionProcessor.getRegisteredDependencies(localContexts),
                 );
             }
         }

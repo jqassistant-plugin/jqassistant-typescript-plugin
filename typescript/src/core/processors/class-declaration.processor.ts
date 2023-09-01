@@ -9,7 +9,7 @@ import { LCETypeDeclared } from "../concepts/type.concept";
 import { ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
-import { getAndDeleteChildConcepts, getParentPropName } from "../processor.utils";
+import { getAndDeleteChildConcepts, getParentPropName } from "../utils/processor.utils";
 import { ClassTraverser } from "../traversers/class.traverser";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
 import { parseClassLikeBaseType, parseClassLikeTypeParameters } from "./type.utils";

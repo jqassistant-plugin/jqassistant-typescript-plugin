@@ -137,18 +137,18 @@ describe("import/export test", () => {
     test("Node.js re-exports (reexport-node.ts)", async () => {
         const exports = exportDecls.get('./src/reexport-node.ts');
         expect(exports).toBeDefined();
-        expectExport(exports!, '"./node_modules/cowsay/index.js".IOptions', "IOptions");
-        expectDependency(dependencies, './src/reexport-node.ts', './node_modules/cowsay/index.js', 1);
-        expectExport(exports!, '"./node_modules/@types/progress/index.d.ts".ProgressBar.ProgressBarOptions', "ProgressBar.ProgressBarOptions", "PBO");
-        expectDependency(dependencies, './src/reexport-node.ts', '"./node_modules/@types/progress/index.d.ts".ProgressBar.ProgressBarOptions', 1);
+        expectExport(exports!, '"cowsay".IOptions', "IOptions");
+        expectDependency(dependencies, './src/reexport-node.ts', 'cowsay', 1);
+        expectExport(exports!, '"progress".ProgressBar.ProgressBarOptions', "ProgressBar.ProgressBarOptions", "PBO");
+        expectDependency(dependencies, './src/reexport-node.ts', '"progress".ProgressBar.ProgressBarOptions', 1);
         expect(exports!).toHaveLength(2);
     });
 
     test("imports (imports2.ts)", async () => {
-        expectDeclaredType(varDecls.get('"./src/imports2.ts".v1')?.type, '"./node_modules/@types/progress/index.d.ts".ProgressBar.ProgressBarOptions');
-        expectDependency(dependencies, '"./src/imports2.ts".v1', '"./node_modules/@types/progress/index.d.ts".ProgressBar.ProgressBarOptions', 1);
-        expectDeclaredType(varDecls.get('"./src/imports2.ts".v2')?.type, '"./node_modules/cowsay/index.js".IOptions');
-        expectDependency(dependencies, '"./src/imports2.ts".v2', '"./node_modules/cowsay/index.js".IOptions', 1);
+        expectDeclaredType(varDecls.get('"./src/imports2.ts".v1')?.type, '"progress".ProgressBar.ProgressBarOptions');
+        expectDependency(dependencies, '"./src/imports2.ts".v1', '"progress".ProgressBar.ProgressBarOptions', 1);
+        expectDeclaredType(varDecls.get('"./src/imports2.ts".v2')?.type, '"cowsay".IOptions');
+        expectDependency(dependencies, '"./src/imports2.ts".v2', '"cowsay".IOptions', 1);
 
         // ensure that no module wide dependencies are present
         expect(dependencies.get('./src/imports2.ts')).toBeUndefined();

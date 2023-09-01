@@ -1,16 +1,16 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, mergeConceptMaps} from "../concept";
-import {ProcessingContext} from "../context";
-import {ProcessorMap} from "../processor";
-import {Traverser} from "../traverser";
-import {runTraverserForNode, runTraverserForNodes} from "../traverser.utils";
+import { ConceptMap, mergeConceptMaps } from "../concept";
+import { ProcessingContext } from "../context";
+import { ProcessorMap } from "../processor";
+import { Traverser } from "../traverser";
+import { runTraverserForNode, runTraverserForNodes } from "../utils/traverser.utils";
 
 export class TypeParameterDeclarationTraverser extends Traverser {
     public static readonly PARAMS_PROP = "params";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSTypeParameterDeclaration) {
@@ -21,7 +21,7 @@ export class TypeParameterDeclarationTraverser extends Traverser {
                 },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 

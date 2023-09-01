@@ -10,7 +10,7 @@ import { LCETypeAliasDeclaration } from "../concepts/type-alias-declaration.conc
 import { LCEVariableDeclaration } from "../concepts/variable-declaration.concept";
 import { ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
-import { PathUtils } from "../path.utils";
+import { PathUtils } from "../utils/path.utils";
 import { Processor } from "../processor";
 import { ExportDefaultDeclarationTraverser, ExportNamedDeclarationTraverser } from "../traversers/export-declaration.traverser";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";

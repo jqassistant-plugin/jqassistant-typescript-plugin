@@ -1,10 +1,10 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, mergeConceptMaps} from "../concept";
-import {ProcessingContext} from "../context";
-import {ProcessorMap} from "../processor";
-import {Traverser} from "../traverser";
-import {runTraverserForNodes} from "../traverser.utils";
+import { ConceptMap, mergeConceptMaps } from "../concept";
+import { ProcessingContext } from "../context";
+import { ProcessorMap } from "../processor";
+import { Traverser } from "../traverser";
+import { runTraverserForNodes } from "../utils/traverser.utils";
 
 export class FunctionTraverser extends Traverser {
     public static readonly TYPE_PARAMETERS_PROP = "type-parameters";
@@ -12,7 +12,7 @@ export class FunctionTraverser extends Traverser {
     public static readonly BODY_PROP = "body";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (
@@ -23,15 +23,15 @@ export class FunctionTraverser extends Traverser {
             if (node.typeParameters) {
                 runTraverserForNodes(
                     node.typeParameters.params,
-                    {parentPropName: FunctionTraverser.TYPE_PARAMETERS_PROP},
+                    { parentPropName: FunctionTraverser.TYPE_PARAMETERS_PROP },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
             }
-            runTraverserForNodes(node.params, {parentPropName: FunctionTraverser.PARAMETERS_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNodes(node.params, { parentPropName: FunctionTraverser.PARAMETERS_PROP }, processingContext, processors, conceptMaps);
             if (node.body)
-                runTraverserForNodes(node.body.body, {parentPropName: FunctionTraverser.BODY_PROP}, processingContext, processors, conceptMaps);
+                runTraverserForNodes(node.body.body, { parentPropName: FunctionTraverser.BODY_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);

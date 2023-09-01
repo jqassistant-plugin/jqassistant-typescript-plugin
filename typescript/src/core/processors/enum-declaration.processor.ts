@@ -1,20 +1,20 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, singleEntryConceptMap} from "../concept";
-import {LCEEnumDeclaration, LCEEnumMember} from "../concepts/enum-declaration.concept";
-import {ProcessingContext} from "../context";
-import {ExecutionCondition} from "../execution-condition";
-import {Processor} from "../processor";
-import {getAndDeleteAllValueChildConcepts, getAndDeleteChildConcepts} from "../processor.utils";
-import {EnumDeclarationTraverser, EnumMemberTraverser} from "../traversers/enum.traverser";
-import {DependencyResolutionProcessor} from "./dependency-resolution.processor";
-import {VALUE_PROCESSING_FLAG} from "./value.processor";
-import {CodeCoordinateUtils} from "./code-coordinate.utils";
+import { ConceptMap, singleEntryConceptMap } from "../concept";
+import { LCEEnumDeclaration, LCEEnumMember } from "../concepts/enum-declaration.concept";
+import { ProcessingContext } from "../context";
+import { ExecutionCondition } from "../execution-condition";
+import { Processor } from "../processor";
+import { getAndDeleteAllValueChildConcepts, getAndDeleteChildConcepts } from "../utils/processor.utils";
+import { EnumDeclarationTraverser, EnumMemberTraverser } from "../traversers/enum.traverser";
+import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
+import { VALUE_PROCESSING_FLAG } from "./value.processor";
+import { CodeCoordinateUtils } from "./code-coordinate.utils";
 
 export class EnumDeclarationProcessor extends Processor {
     public static readonly PARSE_ENUM_MEMBERS_CONTEXT = "parse-enum-members";
 
-    public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.TSEnumDeclaration], ({node}) => {
+    public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.TSEnumDeclaration], ({ node }) => {
         return (
             !!node.parent &&
             (node.parent.type === AST_NODE_TYPES.ExportNamedDeclaration ||
@@ -23,7 +23,7 @@ export class EnumDeclarationProcessor extends Processor {
         );
     });
 
-    public override preChildrenProcessing({node, localContexts}: ProcessingContext): void {
+    public override preChildrenProcessing({ node, localContexts }: ProcessingContext): void {
         localContexts.currentContexts.set(EnumDeclarationProcessor.PARSE_ENUM_MEMBERS_CONTEXT, true);
         if (node.type === AST_NODE_TYPES.TSEnumDeclaration && node.id) {
             DependencyResolutionProcessor.addScopeContext(localContexts, node.id.name);
@@ -31,11 +31,7 @@ export class EnumDeclarationProcessor extends Processor {
         }
     }
 
-    public override postChildrenProcessing({
-                                               node,
-                                               localContexts,
-                                               globalContext
-                                           }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
+    public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (node.type === AST_NODE_TYPES.TSEnumDeclaration) {
             const enumName = node.id.name;
             const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
@@ -49,7 +45,7 @@ export class EnumDeclarationProcessor extends Processor {
                 members,
                 node.const ?? false,
                 node.declare ?? false,
-                CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true)
+                CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true),
             );
 
             return singleEntryConceptMap(LCEEnumDeclaration.conceptId, enumeration);

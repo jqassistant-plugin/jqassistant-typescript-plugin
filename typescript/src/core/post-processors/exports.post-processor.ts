@@ -2,9 +2,12 @@ import { PostProcessor } from "../post-processor";
 import { LCEConcept } from "../concept";
 import { LCEExportDeclaration } from "../concepts/export-declaration.concept";
 import { LCEModule } from "../concepts/typescript-module.concept";
-import { PathUtils } from "../path.utils";
+import { PathUtils } from "../utils/path.utils";
 import { LCEExternalModule } from "../concepts/externals.concept";
 import { LCEDependency } from "../concepts/dependency.concept";
+import { NodeUtils } from "../utils/node.utils";
+import path from "path";
+import * as fs from "fs";
 
 export class ExportsPostProcessor extends PostProcessor {
     postProcess(concepts: Map<string, LCEConcept[]>, projectRootPath: string): void {
@@ -29,6 +32,10 @@ export class ExportsPostProcessor extends PostProcessor {
         projectRootPath: string,
     ): LCEExportDeclaration[] {
         const result: LCEExportDeclaration[] = [];
+        const stats = fs.statSync(path.resolve(projectRootPath, modulePath));
+        if (stats.isDirectory()) {
+            modulePath += "/index.ts";
+        }
         const rawExports = this.filterExportsForModule(exports, modulePath);
 
         for (const exp of rawExports) {
@@ -58,7 +65,7 @@ export class ExportsPostProcessor extends PostProcessor {
                         }
                     } else {
                         // named re-export
-                        const originalExport = this.findSingleModuleExport(moduleExports, exp.identifier);
+                        let originalExport = this.findSingleModuleExport(moduleExports, exp.identifier);
                         if (originalExport) {
                             result.push(
                                 new LCEExportDeclaration(
@@ -76,7 +83,9 @@ export class ExportsPostProcessor extends PostProcessor {
                                 this.addDependency(concepts, modulePath, originalExport.declFqn);
                             }
                         } else {
-                            console.log(`Error: could not find exported declaration ${exp.identifier} in ${exp.sourceFilePath}: Ignoring export...`);
+                            console.log(
+                                `Error: could not find exported declaration "${exp.identifier}" in "${exp.importSource}": Ignoring export...`,
+                            );
                         }
                     }
                 } else {
@@ -86,8 +95,14 @@ export class ExportsPostProcessor extends PostProcessor {
                     if (!externalImportModule) {
                         // if import source is a node module identifier try to resolve it
                         const resolvedModulePath = require.resolve(exp.importSource, { paths: [projectRootPath] });
-                        importSource = PathUtils.normalize(projectRootPath, resolvedModulePath);
-                        externalImportModule = externalModules.find((em) => em.fqn === importSource);
+                        const packageName = NodeUtils.getPackageNameForPath(projectRootPath, resolvedModulePath);
+                        if (packageName) {
+                            externalImportModule = externalModules.find((em) => em.fqn === packageName);
+                        }
+                        if (!externalImportModule) {
+                            importSource = PathUtils.normalize(projectRootPath, resolvedModulePath);
+                            externalImportModule = externalModules.find((em) => em.fqn === importSource);
+                        }
                         if (!externalImportModule) {
                             // TODO: refine this or find existing mechanism that solves the problem of .d.ts to .js mapping
                             const potentialDTSPath = resolvedModulePath.replace("node_modules/", "node_modules/@types/").replace(".js", ".d.ts");
@@ -137,12 +152,12 @@ export class ExportsPostProcessor extends PostProcessor {
                                 this.addDependency(concepts, modulePath, eDecl.fqn);
                             } else {
                                 console.log(
-                                    `Error: external declaration with identifier ${exp.identifier} in module ${exp.importSource} could not be found: Ignoring export...`,
+                                    `Error: external declaration with identifier "${exp.identifier}" in module "${exp.importSource}" could not be found: Ignoring export...`,
                                 );
                             }
                         }
                     } else {
-                        console.log(`Error: external module ${exp.importSource} for re-export could not be found: Ignoring export...`);
+                        console.log(`Error: external module "${exp.importSource}" for re-export could not be found: Ignoring export...`);
                     }
                 }
             } else {

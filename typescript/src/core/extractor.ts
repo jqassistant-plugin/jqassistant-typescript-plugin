@@ -7,15 +7,15 @@ import { Presets, SingleBar } from "cli-progress";
 import { ConceptMap, LCEConcept, mergeConceptMaps, singleEntryConceptMap, unifyConceptMap } from "./concept";
 import { LCEProject } from "./concepts/typescript-project.concept";
 import { GlobalContext } from "./context";
-import { PathUtils } from "./path.utils";
+import { PathUtils } from "./utils/path.utils";
 import { AstTraverser } from "./traversers/ast.traverser";
-import { Utils } from "./utils";
+import { FileUtils } from "./utils/file.utils";
 import { POST_PROCESSORS } from "./features";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export async function processProject(projectRoot: string): Promise<Map<string, LCEConcept[]>> {
     projectRoot = path.resolve(projectRoot);
-    const fileList = Utils.getProjectSourceFileList(projectRoot);
+    const fileList = FileUtils.getProjectSourceFileList(projectRoot);
 
     // maps filenames to the extracted concepts from these files
     let concepts: ConceptMap = singleEntryConceptMap(LCEProject.conceptId, new LCEProject(projectRoot.replace(/\\/g, "/")));
@@ -100,7 +100,7 @@ export async function processAndOutputResult(projectRoot: string, options: Extra
             } else {
                 fs.writeFile(filePath, json, (err) => {
                     if (err) {
-                        console.log(err);
+                        console.log("Error writing JSON: " + err);
                     } else {
                         console.log("JSON result successfully written to " + filePath);
                     }

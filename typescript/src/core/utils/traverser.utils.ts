@@ -1,10 +1,10 @@
-import {Node} from "@typescript-eslint/types/dist/generated/ast-spec";
+import { Node } from "@typescript-eslint/types/dist/generated/ast-spec";
 
-import {ConceptMap, mergeConceptMaps} from "./concept";
-import {ProcessingContext} from "./context";
-import {TRAVERSERS} from "./features";
-import {ProcessorMap} from "./processor";
-import {TraverserContext} from "./traverser";
+import { ConceptMap, mergeConceptMaps } from "../concept";
+import { ProcessingContext } from "../context";
+import { TRAVERSERS } from "../features";
+import { ProcessorMap } from "../processor";
+import { TraverserContext } from "../traverser";
 
 /**
  * Tries to find an appropriate `Traverser` for the given node and calls its `traverse` method on the node.

@@ -4,7 +4,7 @@ import { ConceptMap, mergeConceptMaps } from "../concept";
 import { ProcessingContext } from "../context";
 import { ProcessorMap } from "../processor";
 import { Traverser } from "../traverser";
-import { runTraverserForNode, runTraverserForNodes } from "../traverser.utils";
+import { runTraverserForNode, runTraverserForNodes } from "../utils/traverser.utils";
 
 export class InterfaceDeclarationTraverser extends Traverser {
     public static readonly TYPE_PARAMETERS_PROP = "type-parameters";

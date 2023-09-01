@@ -1,20 +1,20 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
-import {ConceptMap, mergeConceptMaps} from "../concept";
-import {ProcessingContext} from "../context";
-import {ProcessorMap} from "../processor";
-import {Traverser} from "../traverser";
-import {runTraverserForNode, runTraverserForNodes} from "../traverser.utils";
+import { ConceptMap, mergeConceptMaps } from "../concept";
+import { ProcessingContext } from "../context";
+import { ProcessorMap } from "../processor";
+import { Traverser } from "../traverser";
+import { runTraverserForNode, runTraverserForNodes } from "../utils/traverser.utils";
 
 export class BlockStatementTraverser extends Traverser {
     public static readonly BODY_PROP = "body";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.BlockStatement) {
-            runTraverserForNodes(node.body, {parentPropName: BlockStatementTraverser.BODY_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNodes(node.body, { parentPropName: BlockStatementTraverser.BODY_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
