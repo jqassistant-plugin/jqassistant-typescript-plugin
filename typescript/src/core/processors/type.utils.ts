@@ -322,6 +322,10 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
         }
     }
     if(!fqn) {
+        if(symbol && (symbol.flags & ts.SymbolFlags.EnumMember) && "parent" in symbol) {
+            // Normalize enum member symbols to avoid enum member declared types
+            symbol = symbol.parent as Symbol;
+        }
         fqn = symbol ? tc.getFullyQualifiedName(symbol) : undefined;
     }
 
@@ -377,12 +381,6 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
                 } else {
                     normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, `"${sourceFile.fileName}".${fqn}`, globalContext.sourceFilePath);
                 }
-                // if (fqn.includes(".")) {
-                //     // node reference (e.g. "path.ParsedPath") -> set node path in quotes
-                //     normalizedFQN = PathUtils.toFQN(fqn.slice(0, fqn.lastIndexOf("."))) + fqn.slice(fqn.lastIndexOf("."));
-                // } else {
-                //     normalizedFQN = PathUtils.toFQN(fqn);
-                // }
             }
         } else if (fqn.startsWith('"')) {
             // FQN with specified module path (e.g. '"/home/../src/MyModule".MyClass') -> normalize module path

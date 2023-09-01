@@ -734,8 +734,7 @@ describe("variable declarations test", () => {
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
-                // TODO: should be Enum not EnumMember type
-                expectDeclaredType(decl.initValue.type, '"./src/main.ts".CustomEnum.A');
+                expectDeclaredType(decl.initValue.type, '"./src/main.ts".CustomEnum');
 
                 expect(decl.initValue.valueType).toBe("member")
                 
@@ -748,8 +747,8 @@ describe("variable declarations test", () => {
                 const memberValue = (decl.initValue as LCEValueMember).member;
                 expect(memberValue.valueType).toBe("declared");
                 expect((memberValue as LCEValueDeclared).fqn).toBe('A');
-                // TODO: should be Enum not EnumMember type
-                expectDeclaredType(memberValue.type, '"./src/main.ts".CustomEnum.A');
+
+                expectDeclaredType(memberValue.type, '"./src/main.ts".CustomEnum');
             }
         }
 
@@ -857,10 +856,9 @@ describe("variable declarations test", () => {
         expectDependency(dependencies, '"./src/main.ts".vExtStringTypeAlias', '"./src/secondary.ts".ExtStringTypeAlias', 1);
     });
 
-    // TODO: fix different handling of local and remote enum values and their types
     // Local Enum values show correct behavior
     // NOTE: The fix would require manually changing the external FQN determined by the TS TypeChecker in type.utils.ts
-    test.skip("let x: = ExternalEnum.MEMBER;", async () => {
+    test("let x: = ExternalEnum.MEMBER;", async () => {
         const decl = varDecls.get('"./src/main.ts".vExtEnum');
         expect(decl).toBeDefined();
         if(decl) {
@@ -879,8 +877,8 @@ describe("variable declarations test", () => {
                 const parentValue = (decl.initValue as LCEValueMember).parent;
                 expect(parentValue.valueType).toBe("declared");
                 expect((parentValue as LCEValueDeclared).fqn).toBe('"./src/secondary.ts".ExternalCustomEnum');
-                expect(parentValue.type.type).toBe("not-identified");
-                expect((parentValue.type as LCETypeNotIdentified).identifier).toBe("typeof ExternalCustomEnum");
+                // TODO: discepancy between external and internal enum value parent type: typeof vs direct reference
+                expectDeclaredType(parentValue.type, '"./src/secondary.ts".ExternalCustomEnum');
 
                 const memberValue = (decl.initValue as LCEValueMember).member;
                 expect(memberValue.valueType).toBe("declared");
