@@ -877,7 +877,7 @@ describe("variable declarations test", () => {
                 const parentValue = (decl.initValue as LCEValueMember).parent;
                 expect(parentValue.valueType).toBe("declared");
                 expect((parentValue as LCEValueDeclared).fqn).toBe('"./src/secondary.ts".ExternalCustomEnum');
-                // TODO: discepancy between external and internal enum value parent type: typeof vs direct reference
+                // TODO: discrepancy between external and internal enum value parent type: typeof vs direct reference
                 expectDeclaredType(parentValue.type, '"./src/secondary.ts".ExternalCustomEnum');
 
                 const memberValue = (decl.initValue as LCEValueMember).member;
