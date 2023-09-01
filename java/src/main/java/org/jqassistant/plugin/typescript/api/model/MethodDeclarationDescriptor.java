@@ -14,6 +14,9 @@ public interface MethodDeclarationDescriptor extends TypeScriptDescriptor, Named
     String getVisibility();
     void setVisibility(String visibility);
 
+    Boolean getAsync();
+    void setAsync(Boolean async);
+
     Boolean getStatic();
     void setStatic(Boolean staticc);
 

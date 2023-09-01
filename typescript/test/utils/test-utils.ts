@@ -298,19 +298,21 @@ export function expectProperty(props: LCEPropertyDeclaration[] | undefined,
  * @return property declaration object, if it was found in the list
  */
 export function expectMethod(methods: LCEMethodDeclaration[] | undefined,
-                               fqn: string,
-                               name: string,
-                               visibility: Visibility,
-                               override: boolean | undefined,
-                               abstract: boolean | undefined,
-                               isStatic: boolean | undefined,
-                               primitiveReturnType?: string): LCEMethodDeclaration {
+                             fqn: string,
+                             name: string,
+                             visibility: Visibility,
+                             override: boolean | undefined,
+                             abstract: boolean | undefined,
+                             isStatic: boolean | undefined,
+                             primitiveReturnType?: string,
+                             async: boolean = false): LCEMethodDeclaration {
     expect(methods).toBeDefined();
     const methodDecl = methods!.find(p => p.fqn === fqn);
     expect(methodDecl).toBeDefined();
     if(methodDecl) {
         expect(methodDecl.methodName).toBe(name);
         expect(methodDecl.visibility).toBe(visibility);
+        expect(methodDecl.async).toBe(async);
         expect(methodDecl.override).toBe(override);
         expect(methodDecl.abstract).toBe(abstract);
         expect(methodDecl.isStatic).toBe(isStatic);

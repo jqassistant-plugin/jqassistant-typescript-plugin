@@ -111,7 +111,10 @@ export class LCETypeFunction extends LCEType {
      * @param parameters map of parameter names and their respective types
      * @param typeParameters list of type parameters declared by the function type
      */
-    constructor(public returnType: LCEType, public parameters: LCETypeFunctionParameter[], public typeParameters: LCETypeParameterDeclaration[]) {
+    constructor(public returnType: LCEType,
+                public parameters: LCETypeFunctionParameter[],
+                public async: boolean,
+                public typeParameters: LCETypeParameterDeclaration[]) {
         super("function");
     }
 }

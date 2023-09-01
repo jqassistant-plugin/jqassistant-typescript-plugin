@@ -127,10 +127,10 @@ export function parseMethodType(
                     )
                 );
             }
-            return new LCETypeFunction(new LCETypeNotIdentified("constructor"), parameters, []);
+            return new LCETypeFunction(new LCETypeNotIdentified("constructor"), parameters, false, []);
         } else if (esMethodDecl.kind === "get") {
             // getter
-            return new LCETypeFunction(parseType(processingContext, methodType, methodNode), [], []);
+            return new LCETypeFunction(parseType(processingContext, methodType, methodNode), [], false, []);
         } else if (esMethodDecl.kind === "set") {
             // setter
             const param = "value" in esMethodDecl ? esMethodDecl.value.params[0] : esMethodDecl.params[0];
@@ -141,6 +141,7 @@ export function parseMethodType(
             return new LCETypeFunction(
                 new LCETypeNotIdentified("setter"),
                 [new LCETypeFunctionParameter(0, paramName, false, parseType(processingContext, paramType, methodNode))],
+                false,
                 []
             );
         }
@@ -149,13 +150,19 @@ export function parseMethodType(
     // parse return type
     const returnType = parseType(processingContext, methodSignature.getReturnType(), methodNode);
 
-    // parse type parameters
-    const typeParameters = parseFunctionTypeParameters(processingContext, methodSignature, methodNode);
-
     // parse parameters
     const parameters = parseFunctionParameters(processingContext, methodSignature, methodNode);
 
-    return new LCETypeFunction(returnType, parameters, typeParameters);
+    // determine if method is async
+    let async = false;
+    if("modifiers" in methodNode) {
+        async = !!(methodNode.modifiers as {kind: number}[])?.find(m => m.kind === ts.SyntaxKind.AsyncKeyword);
+    }
+
+    // parse type parameters
+    const typeParameters = parseFunctionTypeParameters(processingContext, methodSignature, methodNode);
+
+    return new LCETypeFunction(returnType, parameters, async, typeParameters);
 }
 
 /**
@@ -167,20 +174,22 @@ export function parseFunctionType(
 ): LCETypeFunction {
     const globalContext = processingContext.globalContext;
     const tc = globalContext.typeChecker;
-    const methodNode = globalContext.services.esTreeNodeToTSNodeMap.get(esFunctionDecl);
-    const methodType = tc.getTypeAtLocation(methodNode);
-    const methodSignature = tc.getSignaturesOfType(methodType, SignatureKind.Call)[0];
+    const functionNode = globalContext.services.esTreeNodeToTSNodeMap.get(esFunctionDecl);
+    const functionType = tc.getTypeAtLocation(functionNode);
+    const functionSignature = tc.getSignaturesOfType(functionType, SignatureKind.Call)[0];
 
     // parse return type
-    const returnType = parseType(processingContext, methodSignature.getReturnType(), methodNode);
+    const returnType = parseType(processingContext, functionSignature.getReturnType(), functionNode);
 
     // parse type parameters
-    const typeParameters = parseFunctionTypeParameters(processingContext, methodSignature, methodNode);
+    const typeParameters = parseFunctionTypeParameters(processingContext, functionSignature, functionNode);
 
     // parse parameters
-    const parameters = parseFunctionParameters(processingContext, methodSignature, methodNode);
+    const parameters = parseFunctionParameters(processingContext, functionSignature, functionNode);
 
-    return new LCETypeFunction(returnType, parameters, typeParameters);
+    const async = !!functionNode.modifiers?.find(m => m.kind === ts.SyntaxKind.AsyncKeyword);
+
+    return new LCETypeFunction(returnType, parameters, async, typeParameters);
 }
 
 /**
@@ -302,7 +311,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
     } else {
         if (type.symbol) {
             symbol = type.symbol;
-        } else {
+        } else if(!isPrimitiveType(tc.typeToString(type))){
             // if no symbol is to be found, try to extract TypeName from Node (e.g. "SomeAlias" from "let x: SomeAlias;")
             let nodeToAnalyze = node;
             if(node.kind === ts.SyntaxKind.Identifier) {
@@ -474,7 +483,7 @@ function parseAnonymousType(
             );
         }
         const typeParameters = parseFunctionTypeParameters(processingContext, signature, node);
-        return new LCETypeFunction(returnType, parameters, typeParameters);
+        return new LCETypeFunction(returnType, parameters, false, typeParameters);
     } else if (type.symbol?.members) {
         // anonymous object type
         // TODO: test for methods, callables, index signatures, etc.

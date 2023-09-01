@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 // Sample Declarations to be used later
-import {ExternalCustomClass, ExternalCustomInterface} from "./secondary";
+import { ExternalCustomClass, ExternalCustomInterface } from "./secondary";
 
 class CustomClass {
     public x: number;
@@ -68,4 +68,8 @@ function fGenericConstraintRefExt<T extends ExternalCustomInterface>(p1: T) {}
 
 function fNested() {
     function nested() {}
+}
+
+async function fAsync(p1: string, p2: number): Promise<number> {
+    return 0;
 }

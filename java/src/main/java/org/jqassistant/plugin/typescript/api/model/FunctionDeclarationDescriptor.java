@@ -11,6 +11,9 @@ public interface FunctionDeclarationDescriptor extends TypeScriptDescriptor, Nam
     String getName();
     void setName(String name);
 
+    Boolean getAsync();
+    void setAsync(Boolean async);
+
     @Relation("RETURNS")
     TypeDescriptor getReturnType();
     void setReturnType(TypeDescriptor returnType);

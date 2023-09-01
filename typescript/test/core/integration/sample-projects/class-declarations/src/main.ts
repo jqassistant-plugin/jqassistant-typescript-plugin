@@ -65,6 +65,10 @@ class cMethods {
     a(p1: number, p2: string): string {
         return p2 + p1;
     }
+
+    async mAsync(p1: number): Promise<number> {
+        return p1;
+    }
 }
 
 class cGetterSetter {

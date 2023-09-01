@@ -97,6 +97,7 @@ export class MethodProcessor extends Processor {
                                     ? getAndDeleteChildConcepts(MethodTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
                                     : [],
                                 visibility,
+                                functionType.async,
                                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                                 "override" in node ? node.override : undefined,
                                 inClass ? node.type === AST_NODE_TYPES.TSAbstractMethodDefinition : undefined,

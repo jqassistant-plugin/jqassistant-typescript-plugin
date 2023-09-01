@@ -25,6 +25,8 @@ public class MethodDeclaration extends NamedConcept {
 
     private String visibility;
 
+    private Boolean async;
+
     private CodeCoordinates coordinates;
 
     private Boolean override;

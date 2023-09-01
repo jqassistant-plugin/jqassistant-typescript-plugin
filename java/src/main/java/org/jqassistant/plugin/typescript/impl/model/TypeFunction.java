@@ -16,6 +16,8 @@ public class TypeFunction extends Type {
 
     private List<TypeFunctionParameter> parameters = new ArrayList<>();
 
+    private Boolean async;
+
     private List<TypeParameterDeclaration> typeParameters = new ArrayList<>();
 
 }

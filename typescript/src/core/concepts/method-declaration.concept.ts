@@ -17,6 +17,7 @@ export class LCEMethodDeclaration extends LCENamedConcept {
         public typeParameters: LCETypeParameterDeclaration[],
         public decorators: LCEDecorator[],
         public visibility: Visibility,
+        public async: boolean,
         public coordinates: CodeCoordinates,
         public override?: boolean,
         public abstract?: boolean,

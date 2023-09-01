@@ -65,6 +65,8 @@ describe("function declarations test", () => {
 
             expect(decl.parameters).toHaveLength(0);
 
+            expect(decl.async).toBe(false);
+
             expect(decl.typeParameters).toHaveLength(0);
         }
     });
@@ -80,6 +82,8 @@ describe("function declarations test", () => {
 
             expect(decl.parameters).toHaveLength(0);
 
+            expect(decl.async).toBe(false);
+
             expect(decl.typeParameters).toHaveLength(0);
         }
     });
@@ -94,6 +98,8 @@ describe("function declarations test", () => {
             expectDeclaredType(decl.returnType, '"./src/main.ts".CustomInterface');
 
             expect(decl.parameters).toHaveLength(0);
+
+            expect(decl.async).toBe(false);
 
             expect(decl.typeParameters).toHaveLength(0);
         }
@@ -112,6 +118,8 @@ describe("function declarations test", () => {
 
             expect(decl.parameters).toHaveLength(0);
 
+            expect(decl.async).toBe(false);
+
             expect(decl.typeParameters).toHaveLength(0);
         }
 
@@ -128,6 +136,8 @@ describe("function declarations test", () => {
             expectPrimitiveType(decl.returnType, "void");
 
             expect(decl.parameters).toHaveLength(0);
+
+            expect(decl.async).toBe(false);
 
             expect(decl.typeParameters).toHaveLength(0);
 
@@ -157,6 +167,8 @@ describe("function declarations test", () => {
 
             expect(decl.parameters).toHaveLength(0);
 
+            expect(decl.async).toBe(false);
+
             expect(decl.typeParameters).toHaveLength(0);
         }
 
@@ -175,6 +187,8 @@ describe("function declarations test", () => {
 
             expect(decl.parameters).toHaveLength(1);
             expectFunctionParameter(decl.parameters, 0, "p1", false, "number");
+
+            expect(decl.async).toBe(false);
 
             expect(decl.typeParameters).toHaveLength(0);
         }
@@ -205,6 +219,8 @@ describe("function declarations test", () => {
             expect((unionTypes[0] as LCETypePrimitive).name).toBe("string");
             expect((unionTypes[1] as LCETypePrimitive).name).toBe("undefined");
 
+            expect(decl.async).toBe(false);
+
             expect(decl.typeParameters).toHaveLength(0);
         }
     });
@@ -221,6 +237,8 @@ describe("function declarations test", () => {
             expect(decl.parameters).toHaveLength(1);
             expectFunctionParameter(decl.parameters, 0, "p1", false);
             expectDeclaredType(decl.parameters[0]!.type, '"./src/main.ts".CustomClass');
+
+            expect(decl.async).toBe(false);
 
             expect(decl.typeParameters).toHaveLength(0);
         }
@@ -241,6 +259,8 @@ describe("function declarations test", () => {
             expectFunctionParameter(decl.parameters, 0, "p1", false);
             expectDeclaredType(decl.parameters[0]!.type, '"./src/secondary.ts".ExternalCustomClass');
 
+            expect(decl.async).toBe(false);
+
             expect(decl.typeParameters).toHaveLength(0);
         }
 
@@ -259,6 +279,8 @@ describe("function declarations test", () => {
             expect(decl.parameters).toHaveLength(1);
             expectFunctionParameter(decl.parameters, 0, "p1", false);
             expectTypeParameterReference(decl.parameters[0]!.type, "T");
+
+            expect(decl.async).toBe(false);
 
             expect(decl.typeParameters).toHaveLength(1);
             expectTypeParameterDeclaration(decl.typeParameters, 0, "T");
@@ -280,6 +302,8 @@ describe("function declarations test", () => {
             expectTypeParameterReference(decl.parameters[0]!.type, "T");
             expectTypeParameterReference(decl.parameters[1]!.type, "U");
 
+            expect(decl.async).toBe(false);
+
             expect(decl.typeParameters).toHaveLength(2);
             expectTypeParameterDeclaration(decl.typeParameters, 0, "T");
             expectTypeParameterDeclaration(decl.typeParameters, 1, "U");
@@ -298,6 +322,8 @@ describe("function declarations test", () => {
             expect(decl.parameters).toHaveLength(1);
             expectFunctionParameter(decl.parameters, 0, "p1", false);
             expectTypeParameterReference(decl.parameters[0]!.type, "T");
+
+            expect(decl.async).toBe(false);
 
             expect(decl.typeParameters).toHaveLength(1);
             expectTypeParameterDeclaration(decl.typeParameters, 0, "T", false);
@@ -320,6 +346,8 @@ describe("function declarations test", () => {
             expectFunctionParameter(decl.parameters, 0, "p1", false);
             expectTypeParameterReference(decl.parameters[0]!.type, "T");
 
+            expect(decl.async).toBe(false);
+
             expect(decl.typeParameters).toHaveLength(1);
             expectTypeParameterDeclaration(decl.typeParameters, 0, "T", false);
             expectDeclaredType(decl.typeParameters[0].constraint, '"./src/main.ts".CustomInterface');
@@ -341,6 +369,8 @@ describe("function declarations test", () => {
             expectFunctionParameter(decl.parameters, 0, "p1", false);
             expectTypeParameterReference(decl.parameters[0]!.type, "T");
 
+            expect(decl.async).toBe(false);
+
             expect(decl.typeParameters).toHaveLength(1);
             expectTypeParameterDeclaration(decl.typeParameters, 0, "T", false);
             expectDeclaredType(decl.typeParameters[0].constraint, '"./src/secondary.ts".ExternalCustomInterface');
@@ -359,6 +389,29 @@ describe("function declarations test", () => {
             expectPrimitiveType(decl.returnType, "void");
 
             expect(decl.parameters).toHaveLength(0);
+
+            expect(decl.async).toBe(false);
+
+            expect(decl.typeParameters).toHaveLength(0);
+        }
+    });
+
+    test("async function", async () => {
+        const decl = funDecls.get('"./src/main.ts".fAsync');
+        expect(decl).toBeDefined();
+        if(decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.functionName).toBe("fAsync");
+
+            const returnType = expectDeclaredType(decl.returnType, "Promise", false);
+            expect(returnType.typeArguments).toHaveLength(1);
+            expectPrimitiveType(returnType.typeArguments[0], "number");
+
+            expect(decl.parameters).toHaveLength(2);
+            expectFunctionParameter(decl.parameters, 0, "p1", false, "string");
+            expectFunctionParameter(decl.parameters, 1, "p2", false, "number");
+
+            expect(decl.async).toBe(true);
 
             expect(decl.typeParameters).toHaveLength(0);
         }

@@ -155,7 +155,7 @@ describe("class declarations test", () => {
 
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(0);
-            expect(decl.methods).toHaveLength(5);
+            expect(decl.methods).toHaveLength(6);
             const methodX = expectMethod(decl.methods, '"./src/main.ts".cMethods.x', "x", "private", false, false, false, "void");
             expect(methodX.parameters).toHaveLength(0);
             expect(methodX.typeParameters).toHaveLength(0);
@@ -173,6 +173,13 @@ describe("class declarations test", () => {
             expectFunctionParameter(methodA.parameters, 0, "p1", false, "number");
             expectFunctionParameter(methodA.parameters, 1, "p2", false, "string");
             expect(methodA.typeParameters).toHaveLength(0);
+            const methodAsync = expectMethod(decl.methods, '"./src/main.ts".cMethods.mAsync', "mAsync", "public", false, false, false, undefined, true);
+            const declaredType = expectDeclaredType(methodAsync.returnType, "Promise", false);
+            expect(declaredType.typeArguments).toHaveLength(1);
+            expectPrimitiveType(declaredType.typeArguments[0], "number");
+            expect(methodAsync.parameters).toHaveLength(1);
+            expectFunctionParameter(methodAsync.parameters, 0, "p1", false, "number");
+            expect(methodAsync.typeParameters).toHaveLength(0);
 
             expect(decl.accessorProperties).toHaveLength(0);
 

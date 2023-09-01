@@ -69,6 +69,7 @@ export class FunctionDeclarationProcessor extends Processor {
                             fqn,
                             getAndDeleteChildConcepts(FunctionTraverser.PARAMETERS_PROP, LCEParameterDeclaration.conceptId, childConcepts),
                             returnType,
+                            functionType.async,
                             typeParameters,
                             CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true),
                         ),

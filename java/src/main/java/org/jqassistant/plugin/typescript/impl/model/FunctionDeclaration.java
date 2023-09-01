@@ -17,6 +17,8 @@ public class FunctionDeclaration extends NamedConcept {
     private List<ParameterDeclaration> parameters = new ArrayList<>();
 
     private Type returnType;
+    
+    private Boolean async;
 
     private List<TypeParameterDeclaration> typeParameters = new ArrayList<>();
 
