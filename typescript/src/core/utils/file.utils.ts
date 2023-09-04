@@ -14,20 +14,15 @@ export class FileUtils {
             include?: string[];
             exclude?: string[];
         } = json5.parse(fs.readFileSync(path.join(projectPath, "tsconfig.json"), "utf8"));
-        // TODO: check CommonJS compatibility (.cts) + check package.json for type field
+        // CommonJS (.cts) files are ignored
         const endings = [".ts", ".tsx", ".mts"];
 
-        const ignoredDirs = [".git", "node_modules"];
-
-        // TODO: ignore node_modules, unless explicitly included in tsconfig.json
-        // if (!tsconfig.include?.find((dirPattern) => dirPattern.includes("node_modules") || match(["node_modules"], dirPattern).length > 0)) {
-        //     ignoredDirs.push("node_modules");
-        // }
+        const defaultIgnoredDirs = [".git", "node_modules"];
 
         if (tsconfig.include) tsconfig.include = tsconfig.include.map((dirPattern) => path.join(projectPath, dirPattern).replace(/\\/g, "/"));
         if (tsconfig.exclude) tsconfig.exclude = tsconfig.exclude.map((dirPattern) => path.join(projectPath, dirPattern).replace(/\\/g, "/"));
 
-        const allFiles = FileUtils.getAllFiles(projectPath, [], ignoredDirs);
+        const allFiles = FileUtils.getAllFiles(projectPath, [], tsconfig.include ? [] : defaultIgnoredDirs);
         return allFiles.filter((file) => {
             let matched = false;
             let included = true;
