@@ -848,12 +848,11 @@ describe("variable declarations test", () => {
             expect(decl.variableName).toBe("vExtStringTypeAlias");
             expect(decl.kind).toBe("let");
 
-            expectDeclaredType(decl.type, '"./src/secondary.ts".ExtStringTypeAlias');
+            // This behavior is caused by the TypeChecker that simplifies TypeAlias of primitive types
+            expectPrimitiveType(decl.type, "string");
 
             expect(decl.initValue).toBeUndefined();
         }
-
-        expectDependency(dependencies, '"./src/main.ts".vExtStringTypeAlias', '"./src/secondary.ts".ExtStringTypeAlias', 1);
     });
 
     // Local Enum values show correct behavior

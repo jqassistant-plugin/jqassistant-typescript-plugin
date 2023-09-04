@@ -28,8 +28,7 @@ import ts, {
     SignatureKind,
     Symbol,
     Type,
-    TypeReference,
-    TypeReferenceNode
+    TypeReference
 } from "typescript";
 
 import { LCETypeParameterDeclaration } from "../concepts/type-parameter.concept";
@@ -311,22 +310,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
     } else {
         if (type.symbol) {
             symbol = type.symbol;
-        } else if(!isPrimitiveType(tc.typeToString(type))){
-            // if no symbol is to be found, try to extract TypeName from Node (e.g. "SomeAlias" from "let x: SomeAlias;")
-            let nodeToAnalyze = node;
-            if(node.kind === ts.SyntaxKind.Identifier) {
-                // if node is just plain identifier, try to extract type name from parent node
-                nodeToAnalyze = node.parent;
-            }
-            if("type" in nodeToAnalyze) {
-                const nodeType: ts.TypeNode = nodeToAnalyze.type as ts.TypeNode;
-                if (nodeType && (nodeType.kind === ts.SyntaxKind.TypeReference)) {
-                    const typeName = (nodeType as TypeReferenceNode).typeName;
-                    if(typeName && (typeName.kind === ts.SyntaxKind.Identifier)) {
-                        fqn = (typeName as ts.Identifier).escapedText.toString();
-                    }
-                }
-            }
+        } else {
             symbol = undefined;
         }
     }
