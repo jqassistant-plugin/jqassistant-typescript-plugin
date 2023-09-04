@@ -24,6 +24,10 @@ This will save the JSON report under `.reports/jqa/ts-output.json` in the projec
 This plugin should be largely compatible with all versions of TypeScript.
 However, it is only developed and tested against the current version (5.1) of TypeScript.
 
-The tool only supports projects using ECMAScript modules. The old CommonJS sytax is not supported!
+The tool only supports projects using ECMAScript modules.
 
-Currently, hierarchical tsconfig setups, as well as the scanning of multiple TypeScript projects at once is not supported.
+Currently not supported:
+- old CommonJS module syntax
+- hierarchical tsconfig setups
+- scanning of multiple TypeScript projects at once
+- triple-slash directives
