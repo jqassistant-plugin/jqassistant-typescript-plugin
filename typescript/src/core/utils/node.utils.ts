@@ -21,7 +21,7 @@ export class NodeUtils {
 
         let currentPath = packagePath;
         while (currentPath !== projectRootPath && !path.relative(projectRootPath, currentPath).startsWith("..")) {
-            const allFiles = FileUtils.getAllFiles(currentPath);
+            const allFiles = FileUtils.getAllFiles(currentPath).map(f => f.replace(/\\/g, "/"));
             for (const file of allFiles) {
                 if (path.basename(file) === "package.json") {
                     const data = fs.readFileSync(file, "utf8");

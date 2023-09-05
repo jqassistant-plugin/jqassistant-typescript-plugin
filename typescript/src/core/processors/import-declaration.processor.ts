@@ -37,7 +37,7 @@ export class ImportDeclarationProcessor extends Processor {
                 if (target.startsWith('"') && PathUtils.getPathType(PathUtils.extractFQNPath(target)) === "node") {
                     // resolve node package names to the appropriate paths
                     try {
-                        const resolvedModulePath = require.resolve(PathUtils.extractFQNPath(target), { paths: [globalContext.projectRootPath] });
+                        const resolvedModulePath = require.resolve(PathUtils.extractFQNPath(target), { paths: [globalContext.projectRootPath] }).replace(/\\/g, "/");
                         const targetDeclName = PathUtils.extractFQNIdentifier(target);
                         const packageName = NodeUtils.getPackageNameForPath(globalContext.projectRootPath, resolvedModulePath);
                         if (packageName) {

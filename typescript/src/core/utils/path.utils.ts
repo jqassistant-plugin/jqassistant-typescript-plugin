@@ -39,10 +39,10 @@ export class PathUtils {
         } else {
             let relPath;
             if (pathType === "absolute") {
-                relPath = p.relative(projectPath, path);
+                relPath = p.relative(projectPath, path).replace(/\\/g, "/");
             } else {
                 if (!originPath) throw new Error("originPath is required if path is relative");
-                relPath = p.relative(projectPath, p.resolve(projectPath, originPath.slice(0, originPath.lastIndexOf("/")), path));
+                relPath = p.relative(projectPath, p.resolve(projectPath, originPath.slice(0, originPath.lastIndexOf("/")), path)).replace(/\\/g, "/");
             }
 
             if (!relPath.startsWith(".")) {
@@ -82,12 +82,18 @@ export class PathUtils {
             return absoluteFilePath + ".ts";
         } else if (fs.existsSync(absoluteFilePath + ".tsx")) {
             return absoluteFilePath + ".tsx";
+        } else if (fs.existsSync(absoluteFilePath + ".mts")) {
+            return absoluteFilePath + ".mts";
         } else if (fs.existsSync(absoluteFilePath + ".js")) {
             return absoluteFilePath + ".js";
         } else if (fs.existsSync(absoluteFilePath + ".jsx")) {
             return absoluteFilePath + ".jsx";
+        } else if (fs.existsSync(absoluteFilePath + ".mjs")) {
+            return absoluteFilePath + ".mjs";
         } else if (fs.existsSync(absoluteFilePath + ".d.ts")) {
             return absoluteFilePath + ".d.ts";
+        } else if (fs.existsSync(absoluteFilePath + ".d.mts")) {
+            return absoluteFilePath + ".d.mts";
         }
         return absoluteFilePath;
     }

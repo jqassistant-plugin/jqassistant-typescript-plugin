@@ -37,27 +37,32 @@ export async function processProject(projectRoot: string): Promise<Map<string, L
         const frEndTime = process.hrtime();
         fileReadingTime += (frEndTime[0] + frEndTime[1]/10**9) - (frStartTime[0] + frStartTime[1]/10**9);
 
-        const {ast, services} = parseAndGenerateServices(code, {
-            loc: true,
-            range: true,
-            tokens: false,
-            filePath: file,
-            project: path.join(projectRoot, "tsconfig.json"),
-        });
-        if(!services.program) {
-            continue;
+        try {
+            const {ast, services} = parseAndGenerateServices(code, {
+                loc: true,
+                range: true,
+                tokens: false,
+                filePath: file,
+                project: path.join(projectRoot, "tsconfig.json"),
+            });
+            if (!services.program) {
+                continue;
+            }
+            const typeChecker: TypeChecker = services.program.getTypeChecker();
+
+            const globalContext: GlobalContext = {
+                projectRootPath: projectRoot.replace(/\\/g, "/"),
+                sourceFilePath: PathUtils.normalize(projectRoot, file).replace(/\\/g, "/"),
+                ast: ast,
+                services: services,
+                typeChecker: typeChecker,
+            };
+
+            concepts = mergeConceptMaps(concepts, unifyConceptMap(traverser.traverse(globalContext), globalContext.sourceFilePath));
+        } catch(e) {
+            console.log("Error occurred while processing file: " + file);
+            console.log(e);
         }
-        const typeChecker: TypeChecker = services.program.getTypeChecker();
-
-        const globalContext: GlobalContext = {
-            projectRootPath: projectRoot.replace(/\\/g, "/"),
-            sourceFilePath: PathUtils.normalize(projectRoot, file).replace(/\\/g, "/"),
-            ast: ast,
-            services: services,
-            typeChecker: typeChecker,
-        };
-
-        concepts = mergeConceptMaps(concepts, unifyConceptMap(traverser.traverse(globalContext), globalContext.sourceFilePath));
     }
     progressBar.stop();
     const normalizedConcepts = unifyConceptMap(concepts, "").get("") ?? new Map();

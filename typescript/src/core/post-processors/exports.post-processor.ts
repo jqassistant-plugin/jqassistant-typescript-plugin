@@ -1,11 +1,11 @@
-import { PostProcessor } from "../post-processor";
-import { LCEConcept } from "../concept";
-import { LCEExportDeclaration } from "../concepts/export-declaration.concept";
-import { LCEModule } from "../concepts/typescript-module.concept";
-import { PathUtils } from "../utils/path.utils";
-import { LCEExternalModule } from "../concepts/externals.concept";
-import { LCEDependency } from "../concepts/dependency.concept";
-import { NodeUtils } from "../utils/node.utils";
+import {PostProcessor} from "../post-processor";
+import {LCEConcept} from "../concept";
+import {LCEExportDeclaration} from "../concepts/export-declaration.concept";
+import {LCEModule} from "../concepts/typescript-module.concept";
+import {PathUtils} from "../utils/path.utils";
+import {LCEExternalModule} from "../concepts/externals.concept";
+import {LCEDependency} from "../concepts/dependency.concept";
+import {NodeUtils} from "../utils/node.utils";
 import path from "path";
 import * as fs from "fs";
 
@@ -17,8 +17,7 @@ export class ExportsPostProcessor extends PostProcessor {
         const newExports: LCEExportDeclaration[] = [];
 
         for (const module of modules) {
-            const modulePath = module.fqn;
-            newExports.push(...this.getAllModuleExports(concepts, allExports, modulePath, externalModules, projectRootPath));
+            newExports.push(...this.getAllModuleExports(concepts, allExports, module.fqn, externalModules, projectRootPath));
         }
 
         concepts.set(LCEExportDeclaration.conceptId, newExports);
@@ -94,7 +93,7 @@ export class ExportsPostProcessor extends PostProcessor {
                     let externalImportModule = externalModules.find((em) => em.fqn === exp.importSource);
                     if (!externalImportModule) {
                         // if import source is a node module identifier try to resolve it
-                        const resolvedModulePath = require.resolve(exp.importSource, { paths: [projectRootPath] });
+                        const resolvedModulePath = require.resolve(exp.importSource, { paths: [projectRootPath] }).replace(/\\/g, "/");
                         const packageName = NodeUtils.getPackageNameForPath(projectRootPath, resolvedModulePath);
                         if (packageName) {
                             externalImportModule = externalModules.find((em) => em.fqn === packageName);
