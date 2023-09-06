@@ -22,7 +22,8 @@ export class FileUtils {
         if (tsconfig.include) tsconfig.include = tsconfig.include.map((dirPattern) => path.join(projectPath, dirPattern).replace(/\\/g, "/"));
         if (tsconfig.exclude) tsconfig.exclude = tsconfig.exclude.map((dirPattern) => path.join(projectPath, dirPattern).replace(/\\/g, "/"));
 
-        const allFiles = FileUtils.getAllFiles(projectPath, [], tsconfig.include ? [] : defaultIgnoredDirs);
+        // TODO: ignoredDirs should be set to `tsconfig.include ? [] : defaultIgnoredDirs` (requires multi-project capability)
+        const allFiles = FileUtils.getAllFiles(projectPath, [], defaultIgnoredDirs);
         return allFiles.filter((file) => {
             let matched = false;
             let included = true;

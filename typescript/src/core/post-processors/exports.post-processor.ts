@@ -96,20 +96,28 @@ export class ExportsPostProcessor extends PostProcessor {
                     let externalImportModule = externalModules.find((em) => em.fqn === exp.importSource);
                     if (!externalImportModule) {
                         // if import source is a node module identifier try to resolve it
-                        const resolvedModulePath = require.resolve(exp.importSource, { paths: [projectRootPath] }).replace(/\\/g, "/");
-                        const packageName = NodeUtils.getPackageNameForPath(projectRootPath, resolvedModulePath);
-                        if (packageName) {
-                            externalImportModule = externalModules.find((em) => em.fqn === packageName);
+                        let resolvedModulePath;
+                        try {
+                            resolvedModulePath = require.resolve(exp.importSource, { paths: [projectRootPath] }).replace(/\\/g, "/");
+                        } catch (e) {
+                            console.log(`Error: Could not resolve module: ${exp.importSource}`);
                         }
-                        if (!externalImportModule) {
-                            importSource = PathUtils.normalize(projectRootPath, resolvedModulePath);
-                            externalImportModule = externalModules.find((em) => em.fqn === importSource);
-                        }
-                        if (!externalImportModule) {
-                            // TODO: refine this or find existing mechanism that solves the problem of .d.ts to .js mapping
-                            const potentialDTSPath = resolvedModulePath.replace("node_modules/", "node_modules/@types/").replace(".js", ".d.ts");
-                            importSource = PathUtils.normalize(projectRootPath, potentialDTSPath);
-                            externalImportModule = externalModules.find((em) => em.fqn === importSource);
+
+                        if (resolvedModulePath) {
+                            const packageName = NodeUtils.getPackageNameForPath(projectRootPath, resolvedModulePath);
+                            if (packageName) {
+                                externalImportModule = externalModules.find((em) => em.fqn === packageName);
+                            }
+                            if (!externalImportModule) {
+                                importSource = PathUtils.normalize(projectRootPath, resolvedModulePath);
+                                externalImportModule = externalModules.find((em) => em.fqn === importSource);
+                            }
+                            if (!externalImportModule) {
+                                // TODO: refine this or find existing mechanism that solves the problem of .d.ts to .js mapping
+                                const potentialDTSPath = resolvedModulePath.replace("node_modules/", "node_modules/@types/").replace(".js", ".d.ts");
+                                importSource = PathUtils.normalize(projectRootPath, potentialDTSPath);
+                                externalImportModule = externalModules.find((em) => em.fqn === importSource);
+                            }
                         }
                     }
                     if (externalImportModule) {
