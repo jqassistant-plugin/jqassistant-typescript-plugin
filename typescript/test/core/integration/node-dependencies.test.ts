@@ -1,7 +1,7 @@
 import { processProject } from "../../../src/core/extractor";
 import { LCEConcept } from "../../../src/core/concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
-import { expectDependency, getDependenciesFromResult } from "../../utils/test-utils";
+import { expectDependency, getDependenciesFromResult, initNodeSampleProject } from "../../utils/test-utils";
 
 jest.setTimeout(30000);
 
@@ -11,6 +11,7 @@ describe("Node.js dependencies test", () => {
 
     beforeAll(async () => {
         const projectRoot = "./test/core/integration/sample-projects/node-dependencies";
+        initNodeSampleProject(projectRoot);
         result = await processProject(projectRoot);
         deps = getDependenciesFromResult(result);
     });

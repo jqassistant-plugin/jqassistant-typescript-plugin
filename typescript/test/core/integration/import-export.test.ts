@@ -1,6 +1,6 @@
 import { processProject } from "../../../src/core/extractor";
 import { LCEConcept } from "../../../src/core/concept";
-import { expectDeclaredType, expectDependency, expectExport, getDependenciesFromResult } from "../../utils/test-utils";
+import { expectDeclaredType, expectDependency, expectExport, getDependenciesFromResult, initNodeSampleProject } from "../../utils/test-utils";
 import { LCEVariableDeclaration } from "../../../src/core/concepts/variable-declaration.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
@@ -15,6 +15,7 @@ describe("import/export test", () => {
 
     beforeAll(async () => {
         const projectRoot = "./test/core/integration/sample-projects/import-export";
+        initNodeSampleProject(projectRoot);
         result = await processProject(projectRoot);
 
         if(!result.get(LCEVariableDeclaration.conceptId)) {

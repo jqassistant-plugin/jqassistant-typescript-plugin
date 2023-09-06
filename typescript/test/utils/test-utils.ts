@@ -10,7 +10,7 @@ import {
     LCETypeObjectMember,
     LCETypeParameterReference,
     LCETypePrimitive,
-    LCETypeUnion,
+    LCETypeUnion
 } from "../../src/core/concepts/type.concept";
 import { LCEValue, LCEValueDeclared, LCEValueLiteral, LCEValueObject } from "../../src/core/concepts/value.concept";
 import { LCEMethodDeclaration, LCEParameterDeclaration } from "../../src/core/concepts/method-declaration.concept";
@@ -21,7 +21,27 @@ import { LCEAccessorProperty } from "../../src/core/concepts/accessor-declaratio
 import { LCEModule } from "../../src/core/concepts/typescript-module.concept";
 import { LCEEnumDeclaration } from "../../src/core/concepts/enum-declaration.concept";
 import { LCEExportDeclaration } from "../../src/core/concepts/export-declaration.concept";
+import { execSync } from "child_process";
+import fs from "fs";
 
+
+/**
+ * Checks if Node.js has been initialized for the provided sample project.
+ * Runs `npm install` if that's not the case.
+ */
+export function initNodeSampleProject(path: string) {
+    const files = fs.readdirSync(path);
+    if(!files.includes("node_modules")) {
+        console.log("Installing Node.js packages for sample project: " + path);
+        execSync("npm i", {cwd: path});
+    }
+}
+
+
+/**
+ * Returns a map containing all dependencies of the given result data, mapped by source and target FQN.
+ * The result of this function should be passed to {@link expectDependency}
+ */
 export function getDependenciesFromResult(result: Map<string, LCEConcept[]>): Map<string, Map<string, LCEDependency>> {
     const dependencies: Map<string, Map<string, LCEDependency>> = new Map();
     for (const concept of result.get(LCEDependency.conceptId) ?? []) {
