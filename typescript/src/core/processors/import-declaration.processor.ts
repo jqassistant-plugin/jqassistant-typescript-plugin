@@ -37,7 +37,9 @@ export class ImportDeclarationProcessor extends Processor {
                 if (target.startsWith('"') && PathUtils.getPathType(PathUtils.extractFQNPath(target)) === "node") {
                     // resolve node package names to the appropriate paths
                     try {
-                        const resolvedModulePath = require.resolve(PathUtils.extractFQNPath(target), { paths: [globalContext.projectRootPath] }).replace(/\\/g, "/");
+                        const resolvedModulePath = require
+                            .resolve(PathUtils.extractFQNPath(target), { paths: [globalContext.projectRootPath] })
+                            .replace(/\\/g, "/");
                         const targetDeclName = PathUtils.extractFQNIdentifier(target);
                         const packageName = NodeUtils.getPackageNameForPath(globalContext.projectRootPath, resolvedModulePath);
                         if (packageName) {
@@ -46,7 +48,7 @@ export class ImportDeclarationProcessor extends Processor {
                             target = `"${PathUtils.normalize(globalContext.projectRootPath, resolvedModulePath)}".${targetDeclName}`;
                         }
                     } catch (e) {
-                        console.log(`Error resolving import path for: ${PathUtils.extractFQNPath(target)}`);
+                        console.log("\n" + `Error: Could not resolve import path for: ${PathUtils.extractFQNPath(target)}`);
                     }
                 }
 

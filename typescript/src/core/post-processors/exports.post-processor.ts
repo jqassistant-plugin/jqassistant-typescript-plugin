@@ -86,7 +86,7 @@ export class ExportsPostProcessor extends PostProcessor {
                             }
                         } else {
                             console.log(
-                                `Error: could not find exported declaration "${exp.identifier}" in "${exp.importSource}": Ignoring export...`,
+                                "\n" + `Error: could not find exported declaration "${exp.identifier}" in "${exp.importSource}": Ignoring export...`,
                             );
                         }
                     }
@@ -100,7 +100,7 @@ export class ExportsPostProcessor extends PostProcessor {
                         try {
                             resolvedModulePath = require.resolve(exp.importSource, { paths: [projectRootPath] }).replace(/\\/g, "/");
                         } catch (e) {
-                            console.log(`Error: Could not resolve module: ${exp.importSource}`);
+                            console.log("\n" + `Error: Could not resolve module: ${exp.importSource}`);
                         }
 
                         if (resolvedModulePath) {
@@ -162,12 +162,13 @@ export class ExportsPostProcessor extends PostProcessor {
                                 this.addDependency(concepts, modulePath, eDecl.fqn);
                             } else {
                                 console.log(
-                                    `Error: external declaration with identifier "${exp.identifier}" in module "${exp.importSource}" could not be found: Ignoring export...`,
+                                    "\n" +
+                                        `Error: external declaration with identifier "${exp.identifier}" in module "${exp.importSource}" could not be found: Ignoring export...`,
                                 );
                             }
                         }
                     } else {
-                        console.log(`Error: external module "${exp.importSource}" for re-export could not be found: Ignoring export...`);
+                        console.log("\n" + `Error: external module "${exp.importSource}" for re-export could not be found: Ignoring export...`);
                     }
                 }
             } else {
