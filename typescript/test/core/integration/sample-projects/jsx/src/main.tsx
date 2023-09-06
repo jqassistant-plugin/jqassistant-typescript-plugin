@@ -1,36 +1,24 @@
 /* eslint-disable */
 
-// Sample Declarations to be used later
+import React from "react";
+import { REMOTE } from "./secondary";
 
-class CustomClass {
-    public x: number;
-    public y: number;
+const LOCAL = "local"
 
-    constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-    }
-}
-
-interface CustomInterface {
-    x: number;
-    y: number;
-}
-
-interface CustomInterface2 {
-    str: string;
-}
-
-type CustomType = {
-    x: number;
-    y: number;
-};
-
-enum CustomEnum {
-    A = 1,
-    B = 2,
-}
 
 function returnJSX() {
     return <div></div>;
 }
+
+function localRef() {
+    return <div>
+        {LOCAL}
+    </div>
+}
+
+function remoteRef() {
+    return <div>
+        {REMOTE}
+    </div>
+}
+
