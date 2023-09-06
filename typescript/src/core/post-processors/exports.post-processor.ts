@@ -1,11 +1,11 @@
-import {PostProcessor} from "../post-processor";
-import {LCEConcept} from "../concept";
-import {LCEExportDeclaration} from "../concepts/export-declaration.concept";
-import {LCEModule} from "../concepts/typescript-module.concept";
-import {PathUtils} from "../utils/path.utils";
-import {LCEExternalModule} from "../concepts/externals.concept";
-import {LCEDependency} from "../concepts/dependency.concept";
-import {NodeUtils} from "../utils/node.utils";
+import { PostProcessor } from "../post-processor";
+import { LCEConcept } from "../concept";
+import { LCEExportDeclaration } from "../concepts/export-declaration.concept";
+import { LCEModule } from "../concepts/typescript-module.concept";
+import { PathUtils } from "../utils/path.utils";
+import { LCEExternalModule } from "../concepts/externals.concept";
+import { LCEDependency } from "../concepts/dependency.concept";
+import { NodeUtils } from "../utils/node.utils";
 import path from "path";
 import * as fs from "fs";
 
@@ -46,7 +46,10 @@ export class ExportsPostProcessor extends PostProcessor {
                         // namespace re-export: convert all namespace exports into individual export declarations
                         if (exp.declFqn) {
                             for (const moduleExport of moduleExports) {
-                                const identifier = moduleExport.alias ?? moduleExport.identifier;
+                                let identifier = moduleExport.alias ?? moduleExport.identifier;
+                                if (moduleExport.isDefault) {
+                                    identifier = "default";
+                                }
                                 result.push(
                                     new LCEExportDeclaration(
                                         identifier,
@@ -173,9 +176,15 @@ export class ExportsPostProcessor extends PostProcessor {
 
     private findSingleModuleExport(moduleExports: LCEExportDeclaration[], name: string) {
         for (const me of moduleExports) {
-            const meName = me.alias ?? me.identifier;
-            if (meName === name) {
-                return me;
+            if (name === "default") {
+                if (me.isDefault) {
+                    return me;
+                }
+            } else {
+                const meName = me.alias ?? me.identifier;
+                if (meName === name) {
+                    return me;
+                }
             }
         }
     }

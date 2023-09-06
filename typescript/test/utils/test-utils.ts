@@ -378,9 +378,10 @@ export function expectModule(modules: Map<string, LCEModule>, fqn: string, graph
     }
 }
 
-export function expectExport(exports: LCEExportDeclaration[], fqn: string, identifier: string, alias?: string) {
+export function expectExport(exports: LCEExportDeclaration[], fqn: string, identifier: string, alias?: string, isDefault: boolean = false) {
     const exp = exports.find(e => e.declFqn === fqn);
     expect(exp).toBeDefined();
     expect(exp!.identifier).toBe(identifier);
     expect(exp!.alias).toBe(alias);
+    expect(exp!.isDefault).toBe(isDefault)
 }

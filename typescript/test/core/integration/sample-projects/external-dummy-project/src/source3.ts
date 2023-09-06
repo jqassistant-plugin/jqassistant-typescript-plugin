@@ -25,3 +25,5 @@ enum DummyCustomEnum3 {
 }
 
 export {DummyCustomClass3 as DummyCustomClass3Alias, DummyCustomInterface3, DummyCustomType3, DummyCustomEnum3};
+
+export default class DummyDefaultClass3 {}

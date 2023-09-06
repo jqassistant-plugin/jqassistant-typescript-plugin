@@ -26,3 +26,5 @@ enum CustomEnum2 {
 }
 
 export {CustomClass2, CustomInterface2, CustomType2 as CustomType2Alias, CustomEnum2};
+
+export default class DefaultClass2 {}

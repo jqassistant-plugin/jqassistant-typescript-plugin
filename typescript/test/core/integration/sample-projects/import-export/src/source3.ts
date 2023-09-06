@@ -26,3 +26,5 @@ enum CustomEnum3 {
 }
 
 export {CustomClass3 as CustomClass3Alias, CustomInterface3, CustomType3, CustomEnum3};
+
+export default class DefaultClass3 {}
