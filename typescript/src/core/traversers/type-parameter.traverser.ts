@@ -1,4 +1,4 @@
-import { AST_NODE_TYPES } from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 import { ConceptMap, mergeConceptMaps } from "../concept";
 import { ProcessingContext } from "../context";

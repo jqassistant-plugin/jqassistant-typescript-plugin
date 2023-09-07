@@ -1,4 +1,4 @@
-import { AST_NODE_TYPES } from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 import { ConceptMap, mergeConceptMaps, singleEntryConceptMap } from "../concept";
 import { LCEDecorator } from "../concepts/decorator.concept";

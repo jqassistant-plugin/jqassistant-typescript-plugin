@@ -1,10 +1,10 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
-import {ConceptMap, singleEntryConceptMap} from "../../core/concept";
-import {ProcessingContext} from "../../core/context";
-import {ExecutionCondition} from "../../core/execution-condition";
-import {Processor} from "../../core/processor";
-import {DependencyResolutionProcessor} from "../../core/processors/dependency-resolution.processor";
-import {LCEReactStateHook} from "../concepts/react-hook.concept";
+import { AST_NODE_TYPES } from "@typescript-eslint/utils";
+import { ConceptMap, singleEntryConceptMap } from "../../core/concept";
+import { ProcessingContext } from "../../core/context";
+import { ExecutionCondition } from "../../core/execution-condition";
+import { Processor } from "../../core/processor";
+import { DependencyResolutionProcessor } from "../../core/processors/dependency-resolution.processor";
+import { LCEReactStateHook } from "../concepts/react-hook.concept";
 
 export class ReactHookProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.VariableDeclarator], () => true);
@@ -30,7 +30,7 @@ export class ReactHookProcessor extends Processor {
                 const fqn = localContexts.getNextContext(DependencyResolutionProcessor.DEPENDENCY_SOURCE_FQN_CONTEXT)?.[0] as string;
                 return singleEntryConceptMap(
                     LCEReactStateHook.conceptId,
-                    new LCEReactStateHook(fqn, node.id.elements[0].name, node.id.elements[1].name)
+                    new LCEReactStateHook(fqn, node.id.elements[0].name, node.id.elements[1].name),
                 );
             }
         }

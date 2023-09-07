@@ -1,4 +1,4 @@
-import { AST_NODE_TYPES } from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 import { ConceptMap, mergeConceptMaps } from "../concept";
 import { ProcessingContext } from "../context";
@@ -37,9 +37,11 @@ export class ImportDeclarationProcessor extends Processor {
                 if (target.startsWith('"') && PathUtils.getPathType(PathUtils.extractFQNPath(target)) === "node") {
                     // resolve node package names to the appropriate paths
                     try {
-                        const resolvedModulePath = require
-                            .resolve(PathUtils.extractFQNPath(target), { paths: [globalContext.projectRootPath] })
-                            .replace(/\\/g, "/");
+                        const resolvedModulePath = NodeUtils.resolveImportPath(
+                            PathUtils.extractFQNPath(target),
+                            globalContext.projectRootPath,
+                            globalContext.sourceFilePath,
+                        );
                         const targetDeclName = PathUtils.extractFQNIdentifier(target);
                         const packageName = NodeUtils.getPackageNameForPath(globalContext.projectRootPath, resolvedModulePath);
                         if (packageName) {

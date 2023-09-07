@@ -1,4 +1,4 @@
-import { AST_NODE_TYPES } from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 import { ClassPropertyNameNonComputed, PropertyNameNonComputed } from "@typescript-eslint/types/dist/generated/ast-spec";
 

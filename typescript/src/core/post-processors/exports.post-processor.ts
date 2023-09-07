@@ -98,7 +98,7 @@ export class ExportsPostProcessor extends PostProcessor {
                         // if import source is a node module identifier try to resolve it
                         let resolvedModulePath;
                         try {
-                            resolvedModulePath = require.resolve(exp.importSource, { paths: [projectRootPath] }).replace(/\\/g, "/");
+                            resolvedModulePath = NodeUtils.resolveImportPath(exp.importSource, projectRootPath, exp.sourceFilePath);
                         } catch (e) {
                             console.log("\n" + `Error: Could not resolve module: ${exp.importSource}`);
                         }

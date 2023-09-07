@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
-import {ConceptMap} from "./concept";
-import {ProcessingContext} from "./context";
-import {ExecutionCondition} from "./execution-condition";
+import { ConceptMap } from "./concept";
+import { ProcessingContext } from "./context";
+import { ExecutionCondition } from "./execution-condition";
 
 export type ProcessorMap = Map<AST_NODE_TYPES, Processor[]>;
 

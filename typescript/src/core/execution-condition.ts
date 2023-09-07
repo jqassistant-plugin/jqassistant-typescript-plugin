@@ -1,6 +1,6 @@
-import {AST_NODE_TYPES} from "@typescript-eslint/types";
+import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
-import {ProcessingContext} from "./context";
+import { ProcessingContext } from "./context";
 
 /**
  * Represents the condition under which a `Processor` is executed.
