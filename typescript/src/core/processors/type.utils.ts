@@ -51,6 +51,7 @@ import { ProcessingContext } from "../context";
 import { PathUtils } from "../utils/path.utils";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
 import { NodeUtils } from "../utils/node.utils";
+import path from "path";
 
 /**
  * Returns the type for a given class property (with a non-computed name)
@@ -347,7 +348,8 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
         // normalize TypeChecker FQN and determine if type is part of the project
         const sourceFile = symbol?.valueDeclaration?.getSourceFile() ?? symbol?.declarations?.find((d) => !!d.getSourceFile())?.getSourceFile();
         const isStandardLibrary = !!sourceFile && globalContext.services.program.isSourceFileDefaultLibrary(sourceFile);
-        const isExternal = !!sourceFile && globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile);
+        const relativeSrcPath = !!sourceFile ? path.relative(globalContext.projectRootPath, sourceFile.fileName).replace(/\\/g, "/") : undefined;
+        const isExternal = !!sourceFile && (globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile) || relativeSrcPath!.startsWith("node_modules"));
         // const isExternal = hasSource ? globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile!) :
         //     !!symbol?.declarations && symbol.declarations[0] && globalContext.services.program.isSourceFileFromExternalLibrary(symbol.declarations[0].getSourceFile());
 
