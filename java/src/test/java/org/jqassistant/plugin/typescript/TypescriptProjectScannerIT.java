@@ -11,7 +11,6 @@ import java.io.File;
 public class TypescriptProjectScannerIT  extends AbstractPluginIT {
 
     @Test
-    @TestStore(type = TestStore.Type.REMOTE)
     public void testScanReportFileDescriptor() {
         File file = ClasspathResource.getFile(TypescriptProjectScannerIT.class, "/sample-project/.reports/jqa/ts-output.json");
         Descriptor descriptor = getScanner().scan(file, file.getAbsolutePath(), TypescriptScope.PROJECT);
