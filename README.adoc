@@ -5,9 +5,32 @@ It provides a tool to extract language concepts from TypeScript code and a scann
 
 For more information on jQAssistant see https://jqassistant.org[^].
 
+NOTE: This plugin has not been officially released yet.
+
+== Installation
+
+- Clone this repository and build it using Maven `mvn install`
+- Download the https://repo1.maven.org/maven2/com/buschmais/jqassistant/cli/jqassistant-commandline-distribution/[ZIP distribution] of the jQAssistant command line utility and unpack it. A directory `jqassistant-commandline-distribution-2.x.x` will be created.
+- Install the jQAssistant TypeScript scanner using `npm install --global  @jqassistant/ts-lce` 
+
 == Usage
 
-TODO
+- create a file `.jqassistant.yml` in your project root
++
+----
+jqassistant:
+  plugins:
+    - group-id: org.jqassistant.plugin.typescript
+      artifact-id: jqassistant-typescript-plugin
+      version: 1.0.0-SNAPSHOT
+  scan:
+    include:
+      files:
+        - typescript:project::build/jqa-ts-output.json
+----
+- execute `jqa-ts-lce` from your project root (this will generate a file `build/jqa-ts-output.json`)
+- run the jQAssistant command line utility using `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh scan` (imports `build/jqa-ts-output.json` into the graph database)
+- start exploring the graph by starting the embedded server `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh server` and opening your browser at `http://localhost:7474`
 
 == Model
 
