@@ -19,3 +19,4 @@ target
 
 # jQA
 **/.reports/jqa/
+!java/src/test/resources/java-it-sample-project/.reports/jqa/

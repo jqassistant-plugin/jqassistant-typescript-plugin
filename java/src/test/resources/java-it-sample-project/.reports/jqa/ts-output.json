@@ -1,0 +1,254 @@
+{
+  "project": [
+    {
+      "projectRoot": "jqassistant-typescript-plugin/java/src/test/resources/java-it-sample-project"
+    }
+  ],
+  "class-declaration": [
+    {
+      "fqn": "\"./src/testClass.ts\".Point",
+      "className": "Point",
+      "abstract": false,
+      "typeParameters": [],
+      "implementsInterfaces": [],
+      "constr": {
+        "fqn": "\"./src/testClass.ts\".Point.constructor",
+        "parameters": [
+          {
+            "index": 0,
+            "name": "x",
+            "type": {
+              "type": "primitive",
+              "name": "number"
+            },
+            "optional": false,
+            "decorators": [],
+            "coordinates": {
+              "startLine": 7,
+              "startColumn": 14,
+              "endLine": 7,
+              "endColumn": 23
+            }
+          },
+          {
+            "index": 1,
+            "name": "y",
+            "type": {
+              "type": "primitive",
+              "name": "number"
+            },
+            "optional": false,
+            "decorators": [],
+            "coordinates": {
+              "startLine": 7,
+              "startColumn": 25,
+              "endLine": 7,
+              "endColumn": 34
+            }
+          }
+        ],
+        "parameterProperties": [],
+        "coordinates": {
+          "startLine": 7,
+          "startColumn": 2,
+          "endLine": 10,
+          "endColumn": 3
+        }
+      },
+      "properties": [
+        {
+          "fqn": "\"./src/testClass.ts\".Point.x",
+          "propertyName": "x",
+          "optional": false,
+          "type": {
+            "type": "primitive",
+            "name": "number"
+          },
+          "decorators": [],
+          "visibility": "public",
+          "readonly": false,
+          "coordinates": {
+            "startLine": 4,
+            "startColumn": 2,
+            "endLine": 4,
+            "endColumn": 12
+          },
+          "override": false,
+          "abstract": false,
+          "isStatic": false
+        },
+        {
+          "fqn": "\"./src/testClass.ts\".Point.y",
+          "propertyName": "y",
+          "optional": false,
+          "type": {
+            "type": "primitive",
+            "name": "number"
+          },
+          "decorators": [],
+          "visibility": "public",
+          "readonly": false,
+          "coordinates": {
+            "startLine": 5,
+            "startColumn": 2,
+            "endLine": 5,
+            "endColumn": 12
+          },
+          "override": false,
+          "abstract": false,
+          "isStatic": false
+        }
+      ],
+      "methods": [
+        {
+          "fqn": "\"./src/testClass.ts\".Point.add",
+          "methodName": "add",
+          "parameters": [
+            {
+              "index": 0,
+              "name": "point",
+              "type": {
+                "type": "declared",
+                "fqn": "\"./src/testClass.ts\".Point",
+                "typeArguments": []
+              },
+              "optional": false,
+              "decorators": [],
+              "coordinates": {
+                "startLine": 12,
+                "startColumn": 6,
+                "endLine": 12,
+                "endColumn": 18
+              }
+            }
+          ],
+          "returnType": {
+            "type": "declared",
+            "fqn": "\"./src/testClass.ts\".Point",
+            "typeArguments": []
+          },
+          "typeParameters": [],
+          "decorators": [],
+          "visibility": "public",
+          "async": false,
+          "coordinates": {
+            "startLine": 12,
+            "startColumn": 2,
+            "endLine": 14,
+            "endColumn": 3
+          },
+          "override": false,
+          "abstract": false,
+          "isStatic": false
+        },
+        {
+          "fqn": "\"./src/testClass.ts\".Point.reset",
+          "methodName": "reset",
+          "parameters": [],
+          "returnType": {
+            "type": "primitive",
+            "name": "void"
+          },
+          "typeParameters": [],
+          "decorators": [],
+          "visibility": "public",
+          "async": false,
+          "coordinates": {
+            "startLine": 16,
+            "startColumn": 2,
+            "endLine": 19,
+            "endColumn": 3
+          },
+          "override": false,
+          "abstract": false,
+          "isStatic": false
+        }
+      ],
+      "accessorProperties": [],
+      "decorators": [],
+      "coordinates": {
+        "fileName": "/src/testClass.ts",
+        "startLine": 3,
+        "startColumn": 0,
+        "endLine": 20,
+        "endColumn": 1
+      }
+    }
+  ],
+  "dependency": [
+    {
+      "fqn": "\"./src/testClass.ts\".Point",
+      "targetType": "declaration",
+      "sourceFQN": "\"./src/testClass.ts\".Point.add",
+      "sourceType": "declaration",
+      "cardinality": 3
+    },
+    {
+      "fqn": "\"./src/testClass.ts\".Point.x",
+      "targetType": "declaration",
+      "sourceFQN": "\"./src/testClass.ts\".Point.add",
+      "sourceType": "declaration",
+      "cardinality": 1
+    },
+    {
+      "fqn": "\"./src/testClass.ts\".Point.y",
+      "targetType": "declaration",
+      "sourceFQN": "\"./src/testClass.ts\".Point.add",
+      "sourceType": "declaration",
+      "cardinality": 1
+    },
+    {
+      "fqn": "\"./src/testVariable.ts\".MY_NUMBER",
+      "targetType": "declaration",
+      "sourceFQN": "\"./src/testClass.ts\".Point.reset",
+      "sourceType": "declaration",
+      "cardinality": 2
+    }
+  ],
+  "module": [
+    {
+      "fqn": "./src/testClass.ts",
+      "path": "/src/testClass.ts"
+    },
+    {
+      "fqn": "./src/testVariable.ts",
+      "path": "/src/testVariable.ts"
+    }
+  ],
+  "variable-declaration": [
+    {
+      "fqn": "\"./src/testVariable.ts\".MY_NUMBER",
+      "variableName": "MY_NUMBER",
+      "kind": "const",
+      "type": {
+        "type": "literal",
+        "value": 42
+      },
+      "initValue": {
+        "valueType": "literal",
+        "type": {
+          "type": "primitive",
+          "name": "number"
+        },
+        "value": 42
+      },
+      "coordinates": {
+        "fileName": "/src/testVariable.ts",
+        "startLine": 2,
+        "startColumn": 13,
+        "endLine": 2,
+        "endColumn": 27
+      }
+    }
+  ],
+  "export-declaration": [
+    {
+      "identifier": "MY_NUMBER",
+      "declFqn": "\"./src/testVariable.ts\".MY_NUMBER",
+      "isDefault": false,
+      "kind": "value",
+      "sourceFilePath": "./src/testVariable.ts"
+    }
+  ],
+  "external-module": []
+}

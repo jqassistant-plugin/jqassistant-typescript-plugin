@@ -25,25 +25,31 @@ public class DependencyResolver {
 
         // create missing transitive relationships
         context.getStore().executeQuery(
-                "MATCH (decl:TS)-[r:DEPENDS_ON]->(trgt:TS)<-[:DECLARES*]-(trgtParent:TS) " +
-                "WHERE NOT (trgtParent)-[:DECLARES*]->(decl) " +
-                "CREATE (decl)-[:DEPENDS_ON {cardinality: r.cardinality}]->(trgtParent)"
+            "MATCH (decl:TS)-[r:DEPENDS_ON]->(trgt:TS)<-[:DECLARES*]-(trgtParent:TS) " +
+            "WHERE NOT (trgtParent)-[:DECLARES*]->(decl) " +
+            "CREATE (decl)-[:DEPENDS_ON {cardinality: r.cardinality}]->(trgtParent)"
         );
         context.getStore().executeQuery(
-                "MATCH (srcParent:TS)-[:DECLARES*]->(decl:TS)-[r:DEPENDS_ON]->(trgt:TS) " +
-                "WHERE NOT (srcParent)-[:DECLARES*]->(trgt) " +
-                "CREATE (srcParent)-[:DEPENDS_ON {cardinality: r.cardinality}]->(trgt)"
+            "MATCH (srcParent:TS)-[:DECLARES*]->(decl:TS)-[r:DEPENDS_ON]->(trgt:TS) " +
+            "WHERE NOT (srcParent)-[:DECLARES*]->(trgt) " +
+            "CREATE (srcParent)-[:DEPENDS_ON {cardinality: r.cardinality}]->(trgt)"
         );
 
         // aggregate relationships
         context.getStore().executeQuery(
-                "MATCH (src:TS)-[r:DEPENDS_ON]->(trgt:TS) " +
-                "WITH src, trgt, collect(r) AS rels, sum(r.cardinality) AS new_cardinality " +
-                "WHERE size(rels) > 1 " +
-                "SET (rels[0]).cardinality = new_cardinality " +
-                "WITH src, trgt, rels, new_cardinality " +
-                "UNWIND range(1,size(rels)-1) AS idx " +
-                "DELETE rels[idx]"
+            "MATCH (src:TS)-[r:DEPENDS_ON]->(trgt:TS) " +
+            "WITH src, trgt, collect(r) AS rels, sum(r.cardinality) AS new_cardinality " +
+            "WHERE size(rels) > 1 " +
+            "SET (rels[0]).cardinality = new_cardinality " +
+            "WITH src, trgt, rels, new_cardinality " +
+            "UNWIND range(1,size(rels)-1) AS idx " +
+            "DELETE rels[idx]"
+        );
+
+        // remove self-referencing relationships
+        context.getStore().executeQuery(
+            "MATCH (src:TS)-[r:DEPENDS_ON]->(src:TS) " +
+            "DELETE r"
         );
     }
 
