@@ -28,8 +28,8 @@ jqassistant:
       files:
         - typescript:project::build/jqa-ts-output.json
 ----
-- execute `jqa-ts-lce` from your project root (this will generate a file `build/jqa-ts-output.json`)
-- run the jQAssistant command line utility using `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh scan` (imports `build/jqa-ts-output.json` into the graph database)
+- execute `jqa-ts-lce` from your project root (this will generate a file `.reports/jqa/ts-output.json`)
+- run the jQAssistant command line utility using `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh scan` (imports `.reports/jqa/ts-output.json` into the graph database)
 - start exploring the graph by starting the embedded server `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh server` and opening your browser at `http://localhost:7474`
 
 == Model
