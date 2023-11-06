@@ -37,7 +37,6 @@ public class TypescriptScannerIT extends AbstractPluginIT {
     }
 
     @Test
-    @TestStore(type = TestStore.Type.REMOTE)
     void testProjectNode() {
         assertThat(scannedDescriptor).isInstanceOf(ProjectDescriptor.class);
 
