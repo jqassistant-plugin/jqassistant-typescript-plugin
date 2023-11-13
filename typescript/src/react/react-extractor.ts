@@ -1,8 +1,11 @@
-import { PROCESSORS } from "../core/features";
-import { ReactHookProcessor } from "./processors/react-hook.processor";
+import { POST_PROCESSORS } from "../core/features";
+import { ReactComponentPostProcessor } from "./post-processors/react-component.post-processor";
 
 export function initializeReactExtractor() {
     console.log("Initializing React Extractor...");
 
-    PROCESSORS.push(new ReactHookProcessor());
+    // just for demo purposes:
+    // PROCESSORS.push(new ReactHookProcessor());
+
+    POST_PROCESSORS.push(new ReactComponentPostProcessor());
 }

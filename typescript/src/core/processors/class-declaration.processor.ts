@@ -94,20 +94,22 @@ export class ClassDeclarationProcessor extends Processor {
 
 export class SuperClassDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
-        [AST_NODE_TYPES.Identifier],
+        [AST_NODE_TYPES.Identifier, AST_NODE_TYPES.MemberExpression],
         ({node, localContexts}) =>
             !!node.parent && node.parent.type === AST_NODE_TYPES.ClassDeclaration && getParentPropName(localContexts) === ClassTraverser.EXTENDS_PROP
     );
 
     public override postChildrenProcessing({node, localContexts, globalContext}: ProcessingContext): ConceptMap {
-        if (node.type === AST_NODE_TYPES.Identifier && node.parent?.type === AST_NODE_TYPES.ClassDeclaration) {
-            const superType = parseClassLikeBaseType({
-                globalContext,
-                localContexts,
-                node
-            }, node, node.parent.superTypeArguments?.params);
-            if (superType) {
-                return singleEntryConceptMap(LCETypeDeclared.conceptId, superType);
+        if(node.parent?.type === AST_NODE_TYPES.ClassDeclaration) {
+            if (node.type === AST_NODE_TYPES.Identifier || node.type === AST_NODE_TYPES.MemberExpression) {
+                const superType = parseClassLikeBaseType({
+                    globalContext,
+                    localContexts,
+                    node
+                }, node, node.parent.superTypeArguments?.params);
+                if (superType) {
+                    return singleEntryConceptMap(LCETypeDeclared.conceptId, superType);
+                }
             }
         }
         return new Map();

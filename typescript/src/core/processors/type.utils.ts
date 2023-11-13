@@ -6,6 +6,7 @@ import {
     FunctionDeclaration,
     FunctionExpression,
     Identifier,
+    MemberExpression,
     MethodDefinitionNonComputedName,
     Node as ESNode,
     TSAbstractMethodDefinitionNonComputedName,
@@ -268,7 +269,7 @@ export function parseTypeAliasTypeParameters(processingContext: ProcessingContex
  */
 export function parseClassLikeBaseType(
     processingContext: ProcessingContext,
-    esTypeIdentifier: Identifier | TSClassImplements | TSInterfaceHeritage,
+    esTypeIdentifier: MemberExpression | Identifier | TSClassImplements | TSInterfaceHeritage,
     esTypeArguments?: TypeNode[]
 ): LCETypeDeclared | undefined {
     const globalContext = processingContext.globalContext;

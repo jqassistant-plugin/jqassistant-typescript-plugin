@@ -9,9 +9,9 @@ import com.buschmais.jqassistant.plugin.json.api.model.JSONFileDescriptor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jqassistant.plugin.typescript.api.TypescriptScope;
-import org.jqassistant.plugin.typescript.api.model.ProjectDescriptor;
-import org.jqassistant.plugin.typescript.impl.mapper.ProjectMapper;
-import org.jqassistant.plugin.typescript.impl.model.ScanResultCollection;
+import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
+import org.jqassistant.plugin.typescript.impl.mapper.core.ProjectMapper;
+import org.jqassistant.plugin.typescript.impl.model.core.ScanResultCollection;
 
 import java.io.IOException;
 

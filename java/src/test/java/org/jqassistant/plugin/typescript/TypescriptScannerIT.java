@@ -4,7 +4,7 @@ import com.buschmais.jqassistant.core.shared.io.ClasspathResource;
 import com.buschmais.jqassistant.core.store.api.model.Descriptor;
 import com.buschmais.jqassistant.core.test.plugin.AbstractPluginIT;
 import org.jqassistant.plugin.typescript.api.TypescriptScope;
-import org.jqassistant.plugin.typescript.api.model.*;
+import org.jqassistant.plugin.typescript.api.model.core.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
