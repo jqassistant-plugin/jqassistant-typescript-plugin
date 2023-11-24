@@ -31,6 +31,7 @@ public interface FunctionDeclarationMapper extends
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
     @Mapping(target = "exporters", ignore = true)
+    @Mapping(target = "parameters", dependsOn = "typeParameters")
     FunctionDeclarationDescriptor toDescriptor(FunctionDeclaration value, @Context Scanner scanner);
 
     @AfterMapping

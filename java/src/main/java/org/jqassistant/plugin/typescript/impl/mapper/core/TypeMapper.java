@@ -116,6 +116,7 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
     @Mapping(target = "exporters", ignore = true)
+    @Mapping(source = "parameters", target = "functionParameters", dependsOn = "typeParameters")
     TypeFunctionDescriptor mapTypeFunction(TypeFunction value, @Context Scanner scanner);
 
     @AfterMapping
@@ -133,7 +134,7 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
     @Mapping(target = "exporters", ignore = true)
     List<TypeFunctionParameterDescriptor> mapTypeFunctionParameterList(List<TypeFunctionParameter> value, @Context Scanner scanner);
 
-    @Mapping(target = "reference", ignore = true) // TODO: add reference resolution
+    @Mapping(target = "reference", ignore = true)
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)
     @Mapping(target = "exporters", ignore = true)

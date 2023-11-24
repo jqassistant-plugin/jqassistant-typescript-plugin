@@ -16,7 +16,7 @@ public interface TypeFunctionDescriptor extends TypeDescriptor {
     void setReturnType(TypeDescriptor returnType);
 
     @Relation("HAS_PARAMETER")
-    List<TypeFunctionParameterDescriptor> getParameters();
+    List<TypeFunctionParameterDescriptor> getFunctionParameters();
 
     @Relation("DECLARES")
     List<TypeParameterDeclarationDescriptor> getTypeParameters();

@@ -33,7 +33,6 @@ public interface ParameterDeclarationMapper extends
 
     List<ParameterDeclarationDescriptor> mapList(List<ParameterDeclaration> value, @Context Scanner scanner);
 
-    // TODO: link generated Property Node with Class Node
     default ParameterDeclarationDescriptor mapParameterProperty(ParameterPropertyDeclaration value, @Context Scanner scanner) {
         if(value == null) {
             return null;
@@ -57,6 +56,8 @@ public interface ParameterDeclarationMapper extends
         PropertyDeclarationDescriptor propertyDescriptor = propertyDeclarationMapper.toDescriptor(value, scanner);
 
         parameterDescriptor.setParameterProperty(propertyDescriptor);
+        scannerContext.peek(ParameterPropertyContext.class).getParameterProperties().add(propertyDescriptor);
+
         return parameterDescriptor;
     }
 
