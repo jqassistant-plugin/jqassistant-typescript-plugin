@@ -130,6 +130,8 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
         ScannerContext scannerContext = scanner.getContext();
         ValueCallDescriptor descriptor = scannerContext.getStore().create(ValueCallDescriptor.class);
 
+        descriptor.setCallee(toDescriptor(value.getCallee(), scanner));
+
         for(int i = 0; i < value.getArgs().size(); i++) {
             Value arg = value.getArgs().get(i);
             ValueDescriptor argDescriptor = toDescriptor(arg, scanner);

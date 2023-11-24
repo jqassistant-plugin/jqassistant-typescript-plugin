@@ -8,6 +8,10 @@ import java.util.List;
 @Label("Call")
 public interface ValueCallDescriptor extends ValueDescriptor {
 
+    @Relation("CALLS")
+    ValueDescriptor getCallee();
+    void setCallee(ValueDescriptor callee);
+
     @Relation.Outgoing
     List<ValueCallHasArgumentDescriptor> getArguments();
 

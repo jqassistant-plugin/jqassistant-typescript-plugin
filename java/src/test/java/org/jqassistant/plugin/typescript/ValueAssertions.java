@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 public class ValueAssertions {
 
@@ -243,7 +244,7 @@ public class ValueAssertions {
 
         assertThat(value)
             .as("function value has all properties set correctly")
-            .hasFieldOrPropertyWithValue("arrowFunction", "false");
+            .hasFieldOrPropertyWithValue("arrowFunction", false);
 
         assertThat(value.getType())
             .as("function value has correct type")
@@ -251,59 +252,153 @@ public class ValueAssertions {
 
         TypeFunctionDescriptor type = (TypeFunctionDescriptor)value.getType();
 
-        // TODO: check type information
-//        assertThat(type)
-//            .as("function value's function type has all properties set correctly")
-//            .hasFieldOrPropertyWithValue("async", false);
-//
-//        assertThat(type.getReturnType())
-//            .as("function value's function type's return type has correct type")
-//            .isNotNull()
-//            .isInstanceOf(TypePrimitiveDescriptor.class)
-//            .extracting("name")
-//            .isEqualTo("string");
-//
-//        assertThat(type.getTypeParameters())
-//            .as("function value's function type has one type parameter that is defined correctly")
-//            .hasSize(1)
-//            .anySatisfy((tp) -> {
-//                assertThat(tp)
-//                    .hasFieldOrPropertyWithValue("name", "A")
-//                    .hasFieldOrPropertyWithValue("index", 0);
-//                assertThat(tp.getConstraint())
-//                    .isInstanceOf(TypeDeclaredDescriptor.class)
-//                    .hasFieldOrPropertyWithValue("referencedFqn", "\"./src/testTypes.ts\".typeObject");
-//            });
-//
-//
-//        assertThat(type.getFunctionParameters())
-//            .as("function value's function type has two parameters that are defined correctly")
-//            .hasSize(2)
-//            .anySatisfy((p) -> {
-//                assertThat(p)
-//                    .hasFieldOrPropertyWithValue("name", "x")
-//                    .hasFieldOrPropertyWithValue("index", 0)
-//                    .hasFieldOrPropertyWithValue("optional", false);
-//                assertThat(p.getType())
-//                    .isNotNull()
-//                    .isInstanceOf(TypePrimitiveDescriptor.class)
-//                    .extracting("name")
-//                    .isEqualTo("number");
-//            })
-//            .anySatisfy((p) -> {
-//                assertThat(p)
-//                    .hasFieldOrPropertyWithValue("name", "y")
-//                    .hasFieldOrPropertyWithValue("index", 1)
-//                    .hasFieldOrPropertyWithValue("optional", false);
-//                assertThat(p.getType())
-//                    .isNotNull()
-//                    .isInstanceOf(TypeParameterReferenceDescriptor.class)
-//                    .extracting("name")
-//                    .isEqualTo("A");
-//                assertThat(((TypeParameterReferenceDescriptor)p.getType()).getReference())
-//                    .as("has correct type parameter reference")
-//                    .isEqualTo(type.getTypeParameters().get(0));
-//            });
+        assertThat(type)
+            .as("function value's function type has all properties set correctly")
+            .hasFieldOrPropertyWithValue("async", false);
+
+        assertThat(type.getReturnType())
+            .as("function value's function type's return type has correct type")
+            .isNotNull()
+            .isInstanceOf(TypePrimitiveDescriptor.class)
+            .extracting("name")
+            .isEqualTo("string");
+
+        assertThat(type.getTypeParameters())
+            .as("function value's function type has one type parameter that is defined correctly")
+            .hasSize(1)
+            .anySatisfy((tp) -> {
+                assertThat(tp)
+                    .hasFieldOrPropertyWithValue("name", "T")
+                    .hasFieldOrPropertyWithValue("index", 0);
+                assertThat(tp.getConstraint())
+                    .isInstanceOf(TypeObjectDescriptor.class)
+                    .extracting("members", list(TypeObjectMemberDescriptor.class))
+                    .hasSize(0);
+            });
+
+
+        assertThat(type.getFunctionParameters())
+            .as("function value's function type has two parameters that are defined correctly")
+            .hasSize(2)
+            .anySatisfy((p) -> {
+                assertThat(p)
+                    .hasFieldOrPropertyWithValue("name", "p1")
+                    .hasFieldOrPropertyWithValue("index", 0)
+                    .hasFieldOrPropertyWithValue("optional", false);
+                assertThat(p.getType())
+                    .isNotNull()
+                    .isInstanceOf(TypeParameterReferenceDescriptor.class)
+                    .extracting("name")
+                    .isEqualTo("T");
+                assertThat(((TypeParameterReferenceDescriptor)p.getType()).getReference())
+                    .as("has correct type parameter reference")
+                    .isEqualTo(type.getTypeParameters().get(0));
+            })
+            .anySatisfy((p) -> {
+                assertThat(p)
+                    .hasFieldOrPropertyWithValue("name", "p2")
+                    .hasFieldOrPropertyWithValue("index", 1)
+                    .hasFieldOrPropertyWithValue("optional", false);
+                assertThat(p.getType())
+                    .isNotNull()
+                    .isInstanceOf(TypePrimitiveDescriptor.class)
+                    .extracting("name")
+                    .isEqualTo("number");
+            });
+
+        return this;
+    }
+
+    public ValueAssertions assertValueCall() {
+        AtomicReference<ValueCallDescriptor> valueRef = new AtomicReference<>();
+
+        assertThat(module.getVariableDeclarations())
+            .as("variable declaration for call value exists")
+            .anySatisfy((v) -> {
+                assertThat(v.getName()).isEqualTo("valueCall");
+                valueRef.set((ValueCallDescriptor) v.getInitValue());
+            });
+
+        ValueCallDescriptor value = valueRef.get();
+
+        assertThat(value.getCallee())
+            .as("call value has callee set correctly")
+            .isNotNull()
+            .isInstanceOf(ValueDeclaredDescriptor.class)
+            .hasFieldOrPropertyWithValue("referencedFqn", "\"./src/testValues.ts\".valueFunction");
+
+        assertThat(value.getArguments())
+            .hasSize(2)
+            .anySatisfy(arg -> {
+                assertThat(arg.getIndex()).isEqualTo(0);
+                assertThat(arg.getArgument())
+                    .isInstanceOf(ValueLiteralDescriptor.class)
+                    .hasFieldOrPropertyWithValue("value", "")
+                    .extracting("type", type(TypeDescriptor.class))
+                    .isInstanceOf(TypePrimitiveDescriptor.class)
+                    .hasFieldOrPropertyWithValue("name", "string");
+            })
+            .anySatisfy(arg -> {
+                assertThat(arg.getIndex()).isEqualTo(1);
+                assertThat(arg.getArgument())
+                    .isInstanceOf(ValueLiteralDescriptor.class)
+                    .hasFieldOrPropertyWithValue("value", 1)
+                    .extracting("type", type(TypeDescriptor.class))
+                    .isInstanceOf(TypePrimitiveDescriptor.class)
+                    .hasFieldOrPropertyWithValue("name", "number");
+            });
+
+        assertThat(value.getTypeArguments())
+            .hasSize(1)
+            .first()
+            .hasFieldOrPropertyWithValue("index", 0)
+            .extracting("typeArgument", type(TypeDescriptor.class))
+            .isInstanceOf(TypePrimitiveDescriptor.class)
+            .hasFieldOrPropertyWithValue("name", "string");
+
+        return this;
+    }
+
+    public ValueAssertions assertValueClass() {
+        AtomicReference<ValueClassDescriptor> valueRef = new AtomicReference<>();
+
+        assertThat(module.getVariableDeclarations())
+            .as("variable declaration for class value exists")
+            .anySatisfy((v) -> {
+                assertThat(v.getName()).isEqualTo("valueClass");
+                valueRef.set((ValueClassDescriptor) v.getInitValue());
+            });
+
+        ValueClassDescriptor value = valueRef.get();
+
+        assertThat(value.getType())
+            .as("class value has correct type")
+            .isInstanceOf(TypeNotIdentifiedDescriptor.class)
+            .hasFieldOrPropertyWithValue("identifier", "class expression");
+
+        return this;
+    }
+
+    public ValueAssertions assertValueComplex() {
+        AtomicReference<ValueComplexDescriptor> valueRef = new AtomicReference<>();
+
+        assertThat(module.getVariableDeclarations())
+            .as("variable declaration for complex value exists")
+            .anySatisfy((v) -> {
+                assertThat(v.getName()).isEqualTo("valueComplex");
+                valueRef.set((ValueComplexDescriptor) v.getInitValue());
+            });
+
+        ValueComplexDescriptor value = valueRef.get();
+
+        assertThat(value)
+            .as("complex value has all properties set correctly")
+            .hasFieldOrPropertyWithValue("expression", "valueLiteral + 5");
+
+        assertThat(value.getType())
+            .as("complex value has correct type")
+            .isInstanceOf(TypeNotIdentifiedDescriptor.class)
+            .hasFieldOrPropertyWithValue("identifier", "complex");
 
         return this;
     }
