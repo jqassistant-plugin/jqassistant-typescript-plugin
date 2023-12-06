@@ -23,7 +23,6 @@ public class TypescriptScannerReactIT extends AbstractPluginIT {
     Descriptor scannedDescriptor;
 
     @Test
-    @TestStore(type = TestStore.Type.REMOTE)
     void testScanner() {
         File file = ClasspathResource.getFile(TypescriptScannerReactIT.class, "/java-it-react-sample-ts-output.json");
         scannedDescriptor = getScanner().scan(file, file.getAbsolutePath(), TypescriptScope.PROJECT);
