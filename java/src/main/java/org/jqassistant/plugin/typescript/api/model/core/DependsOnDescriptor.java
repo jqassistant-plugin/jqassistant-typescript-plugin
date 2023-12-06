@@ -7,10 +7,10 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 public interface DependsOnDescriptor extends Descriptor {
 
     @Relation.Incoming
-    TypeScriptDescriptor getDependent();
+    TypeScriptDescriptor getDependency();
 
     @Relation.Outgoing
-    TypeScriptDescriptor getDependency();
+    TypeScriptDescriptor getDependent();
 
     Integer getCardinality();
     void setCardinality(Integer cardinality);

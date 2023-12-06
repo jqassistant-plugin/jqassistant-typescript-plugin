@@ -1,5 +1,4 @@
 import { processProject } from "../../../src/core/extractor";
-import { LCEConcept } from "../../../src/core/concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import { expectDeclaredType, expectDependency, getDependenciesFromResult, initNodeSampleProject } from "../../utils/test-utils";
 import { LCEFunctionDeclaration } from "../../../src/core/concepts/function-declaration.concept";
@@ -8,7 +7,7 @@ import { LCEModule } from "../../../src/core/concepts/typescript-module.concept"
 jest.setTimeout(30000);
 
 describe("JSX test", () => {
-    let result: Map<string, LCEConcept[]>;
+    let result: Map<string, object[]>;
     let deps: Map<string, Map<string, LCEDependency>>;
     const funDecls: Map<string, LCEFunctionDeclaration> = new Map();
     let mainModule: LCEModule;

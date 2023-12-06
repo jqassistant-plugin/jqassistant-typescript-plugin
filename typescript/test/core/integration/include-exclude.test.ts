@@ -1,12 +1,11 @@
 import { processProject } from "../../../src/core/extractor";
-import { LCEConcept } from "../../../src/core/concept";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { expectModule } from "../../utils/test-utils";
 
 jest.setTimeout(30000);
 
 describe("tsconfig include/exclude test", () => {
-    let result: Map<string, LCEConcept[]>;
+    let result: Map<string, object[]>;
     const modules: Map<string, LCEModule> = new Map();
     beforeAll(async () => {
         const projectRoot = "./test/core/integration/sample-projects/include-exclude";

@@ -24,6 +24,7 @@ export class AstTraverser {
                     globalContext: globalContext,
                     localContexts: new LocalContexts(),
                     node: globalContext.ast,
+                    metadataAssignments: [],
                 },
                 this.processorMap,
             ) ?? new Map();

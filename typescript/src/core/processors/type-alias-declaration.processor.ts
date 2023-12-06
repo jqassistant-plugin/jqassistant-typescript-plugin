@@ -26,7 +26,7 @@ export class TypeAliasDeclarationProcessor extends Processor {
         }
     }
 
-    public override postChildrenProcessing({ globalContext, localContexts, node }: ProcessingContext): ConceptMap {
+    public override postChildrenProcessing({ globalContext, localContexts, node, ...unusedProcessingContext }: ProcessingContext): ConceptMap {
         if (node.type === AST_NODE_TYPES.TSTypeAliasDeclaration) {
             const typeAliasName = node.id.name;
             const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
@@ -34,8 +34,8 @@ export class TypeAliasDeclarationProcessor extends Processor {
             const typeAliasDecl = new LCETypeAliasDeclaration(
                 typeAliasName,
                 fqn,
-                parseTypeAliasTypeParameters({ globalContext, localContexts, node }, node),
-                parseESNodeType({ globalContext, localContexts, node }, node.typeAnnotation, typeAliasName),
+                parseTypeAliasTypeParameters({ globalContext, localContexts, node, ...unusedProcessingContext }, node),
+                parseESNodeType({ globalContext, localContexts, node, ...unusedProcessingContext }, node.typeAnnotation, typeAliasName),
                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true),
             );
             return mergeConceptMaps(

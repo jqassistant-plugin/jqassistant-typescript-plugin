@@ -15,7 +15,7 @@ NOTE: This plugin has not been officially released yet.
 
 == Usage
 
-- create a file `.jqassistant.yml` in your project root
+- create a file `.jqassistant.yml` in your project root*
 +
 ----
 jqassistant:
@@ -32,9 +32,15 @@ jqassistant:
 - run the jQAssistant command line utility using `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh scan` (imports `.reports/jqa/ts-output.json` into the graph database)
 - start exploring the graph by starting the embedded server `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh server` and opening your browser at `http://localhost:7474`
 
+*project root does refer to the directory that contains the (root) `tsconfig.json`
+
 == Model
 
-image::docs/jqa-ts-plugin-model.jpg[Neo4j model for the jQAssistant TypeScript plugin]
+=== Core
+
+The core model represents all basic TypeScript language concepts, independent of any used frameworks or libraries.
+
+image::docs/jqa-ts-plugin-model-core.jpg[Neo4j model for the core model of the jQAssistant TypeScript plugin]
 
 The destinations of the `REFERENCES` relations of `:Type:Declared` and `:Value:Declared` as well as all `:DEPENDS_ON` relations have been omitted for the sake of clarity.
 
@@ -84,3 +90,11 @@ and can target one or more of the following nodes:
 * `:Enum`
 * `:Variable`
 * `:Function`
+
+=== React Extension
+
+The React extension works with various concepts that represent usage patterns in the frontend framework React.
+
+image::docs/jqa-ts-plugin-model-react.jpg[Neo4j model for React extension of the jQAssistant TypeScript plugin]
+
+For all element types that reference some declaration, matching `DEPENDS_ON` relations are created.

@@ -1,4 +1,4 @@
-package org.jqassistant.plugin.typescript;
+package org.jqassistant.plugin.typescript.core.assertions;
 
 import org.jqassistant.plugin.typescript.api.model.core.ModuleDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;

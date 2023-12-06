@@ -32,7 +32,10 @@ export class InterfaceDeclarationProcessor extends Processor {
         }
     }
 
-    public override postChildrenProcessing({ globalContext, localContexts, node }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
+    public override postChildrenProcessing(
+        { globalContext, localContexts, node, ...unusedProcessingContext }: ProcessingContext,
+        childConcepts: ConceptMap,
+    ): ConceptMap {
         if (node.type === AST_NODE_TYPES.TSInterfaceDeclaration) {
             const interfaceName = node.id.name;
             const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
@@ -62,7 +65,7 @@ export class InterfaceDeclarationProcessor extends Processor {
             const interfaceDecl = new LCEInterfaceDeclaration(
                 interfaceName,
                 fqn,
-                parseClassLikeTypeParameters({ globalContext, localContexts, node }, node),
+                parseClassLikeTypeParameters({ globalContext, localContexts, node, ...unusedProcessingContext }, node),
                 getAndDeleteChildConcepts(InterfaceDeclarationTraverser.EXTENDS_PROP, LCETypeDeclared.conceptId, childConcepts),
                 getAndDeleteChildConcepts(InterfaceDeclarationTraverser.MEMBERS_PROP, LCEPropertyDeclaration.conceptId, childConcepts),
                 getAndDeleteChildConcepts(InterfaceDeclarationTraverser.MEMBERS_PROP, LCEMethodDeclaration.conceptId, childConcepts),
@@ -87,12 +90,11 @@ export class SuperInterfaceDeclarationProcessor extends Processor {
             getParentPropName(localContexts) === InterfaceHeritageTraverser.EXPRESSION_PROP
     );
 
-    public override postChildrenProcessing({node, localContexts, globalContext}: ProcessingContext): ConceptMap {
+    public override postChildrenProcessing({node, ...unusedProcessingContext}: ProcessingContext): ConceptMap {
         if (node.type === AST_NODE_TYPES.Identifier && node.parent?.type === AST_NODE_TYPES.TSInterfaceHeritage) {
             const superType = parseClassLikeBaseType({
                 node,
-                localContexts,
-                globalContext
+                ...unusedProcessingContext
             }, node, node.parent.typeArguments?.params);
             if (superType) {
                 return singleEntryConceptMap(LCETypeDeclared.conceptId, superType);

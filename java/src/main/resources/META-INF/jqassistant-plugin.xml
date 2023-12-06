@@ -59,6 +59,10 @@
         <class>org.jqassistant.plugin.typescript.api.model.core.ValueObjectDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.core.ValueObjectMemberDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.core.VariableDeclarationDescriptor</class>
+
+        <class>org.jqassistant.plugin.typescript.api.model.react.JSXElementTypeDescriptor</class>
+        <class>org.jqassistant.plugin.typescript.api.model.react.ReactComponentDescriptor</class>
+        <class>org.jqassistant.plugin.typescript.api.model.react.ReactComponentRendersDescriptor</class>
     </model>
     <scope>
         <class>org.jqassistant.plugin.typescript.api.TypescriptScope</class>

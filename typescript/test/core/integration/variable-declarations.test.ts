@@ -1,5 +1,4 @@
 import { processProject } from "../../../src/core/extractor";
-import { LCEConcept } from "../../../src/core/concept";
 import { LCEVariableDeclaration } from "../../../src/core/concepts/variable-declaration.concept";
 import {
     LCEType,
@@ -42,7 +41,7 @@ jest.setTimeout(30000);
 
 describe("variable declarations test", () => {
 
-    let result: Map<string, LCEConcept[]>;
+    let result: Map<string, object[]>;
     const varDecls: Map<string, LCEVariableDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
     let mainModule: LCEModule;

@@ -1,4 +1,5 @@
 import { LCENamedConcept } from "../../core/concept";
+import { LCEJSXDependency } from "./react-jsx-dependency";
 
 export class LCEReactComponent extends LCENamedConcept {
     public static override conceptId = "react-component";
@@ -6,7 +7,7 @@ export class LCEReactComponent extends LCENamedConcept {
     constructor(
         fqn: string,
         public componentName: string,
-        public classComponent: boolean,
+        public renderedElements: LCEJSXDependency[],
     ) {
         super(fqn);
     }

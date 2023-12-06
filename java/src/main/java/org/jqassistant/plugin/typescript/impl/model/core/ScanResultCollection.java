@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.jqassistant.plugin.typescript.impl.model.react.ReactComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,5 +45,8 @@ public class ScanResultCollection {
 
     @JsonAlias("dependency")
     private List<Dependency> dependencies = new ArrayList<>();
+
+    @JsonAlias("react-component")
+    private List<ReactComponent> reactComponents = new ArrayList<>();
 
 }

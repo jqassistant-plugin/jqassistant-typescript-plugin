@@ -1,10 +1,14 @@
-package org.jqassistant.plugin.typescript;
+package org.jqassistant.plugin.typescript.core;
 
 import com.buschmais.jqassistant.core.shared.io.ClasspathResource;
 import com.buschmais.jqassistant.core.store.api.model.Descriptor;
 import com.buschmais.jqassistant.core.test.plugin.AbstractPluginIT;
 import org.jqassistant.plugin.typescript.api.TypescriptScope;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
+import org.jqassistant.plugin.typescript.core.assertions.DeclarationAssertions;
+import org.jqassistant.plugin.typescript.core.assertions.DependencyAssertions;
+import org.jqassistant.plugin.typescript.core.assertions.TypeAssertions;
+import org.jqassistant.plugin.typescript.core.assertions.ValueAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -13,20 +17,23 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Basic integration test for the Java part of the jQA TypeScript Plugin.
+ * Basic integration test for the core part of the jQA TypeScript Plugin.
  * This only checks that basic graph structures are generated. It is not exhaustive for all potential scan results.
  */
-public class TypescriptScannerIT extends AbstractPluginIT {
+public class TypescriptScannerCoreIT extends AbstractPluginIT {
 
     Descriptor scannedDescriptor;
 
     @Test
     void testScanner() {
-        File file = ClasspathResource.getFile(TypescriptScannerIT.class, "/java-it-sample-ts-output.json");
+        File file = ClasspathResource.getFile(TypescriptScannerCoreIT.class, "/java-it-core-sample-ts-output.json");
         scannedDescriptor = getScanner().scan(file, file.getAbsolutePath(), TypescriptScope.PROJECT);
         store.beginTransaction();
 
         TestResult testResult = query("MATCH (project:TS:Project) RETURN project");
+        assertThat(testResult.getColumns())
+            .as("project is present in the graph")
+            .containsKey("project");
         List<ProjectDescriptor> projects = testResult.getColumn("project");
         assertThat(projects)
             .as("there's only one scanned project")
@@ -38,7 +45,7 @@ public class TypescriptScannerIT extends AbstractPluginIT {
         // when regenerating the json, please crop the extracted path accordingly
         assertThat(project.getFileName())
             .as("project has correct path")
-            .isEqualTo("java/src/test/resources/java-it-sample-project");
+            .isEqualTo("java/src/test/resources/java-it-core-sample-project");
 
         new DeclarationAssertions(project)
             .assertModulePresence()

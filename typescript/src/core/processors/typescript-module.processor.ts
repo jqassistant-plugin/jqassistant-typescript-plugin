@@ -10,7 +10,7 @@ import { PathUtils } from "../utils/path.utils";
 export class ModuleProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.Program], () => true);
 
-    public override postChildrenProcessing({ globalContext, localContexts, node }: ProcessingContext): ConceptMap {
+    public override postChildrenProcessing({ globalContext, node }: ProcessingContext): ConceptMap {
         if (node.type === AST_NODE_TYPES.Program) {
             const module = new LCEModule(globalContext.sourceFilePath, PathUtils.toGraphPath(globalContext.sourceFilePath));
             return singleEntryConceptMap(LCEModule.conceptId, module);

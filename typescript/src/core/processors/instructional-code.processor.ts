@@ -110,12 +110,12 @@ export class IdentifierDependencyProcessor extends Processor {
 export class MemberExpressionDependencyProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.MemberExpression], () => true);
 
-    override postChildrenProcessing({node, localContexts, globalContext}: ProcessingContext): ConceptMap {
+    override postChildrenProcessing({node, localContexts, ...unusedProcessingContext}: ProcessingContext): ConceptMap {
         if (
             node.type === AST_NODE_TYPES.MemberExpression &&
             (node.property.type === AST_NODE_TYPES.Identifier || node.property.type === AST_NODE_TYPES.Literal)
         ) {
-            const objectType = parseESNodeType({node, localContexts, globalContext}, node.object, undefined, true);
+            const objectType = parseESNodeType({node, localContexts, ...unusedProcessingContext}, node.object, undefined, true);
             if (objectType instanceof LCETypeDeclared) {
                 const fqn = objectType.fqn + "." + this.getNamespace(node.property);
                 DependencyResolutionProcessor.registerDependency(localContexts, fqn, false);

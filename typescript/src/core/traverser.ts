@@ -1,6 +1,6 @@
-import {ConceptMap, mergeConceptMaps, unifyConceptMap} from "./concept";
-import {ProcessingContext} from "./context";
-import {Processor, ProcessorMap} from "./processor";
+import { ConceptMap, mergeConceptMaps, unifyConceptMap } from "./concept";
+import { ProcessingContext } from "./context";
+import { Processor, ProcessorMap } from "./processor";
 
 export interface TraverserContext {
     parentPropName: string;
@@ -49,6 +49,26 @@ export abstract class Traverser {
 
         // pop local context
         processingContext.localContexts.popContexts();
+
+        // apply metadata assignment rules
+        for(let i = processingContext.metadataAssignments.length - 1; i >= 0; i--) {
+            const rule = processingContext.metadataAssignments[i];
+            let applied = false;
+            for(const conceptMap of concepts) {
+                conceptMap.forEach((innerMap, outerKey) => {
+                    innerMap.forEach((innerConcepts, innerKey) => {
+                        innerConcepts.forEach(innerConcept => {
+                            applied = applied || rule.apply(innerConcept);
+                        });
+                    });
+                });
+            }
+
+            // remove rule, if it was applied at least once
+            if(applied) {
+                processingContext.metadataAssignments.splice(i, 1);
+            }
+        }
 
         // unify created concepts and remaining childConcepts under current parentPropName
         return unifyConceptMap(mergeConceptMaps(childConcepts, ...concepts), traverserContext.parentPropName);

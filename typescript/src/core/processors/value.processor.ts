@@ -57,7 +57,7 @@ export class IdentifierValueProcessor extends Processor {
         return !!localContexts.parentContexts?.has(VALUE_PROCESSING_FLAG);
     });
 
-    public override postChildrenProcessing({node, localContexts, globalContext}: ProcessingContext): ConceptMap {
+    public override postChildrenProcessing({node, localContexts, ...unusedProcessingContext}: ProcessingContext): ConceptMap {
         if (node.type === AST_NODE_TYPES.Identifier) {
             if (node.name === "undefined") {
                 return singleEntryConceptMap(LCEValueNull.conceptId, new LCEValueNull("undefined"));
@@ -65,7 +65,7 @@ export class IdentifierValueProcessor extends Processor {
                 const declaredValue = new LCEValueDeclared(parseESNodeType({
                     node,
                     localContexts,
-                    globalContext
+                    ...unusedProcessingContext
                 }, node, node.name, true), node.name);
                 const resolve = localContexts.parentContexts?.get(IdentifierValueProcessor.DO_NOT_RESOLVE_VALUE_IDENTIFIER_FLAG) as
                     | number
@@ -131,7 +131,7 @@ export class ObjectValueProcessor extends Processor {
     public override postChildrenProcessing({
                                                node,
                                                localContexts,
-                                               globalContext
+                                               ...unusedProcessingContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (node.type === AST_NODE_TYPES.ObjectExpression) {
             const properties: LCEValueObjectProperty[] = getAndDeleteChildConcepts(
@@ -142,7 +142,7 @@ export class ObjectValueProcessor extends Processor {
             const variableDeclarationFQN = localContexts.getNextContext(VariableDeclaratorProcessor.VARIABLE_DECLARATOR_FQN_CONTEXT) as
                 | [string, number]
                 | undefined;
-            const type = parseESNodeType({node, localContexts, globalContext}, node, variableDeclarationFQN?.[0]);
+            const type = parseESNodeType({node, localContexts, ...unusedProcessingContext}, node, variableDeclarationFQN?.[0]);
             return singleEntryConceptMap(
                 LCEValueObject.conceptId,
                 new LCEValueObject(type, new Map(properties.map((prop) => [prop.name, prop.value])))
@@ -184,14 +184,13 @@ export class ArrayValueProcessor extends Processor {
 
     public override postChildrenProcessing({
                                                node,
-                                               localContexts,
-                                               globalContext
+                                               ...unusedProcessingContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (node.type === AST_NODE_TYPES.ArrayExpression) {
             const elements: LCEValue[] = getAndDeleteAllValueChildConcepts(ArrayExpressionTraverser.ELEMENTS_PROP, childConcepts);
             return singleEntryConceptMap(
                 LCEValueArray.conceptId,
-                new LCEValueArray(parseESNodeType({node, localContexts, globalContext}, node), elements)
+                new LCEValueArray(parseESNodeType({node, ...unusedProcessingContext}, node), elements)
             );
         }
         return new Map();
@@ -209,8 +208,7 @@ export class CallValueProcessor extends Processor {
 
     public override postChildrenProcessing({
                                                node,
-                                               localContexts,
-                                               globalContext
+                                               ...unusedProcessingContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (node.type === AST_NODE_TYPES.CallExpression) {
             const callee: LCEValue[] = getAndDeleteAllValueChildConcepts(CallExpressionTraverser.CALLEE_PROP, childConcepts);
@@ -219,13 +217,12 @@ export class CallValueProcessor extends Processor {
             return singleEntryConceptMap(
                 LCEValueCall.conceptId,
                 new LCEValueCall(
-                    parseESNodeType({node, localContexts, globalContext}, node),
+                    parseESNodeType({node, ...unusedProcessingContext}, node),
                     callee[0],
                     args,
                     node.typeArguments?.params.map((param) => parseESNodeType({
                         node: param,
-                        localContexts,
-                        globalContext
+                        ...unusedProcessingContext
                     }, param)) ?? []
                 )
             );
@@ -242,13 +239,13 @@ export class FunctionValueProcessor extends Processor {
         }
     );
 
-    public override postChildrenProcessing({node, globalContext, localContexts}: ProcessingContext): ConceptMap {
+    public override postChildrenProcessing({node, ...unusedProcessingContext}: ProcessingContext): ConceptMap {
         if (node.type === AST_NODE_TYPES.FunctionExpression || node.type === AST_NODE_TYPES.ArrowFunctionExpression) {
             let type: LCEType;
             if (node.parent && node.parent.type === AST_NODE_TYPES.VariableDeclarator && node.parent.id.type === AST_NODE_TYPES.Identifier) {
-                type = parseESNodeType({node, localContexts, globalContext}, node, node.parent.id.name);
+                type = parseESNodeType({node, ...unusedProcessingContext}, node, node.parent.id.name);
             } else {
-                type = parseESNodeType({node, localContexts, globalContext}, node);
+                type = parseESNodeType({node, ...unusedProcessingContext}, node);
             }
             return singleEntryConceptMap(
                 LCEValueFunction.conceptId,

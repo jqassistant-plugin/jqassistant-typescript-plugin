@@ -1,14 +1,13 @@
 import { processProject } from "../../../src/core/extractor";
-import { LCEConcept } from "../../../src/core/concept";
 import { initNodeSampleProject } from "../../utils/test-utils";
-import { LCEFunctionDeclaration } from "../../../src/core/concepts/function-declaration.concept";
 import { initializeReactExtractor } from "../../../src/react/react-extractor";
 import { LCEReactComponent } from "../../../src/react/concepts/react-component.concept";
+import { expectJSXDependency } from "../../utils/react-test-utils";
 
 jest.setTimeout(30000);
 
 describe("React Components test", () => {
-    let result: Map<string, LCEConcept[]>;
+    let result: Map<string, object[]>;
     const components: Map<string, LCEReactComponent> = new Map();
 
     beforeAll(async () => {
@@ -17,7 +16,7 @@ describe("React Components test", () => {
         initializeReactExtractor();
         result = await processProject(projectRoot);
 
-        if(!result.get(LCEFunctionDeclaration.conceptId)) {
+        if(!result.get(LCEReactComponent.conceptId)) {
             throw new Error("Could not find React components in result data.")
         }
 
@@ -39,7 +38,7 @@ describe("React Components test", () => {
         if(comp) {
             expect(comp.componentName).toBe("BasicFunctionComponent");
             expect(comp.fqn).toBe('"./src/main.tsx".BasicFunctionComponent');
-            expect(comp.classComponent).toBeFalsy();
+            expect(comp.renderedElements).toHaveLength(0);
         }
     });
 
@@ -49,7 +48,7 @@ describe("React Components test", () => {
         if(comp) {
             expect(comp.componentName).toBe("BasicArrowFunctionComponent");
             expect(comp.fqn).toBe('"./src/main.tsx".BasicArrowFunctionComponent');
-            expect(comp.classComponent).toBeFalsy();
+            expect(comp.renderedElements).toHaveLength(0);
         }
     });
 
@@ -59,7 +58,34 @@ describe("React Components test", () => {
         if(comp) {
             expect(comp.componentName).toBe("BasicClassComponent");
             expect(comp.fqn).toBe('"./src/main.tsx".BasicClassComponent');
-            expect(comp.classComponent).toBeTruthy();
+            expect(comp.renderedElements).toHaveLength(0);
+        }
+    });
+
+    test("arrow function component with content", async () => {
+        const comp = components.get('"./src/main.tsx".ArrFuncComponentWithContent');
+        expect(comp).toBeDefined();
+        if(comp) {
+            expect(comp.componentName).toBe("ArrFuncComponentWithContent");
+            expect(comp.fqn).toBe('"./src/main.tsx".ArrFuncComponentWithContent');
+            expect(comp.renderedElements).toHaveLength(3);
+            expectJSXDependency(comp, 'h1', 'h1', 1);
+            expectJSXDependency(comp, 'h2', 'h2', 2);
+            expectJSXDependency(comp, '"./src/main.tsx".SomeComponent', 'SomeComponent', 1);
+
+        }
+    });
+
+    test("class function component with content", async () => {
+        const comp = components.get('"./src/main.tsx".ClassComponentWithContent');
+        expect(comp).toBeDefined();
+        if(comp) {
+            expect(comp.componentName).toBe("ClassComponentWithContent");
+            expect(comp.fqn).toBe('"./src/main.tsx".ClassComponentWithContent');
+            expect(comp.renderedElements).toHaveLength(3);
+            expectJSXDependency(comp, 'h1', 'h1', 1);
+            expectJSXDependency(comp, 'div', 'div', 1);
+            expectJSXDependency(comp, '"./src/main.tsx".SomeComponent', 'SomeComponent', 3);
         }
     });
 

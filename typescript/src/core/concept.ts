@@ -7,6 +7,34 @@ export abstract class LCEConcept {
      * Should be set by subclasses.
      */
     public static conceptId: string;
+
+    /**
+     * Contains metadata that may be used by Processors further up the AST, or by Post-Processors.
+     * NOTE: metadata should not be used in the toJSON method, as Concept classes should not contain any processing logic.
+     */
+    public metadata: Map<string, any> = new Map();
+
+    /**
+     * Returns a JSON object that contains all the information that should be present in the JSON report that is used for graph generation.
+     * NOTE: This method should not contain any processing logic!
+     *
+     * Returns all fields, except metadata by default. Also calls toJSON for all fields that are concepts, or concept arrays.
+     */
+    public toJSON(): object {
+        const jsonObject: any = {};
+
+        Object.entries(this).forEach(([key, value]) => {
+            if (value instanceof LCEConcept) {
+                jsonObject[key] = value.toJSON();
+            } else if (Array.isArray(value) && value.every(item => item instanceof LCEConcept)) {
+                jsonObject[key] = value.map(item => item.toJSON());
+            } else if (key !== 'metadata') {
+                jsonObject[key] = value;
+            }
+        });
+
+        return jsonObject;
+    };
 }
 
 /**

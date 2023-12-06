@@ -32,14 +32,14 @@ export class FunctionDeclarationProcessor extends Processor {
         },
     );
 
-    public override preChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext): void {
+    public override preChildrenProcessing({ node, localContexts, ...unusedProcessingContext }: ProcessingContext): void {
         if (node.type === AST_NODE_TYPES.FunctionDeclaration || node.type === AST_NODE_TYPES.TSDeclareFunction) {
             if (node.id) {
                 DependencyResolutionProcessor.addScopeContext(localContexts, node.id.name);
                 DependencyResolutionProcessor.createDependencyIndex(localContexts);
             }
 
-            const functionType = parseFunctionType({ globalContext, localContexts, node }, node);
+            const functionType = parseFunctionType({ localContexts, node, ...unusedProcessingContext }, node);
             if (functionType) {
                 localContexts.currentContexts.set(FunctionDeclarationProcessor.FUNCTION_TYPE_CONTEXT_ID, functionType);
                 if (node.id) {

@@ -1,5 +1,4 @@
 import { processProject } from "../../../src/core/extractor";
-import { LCEConcept } from "../../../src/core/concept";
 import { LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
@@ -21,7 +20,7 @@ jest.setTimeout(30000);
 
 describe("function declarations test", () => {
 
-    let result: Map<string, LCEConcept[]>;
+    let result: Map<string, object[]>;
     const funDecls: Map<string, LCEFunctionDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
     let mainModule: LCEModule;

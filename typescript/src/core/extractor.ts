@@ -13,7 +13,7 @@ import { FileUtils } from "./utils/file.utils";
 import { POST_PROCESSORS } from "./features";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export async function processProject(projectRoot: string): Promise<Map<string, LCEConcept[]>> {
+export async function processProject(projectRoot: string): Promise<Map<string, object[]>> {
     projectRoot = path.resolve(projectRoot);
     const fileList = FileUtils.getProjectSourceFileList(projectRoot);
 
@@ -65,7 +65,7 @@ export async function processProject(projectRoot: string): Promise<Map<string, L
         }
     }
     progressBar.stop();
-    const normalizedConcepts = unifyConceptMap(concepts, "").get("") ?? new Map();
+    const normalizedConcepts: Map<string, LCEConcept[]> = unifyConceptMap(concepts, "").get("") ?? new Map();
 
     // Post-process for project-wide concepts
     console.log("Post-Processing Results...")
@@ -73,12 +73,18 @@ export async function processProject(projectRoot: string): Promise<Map<string, L
         postProcessor.postProcess(normalizedConcepts, projectRoot.replace(/\\/g, "/"),);
     }
 
+    // Convert concept objects to report-ready JSON objects
+    const jsonConcepts: Map<string, object[]> = new Map();
+    normalizedConcepts.forEach((value, key) => {
+        jsonConcepts.set(key, value.map(i => i.toJSON()))
+    })
+
     const endTime = process.hrtime();
     const diffTime = (endTime[0] + endTime[1]/10**9) - (startTime[0] + startTime[1]/10**9);
     console.log("Finished analyzing project files.");
     console.log("Runtime: " + diffTime.toFixed(3) + "s (" + fileReadingTime.toFixed(3) + "s reading files)");
 
-    return normalizedConcepts;
+    return jsonConcepts;
 }
 
 export async function processAndOutputResult(projectRoot: string, options: ExtractorOptions) {

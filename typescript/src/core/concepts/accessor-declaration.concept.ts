@@ -19,7 +19,7 @@ export class LCEAccessorProperty extends LCENamedConcept {
     }
 }
 
-export class LCEGetterDeclaration extends LCEConcept{
+export class LCEGetterDeclaration extends LCEConcept {
     public static override conceptId = "getter-declaration";
 
     constructor(

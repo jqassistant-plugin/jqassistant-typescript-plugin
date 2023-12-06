@@ -1,5 +1,4 @@
 import { processProject } from "../../../src/core/extractor";
-import { LCEConcept } from "../../../src/core/concept";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import {
@@ -24,7 +23,7 @@ import { LCETypeFunctionParameter, LCETypeIntersection, LCETypeTuple, LCETypeUni
 jest.setTimeout(30000);
 
 describe("type alias declarations test", () => {
-    let result: Map<string, LCEConcept[]>;
+    let result: Map<string, object[]>;
     const taDecls: Map<string, LCETypeAliasDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
     let mainModule: LCEModule;

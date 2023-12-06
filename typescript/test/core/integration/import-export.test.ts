@@ -1,5 +1,4 @@
 import { processProject } from "../../../src/core/extractor";
-import { LCEConcept } from "../../../src/core/concept";
 import { expectDeclaredType, expectDependency, expectExport, getDependenciesFromResult, initNodeSampleProject } from "../../utils/test-utils";
 import { LCEVariableDeclaration } from "../../../src/core/concepts/variable-declaration.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
@@ -9,7 +8,7 @@ import { DefaultAlias2 } from "./sample-projects/import-export/src/reexport";
 jest.setTimeout(30000);
 
 describe("import/export test", () => {
-    let result: Map<string, LCEConcept[]>;
+    let result: Map<string, object[]>;
     const varDecls: Map<string, LCEVariableDeclaration> = new Map();
     const exportDecls: Map<string, LCEExportDeclaration[]> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;

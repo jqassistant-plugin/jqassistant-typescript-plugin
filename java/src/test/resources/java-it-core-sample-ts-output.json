@@ -1,7 +1,7 @@
 {
   "project": [
     {
-      "projectRoot": "java/src/test/resources/java-it-sample-project"
+      "projectRoot": "java/src/test/resources/java-it-core-sample-project"
     }
   ],
   "variable-declaration": [

@@ -54,7 +54,8 @@ export class VariableDeclaratorProcessor extends Processor {
     public override postChildrenProcessing({
                                                node,
                                                localContexts,
-                                               globalContext
+                                               globalContext,
+                                               ...unusedProcessingContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         // TODO: add destructuring assignment support
         if (node.type === AST_NODE_TYPES.VariableDeclarator && node.id.type === AST_NODE_TYPES.Identifier) {
@@ -81,7 +82,7 @@ export class VariableDeclaratorProcessor extends Processor {
                 name,
                 fqn,
                 kind,
-                parseESNodeType({node, localContexts, globalContext}, node, name),
+                parseESNodeType({node, localContexts, globalContext, ...unusedProcessingContext}, node, name),
                 init,
                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true)
             );

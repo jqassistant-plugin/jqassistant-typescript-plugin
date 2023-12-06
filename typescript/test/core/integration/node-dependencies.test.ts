@@ -1,12 +1,11 @@
 import { processProject } from "../../../src/core/extractor";
-import { LCEConcept } from "../../../src/core/concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import { expectDependency, getDependenciesFromResult, initNodeSampleProject } from "../../utils/test-utils";
 
 jest.setTimeout(30000);
 
 describe("Node.js dependencies test", () => {
-    let result: Map<string, LCEConcept[]>;
+    let result: Map<string, object[]>;
     let deps: Map<string, Map<string, LCEDependency>>;
 
     beforeAll(async () => {

@@ -13,7 +13,7 @@ import { TraverserContext } from "../traverser";
 export function runTraverserForNode(
     node: Node,
     traverserContext: TraverserContext,
-    {globalContext, localContexts, node: parentNode}: ProcessingContext,
+    {node: parentNode, ...unusedProcessingContext}: ProcessingContext,
     processors: ProcessorMap,
     conceptMaps?: ConceptMap[]
 ): ConceptMap | undefined {
@@ -23,9 +23,8 @@ export function runTraverserForNode(
         const result = traverser.traverse(
             traverserContext,
             {
-                globalContext,
-                localContexts,
                 node,
+                ...unusedProcessingContext
             },
             processors
         );

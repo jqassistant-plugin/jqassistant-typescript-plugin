@@ -7,13 +7,31 @@ import { runTraverserForNode, runTraverserForNodes } from "../utils/traverser.ut
 
 export class JSXElementTraverser extends Traverser {
     public static readonly CHILDREN_PROP = "children";
+    public static readonly OPENING_ELEMENT_PROP = "opening-element";
+    public static readonly CLOSING_ELEMENT_PROP = "closing-element";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.JSXElement) {
+            runTraverserForNode(
+                node.openingElement,
+                { parentPropName: JSXElementTraverser.OPENING_ELEMENT_PROP },
+                processingContext,
+                processors,
+                conceptMaps,
+            );
             runTraverserForNodes(node.children, { parentPropName: JSXElementTraverser.CHILDREN_PROP }, processingContext, processors, conceptMaps);
+            if (node.closingElement) {
+                runTraverserForNode(
+                    node.closingElement,
+                    { parentPropName: JSXElementTraverser.CLOSING_ELEMENT_PROP },
+                    processingContext,
+                    processors,
+                    conceptMaps,
+                );
+            }
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -46,6 +64,21 @@ export class JSXOpeningElementTraverser extends Traverser {
                 processors,
                 conceptMaps
             );
+        }
+
+        return mergeConceptMaps(...conceptMaps);
+    }
+}
+
+export class JSXFragmentTraverser extends Traverser {
+    public static readonly CHILDREN_PROP = "children";
+
+    public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
+        const { node } = processingContext;
+        const conceptMaps: ConceptMap[] = [];
+
+        if (node.type === AST_NODE_TYPES.JSXFragment) {
+            runTraverserForNodes(node.children, { parentPropName: JSXFragmentTraverser.CHILDREN_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);

@@ -6,6 +6,7 @@ import com.buschmais.jqassistant.plugin.common.api.model.DirectoryDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.FileResolver;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
+import org.jqassistant.plugin.typescript.impl.mapper.react.ReactComponentResolver;
 import org.jqassistant.plugin.typescript.impl.model.core.ScanResultCollection;
 
 public class ProjectMapper {
@@ -24,10 +25,11 @@ public class ProjectMapper {
         result.getModules().addAll(
             ModuleMapper.INSTANCE.map(scanResultCollection, scanner)
         );
-
         result.getExternalModules().addAll(
             ExternalModuleMapper.INSTANCE.map(scanResultCollection, scanner)
         );
+
+        ReactComponentResolver.resolve(scanner, scanResultCollection.getReactComponents());
 
         DependencyResolver.resolve(scanner, scanResultCollection.getDependencies());
         ExportDeclarationResolver.resolve(scanner, scanResultCollection.getExportDeclarations());

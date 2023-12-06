@@ -1,15 +1,19 @@
 package org.jqassistant.plugin.typescript.api.model.react;
 
 import com.buschmais.xo.neo4j.api.annotation.Label;
+import com.buschmais.xo.neo4j.api.annotation.Relation;
 import org.jqassistant.plugin.typescript.api.model.core.NamedConceptDescriptor;
+import org.jqassistant.plugin.typescript.api.model.core.TypeScriptDescriptor;
+
+import java.util.List;
 
 @Label("ReactComponent")
-public interface ReactComponentDescriptor extends NamedConceptDescriptor {
+public interface ReactComponentDescriptor extends NamedConceptDescriptor, TypeScriptDescriptor {
 
-    String getName();
-    void setName(String name);
+    String getComponentName();
+    void setComponentName(String componentName);
 
-    Boolean getClassComponent();
-    void setClassComponent(Boolean classComponent);
+    @Relation.Outgoing
+    List<ReactComponentRendersDescriptor> getRenderedElements();
 
 }

@@ -117,6 +117,7 @@ import {
     JSXAttributeTraverser,
     JSXElementTraverser,
     JSXExpressionContainerTraverser,
+    JSXFragmentTraverser,
     JSXOpeningElementTraverser,
     JSXSpreadAttributeTraverser,
     JSXSpreadChildTraverser
@@ -160,6 +161,7 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
     [AST_NODE_TYPES.JSXEmptyExpression, new SimpleTraverser()],
     [AST_NODE_TYPES.JSXOpeningElement, new JSXOpeningElementTraverser()],
     [AST_NODE_TYPES.JSXAttribute, new JSXAttributeTraverser()],
+    [AST_NODE_TYPES.JSXFragment, new JSXFragmentTraverser()],
     [AST_NODE_TYPES.JSXSpreadAttribute, new JSXSpreadAttributeTraverser()],
     [AST_NODE_TYPES.JSXSpreadChild, new JSXSpreadChildTraverser()],
     [AST_NODE_TYPES.JSXExpressionContainer, new JSXExpressionContainerTraverser()],

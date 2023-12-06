@@ -1,5 +1,4 @@
 import { LCEDependency } from "../../src/core/concepts/dependency.concept";
-import { LCEConcept } from "../../src/core/concept";
 import {
     LCEType,
     LCETypeDeclared,
@@ -42,7 +41,7 @@ export function initNodeSampleProject(path: string) {
  * Returns a map containing all dependencies of the given result data, mapped by source and target FQN.
  * The result of this function should be passed to {@link expectDependency}
  */
-export function getDependenciesFromResult(result: Map<string, LCEConcept[]>): Map<string, Map<string, LCEDependency>> {
+export function getDependenciesFromResult(result: Map<string, object[]>): Map<string, Map<string, LCEDependency>> {
     const dependencies: Map<string, Map<string, LCEDependency>> = new Map();
     for (const concept of result.get(LCEDependency.conceptId) ?? []) {
         const dep: LCEDependency = concept as LCEDependency;

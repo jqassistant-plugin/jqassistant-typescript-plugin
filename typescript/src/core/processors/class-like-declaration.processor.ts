@@ -35,7 +35,7 @@ export class MethodProcessor extends Processor {
         () => true,
     );
 
-    public override preChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext): void {
+    public override preChildrenProcessing({ node, localContexts, globalContext, ...unusedProcessingContext }: ProcessingContext): void {
         if (
             (node.type === AST_NODE_TYPES.MethodDefinition ||
                 node.type === AST_NODE_TYPES.TSAbstractMethodDefinition ||
@@ -54,6 +54,7 @@ export class MethodProcessor extends Processor {
                     globalContext,
                     localContexts,
                     node,
+                    ...unusedProcessingContext,
                 },
                 node.parent,
                 node,
@@ -269,7 +270,8 @@ export class PropertyProcessor extends Processor {
     public override postChildrenProcessing({
                                                node,
                                                localContexts,
-                                               globalContext
+                                               globalContext,
+                                               ...unusedProcessingContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (
             (node.type === AST_NODE_TYPES.PropertyDefinition ||
@@ -288,7 +290,7 @@ export class PropertyProcessor extends Processor {
                         propertyName,
                         fqn,
                         !!node.optional,
-                        parseClassPropertyType({globalContext, localContexts, node}, node.key),
+                        parseClassPropertyType({globalContext, localContexts, node, ...unusedProcessingContext}, node.key),
                         "decorators" in node
                             ? getAndDeleteChildConcepts(PropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
                             : [],
@@ -329,7 +331,8 @@ export class AutoAccessorDeclarationProcessor extends Processor {
     public override postChildrenProcessing({
                                                node,
                                                localContexts,
-                                               globalContext
+                                               globalContext,
+                                               ...unusedProcessingContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (
             (node.type === AST_NODE_TYPES.AccessorProperty ||
@@ -348,7 +351,7 @@ export class AutoAccessorDeclarationProcessor extends Processor {
                         undefined,
                         undefined,
                         new LCEAutoAccessorDeclaration(
-                            parseClassPropertyType({globalContext, localContexts, node}, node.key),
+                            parseClassPropertyType({globalContext, localContexts, node, ...unusedProcessingContext}, node.key),
                             "decorators" in node
                                 ? getAndDeleteChildConcepts(PropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
                                 : [],

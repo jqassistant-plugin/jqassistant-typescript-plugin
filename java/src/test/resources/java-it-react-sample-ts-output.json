@@ -1,0 +1,170 @@
+{
+  "project": [
+    {
+      "projectRoot": "java/src/test/resources/java-it-react-sample-project"
+    }
+  ],
+  "variable-declaration": [
+    {
+      "fqn": "\"./src/testComponents.tsx\".SomeComponent",
+      "variableName": "SomeComponent",
+      "kind": "const",
+      "type": {
+        "type": "function",
+        "returnType": {
+          "type": "declared",
+          "fqn": "\"react\".React.JSX.Element",
+          "typeArguments": []
+        },
+        "parameters": [],
+        "async": false,
+        "typeParameters": []
+      },
+      "initValue": {
+        "valueType": "function",
+        "type": {
+          "type": "function",
+          "returnType": {
+            "type": "declared",
+            "fqn": "\"react\".React.JSX.Element",
+            "typeArguments": []
+          },
+          "parameters": [],
+          "async": false,
+          "typeParameters": []
+        },
+        "arrowFunction": true
+      },
+      "coordinates": {
+        "fileName": "/src/testComponents.tsx",
+        "startLine": 5,
+        "startColumn": 6,
+        "endLine": 7,
+        "endColumn": 1
+      }
+    },
+    {
+      "fqn": "\"./src/testComponents.tsx\".ComponentWithContent",
+      "variableName": "ComponentWithContent",
+      "kind": "const",
+      "type": {
+        "type": "function",
+        "returnType": {
+          "type": "declared",
+          "fqn": "\"react\".React.JSX.Element",
+          "typeArguments": []
+        },
+        "parameters": [],
+        "async": false,
+        "typeParameters": []
+      },
+      "initValue": {
+        "valueType": "function",
+        "type": {
+          "type": "function",
+          "returnType": {
+            "type": "declared",
+            "fqn": "\"react\".React.JSX.Element",
+            "typeArguments": []
+          },
+          "parameters": [],
+          "async": false,
+          "typeParameters": []
+        },
+        "arrowFunction": true
+      },
+      "coordinates": {
+        "fileName": "/src/testComponents.tsx",
+        "startLine": 9,
+        "startColumn": 6,
+        "endLine": 25,
+        "endColumn": 1
+      }
+    }
+  ],
+  "dependency": [
+    {
+      "fqn": "\"react\".React.JSX.Element",
+      "targetType": "declaration",
+      "sourceFQN": "\"./src/testComponents.tsx\".SomeComponent",
+      "sourceType": "declaration",
+      "cardinality": 2
+    },
+    {
+      "fqn": "\"./src/testComponents.tsx\".SomeComponent",
+      "targetType": "declaration",
+      "sourceFQN": "\"./src/testComponents.tsx\".ComponentWithContent",
+      "sourceType": "declaration",
+      "cardinality": 3
+    },
+    {
+      "fqn": "\"react\".React.JSX.Element",
+      "targetType": "declaration",
+      "sourceFQN": "\"./src/testComponents.tsx\".ComponentWithContent",
+      "sourceType": "declaration",
+      "cardinality": 2
+    }
+  ],
+  "module": [
+    {
+      "fqn": "./src/testComponents.tsx",
+      "path": "/src/testComponents.tsx"
+    }
+  ],
+  "external-module": [
+    {
+      "fqn": "react",
+      "declarations": [
+        {
+          "fqn": "\"react\".React.JSX.Element",
+          "name": "React.JSX.Element"
+        }
+      ]
+    }
+  ],
+  "export-declaration": [],
+  "react-component": [
+    {
+      "fqn": "\"./src/testComponents.tsx\".SomeComponent",
+      "componentName": "SomeComponent",
+      "renderedElements": [
+        {
+          "fqn": "div",
+          "name": "div",
+          "cardinality": 1
+        }
+      ]
+    },
+    {
+      "fqn": "\"./src/testComponents.tsx\".ComponentWithContent",
+      "componentName": "ComponentWithContent",
+      "renderedElements": [
+        {
+          "fqn": "div",
+          "name": "div",
+          "cardinality": 2
+        },
+        {
+          "fqn": "button",
+          "name": "button",
+          "cardinality": 1
+        },
+        {
+          "fqn": "h1",
+          "name": "h1",
+          "cardinality": 1
+        },
+        {
+          "fqn": "h2",
+          "name": "h2",
+          "cardinality": 2
+        },
+        {
+          "fqn": "\"./src/testComponents.tsx\".SomeComponent",
+          "name": "SomeComponent",
+          "cardinality": 3
+        }
+      ]
+    }
+  ]
+}

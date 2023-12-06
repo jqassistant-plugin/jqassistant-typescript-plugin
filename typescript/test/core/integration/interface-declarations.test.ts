@@ -1,5 +1,4 @@
 import { processProject } from "../../../src/core/extractor";
-import { LCEConcept } from "../../../src/core/concept";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import {
@@ -21,7 +20,7 @@ import { LCEInterfaceDeclaration } from "../../../src/core/concepts/interface-de
 jest.setTimeout(30000);
 
 describe("interface declarations test", () => {
-    let result: Map<string, LCEConcept[]>;
+    let result: Map<string, object[]>;
     const interfaceDecls: Map<string, LCEInterfaceDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
     let mainModule: LCEModule;
