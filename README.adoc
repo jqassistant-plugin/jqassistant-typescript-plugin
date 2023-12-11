@@ -11,11 +11,25 @@ NOTE: This plugin has not been officially released yet.
 
 - Clone this repository and build it using Maven `mvn install`
 - Download the https://repo1.maven.org/maven2/com/buschmais/jqassistant/cli/jqassistant-commandline-distribution/[ZIP distribution] of the jQAssistant command line utility and unpack it. A directory `jqassistant-commandline-distribution-2.x.x` will be created.
-- Install the jQAssistant TypeScript scanner using `npm install --global  @jqassistant/ts-lce` 
+
+=== NPM Installation (global):
+
+* run `npm install --global  @jqassistant/ts-lce`
+
+=== NPM Installation (local):
+
+* Run `npm install --save-dev  @jqassistant/ts-lce`
+* Add the following section to the `package.json` (add additional options as needed)
++
+----
+"scripts": {
+    "jqa": "jqa-ts-lce"
+}
+----
 
 == Usage
 
-- create a file `.jqassistant.yml` in your project root*
+* create a file `.jqassistant.yml` in your project root*
 +
 ----
 jqassistant:
@@ -28,9 +42,10 @@ jqassistant:
       files:
         - typescript:project::build/jqa-ts-output.json
 ----
-- execute `jqa-ts-lce` from your project root (this will generate a file `.reports/jqa/ts-output.json`)
-- run the jQAssistant command line utility using `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh scan` (imports `.reports/jqa/ts-output.json` into the graph database)
-- start exploring the graph by starting the embedded server `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh server` and opening your browser at `http://localhost:7474`
+* execute `jqa-ts-lce`(global installation) or `npm run jqa`(local installation) from your project root (this will generate a file `.reports/jqa/ts-output.json`)
+** use `--help` option to show available options for the command (when using local installation, options have to be specified in the `package.json`)
+* run the jQAssistant command line utility using `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh scan` (imports `.reports/jqa/ts-output.json` into the graph database)
+* start exploring the graph by starting the embedded server `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh server` and opening your browser at `http://localhost:7474`
 
 *project root does refer to the directory that contains the (root) `tsconfig.json`
 
@@ -98,3 +113,18 @@ The React extension works with various concepts that represent usage patterns in
 image::docs/jqa-ts-plugin-model-react.jpg[Neo4j model for React extension of the jQAssistant TypeScript plugin]
 
 For all element types that reference some declaration, matching `DEPENDS_ON` relations are created.
+
+== Support
+
+This plugin should be largely compatible with all versions of TypeScript.
+However, it is only developed and tested against the current version (5.1) of TypeScript.
+
+The tool currently only supports projects using ECMAScript modules.
+
+Currently not supported:
+
+* old CommonJS module syntax
+* hierarchical tsconfig setups
+* project references in tsconfig
+* scanning of multiple TypeScript projects at once
+* triple-slash directives

@@ -13,7 +13,7 @@ program
         "Tool to extract language concepts from a TypeScript codebase and export them to a JSON file.")
     .version(packageInfo.version)
     .argument("[path]", "path to the root of the TypeScript project to be scanned", ".")
-    .option("-e, --extension [extensions...]", "space separated list of extensions to activate")
+    .option("-e, --extension [extensions...]", "space separated list of extensions to activate (currently available: react)")
     .option("-p, --pretty", "pretty-print JSON result report");
 program.parse();
 
