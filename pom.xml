@@ -54,7 +54,6 @@
     </scm>
 
     <modules>
-        <module>typescript</module>
         <module>java</module>
     </modules>
 
