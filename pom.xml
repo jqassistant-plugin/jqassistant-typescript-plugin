@@ -50,7 +50,7 @@
         <developerConnection>scm:git:https://github.com/jqassistant-plugin/jqassistant-typescript-plugin.git
         </developerConnection>
         <url>https://github.com/jqassistant-plugin/jqassistant-typescript-plugin</url>
-        <tag>HEAD</tag>
+        <tag>1.0.0-M1</tag>
     </scm>
 
     <modules>
