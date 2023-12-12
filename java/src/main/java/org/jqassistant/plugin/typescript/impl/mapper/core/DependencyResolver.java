@@ -25,7 +25,7 @@ public class DependencyResolver {
 
         // create missing transitive relationships
         context.getStore().executeQuery(
-            "MATCH (decl:TS)-[r:DEPENDS_ON]->(trgt:TS)<-[:DECLARES*]-(trgtParent:TS) " +
+            "MATCH (decl:TS)-[r:DEPENDS_ON]->(trgt:TS)<-[:DECLARES|EXPORTS*]-(trgtParent:TS) " +
             "WHERE NOT (trgtParent)-[:DECLARES*]->(decl) " +
             "CREATE (decl)-[:DEPENDS_ON {cardinality: r.cardinality}]->(trgtParent)"
         );

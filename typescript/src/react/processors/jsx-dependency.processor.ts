@@ -99,7 +99,11 @@ export class JSXDependencyProcessor extends Processor {
                 DependencyResolutionProcessor.registerDependency(localContexts, name);
             }
 
-            (localContexts.getNextContext(JSXDependencyContextProcessor.JSX_DEPENDENCY_CONTEXT) as [LCEJSXDependency[], number])[0].push(dep);
+            const jsxDependencyContext = (localContexts.getNextContext(JSXDependencyContextProcessor.JSX_DEPENDENCY_CONTEXT) as [LCEJSXDependency[], number]);
+            if(jsxDependencyContext) {
+                jsxDependencyContext[0].push(dep);
+            }
+
         }
         return new Map();
     }
