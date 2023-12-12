@@ -102,7 +102,7 @@ public class ReactComponentAssertions {
 
                 assertThat(comp.getDependencies())
                     .as("component has correct dependencies")
-                    .hasSize(2)
+                    .hasSize(3)
                     .anySatisfy(dep -> {
                         assertThat(dep.getDependency()).isEqualTo(otherComponent);
                         assertThat(dep.getCardinality()).isEqualTo(3);
