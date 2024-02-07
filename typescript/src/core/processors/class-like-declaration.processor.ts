@@ -12,7 +12,7 @@ import {
 } from "../concepts/method-declaration.concept";
 import { LCEPropertyDeclaration } from "../concepts/property-declaration.concept";
 import { LCETypeFunction } from "../concepts/type.concept";
-import { ProcessingContext } from "../context";
+import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getAndDeleteChildConcepts, getChildConcepts, getParentPropIndex, getParentPropName } from "../utils/processor.utils";
@@ -46,7 +46,7 @@ export class MethodProcessor extends Processor {
         ) {
             const [methodName, jsPrivate] = processMemberName(node.key);
 
-            DependencyResolutionProcessor.addScopeContext(localContexts, methodName);
+            DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(methodName));
             DependencyResolutionProcessor.createDependencyIndex(localContexts);
 
             const functionType = parseMethodType(
@@ -190,10 +190,11 @@ export class MethodParameterProcessor extends Processor {
                     const funcTypeParam = functionType.parameters[paramIndex];
 
                     if (node.type === AST_NODE_TYPES.Identifier) {
+                        const scopeFqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
                         DependencyResolutionProcessor.registerDeclaration(
                             localContexts,
                             funcTypeParam.name,
-                            DependencyResolutionProcessor.constructScopeFQN(localContexts) + "." + funcTypeParam.name
+                            new FQN(scopeFqn.globalFqn + "." + funcTypeParam.name, scopeFqn.localFqn + "." + funcTypeParam.name)
                         );
                         return singleEntryConceptMap(
                             LCEParameterDeclaration.conceptId,
@@ -207,17 +208,18 @@ export class MethodParameterProcessor extends Processor {
                             )
                         );
                     } else if (node.type === AST_NODE_TYPES.TSParameterProperty) {
-                        const paramPropFQN =
-                            DependencyResolutionProcessor.constructScopeFQN(localContexts, true).replace(".constructor", "") +
-                            "." +
-                            funcTypeParam.name;
+                        const scopeFqn = DependencyResolutionProcessor.constructScopeFQN(localContexts, true);
+                        const paramPropFQN = new FQN(
+                            scopeFqn.globalFqn.replace(".constructor", "") + "." + funcTypeParam.name,
+                            scopeFqn.localFqn.replace(".constructor", "") + "." + funcTypeParam.name,
+                        );
                         const paramPropConcept = singleEntryConceptMap(
                             LCEParameterPropertyDeclaration.conceptId,
                             new LCEParameterPropertyDeclaration(
                                 funcTypeParam.index,
                                 funcTypeParam.name,
                                 paramPropFQN,
-                                "optional" in node.parameter && !!node.parameter.optional,
+                                "optional" in node.parameter && node.parameter.optional,
                                 funcTypeParam.type,
                                 getChildConcepts(ParameterPropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
                                 node.accessibility ?? "public",
@@ -232,7 +234,7 @@ export class MethodParameterProcessor extends Processor {
                                 funcTypeParam.index,
                                 funcTypeParam.name,
                                 funcTypeParam.type,
-                                "optional" in node.parameter && !!node.parameter.optional,
+                                "optional" in node.parameter && node.parameter.optional,
                                 getAndDeleteChildConcepts(ParameterPropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
                                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node)
                             )
@@ -262,7 +264,7 @@ export class PropertyProcessor extends Processor {
             !node.computed
         ) {
             const [propertyName] = processMemberName(node.key);
-            DependencyResolutionProcessor.addScopeContext(localContexts, propertyName);
+            DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(propertyName));
             DependencyResolutionProcessor.createDependencyIndex(localContexts);
         }
     }
@@ -323,7 +325,7 @@ export class AutoAccessorDeclarationProcessor extends Processor {
             !node.computed
         ) {
             const [accessorPropertyName] = processMemberName(node.key);
-            DependencyResolutionProcessor.addScopeContext(localContexts, accessorPropertyName);
+            DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(accessorPropertyName));
             DependencyResolutionProcessor.createDependencyIndex(localContexts);
         }
     }

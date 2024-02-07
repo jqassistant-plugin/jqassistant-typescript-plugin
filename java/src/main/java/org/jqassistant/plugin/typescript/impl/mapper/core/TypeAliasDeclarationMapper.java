@@ -35,7 +35,7 @@ public interface TypeAliasDeclarationMapper extends
 
     @AfterMapping
     default void after(TypeAliasDeclaration type, @MappingTarget TypeAliasDeclarationDescriptor target, @Context Scanner scanner) {
-        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(target);
         scanner.getContext().peek(TypeParameterResolver.class).popScope();
     }
 

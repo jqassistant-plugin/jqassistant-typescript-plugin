@@ -1,4 +1,5 @@
-import {LCENamedConcept} from "../concept";
+import { LCENamedConcept } from "../concept";
+import { FQN } from "../context";
 
 export type FQNType = "declaration" | "module";
 
@@ -6,12 +7,12 @@ export class LCEDependency extends LCENamedConcept {
     public static override conceptId = "dependency";
 
     constructor(
-        fqn: string, // target fqn
+        globalTargetFqn: string,
         public targetType: FQNType,
-        public sourceFQN: string,
+        public globalSourceFQN: string,
         public sourceType: FQNType,
         public cardinality: number
     ) {
-        super(fqn);
+        super(new FQN(globalTargetFqn));
     }
 }

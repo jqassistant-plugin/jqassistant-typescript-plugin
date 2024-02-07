@@ -18,7 +18,7 @@ export abstract class Processor {
 
     /**
      * Function that is executed before the children of the current AST node are processed.
-     * Use to setup the local context.
+     * Use to set up the local context.
      */
     public preChildrenProcessing(processingContext: ProcessingContext): void {
         return;

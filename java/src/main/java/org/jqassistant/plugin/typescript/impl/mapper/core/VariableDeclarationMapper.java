@@ -30,7 +30,7 @@ public interface VariableDeclarationMapper extends
 
     @AfterMapping
     default void registerFqn(VariableDeclaration type, @MappingTarget VariableDeclarationDescriptor target, @Context Scanner scanner) {
-        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(target);
     }
 
     List<VariableDeclarationDescriptor> mapList(List<VariableDeclaration> value, @Context Scanner scanner);

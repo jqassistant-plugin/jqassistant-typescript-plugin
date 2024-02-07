@@ -9,11 +9,11 @@ import lombok.ToString;
 @ToString
 public class ExportDeclaration {
 
-    private String declFqn;
-
     private String identifier;
 
     private String alias;
+
+    private String globalDeclFqn;
 
     private String importSource;
 
@@ -23,6 +23,6 @@ public class ExportDeclaration {
 
     private String kind;
 
-    private String sourceFilePath;
+    private String sourceFilePathAbsolute;
 
 }

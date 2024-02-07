@@ -8,8 +8,8 @@ import java.util.List;
 @Label("Declared")
 public interface TypeDeclaredDescriptor extends TypeDescriptor {
 
-    String getReferencedFqn();
-    void setReferencedFqn(String referencedFqn);
+    String getReferencedGlobalFqn();
+    void setReferencedGlobalFqn(String referencedGlobalFqn);
 
     @Relation.Outgoing
     List<TypeDeclaredHasTypeArgumentDescriptor> getTypeArguments();

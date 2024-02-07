@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { program } from "commander";
-import { processAndOutputResult } from "./core/extractor";
+import { processProjectsAndOutputResult } from "./core/extractor";
 import packageInfo from "../package.json";
 import { initializeReactExtractor } from "./react/react-extractor";
 
@@ -31,4 +31,4 @@ if(extensions.includes("react")) {
 }
 
 // initializeReactExtractor();
-processAndOutputResult(projectRootPath, {prettyPrint});
+processProjectsAndOutputResult(projectRootPath, {prettyPrint});

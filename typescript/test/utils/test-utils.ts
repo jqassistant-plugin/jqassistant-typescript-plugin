@@ -22,6 +22,8 @@ import { LCEEnumDeclaration } from "../../src/core/concepts/enum-declaration.con
 import { LCEExportDeclaration } from "../../src/core/concepts/export-declaration.concept";
 import { execSync } from "child_process";
 import fs from "fs";
+import path from "path";
+import { ModulePathUtils } from "../../src/core/utils/modulepath.utils";
 
 
 /**
@@ -36,7 +38,6 @@ export function initNodeSampleProject(path: string) {
     }
 }
 
-
 /**
  * Returns a map containing all dependencies of the given result data, mapped by source and target FQN.
  * The result of this function should be passed to {@link expectDependency}
@@ -45,20 +46,20 @@ export function getDependenciesFromResult(result: Map<string, object[]>): Map<st
     const dependencies: Map<string, Map<string, LCEDependency>> = new Map();
     for (const concept of result.get(LCEDependency.conceptId) ?? []) {
         const dep: LCEDependency = concept as LCEDependency;
-        if (!dep.sourceFQN) {
+        if (!dep.globalSourceFQN) {
             throw new Error("Dependency has no source fqn " + JSON.stringify(dep));
         }
-        if (!dep.fqn) {
+        if (!dep.fqn.globalFqn) {
             throw new Error("Dependency has no target fqn " + JSON.stringify(dep));
         }
-        if (dependencies.get(dep.sourceFQN)?.get(dep.fqn)) {
+        if (dependencies.get(dep.globalSourceFQN)?.get(dep.fqn.globalFqn)) {
             throw new Error("Two dependencies with same source and target FQN were returned: " + JSON.stringify(dep));
         }
 
-        if (!dependencies.has(dep.sourceFQN)) {
-            dependencies.set(dep.sourceFQN, new Map());
+        if (!dependencies.has(dep.globalSourceFQN)) {
+            dependencies.set(dep.globalSourceFQN, new Map());
         }
-        dependencies.get(dep.sourceFQN)?.set(dep.fqn, dep);
+        dependencies.get(dep.globalSourceFQN)?.set(dep.fqn.globalFqn, dep);
     }
 
     return dependencies;
@@ -66,13 +67,14 @@ export function getDependenciesFromResult(result: Map<string, object[]>): Map<st
 
 /**
  * Test if a certain dependency was registered during language concept extraction
+ * @param projectRootPath root path of the sample project
  * @param dependencies map of all dependencies (obtain via `getDependenciesFromResult`)
- * @param sourceFqn fqn of source concept
+ * @param sourceFqnLocal fqn of source concept
  * @param targetFqn fqn of target concept
  * @param cardinality cardinality of dependency (remember that there are no transitive/aggregated dependencies after LCE)
  */
-export function expectDependency(dependencies: Map<string, Map<string, LCEDependency>>, sourceFqn: string, targetFqn: string, cardinality: number) {
-    const dependency = dependencies.get(sourceFqn)?.get(targetFqn);
+export function expectDependency(projectRootPath: string, dependencies: Map<string, Map<string, LCEDependency>>, sourceFqnLocal: string, targetFqn: string, cardinality: number) {
+    const dependency = dependencies.get(resolveGlobalFqn(projectRootPath, sourceFqnLocal))?.get(targetFqn);
     expect(dependency).toBeDefined();
     expect(dependency!.cardinality).toBe(cardinality);
 }
@@ -123,11 +125,11 @@ export function expectLiteralType(type: LCEType | undefined, value: any) {
  * Expect the provided type to be not null and of the specified declared variant.
  * Assumes by default that there are no specified type arguments. (can be turned off via `checkEmptyTypeArgs` parameter)
  */
-export function expectDeclaredType(type: LCEType | undefined, fqn: string, checkEmptyTypeArgs: boolean = true) {
+export function expectDeclaredType(type: LCEType | undefined, globalFqn: string, checkEmptyTypeArgs: boolean = true) {
     expect(type).toBeDefined();
     if(type) {
         expect(type.type).toBe("declared");
-        expect((type as LCETypeDeclared).fqn).toBe(fqn);
+        expect((type as LCETypeDeclared).fqn.globalFqn).toBe(globalFqn);
         if(checkEmptyTypeArgs) {
             expect((type as LCETypeDeclared).typeArguments).toHaveLength(0);
         }
@@ -206,10 +208,10 @@ export function expectLiteralValue(value: LCEValue | undefined, literalValue: an
 /**
  * Expect the provided value to be not null and of the specified declared variant.
  */
-export function expectDeclaredValue(value: LCEValue | undefined, fqn: string) {
+export function expectDeclaredValue(value: LCEValue | undefined, globalFqn: string) {
     expect(value).toBeDefined();
     expect(value!.valueType).toBe("declared");
-    expect((value! as LCEValueDeclared).fqn).toBe(fqn);
+    expect((value! as LCEValueDeclared).fqn.globalFqn).toBe(globalFqn);
     return value! as LCEValueDeclared;
 }
 
@@ -282,7 +284,7 @@ export function expectTypeParameterDeclaration(typeParams: LCETypeParameterDecla
  * @return property declaration object, if it was found in the list
  */
 export function expectProperty(props: LCEPropertyDeclaration[] | undefined,
-                               fqn: string,
+                               localFqn: string,
                                name: string,
                                optional: boolean,
                                visibility: Visibility,
@@ -292,7 +294,7 @@ export function expectProperty(props: LCEPropertyDeclaration[] | undefined,
                                isStatic: boolean | undefined,
                                primitiveType?: string): LCEPropertyDeclaration {
     expect(props).toBeDefined();
-    const propDecl = props!.find(p => p.fqn === fqn);
+    const propDecl = props!.find(p => p.fqn.localFqn === localFqn);
     expect(propDecl).toBeDefined();
     if(propDecl) {
         expect(propDecl.propertyName).toBe(name);
@@ -317,7 +319,7 @@ export function expectProperty(props: LCEPropertyDeclaration[] | undefined,
  * @return property declaration object, if it was found in the list
  */
 export function expectMethod(methods: LCEMethodDeclaration[] | undefined,
-                             fqn: string,
+                             localFqn: string,
                              name: string,
                              visibility: Visibility,
                              override: boolean | undefined,
@@ -326,7 +328,7 @@ export function expectMethod(methods: LCEMethodDeclaration[] | undefined,
                              primitiveReturnType?: string,
                              async: boolean = false): LCEMethodDeclaration {
     expect(methods).toBeDefined();
-    const methodDecl = methods!.find(p => p.fqn === fqn);
+    const methodDecl = methods!.find(p => p.fqn.localFqn === localFqn);
     expect(methodDecl).toBeDefined();
     if(methodDecl) {
         expect(methodDecl.methodName).toBe(name);
@@ -344,10 +346,10 @@ export function expectMethod(methods: LCEMethodDeclaration[] | undefined,
 }
 
 export function expectAccessorProperty(accessorProperties: LCEAccessorProperty[] | undefined,
-                                       fqn: string,
+                                       localFqn: string,
                                        name: string): LCEAccessorProperty {
     expect(accessorProperties).toBeDefined();
-    const accProp = accessorProperties!.find(p => p.fqn === fqn);
+    const accProp = accessorProperties!.find(p => p.fqn.localFqn === localFqn);
     expect(accProp).toBeDefined();
     if(accProp) {
         expect(accProp.accessorName).toBe(name);
@@ -358,15 +360,15 @@ export function expectAccessorProperty(accessorProperties: LCEAccessorProperty[]
 /**
  * Expect that the given enum declaration has a certain member.
  */
-export function expectEnumMember(enumDecl: LCEEnumDeclaration, name: string, fqn: string) {
+export function expectEnumMember(enumDecl: LCEEnumDeclaration, name: string, localFqn: string) {
     const member = enumDecl.members.find(mem => mem.enumMemberName === name);
     expect(member).toBeDefined();
-    expect(member!.fqn).toBe(fqn);
+    expect(member!.fqn.localFqn).toBe(localFqn);
     return member!;
 }
 
-export function expectModule(modules: Map<string, LCEModule>, fqn: string, graphPath: string, present: boolean = true) {
-    const module = modules.get(fqn);
+export function expectModule(projectRootPath: string, modules: Map<string, LCEModule>, localFqn: string, graphPath: string, present: boolean = true) {
+    const module = modules.get(resolveGlobalFqn(projectRootPath, localFqn));
     if(present) {
         expect(module).toBeDefined();
         if(module) {
@@ -377,10 +379,23 @@ export function expectModule(modules: Map<string, LCEModule>, fqn: string, graph
     }
 }
 
-export function expectExport(exports: LCEExportDeclaration[], fqn: string, identifier: string, alias?: string, isDefault: boolean = false) {
-    const exp = exports.find(e => e.declFqn === fqn);
+export function expectExport(projectRootPath: string, exports: LCEExportDeclaration[], localDeclFqn: string, identifier: string, alias?: string, isDefault: boolean = false) {
+    const declFqnPathType = ModulePathUtils.getPathType(ModulePathUtils.extractFQNPath(localDeclFqn))
+    const exp = exports.find(e => e.globalDeclFqn === (declFqnPathType === "node" ? localDeclFqn : resolveGlobalFqn(projectRootPath, localDeclFqn)));
     expect(exp).toBeDefined();
     expect(exp!.identifier).toBe(identifier);
     expect(exp!.alias).toBe(alias);
     expect(exp!.isDefault).toBe(isDefault)
+}
+
+export function resolveGlobalFqn(projectRootPath: string, localFqn: string): string {
+    const fqnPath = ModulePathUtils.extractFQNPath(localFqn);
+    const fqnIdentifier = ModulePathUtils.extractFQNIdentifier(localFqn);
+    if(fqnPath) {
+        // standard declaration FQN
+        return `"${path.resolve(projectRootPath, fqnPath)}".${fqnIdentifier}`
+    } else {
+        // module FQN
+        return path.resolve(projectRootPath, fqnIdentifier);
+    }
 }

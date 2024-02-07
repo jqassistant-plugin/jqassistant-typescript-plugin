@@ -11,7 +11,7 @@ public class Dependency extends NamedConcept {
 
     private String targetType;
 
-    private String sourceFQN;
+    private String globalSourceFQN;
 
     private String sourceType;
 

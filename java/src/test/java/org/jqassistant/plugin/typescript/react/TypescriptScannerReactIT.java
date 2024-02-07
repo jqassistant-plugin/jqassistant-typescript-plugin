@@ -48,9 +48,9 @@ public class TypescriptScannerReactIT extends AbstractPluginIT {
 
         // normally, the following path would be absolute
         // when regenerating the json, please crop the extracted path accordingly
-        assertThat(project.getFileName())
+        assertThat(project.getRootDirectory().getFileName())
             .as("project has correct path")
-            .isEqualTo("java/src/test/resources/java-it-react-sample-project");
+            .isEqualTo("/java/src/test/resources/java-it-react-sample-project");
 
         new ReactComponentAssertions(project, components)
             .assertModulePresence()

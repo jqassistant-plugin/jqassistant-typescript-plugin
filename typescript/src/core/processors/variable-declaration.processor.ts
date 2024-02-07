@@ -3,7 +3,7 @@ import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 import { ConceptMap, mergeConceptMaps, singleEntryConceptMap } from "../concept";
 import { LCEValue, LCEValueComplex } from "../concepts/value.concept";
 import { LCEVariableDeclaration } from "../concepts/variable-declaration.concept";
-import { ProcessingContext } from "../context";
+import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getAndDeleteAllValueChildConcepts } from "../utils/processor.utils";
@@ -44,9 +44,13 @@ export class VariableDeclaratorProcessor extends Processor {
             if (node.init) localContexts.currentContexts.set(VALUE_PROCESSING_FLAG, true);
             localContexts.currentContexts.set(
                 VariableDeclaratorProcessor.VARIABLE_DECLARATOR_FQN_CONTEXT,
-                DependencyResolutionProcessor.constructFQNPrefix(localContexts) + node.id.name
+                DependencyResolutionProcessor.constructDeclarationFQN(localContexts, node.parent, node.id.name)
             );
-            DependencyResolutionProcessor.addScopeContext(localContexts, node.id.name);
+            if (DependencyResolutionProcessor.isDefaultDeclaration(localContexts, node.parent, node.id.name)) {
+                DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id("default"));
+            } else {
+                DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(node.id.name));
+            }
             DependencyResolutionProcessor.createDependencyIndex(localContexts);
         }
     }
@@ -72,7 +76,7 @@ export class VariableDeclaratorProcessor extends Processor {
             }
 
             const name = node.id.name;
-            const fqn = localContexts.currentContexts.get(VariableDeclaratorProcessor.VARIABLE_DECLARATOR_FQN_CONTEXT) as string;
+            const fqn = localContexts.currentContexts.get(VariableDeclaratorProcessor.VARIABLE_DECLARATOR_FQN_CONTEXT) as FQN;
             DependencyResolutionProcessor.registerDeclaration(localContexts, name, fqn, true);
 
             const kind = localContexts.parentContexts?.get(VariableDeclarationProcessor.VARIABLE_DECLARATION_KIND_CONTEXT) as "var" | "let" | "const";

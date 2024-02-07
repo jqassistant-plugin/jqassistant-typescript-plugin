@@ -29,7 +29,7 @@ public interface EnumDeclarationMapper extends DescriptorMapper<EnumDeclaration,
 
     @AfterMapping
     default void registerFqn(EnumDeclaration type, @MappingTarget EnumDeclarationDescriptor target, @Context Scanner scanner) {
-        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(target);
     }
 
     List<EnumDeclarationDescriptor> mapList(List<EnumDeclaration> value, @Context Scanner scanner);

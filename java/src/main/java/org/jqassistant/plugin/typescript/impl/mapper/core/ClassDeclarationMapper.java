@@ -38,7 +38,7 @@ public interface ClassDeclarationMapper extends
     @AfterMapping
     default void after(ClassDeclaration value, @MappingTarget ClassDeclarationDescriptor target, @Context Scanner scanner) {
         target.getProperties().addAll(scanner.getContext().pop(ParameterPropertyContext.class).getParameterProperties());
-        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(target);
         scanner.getContext().peek(TypeParameterResolver.class).popScope();
     }
 

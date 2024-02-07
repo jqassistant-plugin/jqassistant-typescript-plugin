@@ -4,7 +4,7 @@ import com.buschmais.xo.neo4j.api.annotation.Label;
 import com.buschmais.xo.neo4j.api.annotation.Relation;
 
 @Label("AccessorProperty")
-public interface AccessorPropertyDescriptor extends TypeScriptDescriptor, NamedConceptDescriptor {
+public interface AccessorPropertyDescriptor extends TypeScriptDescriptor, LocalGlobalFqnDescriptor {
 
     String getName();
     void setName(String name);

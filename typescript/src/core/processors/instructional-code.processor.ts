@@ -3,7 +3,7 @@ import { Identifier, Literal } from "@typescript-eslint/types/dist/generated/ast
 
 import { ConceptMap } from "../concept";
 import { LCETypeDeclared } from "../concepts/type.concept";
-import { ProcessingContext } from "../context";
+import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getParentPropName } from "../utils/processor.utils";
@@ -49,7 +49,7 @@ export class DeclarationScopeProcessor extends Processor {
                 node.type === AST_NODE_TYPES.TSEnumDeclaration) &&
             node.id
         ) {
-            DependencyResolutionProcessor.addScopeContext(localContexts, node.id.name);
+            DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(node.id.name));
         } else {
             DependencyResolutionProcessor.addScopeContext(localContexts);
         }
@@ -117,8 +117,8 @@ export class MemberExpressionDependencyProcessor extends Processor {
         ) {
             const objectType = parseESNodeType({node, localContexts, ...unusedProcessingContext}, node.object, undefined, true);
             if (objectType instanceof LCETypeDeclared) {
-                const fqn = objectType.fqn + "." + this.getNamespace(node.property);
-                DependencyResolutionProcessor.registerDependency(localContexts, fqn, false);
+                const globalFqn = objectType.fqn.globalFqn + "." + this.getNamespace(node.property);
+                DependencyResolutionProcessor.registerDependency(localContexts, globalFqn, false);
             }
         }
         return new Map();

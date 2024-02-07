@@ -6,7 +6,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 import java.util.List;
 
 @Label("ExternalModule")
-public interface ExternalModuleDescriptor extends TypeScriptDescriptor, NamedConceptDescriptor {
+public interface ExternalModuleDescriptor extends TypeScriptDescriptor, GlobalFqnDescriptor {
 
     @Relation.Outgoing
     List<ExternalModuleExportsDescriptor> getExportedDeclarations();

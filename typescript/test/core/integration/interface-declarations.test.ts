@@ -1,4 +1,4 @@
-import { processProject } from "../../../src/core/extractor";
+import { processProjects } from "../../../src/core/extractor";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import {
@@ -13,6 +13,7 @@ import {
     expectTypeParameterDeclaration,
     expectTypeParameterReference,
     getDependenciesFromResult,
+    resolveGlobalFqn,
 } from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCEInterfaceDeclaration } from "../../../src/core/concepts/interface-declaration.concept";
@@ -20,14 +21,18 @@ import { LCEInterfaceDeclaration } from "../../../src/core/concepts/interface-de
 jest.setTimeout(30000);
 
 describe("interface declarations test", () => {
+    const projectRootPath = "./test/core/integration/sample-projects/interface-declarations";
     let result: Map<string, object[]>;
     const interfaceDecls: Map<string, LCEInterfaceDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
     let mainModule: LCEModule;
 
     beforeAll(async () => {
-        const projectRoot = "./test/core/integration/sample-projects/interface-declarations";
-        result = await processProject(projectRoot);
+        const projects = await processProjects(projectRootPath);
+        if(projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        }
+        result = projects[0].concepts;
 
         if (!result.get(LCEInterfaceDeclaration.conceptId)) {
             throw new Error("Could not find interface declarations in result data.");
@@ -35,16 +40,16 @@ describe("interface declarations test", () => {
 
         for (const concept of result.get(LCEInterfaceDeclaration.conceptId) ?? []) {
             const interfaceDecl: LCEInterfaceDeclaration = concept as LCEInterfaceDeclaration;
-            if (!interfaceDecl.fqn) {
-                throw new Error("Interface declaration has no fqn " + JSON.stringify(interfaceDecl));
+            if (!interfaceDecl.fqn.globalFqn) {
+                throw new Error("Interface declaration has no global FQN " + JSON.stringify(interfaceDecl));
             }
-            if (interfaceDecls.has(interfaceDecl.fqn)) {
-                throw new Error("Two interface declarations with same FQN were returned: " + interfaceDecl.fqn);
+            if (interfaceDecls.has(interfaceDecl.fqn.globalFqn)) {
+                throw new Error("Two interface declarations with same global FQN were returned: " + interfaceDecl.fqn.globalFqn);
             }
-            interfaceDecls.set(interfaceDecl.fqn, interfaceDecl);
+            interfaceDecls.set(interfaceDecl.fqn.globalFqn, interfaceDecl);
         }
 
-        const mainModuleConcept = result.get(LCEModule.conceptId)?.find((mod) => (mod as LCEModule).fqn === "./src/main.ts");
+        const mainModuleConcept = result.get(LCEModule.conceptId)?.find((mod) => (mod as LCEModule).fqn.localFqn === "./src/main.ts");
         if (!mainModuleConcept) {
             throw new Error("Could not find main module in result data");
         }
@@ -54,10 +59,11 @@ describe("interface declarations test", () => {
     });
 
     test("empty interface", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iEmpty');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iEmpty'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iEmpty'));
             expect(decl.interfaceName).toBe("iEmpty");
 
             expect(decl.typeParameters).toHaveLength(0);
@@ -71,10 +77,11 @@ describe("interface declarations test", () => {
     });
 
     test("exported empty interface", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iExported');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iExported'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iExported'));
             expect(decl.interfaceName).toBe("iExported");
 
             expect(decl.typeParameters).toHaveLength(0);
@@ -87,7 +94,7 @@ describe("interface declarations test", () => {
 
             const exportDeclConcept = result
                 .get(LCEExportDeclaration.conceptId)
-                ?.find((exp) => (exp as LCEExportDeclaration).declFqn === '"./src/main.ts".iExported');
+                ?.find((exp) => (exp as LCEExportDeclaration).globalDeclFqn === resolveGlobalFqn(projectRootPath, '"./src/main.ts".iExported'));
 
             expect(exportDeclConcept).toBeDefined();
             if (exportDeclConcept) {
@@ -96,16 +103,17 @@ describe("interface declarations test", () => {
                 expect(exportDecl.identifier).toBe("iExported");
                 expect(exportDecl.alias).toBeUndefined();
                 expect(exportDecl.isDefault).toBe(false);
-                expect(exportDecl.sourceFilePath).toBe(mainModule.fqn);
+                expect(exportDecl.sourceFilePathAbsolute).toBe(mainModule.fqn.globalFqn);
             }
         }
     });
 
     test("interface with properties", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iProperties');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iProperties'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iProperties'));
             expect(decl.interfaceName).toBe("iProperties");
 
             expect(decl.typeParameters).toHaveLength(0);
@@ -124,10 +132,11 @@ describe("interface declarations test", () => {
     });
 
     test("interface with methods", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iMethods');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iMethods'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iMethods'));
             expect(decl.interfaceName).toBe("iMethods");
 
             expect(decl.typeParameters).toHaveLength(0);
@@ -150,10 +159,11 @@ describe("interface declarations test", () => {
     });
 
     test("interface with getters and setters", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iGetterSetter');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iGetterSetter'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iGetterSetter'));
             expect(decl.interfaceName).toBe("iGetterSetter");
 
             expect(decl.typeParameters).toHaveLength(0);
@@ -195,17 +205,18 @@ describe("interface declarations test", () => {
     });
 
     test("interface extending another interface", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iExtends');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iExtends'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iExtends'));
             expect(decl.interfaceName).toBe("iExtends");
 
             expect(decl.typeParameters).toHaveLength(0);
 
             expect(decl.extendsInterfaces).toHaveLength(1);
-            expectDeclaredType(decl.extendsInterfaces[0], '"./src/main.ts".CustomInterface');
-            expectDependency(dependencies,'"./src/main.ts".iExtends', '"./src/main.ts".CustomInterface', 1);
+            expectDeclaredType(decl.extendsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
+            expectDependency(projectRootPath, dependencies,'"./src/main.ts".iExtends', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
 
             expect(decl.properties).toHaveLength(1);
             expectProperty(decl.properties, '"./src/main.ts".iExtends.newProp', "newProp", false, "public", false, undefined, undefined, undefined, "string");
@@ -216,19 +227,20 @@ describe("interface declarations test", () => {
     });
 
     test("interface extending multiple other interfaces", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iExtendsMulti');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iExtendsMulti'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iExtendsMulti'));
             expect(decl.interfaceName).toBe("iExtendsMulti");
 
             expect(decl.typeParameters).toHaveLength(0);
 
             expect(decl.extendsInterfaces).toHaveLength(2);
-            expectDeclaredType(decl.extendsInterfaces[0], '"./src/main.ts".CustomInterface');
-            expectDependency(dependencies,'"./src/main.ts".iExtendsMulti', '"./src/main.ts".CustomInterface', 1);
-            expectDeclaredType(decl.extendsInterfaces[1], '"./src/main.ts".CustomInterface2');
-            expectDependency(dependencies,'"./src/main.ts".iExtendsMulti', '"./src/main.ts".CustomInterface2', 1);
+            expectDeclaredType(decl.extendsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
+            expectDependency(projectRootPath, dependencies,'"./src/main.ts".iExtendsMulti', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
+            expectDeclaredType(decl.extendsInterfaces[1], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface2'));
+            expectDependency(projectRootPath, dependencies,'"./src/main.ts".iExtendsMulti', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface2'), 1);
 
             expect(decl.properties).toHaveLength(1);
             expectProperty(decl.properties, '"./src/main.ts".iExtendsMulti.newProp', "newProp", false, "public", false, undefined, undefined, undefined, "string");
@@ -239,10 +251,11 @@ describe("interface declarations test", () => {
     });
 
     test("interface with dependencies", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iRef');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRef'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRef'));
             expect(decl.interfaceName).toBe("iRef");
 
             expect(decl.typeParameters).toHaveLength(0);
@@ -251,32 +264,33 @@ describe("interface declarations test", () => {
 
             expect(decl.properties).toHaveLength(1);
             const prop = expectProperty(decl.properties, '"./src/main.ts".iRef.x', "x", false, "public", false, undefined, undefined, undefined);
-            expectDeclaredType(prop.type, '"./src/main.ts".CustomInterface');
-            expectDependency(dependencies, '"./src/main.ts".iRef.x', '"./src/main.ts".CustomInterface', 1);
+            expectDeclaredType(prop.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
+            expectDependency(projectRootPath, dependencies, '"./src/main.ts".iRef.x', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
 
             expect(decl.methods).toHaveLength(1);
             const method = expectMethod(decl.methods, '"./src/main.ts".iRef.method', "method", "public", undefined, undefined, undefined);
-            expectDeclaredType(method.returnType, '"./src/main.ts".CustomClass');
+            expectDeclaredType(method.returnType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'));
             expect(method.parameters).toHaveLength(0);
             expect(method.typeParameters).toHaveLength(0);
-            expectDependency(dependencies, '"./src/main.ts".iRef.method', '"./src/main.ts".CustomClass', 1);
+            expectDependency(projectRootPath, dependencies, '"./src/main.ts".iRef.method', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'), 1);
 
             expect(decl.accessorProperties).toHaveLength(0);
         }
     });
 
     test("interface extending an interface of another module", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iExtendsExt');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iExtendsExt'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iExtendsExt'));
             expect(decl.interfaceName).toBe("iExtendsExt");
 
             expect(decl.typeParameters).toHaveLength(0);
 
             expect(decl.extendsInterfaces).toHaveLength(1);
-            expectDeclaredType(decl.extendsInterfaces[0], '"./src/secondary.ts".ExternalCustomInterface');
-            expectDependency(dependencies,'"./src/main.ts".iExtendsExt', '"./src/secondary.ts".ExternalCustomInterface', 1);
+            expectDeclaredType(decl.extendsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'));
+            expectDependency(projectRootPath, dependencies,'"./src/main.ts".iExtendsExt', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'), 1);
 
             expect(decl.properties).toHaveLength(0);
 
@@ -286,10 +300,11 @@ describe("interface declarations test", () => {
     });
 
     test("interface with dependencies to another module", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iRefExt');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRefExt'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRefExt'));
             expect(decl.interfaceName).toBe("iRefExt");
 
             expect(decl.typeParameters).toHaveLength(0);
@@ -298,25 +313,26 @@ describe("interface declarations test", () => {
 
             expect(decl.properties).toHaveLength(1);
             const prop = expectProperty(decl.properties, '"./src/main.ts".iRefExt.x', "x", false, "public", false, undefined, undefined, undefined);
-            expectDeclaredType(prop.type, '"./src/secondary.ts".ExternalCustomInterface');
-            expectDependency(dependencies, '"./src/main.ts".iRefExt.x', '"./src/secondary.ts".ExternalCustomInterface', 1);
+            expectDeclaredType(prop.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'));
+            expectDependency(projectRootPath, dependencies, '"./src/main.ts".iRefExt.x', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'), 1);
 
             expect(decl.methods).toHaveLength(1);
             const method = expectMethod(decl.methods, '"./src/main.ts".iRefExt.method', "method", "public", undefined, undefined, undefined);
-            expectDeclaredType(method.returnType, '"./src/secondary.ts".ExternalCustomClass');
+            expectDeclaredType(method.returnType, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'));
             expect(method.parameters).toHaveLength(0);
             expect(method.typeParameters).toHaveLength(0);
-            expectDependency(dependencies, '"./src/main.ts".iRefExt.method', '"./src/secondary.ts".ExternalCustomClass', 1);
+            expectDependency(projectRootPath, dependencies, '"./src/main.ts".iRefExt.method', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'), 1);
 
             expect(decl.accessorProperties).toHaveLength(0);
         }
     });
 
     test("interface with type parameters", async () => {
-        const decl = interfaceDecls.get('"./src/main.ts".iGeneric');
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iGeneric'));
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iGeneric'));
             expect(decl.interfaceName).toBe("iGeneric");
 
             expect(decl.typeParameters).toHaveLength(1);

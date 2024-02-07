@@ -1,5 +1,6 @@
-import {LCEConcept} from "../concept";
-import {LCEType, LCETypeDeclared, LCETypeNotIdentified, LCETypePrimitive} from "./type.concept";
+import { LCEConcept } from "../concept";
+import { LCEType, LCETypeDeclared, LCETypeNotIdentified, LCETypePrimitive } from "./type.concept";
+import { FQN } from "../context";
 
 /** Base class for all values. */
 export abstract class LCEValue extends LCEConcept {
@@ -42,7 +43,7 @@ export class LCEValueLiteral extends LCEValue {
     constructor(public value: string | number | bigint | boolean | RegExp) {
         super(
             "literal",
-            typeof value === "object" ? new LCETypeDeclared("RegExp", []) : new LCETypePrimitive(typeof value)
+            typeof value === "object" ? new LCETypeDeclared(new FQN("RegExp"), []) : new LCETypePrimitive(typeof value)
         );
     }
 }
@@ -54,9 +55,9 @@ export class LCEValueDeclared extends LCEValue {
     public static override conceptId = "declared-value";
 
     /**
-     * @param fqn fully qualified name of the referenced variable/function/class
+     * @param fqn fully qualified name of the referenced variable/function/class (only global Fqn is used)
      */
-    constructor(type: LCEType, public fqn: string) {
+    constructor(type: LCEType, public fqn: FQN) {
         super("declared", type);
     }
 }

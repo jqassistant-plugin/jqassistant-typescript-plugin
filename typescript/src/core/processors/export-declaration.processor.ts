@@ -10,7 +10,7 @@ import { LCETypeAliasDeclaration } from "../concepts/type-alias-declaration.conc
 import { LCEVariableDeclaration } from "../concepts/variable-declaration.concept";
 import { ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
-import { PathUtils } from "../utils/path.utils";
+import { ModulePathUtils } from "../utils/modulepath.utils";
 import { Processor } from "../processor";
 import { ExportDefaultDeclarationTraverser, ExportNamedDeclarationTraverser } from "../traversers/export-declaration.traverser";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
@@ -24,35 +24,41 @@ export class ExportDeclarationProcessor extends Processor {
     public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         const concepts: ConceptMap[] = [];
         if (node.type === AST_NODE_TYPES.ExportNamedDeclaration) {
-            let inProject, source;
+            let source: string | undefined;
             if (node.source) {
-                source = PathUtils.normalizeImportPath(globalContext.projectRootPath, node.source.value, globalContext.sourceFilePath);
-                inProject = !PathUtils.isExternal(source);
+                source = ModulePathUtils.normalizeImportPath(
+                    globalContext.projectInfo.rootPath,
+                    node.source.value,
+                    globalContext.sourceFilePathAbsolute,
+                );
             }
 
             if (node.declaration) {
+                // direct export of a declaration definition (e.g. "export class MyClass { ... }")
                 const identifier = this.extractExportedIdentifier(childConcepts.get(ExportNamedDeclarationTraverser.DECLARATION_PROP));
                 if (identifier) {
-                    const fqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts) + identifier;
+                    const globalDeclFqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + identifier;
                     concepts.push(
                         singleEntryConceptMap(
                             LCEExportDeclaration.conceptId,
                             new LCEExportDeclaration(
                                 identifier,
                                 undefined,
-                                fqn,
-                                undefined,
+                                globalDeclFqn,
                                 undefined,
                                 false,
                                 node.exportKind,
-                                globalContext.sourceFilePath,
+                                globalContext.sourceFilePathAbsolute,
                             ),
                         ),
                     );
                 }
             } else {
+                // export of declaration list (e.g. "export {MyClass, MyFunc}")
+                // may also contain a default export using the "default" specifier
+                // may also be a re-export
                 for (const specifier of node.specifiers) {
-                    const fqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts) + specifier.local.name;
+                    const globalDeclFqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + specifier.local.name;
                     concepts.push(
                         singleEntryConceptMap(
                             LCEExportDeclaration.conceptId,
@@ -61,52 +67,55 @@ export class ExportDeclarationProcessor extends Processor {
                                 specifier.exported.name === "default" || specifier.exported.name === specifier.local.name
                                     ? undefined
                                     : specifier.exported.name,
-                                fqn,
+                                globalDeclFqn,
                                 source,
-                                inProject,
                                 specifier.exported.name === "default",
                                 node.exportKind,
-                                globalContext.sourceFilePath,
+                                globalContext.sourceFilePathAbsolute,
                             ),
                         ),
                     );
                 }
             }
         } else if (node.type === AST_NODE_TYPES.ExportDefaultDeclaration) {
-            const identifier = this.extractExportedIdentifier(childConcepts.get(ExportDefaultDeclarationTraverser.DECLARATION_PROP));
+            // default export (e.g. "export default myFunc")
+            // NOTE: anonymous declaration may also be directly exported as default (in that case "default" is used as identifier name)
+            const identifier = this.extractExportedIdentifier(childConcepts.get(ExportDefaultDeclarationTraverser.DECLARATION_PROP)) ?? "default";
             if (identifier) {
-                const fqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts) + identifier;
+                const globalDeclFqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + identifier;
                 concepts.push(
                     singleEntryConceptMap(
                         LCEExportDeclaration.conceptId,
                         new LCEExportDeclaration(
                             identifier,
                             undefined,
-                            fqn,
-                            undefined,
+                            globalDeclFqn,
                             undefined,
                             true,
                             node.exportKind,
-                            globalContext.sourceFilePath,
+                            globalContext.sourceFilePathAbsolute,
                         ),
                     ),
                 );
             }
         } else if (node.type === AST_NODE_TYPES.ExportAllDeclaration && node.source) {
-            const source = PathUtils.normalizeImportPath(globalContext.projectRootPath, node.source.value, globalContext.sourceFilePath);
-            const inProject = !PathUtils.isExternal(source);
+            // re-export of all declarations of a module (e.g. "export * from "./myModule")
+            const source = ModulePathUtils.normalizeImportPath(
+                globalContext.projectInfo.rootPath,
+                node.source.value,
+                globalContext.sourceFilePathAbsolute,
+            );
             concepts.push(
                 singleEntryConceptMap(
                     LCEExportDeclaration.conceptId,
                     new LCEExportDeclaration(
                         "*",
                         node.exported?.name,
-                        DependencyResolutionProcessor.constructScopeFQN(localContexts),
+                        DependencyResolutionProcessor.constructScopeFQN(localContexts).globalFqn,
                         source,
-                        inProject,
                         false,
                         "namespace",
-                        globalContext.sourceFilePath,
+                        globalContext.sourceFilePathAbsolute,
                     ),
                 ),
             );

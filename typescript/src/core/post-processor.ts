@@ -1,16 +1,16 @@
-import { LCEConcept } from "./concept";
+import { LCEProject } from "./project";
 
 /**
- *  Post-processes the set of all extracted concepts on a project-wide basis.
+ *  Post-processes the set of all extracted concepts on a cross-project or per-project basis.
  *  Can be used to modify or add language concepts based on existing ones.
  */
 export abstract class PostProcessor {
 
     /**
-     * Modifies or adds language concepts of the provided concept map in-place.
+     * Modifies or adds language concepts of the provided projects in-place.
      *
-     * @param concepts normalized map of all extracted language concepts of a project (keys are conceptIds)
+     * @param projects list of all processed projects
      */
-    public abstract postProcess(concepts: Map<string, LCEConcept[]>, projectRootPath: string): void;
+    public abstract postProcess(projects: LCEProject[]): void;
 
 }

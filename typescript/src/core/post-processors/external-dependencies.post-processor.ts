@@ -1,38 +1,49 @@
 import { PostProcessor } from "../post-processor";
-import { LCEConcept } from "../concept";
 import { LCEDependency } from "../concepts/dependency.concept";
 import { LCEExternalDeclaration, LCEExternalModule } from "../concepts/externals.concept";
-import { PathUtils } from "../utils/path.utils";
+import { ModulePathUtils } from "../utils/modulepath.utils";
+import { LCEProject } from "../project";
 
 export class ExternalDependenciesPostProcessor extends PostProcessor {
-    postProcess(concepts: Map<string, LCEConcept[]>): void {
-        const allDependencies: LCEDependency[] = (concepts.get(LCEDependency.conceptId) ?? []) as LCEDependency[];
-        const externalModules: Map<string, LCEExternalModule> = new Map();
-        const externalDeclarations: Map<string, Map<string, LCEExternalDeclaration>> = new Map();
-        for (const dep of allDependencies) {
-            const external = PathUtils.isExternal(dep.targetType === "module" ? dep.fqn : PathUtils.extractFQNPath(dep.fqn));
-            if (external) {
-                if (dep.targetType === "declaration") {
-                    const modulePath = PathUtils.extractFQNPath(dep.fqn);
-                    if (!externalModules.has(modulePath)) {
-                        externalModules.set(modulePath, new LCEExternalModule(modulePath, []));
-                        externalDeclarations.set(modulePath, new Map());
+    postProcess(projects: LCEProject[]): void {
+        for (const project of projects) {
+            const concepts = project.concepts;
+
+            const allDependencies: LCEDependency[] = (concepts.get(LCEDependency.conceptId) ?? []) as LCEDependency[];
+            const externalModules: Map<string, LCEExternalModule> = new Map();
+            const externalDeclarations: Map<string, Map<string, LCEExternalDeclaration>> = new Map();
+            for (const dep of allDependencies) {
+                const external = ModulePathUtils.isExternal(
+                    dep.targetType === "module" ? dep.globalSourceFQN : ModulePathUtils.extractFQNPath(dep.fqn.globalFqn),
+                    project.projectInfo,
+                    projects,
+                );
+                if (external) {
+                    if (dep.targetType === "declaration") {
+                        const modulePath = ModulePathUtils.extractFQNPath(dep.fqn.globalFqn);
+                        if (!externalModules.has(modulePath)) {
+                            externalModules.set(modulePath, new LCEExternalModule(modulePath, []));
+                            externalDeclarations.set(modulePath, new Map());
+                        }
+                        if (!externalDeclarations.get(modulePath)!.has(dep.fqn.globalFqn)) {
+                            externalDeclarations
+                                .get(modulePath)!
+                                .set(
+                                    dep.fqn.globalFqn,
+                                    new LCEExternalDeclaration(dep.fqn.globalFqn, ModulePathUtils.extractFQNIdentifier(dep.fqn.globalFqn)),
+                                );
+                        }
+                    } else if (!externalModules.has(dep.fqn.globalFqn)) {
+                        externalModules.set(dep.fqn.globalFqn, new LCEExternalModule(dep.fqn.globalFqn, []));
+                        externalDeclarations.set(dep.fqn.globalFqn, new Map());
                     }
-                    if (!externalDeclarations.get(modulePath)!.has(dep.fqn)) {
-                        externalDeclarations
-                            .get(modulePath)!
-                            .set(dep.fqn, new LCEExternalDeclaration(dep.fqn, PathUtils.extractFQNIdentifier(dep.fqn)));
-                    }
-                } else if (!externalModules.has(dep.fqn)) {
-                    externalModules.set(dep.fqn, new LCEExternalModule(dep.fqn, []));
-                    externalDeclarations.set(dep.fqn, new Map());
                 }
             }
-        }
-        for (const entry of externalDeclarations.entries()) {
-            externalModules.get(entry[0])!.declarations = [...entry[1].values()];
-        }
+            for (const entry of externalDeclarations.entries()) {
+                externalModules.get(entry[0])!.declarations = [...entry[1].values()];
+            }
 
-        concepts.set(LCEExternalModule.conceptId, [...externalModules.values()]);
+            concepts.set(LCEExternalModule.conceptId, [...externalModules.values()]);
+        }
     }
 }

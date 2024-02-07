@@ -9,6 +9,8 @@ import lombok.ToString;
 @ToString
 public abstract class NamedConcept {
 
-    private String fqn;
+    private String localFqn;
+
+    private String globalFqn;
 
 }

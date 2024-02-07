@@ -20,7 +20,7 @@ public interface AccessorPropertyMapper extends DescriptorMapper<AccessorPropert
 
     @AfterMapping
     default void registerFqn(AccessorProperty type, @MappingTarget AccessorPropertyDescriptor target, @Context Scanner scanner) {
-        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(target);
     }
 
     List<AccessorPropertyDescriptor> mapList(List<AccessorProperty> value, @Context Scanner scanner);

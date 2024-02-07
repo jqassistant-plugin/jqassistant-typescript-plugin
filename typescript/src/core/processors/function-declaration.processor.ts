@@ -6,7 +6,7 @@ import { LCEFunctionDeclaration } from "../concepts/function-declaration.concept
 import { LCEParameterDeclaration } from "../concepts/method-declaration.concept";
 import { LCETypeParameterDeclaration } from "../concepts/type-parameter.concept";
 import { LCETypeFunction } from "../concepts/type.concept";
-import { ProcessingContext } from "../context";
+import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getAndDeleteChildConcepts, getParentPropIndex } from "../utils/processor.utils";
@@ -21,7 +21,7 @@ export class FunctionDeclarationProcessor extends Processor {
     public static readonly FUNCTION_TYPE_CONTEXT_ID = "function-type";
 
     public executionCondition: ExecutionCondition = new ExecutionCondition(
-        [AST_NODE_TYPES.FunctionDeclaration, AST_NODE_TYPES.TSDeclareFunction],
+        [AST_NODE_TYPES.FunctionDeclaration, AST_NODE_TYPES.TSDeclareFunction, AST_NODE_TYPES.ArrowFunctionExpression],
         ({ node }) => {
             return (
                 !!node.parent &&
@@ -32,32 +32,42 @@ export class FunctionDeclarationProcessor extends Processor {
         },
     );
 
-    public override preChildrenProcessing({ node, localContexts, ...unusedProcessingContext }: ProcessingContext): void {
-        if (node.type === AST_NODE_TYPES.FunctionDeclaration || node.type === AST_NODE_TYPES.TSDeclareFunction) {
-            if (node.id) {
-                DependencyResolutionProcessor.addScopeContext(localContexts, node.id.name);
+    public override preChildrenProcessing({ node, localContexts, globalContext, ...unusedProcessingContext }: ProcessingContext): void {
+        if (
+            node.type === AST_NODE_TYPES.FunctionDeclaration ||
+            node.type === AST_NODE_TYPES.TSDeclareFunction ||
+            node.type === AST_NODE_TYPES.ArrowFunctionExpression
+        ) {
+            const fqnIdentifier = DependencyResolutionProcessor.isDefaultDeclaration(localContexts, node, node.id?.name) ? "default" : node.id?.name;
+            if (fqnIdentifier) {
+                DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(fqnIdentifier));
                 DependencyResolutionProcessor.createDependencyIndex(localContexts);
             }
 
-            const functionType = parseFunctionType({ localContexts, node, ...unusedProcessingContext }, node);
+            const functionType = parseFunctionType({ localContexts, node, globalContext, ...unusedProcessingContext }, node);
             if (functionType) {
                 localContexts.currentContexts.set(FunctionDeclarationProcessor.FUNCTION_TYPE_CONTEXT_ID, functionType);
-                if (node.id) {
+                if (fqnIdentifier) {
                     const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
-                    DependencyResolutionProcessor.registerDeclaration(localContexts, node.id.name, fqn, true);
+                    let id = DependencyResolutionProcessor.constructDeclarationIdentifier(localContexts, node, node.id?.name);
+                    DependencyResolutionProcessor.registerDeclaration(localContexts, id, fqn, true);
                 }
             }
         }
     }
 
     public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
-        if (node.type === AST_NODE_TYPES.FunctionDeclaration || node.type === AST_NODE_TYPES.TSDeclareFunction) {
+        if (
+            node.type === AST_NODE_TYPES.FunctionDeclaration ||
+            node.type === AST_NODE_TYPES.TSDeclareFunction ||
+            node.type === AST_NODE_TYPES.ArrowFunctionExpression
+        ) {
             // TODO: handle overloads
             const functionType = localContexts.currentContexts.get(FunctionDeclarationProcessor.FUNCTION_TYPE_CONTEXT_ID) as
                 | LCETypeFunction
                 | undefined;
             if (functionType) {
-                const functionName = node.id?.name ?? "";
+                const functionName = DependencyResolutionProcessor.constructDeclarationIdentifier(localContexts, node, node.id?.name);
                 const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
                 const typeParameters: LCETypeParameterDeclaration[] = functionType.typeParameters;
                 const returnType = functionType.returnType;

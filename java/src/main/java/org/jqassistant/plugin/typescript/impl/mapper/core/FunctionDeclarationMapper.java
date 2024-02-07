@@ -36,7 +36,7 @@ public interface FunctionDeclarationMapper extends
 
     @AfterMapping
     default void teardown(FunctionDeclaration type, @MappingTarget FunctionDeclarationDescriptor target, @Context Scanner scanner) {
-        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(target);
         scanner.getContext().peek(TypeParameterResolver.class).popScope();
     }
 

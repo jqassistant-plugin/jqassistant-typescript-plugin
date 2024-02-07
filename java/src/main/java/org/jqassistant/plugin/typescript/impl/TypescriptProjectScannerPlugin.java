@@ -9,14 +9,16 @@ import com.buschmais.jqassistant.plugin.json.api.model.JSONFileDescriptor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jqassistant.plugin.typescript.api.TypescriptScope;
-import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
-import org.jqassistant.plugin.typescript.impl.mapper.core.ProjectMapper;
-import org.jqassistant.plugin.typescript.impl.model.core.ScanResultCollection;
+import org.jqassistant.plugin.typescript.api.model.core.TypeScriptScanDescriptor;
+import org.jqassistant.plugin.typescript.impl.mapper.core.TypeScriptScanMapper;
+import org.jqassistant.plugin.typescript.impl.model.core.Project;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @ScannerPlugin.Requires(JSONFileDescriptor.class)
-public class TypescriptProjectScannerPlugin extends AbstractScannerPlugin<FileResource, ProjectDescriptor> {
+public class TypescriptProjectScannerPlugin extends AbstractScannerPlugin<FileResource, TypeScriptScanDescriptor> {
 
     private ObjectMapper objectMapper;
 
@@ -34,8 +36,10 @@ public class TypescriptProjectScannerPlugin extends AbstractScannerPlugin<FileRe
     }
 
     @Override
-    public ProjectDescriptor scan(FileResource fileResource, String path, Scope scope, Scanner scanner) throws IOException {
-        ScanResultCollection scanResultCollection = objectMapper.readValue(fileResource.createStream(), ScanResultCollection.class);
-        return ProjectMapper.INSTANCE.map(scanResultCollection, scanner);
+    public TypeScriptScanDescriptor scan(FileResource fileResource, String path, Scope scope, Scanner scanner) throws IOException {
+        var reader = objectMapper.readerFor(Project.class);
+        var parser = reader.createParser(fileResource.createStream());
+        List<Project> projects = Arrays.asList(reader.readValue(parser, Project[].class));
+        return TypeScriptScanMapper.INSTANCE.map(projects, scanner);
     }
 }

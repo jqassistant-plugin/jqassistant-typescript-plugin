@@ -2,49 +2,57 @@ import { PostProcessor } from "../post-processor";
 import { LCEConcept } from "../concept";
 import { LCEExportDeclaration } from "../concepts/export-declaration.concept";
 import { LCEModule } from "../concepts/typescript-module.concept";
-import { PathUtils } from "../utils/path.utils";
+import { ModulePathUtils } from "../utils/modulepath.utils";
 import { LCEExternalModule } from "../concepts/externals.concept";
 import { LCEDependency } from "../concepts/dependency.concept";
 import { NodeUtils } from "../utils/node.utils";
-import path from "path";
 import * as fs from "fs";
+import { LCEProject, LCEProjectInfo } from "../project";
 
 export class ExportsPostProcessor extends PostProcessor {
-    postProcess(concepts: Map<string, LCEConcept[]>, projectRootPath: string): void {
-        const modules = (concepts.get(LCEModule.conceptId) ?? []) as LCEModule[];
-        const externalModules = (concepts.get(LCEExternalModule.conceptId) ?? []) as LCEExternalModule[];
-        const allExports = (concepts.get(LCEExportDeclaration.conceptId) ?? []) as LCEExportDeclaration[];
-        const newExports: LCEExportDeclaration[] = [];
+    postProcess(projects: LCEProject[]): void {
+        for (const project of projects) {
+            const concepts = project.concepts;
+            const modules = (concepts.get(LCEModule.conceptId) ?? []) as LCEModule[];
+            const externalModules = (concepts.get(LCEExternalModule.conceptId) ?? []) as LCEExternalModule[];
+            const allExports = (concepts.get(LCEExportDeclaration.conceptId) ?? []) as LCEExportDeclaration[];
+            const newExports: LCEExportDeclaration[] = [];
 
-        for (const module of modules) {
-            newExports.push(...this.getAllModuleExports(concepts, allExports, module.fqn, externalModules, projectRootPath));
+            for (const module of modules) {
+                newExports.push(
+                    ...this.getAllModuleExports(concepts, allExports, module.fqn.globalFqn, externalModules, project.projectInfo, projects),
+                );
+            }
+
+            concepts.set(LCEExportDeclaration.conceptId, newExports);
         }
-
-        concepts.set(LCEExportDeclaration.conceptId, newExports);
     }
 
     private getAllModuleExports(
         concepts: Map<string, LCEConcept[]>,
         exports: LCEExportDeclaration[],
-        modulePath: string,
+        modulePathAbsolute: string,
         externalModules: LCEExternalModule[],
-        projectRootPath: string,
+        projectInfo: LCEProjectInfo,
+        projects: LCEProject[],
     ): LCEExportDeclaration[] {
         const result: LCEExportDeclaration[] = [];
-        const stats = fs.statSync(path.resolve(projectRootPath, modulePath));
+
+        const stats = fs.statSync(modulePathAbsolute);
         if (stats.isDirectory()) {
-            modulePath += "/index.ts";
+            modulePathAbsolute += "/index.ts";
         }
-        const rawExports = this.filterExportsForModule(exports, modulePath);
+        const rawExports = this.filterExportsForModule(exports, modulePathAbsolute);
 
         for (const exp of rawExports) {
             if (exp.importSource) {
-                if (exp.sourceInProject) {
+                // re-export
+                if (!ModulePathUtils.isExternal(exp.importSource, projectInfo, projects)) {
                     // internal re-export: try to resolve export tree
-                    const moduleExports = this.getAllModuleExports(concepts, exports, exp.importSource, externalModules, projectRootPath);
+                    const moduleExports = this.getAllModuleExports(concepts, exports, exp.importSource, externalModules, projectInfo, projects);
                     if (exp.kind === "namespace") {
                         // namespace re-export: convert all namespace exports into individual export declarations
-                        if (exp.declFqn) {
+                        if (exp.globalDeclFqn) {
                             for (const moduleExport of moduleExports) {
                                 let identifier = moduleExport.alias ?? moduleExport.identifier;
                                 if (moduleExport.isDefault) {
@@ -54,16 +62,15 @@ export class ExportsPostProcessor extends PostProcessor {
                                     new LCEExportDeclaration(
                                         identifier,
                                         exp.alias ? `${exp.alias}.${identifier}` : undefined,
-                                        moduleExport.declFqn,
-                                        undefined,
+                                        moduleExport.globalDeclFqn,
                                         undefined,
                                         moduleExport.isDefault,
                                         moduleExport.kind,
-                                        modulePath,
+                                        modulePathAbsolute,
                                     ),
                                 );
                             }
-                            this.addDependency(concepts, modulePath, exp.importSource, "module");
+                            this.addDependency(concepts, modulePathAbsolute, exp.importSource, "module");
                         }
                     } else {
                         // named re-export
@@ -73,16 +80,15 @@ export class ExportsPostProcessor extends PostProcessor {
                                 new LCEExportDeclaration(
                                     exp.identifier,
                                     exp.alias,
-                                    originalExport.declFqn,
-                                    undefined,
+                                    originalExport.globalDeclFqn,
                                     undefined,
                                     exp.isDefault,
                                     originalExport.kind,
-                                    modulePath,
+                                    modulePathAbsolute,
                                 ),
                             );
-                            if (originalExport.declFqn) {
-                                this.addDependency(concepts, modulePath, originalExport.declFqn);
+                            if (originalExport.globalDeclFqn) {
+                                this.addDependency(concepts, modulePathAbsolute, originalExport.globalDeclFqn);
                             }
                         } else {
                             console.log(
@@ -93,30 +99,30 @@ export class ExportsPostProcessor extends PostProcessor {
                 } else {
                     // external re-export: link to external declaration(s)
                     let importSource = exp.importSource;
-                    let externalImportModule = externalModules.find((em) => em.fqn === exp.importSource);
+                    let externalImportModule = externalModules.find((em) => em.fqn.globalFqn === exp.importSource);
                     if (!externalImportModule) {
                         // if import source is a node module identifier try to resolve it
                         let resolvedModulePath;
                         try {
-                            resolvedModulePath = NodeUtils.resolveImportPath(exp.importSource, projectRootPath, exp.sourceFilePath);
+                            resolvedModulePath = NodeUtils.resolveImportPath(exp.importSource, projectInfo.rootPath, exp.sourceFilePathAbsolute);
                         } catch (e) {
                             console.log("\n" + `Error: Could not resolve module: ${exp.importSource}`);
                         }
 
                         if (resolvedModulePath) {
-                            const packageName = NodeUtils.getPackageNameForPath(projectRootPath, resolvedModulePath);
+                            const packageName = NodeUtils.getPackageNameForPath(projectInfo.rootPath, resolvedModulePath);
                             if (packageName) {
-                                externalImportModule = externalModules.find((em) => em.fqn === packageName);
+                                externalImportModule = externalModules.find((em) => em.fqn.globalFqn === packageName);
                             }
                             if (!externalImportModule) {
-                                importSource = PathUtils.normalize(projectRootPath, resolvedModulePath);
-                                externalImportModule = externalModules.find((em) => em.fqn === importSource);
+                                importSource = ModulePathUtils.normalize(projectInfo.rootPath, resolvedModulePath);
+                                externalImportModule = externalModules.find((em) => em.fqn.globalFqn === importSource);
                             }
                             if (!externalImportModule) {
                                 // TODO: refine this or find existing mechanism that solves the problem of .d.ts to .js mapping
                                 const potentialDTSPath = resolvedModulePath.replace("node_modules/", "node_modules/@types/").replace(".js", ".d.ts");
-                                importSource = PathUtils.normalize(projectRootPath, potentialDTSPath);
-                                externalImportModule = externalModules.find((em) => em.fqn === importSource);
+                                importSource = ModulePathUtils.normalize(projectInfo.rootPath, potentialDTSPath);
+                                externalImportModule = externalModules.find((em) => em.fqn.globalFqn === importSource);
                             }
                         }
                     }
@@ -129,16 +135,15 @@ export class ExportsPostProcessor extends PostProcessor {
                                     new LCEExportDeclaration(
                                         eDecl.name,
                                         exp.alias ? `${exp.alias}.${eDecl.name}` : undefined,
-                                        eDecl.fqn,
-                                        undefined,
+                                        eDecl.fqn.globalFqn,
                                         undefined,
                                         false, // technically incorrect, but not relevant for graph generation
                                         "value", //  - || -
-                                        modulePath,
+                                        modulePathAbsolute,
                                     ),
                                 );
                             }
-                            this.addDependency(concepts, modulePath, importSource, "module");
+                            this.addDependency(concepts, modulePathAbsolute, importSource, "module");
                         } else {
                             // named re-export of single external dependency
                             let eDecl = externalDeclarations.find((ed) => ed.name === exp.identifier);
@@ -151,15 +156,14 @@ export class ExportsPostProcessor extends PostProcessor {
                                     new LCEExportDeclaration(
                                         eDecl.name,
                                         exp.alias,
-                                        eDecl.fqn,
-                                        undefined,
+                                        eDecl.fqn.globalFqn,
                                         undefined,
                                         exp.isDefault,
                                         exp.kind,
-                                        modulePath,
+                                        modulePathAbsolute,
                                     ),
                                 );
-                                this.addDependency(concepts, modulePath, eDecl.fqn);
+                                this.addDependency(concepts, modulePathAbsolute, eDecl.fqn.globalFqn);
                             } else {
                                 console.log(
                                     "\n" +
@@ -180,7 +184,7 @@ export class ExportsPostProcessor extends PostProcessor {
     }
 
     private filterExportsForModule(exports: LCEExportDeclaration[], modulePath: string): LCEExportDeclaration[] {
-        return exports.filter((ed) => ed.sourceFilePath === modulePath);
+        return exports.filter((ed) => ed.sourceFilePathAbsolute === modulePath);
     }
 
     private findSingleModuleExport(moduleExports: LCEExportDeclaration[], name: string) {

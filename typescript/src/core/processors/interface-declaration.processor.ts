@@ -5,7 +5,7 @@ import { LCEInterfaceDeclaration } from "../concepts/interface-declaration.conce
 import { LCEMethodDeclaration } from "../concepts/method-declaration.concept";
 import { LCEPropertyDeclaration } from "../concepts/property-declaration.concept";
 import { LCETypeDeclared } from "../concepts/type.concept";
-import { ProcessingContext } from "../context";
+import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getAndDeleteChildConcepts, getParentPropName } from "../utils/processor.utils";
@@ -26,9 +26,12 @@ export class InterfaceDeclarationProcessor extends Processor {
     });
 
     public override preChildrenProcessing({ node, localContexts }: ProcessingContext): void {
-        if (node.type === AST_NODE_TYPES.TSInterfaceDeclaration && node.id) {
-            DependencyResolutionProcessor.addScopeContext(localContexts, node.id.name);
-            DependencyResolutionProcessor.createDependencyIndex(localContexts);
+        if (node.type === AST_NODE_TYPES.TSInterfaceDeclaration) {
+            const fqnIdentifier = DependencyResolutionProcessor.isDefaultDeclaration(localContexts, node, node.id.name) ? "default" : node.id.name;
+            if (fqnIdentifier) {
+                DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(node.id.name));
+                DependencyResolutionProcessor.createDependencyIndex(localContexts);
+            }
         }
     }
 
@@ -37,7 +40,7 @@ export class InterfaceDeclarationProcessor extends Processor {
         childConcepts: ConceptMap,
     ): ConceptMap {
         if (node.type === AST_NODE_TYPES.TSInterfaceDeclaration) {
-            const interfaceName = node.id.name;
+            const interfaceName = DependencyResolutionProcessor.constructDeclarationIdentifier(localContexts, node, node.id.name);
             const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
             DependencyResolutionProcessor.registerDeclaration(localContexts, interfaceName, fqn, true);
 
@@ -49,8 +52,8 @@ export class InterfaceDeclarationProcessor extends Processor {
             );
             const accessorProperties: Map<string, LCEAccessorProperty> = new Map();
             for (const accProp of childAccProps) {
-                if (accessorProperties.has(accProp.fqn)) {
-                    const existingAccProp = accessorProperties.get(accProp.fqn)!;
+                if (accessorProperties.has(accProp.fqn.globalFqn)) {
+                    const existingAccProp = accessorProperties.get(accProp.fqn.globalFqn)!;
                     if (!existingAccProp.getter) {
                         existingAccProp.getter = accProp.getter;
                     }
@@ -58,7 +61,7 @@ export class InterfaceDeclarationProcessor extends Processor {
                         existingAccProp.setter = accProp.setter;
                     }
                 } else {
-                    accessorProperties.set(accProp.fqn, accProp);
+                    accessorProperties.set(accProp.fqn.globalFqn, accProp);
                 }
             }
 

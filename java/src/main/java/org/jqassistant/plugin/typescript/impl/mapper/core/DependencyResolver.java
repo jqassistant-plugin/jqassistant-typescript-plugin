@@ -15,8 +15,8 @@ public class DependencyResolver {
         FqnResolver fqnResolver = context.peek(FqnResolver.class);
 
         for(Dependency dep : dependencies) {
-            TypeScriptDescriptor source = fqnResolver.getByFqn(dep.getSourceFQN());
-            TypeScriptDescriptor target = fqnResolver.getByFqn(dep.getFqn());
+            TypeScriptDescriptor source = fqnResolver.getByGlobalFqn(dep.getGlobalSourceFQN());
+            TypeScriptDescriptor target = fqnResolver.getByGlobalFqn(dep.getGlobalFqn());
             if(source != null && target != null) {
                 DependsOnDescriptor relationDescriptor = context.getStore().create(source, DependsOnDescriptor.class, target);
                 relationDescriptor.setCardinality(dep.getCardinality());

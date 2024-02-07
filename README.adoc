@@ -57,6 +57,8 @@ The core model represents all basic TypeScript language concepts, independent of
 
 image::docs/jqa-ts-plugin-model-core.jpg[Neo4j model for the core model of the jQAssistant TypeScript plugin]
 
+==== References and Dependencies
+
 The destinations of the `REFERENCES` relations of `:Type:Declared` and `:Value:Declared` as well as all `:DEPENDS_ON` relations have been omitted for the sake of clarity.
 
 The `REFERENCES` relation of `:Type:Declared` can target:
@@ -106,6 +108,9 @@ and can target one or more of the following nodes:
 * `:Variable`
 * `:Function`
 
+==== Additional Information about the Core Graph Structure
+* Re-exports are resolved transitively as far as possible, that means dependencies are always targeting the original declaration, never some intermediary re-exporting module
+
 === React Extension
 
 The React extension works with various concepts that represent usage patterns in the frontend framework React.
@@ -124,7 +129,4 @@ The tool currently only supports projects using ECMAScript modules.
 Currently not supported:
 
 * old CommonJS module syntax
-* hierarchical tsconfig setups
-* project references in tsconfig
-* scanning of multiple TypeScript projects at once
 * triple-slash directives

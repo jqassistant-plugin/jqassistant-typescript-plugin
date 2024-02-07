@@ -6,7 +6,7 @@ import { LCEDecorator } from "../concepts/decorator.concept";
 import { LCEConstructorDeclaration, LCEMethodDeclaration } from "../concepts/method-declaration.concept";
 import { LCEPropertyDeclaration } from "../concepts/property-declaration.concept";
 import { LCETypeDeclared } from "../concepts/type.concept";
-import { ProcessingContext } from "../context";
+import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getAndDeleteChildConcepts, getParentPropName } from "../utils/processor.utils";
@@ -27,9 +27,12 @@ export class ClassDeclarationProcessor extends Processor {
     });
 
     public override preChildrenProcessing({ node, localContexts }: ProcessingContext): void {
-        if (node.type === AST_NODE_TYPES.ClassDeclaration && node.id) {
-            DependencyResolutionProcessor.addScopeContext(localContexts, node.id.name);
-            DependencyResolutionProcessor.createDependencyIndex(localContexts);
+        if (node.type === AST_NODE_TYPES.ClassDeclaration) {
+            const fqnIdentifier = DependencyResolutionProcessor.isDefaultDeclaration(localContexts, node, node.id?.name) ? "default" : node.id?.name;
+            if (fqnIdentifier) {
+                DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(fqnIdentifier));
+                DependencyResolutionProcessor.createDependencyIndex(localContexts);
+            }
         }
     }
 
@@ -38,7 +41,7 @@ export class ClassDeclarationProcessor extends Processor {
         childConcepts: ConceptMap,
     ): ConceptMap {
         if (node.type === AST_NODE_TYPES.ClassDeclaration) {
-            const className = node.id?.name ?? "";
+            const className = DependencyResolutionProcessor.constructDeclarationIdentifier(localContexts, node, node.id?.name);
             const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
             DependencyResolutionProcessor.registerDeclaration(localContexts, className, fqn, true);
 
@@ -50,8 +53,8 @@ export class ClassDeclarationProcessor extends Processor {
             );
             const accessorProperties: Map<string, LCEAccessorProperty> = new Map();
             for (const accProp of childAccProps) {
-                if (accessorProperties.has(accProp.fqn)) {
-                    const existingAccProp = accessorProperties.get(accProp.fqn)!;
+                if (accessorProperties.has(accProp.fqn.globalFqn)) {
+                    const existingAccProp = accessorProperties.get(accProp.fqn.globalFqn)!;
                     if (!existingAccProp.getter) {
                         existingAccProp.getter = accProp.getter;
                     }
@@ -62,7 +65,7 @@ export class ClassDeclarationProcessor extends Processor {
                         existingAccProp.autoAccessor = accProp.autoAccessor;
                     }
                 } else {
-                    accessorProperties.set(accProp.fqn, accProp);
+                    accessorProperties.set(accProp.fqn.globalFqn, accProp);
                 }
             }
 

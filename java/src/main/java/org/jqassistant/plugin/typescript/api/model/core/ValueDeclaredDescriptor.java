@@ -6,8 +6,8 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 @Label("Declared")
 public interface ValueDeclaredDescriptor extends ValueDescriptor {
 
-    String getReferencedFqn();
-    void setReferencedFqn(String referencedFqn);
+    String getReferencedGlobalFqn();
+    void setReferencedGlobalFqn(String referencedGlobalFqn);
 
     @Relation("REFERENCES")
     TypeScriptDescriptor getReference();

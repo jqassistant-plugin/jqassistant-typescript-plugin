@@ -5,13 +5,14 @@ import { LCETypeParameterDeclaration } from "./type-parameter.concept";
 import { LCEType } from "./type.concept";
 import { Visibility } from "./visibility.concept";
 import { CodeCoordinates } from "./code-coordinate.concept";
+import { FQN } from "../context";
 
 export class LCEMethodDeclaration extends LCENamedConcept {
     public static override conceptId = "method-declaration";
 
     constructor(
         public methodName: string,
-        fqn: string,
+        fqn: FQN,
         public parameters: LCEParameterDeclaration[],
         public returnType: LCEType,
         public typeParameters: LCETypeParameterDeclaration[],
@@ -47,7 +48,7 @@ export class LCEParameterPropertyDeclaration extends LCEPropertyDeclaration {
     constructor(
         public index: number,
         propertyName: string,
-        fqn: string,
+        fqn: FQN,
         optional: boolean,
         type: LCEType,
         decorators: LCEDecorator[],
@@ -67,7 +68,7 @@ export class LCEConstructorDeclaration extends LCENamedConcept {
      * @param parameterProperties maps parameter index numbers to declared parameter properties
      */
     constructor(
-        fqn: string,
+        fqn: FQN,
         public parameters: LCEParameterDeclaration[],
         public parameterProperties: LCEParameterPropertyDeclaration[],
         public coordinates: CodeCoordinates

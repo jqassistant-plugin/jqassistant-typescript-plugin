@@ -1,4 +1,4 @@
-import { processProject } from "../../../src/core/extractor";
+import { processProjects } from "../../../src/core/extractor";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import {
@@ -14,6 +14,7 @@ import {
     expectTypeParameterDeclaration,
     expectTypeParameterReference,
     getDependenciesFromResult,
+    resolveGlobalFqn,
 } from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCEClassDeclaration } from "../../../src/core/concepts/class-declaration.concept";
@@ -21,14 +22,18 @@ import { LCEClassDeclaration } from "../../../src/core/concepts/class-declaratio
 jest.setTimeout(30000);
 
 describe("class declarations test", () => {
+    const projectRootPath = "./test/core/integration/sample-projects/class-declarations";
     let result: Map<string, object[]>;
     const classDecls: Map<string, LCEClassDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
     let mainModule: LCEModule;
 
     beforeAll(async () => {
-        const projectRoot = "./test/core/integration/sample-projects/class-declarations";
-        result = await processProject(projectRoot);
+        const projects = await processProjects(projectRootPath);
+        if(projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        }
+        result = projects[0].concepts;
 
         if (!result.get(LCEClassDeclaration.conceptId)) {
             throw new Error("Could not find class declarations in result data.");
@@ -36,16 +41,16 @@ describe("class declarations test", () => {
 
         for (const concept of result.get(LCEClassDeclaration.conceptId) ?? []) {
             const classDecl: LCEClassDeclaration = concept as LCEClassDeclaration;
-            if (!classDecl.fqn) {
-                throw new Error("Class declaration has no fqn " + JSON.stringify(classDecl));
+            if (!classDecl.fqn.localFqn) {
+                throw new Error("Class declaration has no local FQN " + JSON.stringify(classDecl));
             }
-            if (classDecls.has(classDecl.fqn)) {
-                throw new Error("Two class declarations with same FQN were returned: " + classDecl.fqn);
+            if (classDecls.has(classDecl.fqn.localFqn)) {
+                throw new Error("Two class declarations with same FQN were returned: " + classDecl.fqn.localFqn);
             }
-            classDecls.set(classDecl.fqn, classDecl);
+            classDecls.set(classDecl.fqn.localFqn, classDecl);
         }
 
-        const mainModuleConcept = result.get(LCEModule.conceptId)?.find((mod) => (mod as LCEModule).fqn === "./src/main.ts");
+        const mainModuleConcept = result.get(LCEModule.conceptId)?.find((mod) => (mod as LCEModule).fqn.localFqn === "./src/main.ts");
         if (!mainModuleConcept) {
             throw new Error("Could not find main module in result data");
         }
@@ -59,6 +64,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cEmpty'));
             expect(decl.className).toBe("cEmpty");
             expect(decl.abstract).toBe(false);
 
@@ -81,6 +87,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cProperties'));
             expect(decl.className).toBe("cProperties");
             expect(decl.abstract).toBe(false);
 
@@ -112,6 +119,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cConstructor'));
             expect(decl.className).toBe("cConstructor");
             expect(decl.abstract).toBe(false);
 
@@ -122,7 +130,7 @@ describe("class declarations test", () => {
 
             expect(decl.constr).toBeDefined();
             if(decl.constr) {
-                expect(decl.constr.fqn).toBe('"./src/main.ts".cConstructor.constructor');
+                expect(decl.constr.fqn.localFqn).toBe('"./src/main.ts".cConstructor.constructor');
                 expect(decl.constr.parameters).toHaveLength(2);
                 expectFunctionParameter(decl.constr.parameters, 0, "x", false, "number");
                 expectFunctionParameter(decl.constr.parameters, 1, "y", false, "number");
@@ -144,6 +152,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cMethods'));
             expect(decl.className).toBe("cMethods");
             expect(decl.abstract).toBe(false);
 
@@ -191,6 +200,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cGetterSetter'));
             expect(decl.className).toBe("cGetterSetter");
             expect(decl.abstract).toBe(false);
 
@@ -241,6 +251,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cAutoAccessor'));
             expect(decl.className).toBe("cAutoAccessor");
             expect(decl.abstract).toBe(false);
 
@@ -274,6 +285,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cParameterProperties'));
             expect(decl.className).toBe("cParameterProperties");
             expect(decl.abstract).toBe(false);
 
@@ -284,7 +296,7 @@ describe("class declarations test", () => {
 
             expect(decl.constr).toBeDefined();
             if(decl.constr) {
-                expect(decl.constr.fqn).toBe('"./src/main.ts".cParameterProperties.constructor');
+                expect(decl.constr.fqn.localFqn).toBe('"./src/main.ts".cParameterProperties.constructor');
                 expect(decl.constr.parameters).toHaveLength(3);
                 expectFunctionParameter(decl.constr.parameters, 0, "x", false, "number");
                 expectFunctionParameter(decl.constr.parameters, 1, "other", false, "string");
@@ -309,6 +321,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cStatic'));
             expect(decl.className).toBe("cStatic");
             expect(decl.abstract).toBe(false);
 
@@ -339,6 +352,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cExported'));
             expect(decl.className).toBe("cExported");
             expect(decl.abstract).toBe(false);
 
@@ -349,7 +363,7 @@ describe("class declarations test", () => {
 
             expect(decl.constr).toBeDefined();
             if(decl.constr) {
-                expect(decl.constr.fqn).toBe('"./src/main.ts".cExported.constructor');
+                expect(decl.constr.fqn.localFqn).toBe('"./src/main.ts".cExported.constructor');
                 expect(decl.constr.parameters).toHaveLength(0);
                 expect(decl.constr.parameterProperties).toHaveLength(0);
             }
@@ -370,7 +384,7 @@ describe("class declarations test", () => {
 
             const exportDeclConcept = result
                 .get(LCEExportDeclaration.conceptId)
-                ?.find((exp) => (exp as LCEExportDeclaration).declFqn === '"./src/main.ts".cExported');
+                ?.find((exp) => (exp as LCEExportDeclaration).globalDeclFqn === resolveGlobalFqn(projectRootPath, '"./src/main.ts".cExported'));
 
             expect(exportDeclConcept).toBeDefined();
             if (exportDeclConcept) {
@@ -379,7 +393,7 @@ describe("class declarations test", () => {
                 expect(exportDecl.identifier).toBe("cExported");
                 expect(exportDecl.alias).toBeUndefined();
                 expect(exportDecl.isDefault).toBe(false);
-                expect(exportDecl.sourceFilePath).toBe(mainModule.fqn);
+                expect(exportDecl.sourceFilePathAbsolute).toBe(mainModule.fqn.globalFqn);
             }
         }
     });
@@ -389,6 +403,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cAbstract'));
             expect(decl.className).toBe("cAbstract");
             expect(decl.abstract).toBe(true);
 
@@ -435,13 +450,14 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cExtends'));
             expect(decl.className).toBe("cExtends");
             expect(decl.abstract).toBe(false);
 
             expect(decl.typeParameters).toHaveLength(0);
 
-            expectDeclaredType(decl.extendsClass, '"./src/main.ts".CustomClass');
-            expectDependency(dependencies,'"./src/main.ts".cExtends', '"./src/main.ts".CustomClass', 1);
+            expectDeclaredType(decl.extendsClass, resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomClass'));
+            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cExtends', resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomClass'), 1);
             expect(decl.implementsInterfaces).toHaveLength(0);
 
             expect(decl.constr).toBeUndefined();
@@ -460,6 +476,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cImplements'));
             expect(decl.className).toBe("cImplements");
             expect(decl.abstract).toBe(false);
 
@@ -467,8 +484,8 @@ describe("class declarations test", () => {
 
             expect(decl.extendsClass).toBeUndefined();
             expect(decl.implementsInterfaces).toHaveLength(1);
-            expectDeclaredType(decl.implementsInterfaces[0], '"./src/main.ts".CustomInterface');
-            expectDependency(dependencies,'"./src/main.ts".cImplements', '"./src/main.ts".CustomInterface', 1);
+            expectDeclaredType(decl.implementsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
+            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cImplements', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
 
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(2);
@@ -487,6 +504,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cImplementsMulti'));
             expect(decl.className).toBe("cImplementsMulti");
             expect(decl.abstract).toBe(false);
 
@@ -494,10 +512,10 @@ describe("class declarations test", () => {
 
             expect(decl.extendsClass).toBeUndefined();
             expect(decl.implementsInterfaces).toHaveLength(2);
-            expectDeclaredType(decl.implementsInterfaces[0], '"./src/main.ts".CustomInterface');
-            expectDependency(dependencies,'"./src/main.ts".cImplementsMulti', '"./src/main.ts".CustomInterface', 1);
-            expectDeclaredType(decl.implementsInterfaces[1], '"./src/main.ts".CustomInterface2');
-            expectDependency(dependencies,'"./src/main.ts".cImplementsMulti', '"./src/main.ts".CustomInterface2', 1);
+            expectDeclaredType(decl.implementsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
+            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cImplementsMulti', resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomInterface'), 1);
+            expectDeclaredType(decl.implementsInterfaces[1], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface2'));
+            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cImplementsMulti', resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomInterface2'), 1);
 
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(3);
@@ -517,6 +535,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cRef'));
             expect(decl.className).toBe("cRef");
             expect(decl.abstract).toBe(false);
 
@@ -528,15 +547,15 @@ describe("class declarations test", () => {
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(1);
             const prop = expectProperty(decl.properties, '"./src/main.ts".cRef.x', "x", false, "public", false, false, false, false);
-            expectDeclaredType(prop.type, '"./src/main.ts".CustomInterface');
-            expectDependency(dependencies, '"./src/main.ts".cRef.x', '"./src/main.ts".CustomInterface', 1);
+            expectDeclaredType(prop.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
+            expectDependency(projectRootPath, dependencies, '"./src/main.ts".cRef.x', resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomInterface'), 1);
 
             expect(decl.methods).toHaveLength(1);
             const method = expectMethod(decl.methods, '"./src/main.ts".cRef.method', "method", "public", false, false, false);
-            expectDeclaredType(method.returnType, '"./src/main.ts".CustomClass');
+            expectDeclaredType(method.returnType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'));
             expect(method.parameters).toHaveLength(0);
             expect(method.typeParameters).toHaveLength(0);
-            expectDependency(dependencies, '"./src/main.ts".cRef.method', '"./src/main.ts".CustomClass', 2);
+            expectDependency(projectRootPath, dependencies, '"./src/main.ts".cRef.method', resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomClass'), 2);
 
             expect(decl.accessorProperties).toHaveLength(0);
 
@@ -549,13 +568,14 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cExtendsExt'));
             expect(decl.className).toBe("cExtendsExt");
             expect(decl.abstract).toBe(false);
 
             expect(decl.typeParameters).toHaveLength(0);
 
-            expectDeclaredType(decl.extendsClass, '"./src/secondary.ts".ExternalCustomClass');
-            expectDependency(dependencies,'"./src/main.ts".cExtendsExt', '"./src/secondary.ts".ExternalCustomClass', 1);
+            expectDeclaredType(decl.extendsClass, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'));
+            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cExtendsExt', resolveGlobalFqn(projectRootPath,'"./src/secondary.ts".ExternalCustomClass'), 1);
             expect(decl.implementsInterfaces).toHaveLength(0);
 
             expect(decl.constr).toBeUndefined();
@@ -574,6 +594,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cImplementsExt'));
             expect(decl.className).toBe("cImplementsExt");
             expect(decl.abstract).toBe(false);
 
@@ -581,8 +602,8 @@ describe("class declarations test", () => {
 
             expect(decl.extendsClass).toBeUndefined();
             expect(decl.implementsInterfaces).toHaveLength(1);
-            expectDeclaredType(decl.implementsInterfaces[0], '"./src/secondary.ts".ExternalCustomInterface');
-            expectDependency(dependencies,'"./src/main.ts".cImplementsExt', '"./src/secondary.ts".ExternalCustomInterface', 1);
+            expectDeclaredType(decl.implementsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'));
+            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cImplementsExt', resolveGlobalFqn(projectRootPath,'"./src/secondary.ts".ExternalCustomInterface'), 1);
 
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(2);
@@ -601,6 +622,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cRefExt'));
             expect(decl.className).toBe("cRefExt");
             expect(decl.abstract).toBe(false);
 
@@ -612,15 +634,15 @@ describe("class declarations test", () => {
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(1);
             const prop = expectProperty(decl.properties, '"./src/main.ts".cRefExt.x', "x", false, "public", false, false, false, false);
-            expectDeclaredType(prop.type, '"./src/secondary.ts".ExternalCustomInterface');
-            expectDependency(dependencies, '"./src/main.ts".cRefExt.x', '"./src/secondary.ts".ExternalCustomInterface', 1);
+            expectDeclaredType(prop.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'));
+            expectDependency(projectRootPath, dependencies, '"./src/main.ts".cRefExt.x', resolveGlobalFqn(projectRootPath,'"./src/secondary.ts".ExternalCustomInterface'), 1);
 
             expect(decl.methods).toHaveLength(1);
             const method = expectMethod(decl.methods, '"./src/main.ts".cRefExt.method', "method", "public", false, false, false);
-            expectDeclaredType(method.returnType, '"./src/secondary.ts".ExternalCustomClass');
+            expectDeclaredType(method.returnType, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'));
             expect(method.parameters).toHaveLength(0);
             expect(method.typeParameters).toHaveLength(0);
-            expectDependency(dependencies, '"./src/main.ts".cRefExt.method', '"./src/secondary.ts".ExternalCustomClass', 2);
+            expectDependency(projectRootPath, dependencies, '"./src/main.ts".cRefExt.method', resolveGlobalFqn(projectRootPath,'"./src/secondary.ts".ExternalCustomClass'), 2);
 
             expect(decl.accessorProperties).toHaveLength(0);
 
@@ -633,6 +655,7 @@ describe("class declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cGeneric'));
             expect(decl.className).toBe("cGeneric");
             expect(decl.abstract).toBe(false);
 

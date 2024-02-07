@@ -3,7 +3,7 @@ package org.jqassistant.plugin.typescript.impl.mapper.react;
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerContext;
 import com.buschmais.jqassistant.core.store.api.Store;
-import org.jqassistant.plugin.typescript.api.model.core.NamedConceptDescriptor;
+import org.jqassistant.plugin.typescript.api.model.core.LocalGlobalFqnDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.TypeScriptDescriptor;
 import org.jqassistant.plugin.typescript.api.model.react.JSXElementTypeDescriptor;
 import org.jqassistant.plugin.typescript.api.model.react.ReactComponentDescriptor;
@@ -25,17 +25,17 @@ public class ReactComponentResolver {
 
         Map<String, JSXElementTypeDescriptor> elementTypeDescriptors = new HashMap<>();
         for(ReactComponent component : reactComponents) {
-            TypeScriptDescriptor target = fqnResolver.getByFqn(component.getFqn());
-            if(target != null && target instanceof NamedConceptDescriptor) {
+            TypeScriptDescriptor target = fqnResolver.getByGlobalFqn(component.getGlobalFqn());
+            if(target instanceof LocalGlobalFqnDescriptor) {
                 ReactComponentDescriptor componentDescriptor = store.addDescriptorType(target, ReactComponentDescriptor.class);
                 componentDescriptor.setComponentName(component.getComponentName());
 
-                for(JSXDependency dep : component.getRenderedElements()) {
-                    var elementTypeDescriptor = elementTypeDescriptors.computeIfAbsent(dep.getFqn(), (key) -> {
+                for(JSXDependency jsxDep : component.getRenderedElements()) {
+                    var elementTypeDescriptor = elementTypeDescriptors.computeIfAbsent(jsxDep.getGlobalFqn(), (key) -> {
                         var elementType = store.create(JSXElementTypeDescriptor.class);
-                        elementType.setFqn(dep.getFqn());
-                        elementType.setName(dep.getName());
-                        var referenceDescriptor = fqnResolver.getByFqn(dep.getFqn());
+                        elementType.setGlobalFqn(jsxDep.getGlobalFqn());
+                        elementType.setName(jsxDep.getName());
+                        var referenceDescriptor = fqnResolver.getByGlobalFqn(jsxDep.getGlobalFqn());
                         if(referenceDescriptor != null) {
                             elementType.setReference(referenceDescriptor);
                         }
@@ -43,7 +43,7 @@ public class ReactComponentResolver {
                     });
 
                     var rendersRelation = store.create(componentDescriptor, ReactComponentRendersDescriptor.class, elementTypeDescriptor);
-                    rendersRelation.setCardinality(dep.getCardinality());
+                    rendersRelation.setCardinality(jsxDep.getCardinality());
                 }
             }
         }

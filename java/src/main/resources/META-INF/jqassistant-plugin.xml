@@ -40,6 +40,7 @@
         <class>org.jqassistant.plugin.typescript.api.model.core.TypeParameterReferenceDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.core.TypePrimitiveDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.core.TypeScriptDescriptor</class>
+        <class>org.jqassistant.plugin.typescript.api.model.core.TypeScriptScanDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.core.TypeTupleDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.core.TypeTupleContainsDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.core.TypeUnionDescriptor</class>

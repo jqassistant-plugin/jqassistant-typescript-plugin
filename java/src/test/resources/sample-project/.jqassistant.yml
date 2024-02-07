@@ -6,7 +6,6 @@ jqassistant:
   scan:
     include:
       files:
-        -
         - typescript:project::.reports/jqa/ts-output.json
     properties:
       file.exclude:

@@ -23,7 +23,8 @@ public interface ConstructorDeclarationMapper extends
         ScannerContext scannerContext = scanner.getContext();
 
         ConstructorDeclarationDescriptor constructorDescriptor = scannerContext.getStore().create(ConstructorDeclarationDescriptor.class);
-        constructorDescriptor.setFqn(value.getFqn());
+        constructorDescriptor.setGlobalFqn(value.getGlobalFqn());
+        constructorDescriptor.setLocalFqn(value.getLocalFqn());
         constructorDescriptor.setStartLine(value.getCoordinates().getStartLine());
         constructorDescriptor.setStartColumn(value.getCoordinates().getStartColumn());
         constructorDescriptor.setEndLine(value.getCoordinates().getEndLine());
@@ -33,7 +34,7 @@ public interface ConstructorDeclarationMapper extends
         constructorDescriptor.getParameters().addAll(parameterMapper.mapList(value.getParameters(), scanner));
         constructorDescriptor.getParameters().addAll(parameterMapper.mapParameterPropertyList(value.getParameterProperties(), scanner));
 
-        scanner.getContext().peek(FqnResolver.class).registerFqn(constructorDescriptor);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(constructorDescriptor);
 
         return constructorDescriptor;
     }

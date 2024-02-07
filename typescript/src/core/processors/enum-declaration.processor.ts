@@ -2,7 +2,7 @@ import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 import { ConceptMap, singleEntryConceptMap } from "../concept";
 import { LCEEnumDeclaration, LCEEnumMember } from "../concepts/enum-declaration.concept";
-import { ProcessingContext } from "../context";
+import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getAndDeleteAllValueChildConcepts, getAndDeleteChildConcepts } from "../utils/processor.utils";
@@ -25,22 +25,25 @@ export class EnumDeclarationProcessor extends Processor {
 
     public override preChildrenProcessing({ node, localContexts }: ProcessingContext): void {
         localContexts.currentContexts.set(EnumDeclarationProcessor.PARSE_ENUM_MEMBERS_CONTEXT, true);
-        if (node.type === AST_NODE_TYPES.TSEnumDeclaration && node.id) {
-            DependencyResolutionProcessor.addScopeContext(localContexts, node.id.name);
-            DependencyResolutionProcessor.createDependencyIndex(localContexts);
+        if (node.type === AST_NODE_TYPES.TSEnumDeclaration) {
+            const fqnIdentifier = DependencyResolutionProcessor.isDefaultDeclaration(localContexts, node, node.id.name) ? "default" : node.id.name;
+            if (fqnIdentifier) {
+                DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(fqnIdentifier));
+                DependencyResolutionProcessor.createDependencyIndex(localContexts);
+            }
         }
     }
 
     public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (node.type === AST_NODE_TYPES.TSEnumDeclaration) {
-            const enumName = node.id.name;
+            const enumName = DependencyResolutionProcessor.constructDeclarationIdentifier(localContexts, node, node.id.name);
             const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
             DependencyResolutionProcessor.registerDeclaration(localContexts, enumName, fqn, true);
 
             const members: LCEEnumMember[] = getAndDeleteChildConcepts(EnumDeclarationTraverser.MEMBERS_PROP, LCEEnumMember.conceptId, childConcepts);
 
             const enumeration = new LCEEnumDeclaration(
-                node.id.name,
+                enumName,
                 fqn,
                 members,
                 node.const ?? false,
@@ -72,10 +75,11 @@ export class EnumMemberProcessor extends Processor {
             const init = getAndDeleteAllValueChildConcepts(EnumMemberTraverser.INIT_PROP, childConcepts);
 
             const memberName = node.id.type === AST_NODE_TYPES.Identifier ? node.id.name : node.id.raw;
+            const fqnPrefix = DependencyResolutionProcessor.constructFQNPrefix(localContexts);
 
             const member = new LCEEnumMember(
                 memberName,
-                DependencyResolutionProcessor.constructFQNPrefix(localContexts) + memberName,
+                new FQN(fqnPrefix.globalFqn + memberName, fqnPrefix.localFqn + memberName),
                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                 init.length === 1 ? init[0] : undefined
             );

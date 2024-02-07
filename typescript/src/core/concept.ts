@@ -1,3 +1,5 @@
+import { FQN } from "./context";
+
 /**
  * Base class for all language concepts.
  */
@@ -28,6 +30,9 @@ export abstract class LCEConcept {
                 jsonObject[key] = value.toJSON();
             } else if (Array.isArray(value) && value.every(item => item instanceof LCEConcept)) {
                 jsonObject[key] = value.map(item => item.toJSON());
+            } else if (key === "fqn" && value instanceof FQN) {
+                jsonObject["globalFqn"] = value.globalFqn;
+                jsonObject["localFqn"] = value.localFqn;
             } else if (key !== 'metadata') {
                 jsonObject[key] = value;
             }
@@ -38,16 +43,16 @@ export abstract class LCEConcept {
 }
 
 /**
- * Base class for all language concepts that can be referred to by a name.
+ * Base class for all language concepts that can be referred to by a fully qualified name.
  */
 export abstract class LCENamedConcept extends LCEConcept {
-    protected constructor(public fqn: string) {
+    protected constructor(public fqn: FQN) {
         super();
     }
 }
 
 export function isNamedConcept(concept: LCEConcept): concept is LCENamedConcept {
-    return "fqn" in concept;
+    return "globalFqn" in concept && "localFqn" in concept;
 }
 
 /**

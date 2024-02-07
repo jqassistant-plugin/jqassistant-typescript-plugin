@@ -3,14 +3,35 @@ import { Node } from "@typescript-eslint/types/dist/generated/ast-spec";
 import { AST } from "@typescript-eslint/typescript-estree";
 import { TypeChecker } from "typescript";
 import { LCEConcept } from "./concept";
+import { LCEProjectInfo } from "./project";
+
+
+/**
+ * Represents a fully qualified name.
+ * An object can be identified by a global fully qualified name which is unique, even across projects, but may be hard-to-read by humans.
+ * The local fully qualified name provides an alternative to this, however, it is only unique within a project (it may be left empty for concepts that use the FQN only for linking nodes).
+ */
+export class FQN {
+    constructor(public globalFqn: string,
+                public localFqn: string = "") {
+    }
+
+    /**
+     * Returns a new FQN instance using the provided identifier for both global and local FQNs.
+     */
+    public static id(identifier: string): FQN {
+        return new FQN(identifier, identifier);
+    }
+}
 
 /**
  * describes basic data structures provided to all Processors on a file level
  */
 export class GlobalContext {
     constructor(
-        public projectRootPath: string,
-        public sourceFilePath: string,
+        public projectInfo: LCEProjectInfo,
+        public sourceFilePathAbsolute: string,
+        public sourceFilePathRelative: string,
         public ast: AST<{
             filePath: string;
             loc: true;
@@ -102,3 +123,4 @@ export interface ProcessingContext {
     localContexts: LocalContexts;
     metadataAssignments: MetadataAssignmentRule[];
 }
+

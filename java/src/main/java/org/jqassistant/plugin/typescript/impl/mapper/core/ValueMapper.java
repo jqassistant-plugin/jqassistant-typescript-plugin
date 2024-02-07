@@ -60,7 +60,7 @@ public interface ValueMapper extends DescriptorMapper<Value, ValueDescriptor> {
         return descriptor;
     }
 
-    @Mapping(source = "fqn", target = "referencedFqn")
+    @Mapping(source = "globalFqn", target = "referencedGlobalFqn")
     @Mapping(target = "reference", ignore = true)
     @Mapping(target = "dependents", ignore = true)
     @Mapping(target = "dependencies", ignore = true)

@@ -1,4 +1,4 @@
-import { PathUtils } from "./path.utils";
+import { ModulePathUtils } from "./modulepath.utils";
 import path from "path";
 import { FileUtils } from "./file.utils";
 import * as fs from "fs";
@@ -17,10 +17,10 @@ export class NodeUtils {
      * Tries to resolve @types/* packages to their implementation counterparts.
      */
     public static getPackageNameForPath(projectRootPath: string, pathToPackageFile: string): string | undefined {
-        if (PathUtils.getPathType(pathToPackageFile) === "node") {
+        if (ModulePathUtils.getPathType(pathToPackageFile) === "node") {
             return pathToPackageFile;
         }
-        if (PathUtils.getPathType(pathToPackageFile) === "relative") {
+        if (ModulePathUtils.getPathType(pathToPackageFile) === "relative") {
             pathToPackageFile = path.resolve(projectRootPath, pathToPackageFile);
         }
         const packagePath = path.dirname(pathToPackageFile);
@@ -56,20 +56,15 @@ export class NodeUtils {
      *
      * NOTE: Throws Error on failure of both resolution methods.
      */
-    public static resolveImportPath(importPath: string, projectRootPath: string, sourceFilePath: string): string {
-        if (!this.tsConfigs.has(projectRootPath)) {
-            this.tsConfigs.set(projectRootPath, this.parseTsConfig(projectRootPath));
+    public static resolveImportPath(importPath: string, projectPath: string, sourceFilePathAbsolute: string): string {
+        if (!this.tsConfigs.has(projectPath)) {
+            this.tsConfigs.set(projectPath, this.parseTsConfig(projectPath));
         }
-        const tsconfig = this.tsConfigs.get(projectRootPath)!;
+        const tsconfig = this.tsConfigs.get(projectPath)!;
 
         let tsResolvedModule: string | undefined;
         try {
-            const module = ts.resolveModuleName(
-                importPath,
-                path.resolve(projectRootPath, sourceFilePath),
-                tsconfig.options,
-                this.moduleResolutionHost,
-            );
+            const module = ts.resolveModuleName(importPath, sourceFilePathAbsolute, tsconfig.options, this.moduleResolutionHost);
             tsResolvedModule = module.resolvedModule?.resolvedFileName;
         } catch (e) {}
         if (tsResolvedModule) {
@@ -77,7 +72,7 @@ export class NodeUtils {
         } else {
             let jsResolvedModule: string | undefined;
             try {
-                jsResolvedModule = require.resolve(importPath, { paths: [projectRootPath] });
+                jsResolvedModule = require.resolve(importPath, { paths: [projectPath] });
             } catch (e) {}
             if (jsResolvedModule) {
                 return jsResolvedModule.replace(/\\/g, "/");

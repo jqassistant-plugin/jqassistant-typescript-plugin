@@ -6,7 +6,7 @@ import com.buschmais.xo.neo4j.api.annotation.Relation;
 import java.util.List;
 
 @Label("Module")
-public interface ModuleDescriptor extends TypeScriptDescriptor, NamedConceptDescriptor {
+public interface ModuleDescriptor extends TypeScriptDescriptor, LocalGlobalFqnDescriptor {
 
     @Relation("DECLARES")
     List<TypeAliasDeclarationDescriptor> getTypeAliasDeclarations();

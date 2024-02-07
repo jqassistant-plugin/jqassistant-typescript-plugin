@@ -28,7 +28,7 @@ public interface PropertyDeclarationMapper extends
 
     @AfterMapping
     default void registerFqn(PropertyDeclaration type, @MappingTarget PropertyDeclarationDescriptor target, @Context Scanner scanner) {
-        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(target);
     }
 
     List<PropertyDeclarationDescriptor> mapList(List<PropertyDeclaration> value, @Context Scanner scanner);

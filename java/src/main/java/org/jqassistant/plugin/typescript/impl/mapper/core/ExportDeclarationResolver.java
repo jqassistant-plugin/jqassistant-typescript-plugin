@@ -23,8 +23,8 @@ public class ExportDeclarationResolver {
                 continue;
             }
 
-            TypeScriptDescriptor module = fqnResolver.getByFqn(export.getSourceFilePath());
-            TypeScriptDescriptor target = fqnResolver.getByFqn(export.getDeclFqn());
+            TypeScriptDescriptor module = fqnResolver.getByGlobalFqn(export.getSourceFilePathAbsolute());
+            TypeScriptDescriptor target = fqnResolver.getByGlobalFqn(export.getGlobalDeclFqn());
             if(target != null && module instanceof ModuleDescriptor) {
                 ModuleExportsDescriptor relationDescriptor = context.getStore().create(module, ModuleExportsDescriptor.class, target);
 

@@ -25,7 +25,7 @@ public interface EnumMemberMapper extends DescriptorMapper<EnumMember, EnumMembe
 
     @AfterMapping
     default void registerFqn(EnumMember type, @MappingTarget EnumMemberDescriptor target, @Context Scanner scanner) {
-        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(target);
     }
 
     List<EnumMemberDescriptor> mapList(List<EnumMember> value, @Context Scanner scanner);

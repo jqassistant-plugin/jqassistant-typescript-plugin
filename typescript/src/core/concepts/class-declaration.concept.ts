@@ -6,13 +6,14 @@ import { LCETypeParameterDeclaration } from "./type-parameter.concept";
 import { LCETypeDeclared } from "./type.concept";
 import { CodeCoordinates } from "./code-coordinate.concept";
 import { LCEAccessorProperty } from "./accessor-declaration.concept";
+import { FQN } from "../context";
 
 export class LCEClassDeclaration extends LCENamedConcept {
     public static override conceptId = "class-declaration";
 
     constructor(
         public className: string,
-        fqn: string,
+        fqn: FQN,
         public abstract: boolean,
         public typeParameters: LCETypeParameterDeclaration[],
         public extendsClass: LCETypeDeclared | undefined,

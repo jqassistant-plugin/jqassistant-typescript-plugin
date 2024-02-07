@@ -1,6 +1,9 @@
 /* eslint-disable */
 
 import React, { ReactNode } from "react";
+import UnnamedIndexComponent from "./components/UnnamedIndexComponent";
+import MyNamedIndexComponent from "./components/NamedIndexComponent";
+import NamedIndexComponent from "./components/NamedIndexComponent";
 
 const SomeComponent = () => {
     return <div>Something</div>;
@@ -39,3 +42,7 @@ class ClassComponentWithContent extends React.Component<unknown, {}> {
         </>;
     }
 }
+
+const ComponentWithUnnamedIndexDefaultComponent = () => <><UnnamedIndexComponent /></>;
+const ComponentWithNamedIndexDefaultComponent = () => <><NamedIndexComponent /></>;
+const ComponentWithNamedAliasIndexDefaultComponent = () => <><MyNamedIndexComponent /></>;

@@ -1,7 +1,7 @@
-import { processProject } from "../../../src/core/extractor";
+import { processProjects } from "../../../src/core/extractor";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
-import { expectEnumMember, expectLiteralValue, expectPrimitiveType, getDependenciesFromResult } from "../../utils/test-utils";
+import { expectEnumMember, expectLiteralValue, expectPrimitiveType, getDependenciesFromResult, resolveGlobalFqn } from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCEEnumDeclaration } from "../../../src/core/concepts/enum-declaration.concept";
 import { LCEValueComplex, LCEValueDeclared, LCEValueMember } from "../../../src/core/concepts/value.concept";
@@ -9,14 +9,18 @@ import { LCEValueComplex, LCEValueDeclared, LCEValueMember } from "../../../src/
 jest.setTimeout(30000);
 
 describe("enum declarations test", () => {
+    const projectRootPath = "./test/core/integration/sample-projects/enum-declarations"
     let result: Map<string, object[]>;
     const enumDecls: Map<string, LCEEnumDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
     let mainModule: LCEModule;
 
     beforeAll(async () => {
-        const projectRoot = "./test/core/integration/sample-projects/enum-declarations";
-        result = await processProject(projectRoot);
+        const projects = await processProjects(projectRootPath);
+        if(projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        }
+        result = projects[0].concepts;
 
         if (!result.get(LCEEnumDeclaration.conceptId)) {
             throw new Error("Could not find enum declarations in result data.");
@@ -24,16 +28,16 @@ describe("enum declarations test", () => {
 
         for (const concept of result.get(LCEEnumDeclaration.conceptId) ?? []) {
             const enumDecl: LCEEnumDeclaration = concept as LCEEnumDeclaration;
-            if (!enumDecl.fqn) {
-                throw new Error("Enum declaration has no fqn " + JSON.stringify(enumDecl));
+            if (!enumDecl.fqn.localFqn) {
+                throw new Error("Enum declaration has no local FQN " + JSON.stringify(enumDecl));
             }
-            if (enumDecls.has(enumDecl.fqn)) {
-                throw new Error("Two enum declarations with same FQN were returned: " + enumDecl.fqn);
+            if (enumDecls.has(enumDecl.fqn.localFqn)) {
+                throw new Error("Two enum declarations with same local FQN were returned: " + enumDecl.fqn.localFqn);
             }
-            enumDecls.set(enumDecl.fqn, enumDecl);
+            enumDecls.set(enumDecl.fqn.localFqn, enumDecl);
         }
 
-        const mainModuleConcept = result.get(LCEModule.conceptId)?.find((mod) => (mod as LCEModule).fqn === "./src/main.ts");
+        const mainModuleConcept = result.get(LCEModule.conceptId)?.find((mod) => (mod as LCEModule).fqn.localFqn === "./src/main.ts");
         if (!mainModuleConcept) {
             throw new Error("Could not find main module in result data");
         }
@@ -47,6 +51,7 @@ describe("enum declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eEmpty'));
             expect(decl.enumName).toBe("eEmpty");
             expect(decl.constant).toBe(false);
             expect(decl.declared).toBe(false);
@@ -60,6 +65,7 @@ describe("enum declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eBasic'));
             expect(decl.enumName).toBe("eBasic");
             expect(decl.constant).toBe(false);
             expect(decl.declared).toBe(false);
@@ -79,6 +85,7 @@ describe("enum declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eExported'));
             expect(decl.enumName).toBe("eExported");
             expect(decl.constant).toBe(false);
             expect(decl.declared).toBe(false);
@@ -94,7 +101,7 @@ describe("enum declarations test", () => {
 
         const exportDeclConcept = result
             .get(LCEExportDeclaration.conceptId)
-            ?.find((exp) => (exp as LCEExportDeclaration).declFqn === '"./src/main.ts".eExported');
+            ?.find((exp) => (exp as LCEExportDeclaration).globalDeclFqn === resolveGlobalFqn(projectRootPath, '"./src/main.ts".eExported'));
 
         expect(exportDeclConcept).toBeDefined();
         if (exportDeclConcept) {
@@ -103,7 +110,7 @@ describe("enum declarations test", () => {
             expect(exportDecl.identifier).toBe("eExported");
             expect(exportDecl.alias).toBeUndefined();
             expect(exportDecl.isDefault).toBe(false);
-            expect(exportDecl.sourceFilePath).toBe(mainModule.fqn);
+            expect(exportDecl.sourceFilePathAbsolute).toBe(mainModule.fqn.globalFqn);
         }
     });
 
@@ -112,6 +119,7 @@ describe("enum declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eNumeric'));
             expect(decl.enumName).toBe("eNumeric");
             expect(decl.constant).toBe(false);
             expect(decl.declared).toBe(false);
@@ -132,6 +140,7 @@ describe("enum declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eString'));
             expect(decl.enumName).toBe("eString");
             expect(decl.constant).toBe(false);
             expect(decl.declared).toBe(false);
@@ -151,6 +160,7 @@ describe("enum declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eMixed'));
             expect(decl.enumName).toBe("eMixed");
             expect(decl.constant).toBe(false);
             expect(decl.declared).toBe(false);
@@ -170,6 +180,7 @@ describe("enum declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eConstants'));
             expect(decl.enumName).toBe("eConstants");
             expect(decl.constant).toBe(false);
             expect(decl.declared).toBe(false);
@@ -199,6 +210,7 @@ describe("enum declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eComputed'));
             expect(decl.enumName).toBe("eComputed");
             expect(decl.constant).toBe(false);
             expect(decl.declared).toBe(false);
@@ -212,7 +224,7 @@ describe("enum declarations test", () => {
             expectLiteralValue(memberValue.parent, "abc", "string");
             expect(memberValue.member).toBeDefined();
             expect(memberValue.member.valueType).toBe("declared");
-            expect((memberValue.member as LCEValueDeclared).fqn).toBe("length");
+            expect((memberValue.member as LCEValueDeclared).fqn.globalFqn).toBe("length");
             expectPrimitiveType(memberValue.type, "number");
         }
     });
@@ -222,6 +234,7 @@ describe("enum declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eConst'));
             expect(decl.enumName).toBe("eConst");
             expect(decl.constant).toBe(true);
             expect(decl.declared).toBe(false);
@@ -239,6 +252,7 @@ describe("enum declarations test", () => {
         expect(decl).toBeDefined();
         if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eAmbient'));
             expect(decl.enumName).toBe("eAmbient");
             expect(decl.constant).toBe(false);
             expect(decl.declared).toBe(true);

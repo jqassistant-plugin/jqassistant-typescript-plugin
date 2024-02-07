@@ -4,12 +4,13 @@ import { Visibility } from "./visibility.concept";
 import { CodeCoordinates } from "./code-coordinate.concept";
 import { LCEType } from "./type.concept";
 import { LCEParameterDeclaration } from "./method-declaration.concept";
+import { FQN } from "../context";
 
 export class LCEAccessorProperty extends LCENamedConcept {
     public static override conceptId = "accessor";
 
     constructor(
-        fqn: string,
+        fqn: FQN,
         public accessorName: string,
         public getter?: LCEGetterDeclaration,
         public setter?: LCESetterDeclaration,

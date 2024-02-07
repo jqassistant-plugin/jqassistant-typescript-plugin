@@ -48,8 +48,8 @@ import {
     LCETypeTuple,
     LCETypeUnion
 } from "../concepts/type.concept";
-import { ProcessingContext } from "../context";
-import { PathUtils } from "../utils/path.utils";
+import { FQN, ProcessingContext } from "../context";
+import { ModulePathUtils } from "../utils/modulepath.utils";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
 import { NodeUtils } from "../utils/node.utils";
 import path from "path";
@@ -68,7 +68,7 @@ export function parseClassPropertyType(processingContext: ProcessingContext, esP
 /**
  * Returns the type for a given method (with a non-computed name).
  * This includes constructors, getters and setters.
- * @param esProperty method name node provided in ESTree
+ * @param esMethodDecl method name node provided in ESTree
  * @returns LCEType with encoded type information
  */
 export function parseMethodType(
@@ -306,7 +306,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
     const tc = globalContext.typeChecker;
 
     let symbol: ts.Symbol | undefined;
-    let fqn: string | undefined;
+    let globalFqn: string | undefined;
     if (type.aliasSymbol && (!excludedFQN || !tc.getFullyQualifiedName(type.aliasSymbol).endsWith(excludedFQN))) {
         symbol = type.aliasSymbol;
     } else {
@@ -316,17 +316,29 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
             symbol = undefined;
         }
     }
-    if(!fqn) {
+    if(!globalFqn) {
         if(symbol && (symbol.flags & ts.SymbolFlags.EnumMember) && "parent" in symbol) {
             // Normalize enum member symbols to avoid enum member declared types
             symbol = symbol.parent as Symbol;
         }
-        fqn = symbol ? tc.getFullyQualifiedName(symbol) : undefined;
+        globalFqn = symbol ? tc.getFullyQualifiedName(symbol) : undefined;
     }
 
-    if ((!fqn || fqn === "(Anonymous function)" || fqn.startsWith("__type") || fqn.startsWith("__object") || fqn === excludedFQN) && !isPrimitiveType(tc.typeToString(type))) {
+    if (
+        (
+            !globalFqn ||
+            globalFqn === "(Anonymous function)" ||
+            globalFqn.startsWith("__type") ||
+            globalFqn.startsWith("__object") ||
+            globalFqn === excludedFQN ||
+            (symbol && symbol.getEscapedName().toString().startsWith("__object"))
+        ) &&
+        !isPrimitiveType(tc.typeToString(type))
+    ) {
         // TODO: handle recursive types like `_DeepPartialObject`
-        if (type.aliasSymbol?.getName() === "_DeepPartialObject") return new LCETypeNotIdentified("DeepPartialObject is not supported");
+        if (type.aliasSymbol?.getName() === "_DeepPartialObject") {
+            return new LCETypeNotIdentified("DeepPartialObject is not supported");
+        }
 
         // anonymous type
         return parseAnonymousType(processingContext, type, node, symbol, excludedFQN, ignoreDependencies);
@@ -337,60 +349,60 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
         return new LCETypeParameterReference(type.symbol.name);
     }
 
-    const primitive = !fqn;
+    const primitive = !globalFqn;
 
     if (primitive) {
         // primitive type
         return new LCETypePrimitive(tc.typeToString(type));
     } else {
-        fqn = fqn!;
+        globalFqn = globalFqn!;
         // declared type
 
         // normalize TypeChecker FQN and determine if type is part of the project
         const sourceFile = symbol?.valueDeclaration?.getSourceFile() ?? symbol?.declarations?.find((d) => !!d.getSourceFile())?.getSourceFile();
         const isStandardLibrary = !!sourceFile && globalContext.services.program.isSourceFileDefaultLibrary(sourceFile);
-        const relativeSrcPath = !!sourceFile ? path.relative(globalContext.projectRootPath, sourceFile.fileName).replace(/\\/g, "/") : undefined;
+        const relativeSrcPath = !!sourceFile ? path.relative(globalContext.projectInfo.rootPath, sourceFile.fileName).replace(/\\/g, "/") : undefined;
         const isExternal = !!sourceFile && (globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile) || relativeSrcPath!.startsWith("node_modules"));
         // const isExternal = hasSource ? globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile!) :
         //     !!symbol?.declarations && symbol.declarations[0] && globalContext.services.program.isSourceFileFromExternalLibrary(symbol.declarations[0].getSourceFile());
 
-        let normalizedFQN = "";
+        let normalizedFqn = new FQN("");
         let scheduleFqnResolution = false;
         if (isStandardLibrary) {
             // Standard Library fqn (e.g. 'Array') -> keep name
-            normalizedFQN = fqn;
+            normalizedFqn.globalFqn = globalFqn;
         } else if (isExternal) {
-            if(fqn.startsWith('"')) {
+            if(globalFqn.startsWith('"')) {
                 // path that *probably* points to node modules
                 // -> resolve absolute path
-                const packageName = NodeUtils.getPackageNameForPath(globalContext.projectRootPath, PathUtils.extractFQNPath(fqn));
+                const packageName = NodeUtils.getPackageNameForPath(globalContext.projectInfo.rootPath, ModulePathUtils.extractFQNPath(globalFqn));
                 if(packageName) {
-                    normalizedFQN = `"${packageName}".${PathUtils.extractFQNIdentifier(fqn)}`;
+                    normalizedFqn.globalFqn = `"${packageName}".${ModulePathUtils.extractFQNIdentifier(globalFqn)}`;
                 } else {
-                    normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, fqn, globalContext.sourceFilePath);
+                    normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(globalFqn, globalContext.sourceFilePathAbsolute);
                 }
             } else {
                 // Node fqn -> set node path in quotes
-                const packageName = NodeUtils.getPackageNameForPath(globalContext.projectRootPath, sourceFile.fileName);
+                const packageName = NodeUtils.getPackageNameForPath(globalContext.projectInfo.rootPath, sourceFile.fileName);
                 if(packageName) {
-                    normalizedFQN = normalizedFQN = `"${packageName}".${fqn}`;
+                    normalizedFqn.globalFqn = `"${packageName}".${globalFqn}`;
                 } else {
-                    normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, `"${sourceFile.fileName}".${fqn}`, globalContext.sourceFilePath);
+                    normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(`"${sourceFile.fileName}".${globalFqn}`, globalContext.sourceFilePathAbsolute);
                 }
             }
-        } else if (fqn.startsWith('"')) {
+        } else if (globalFqn.startsWith('"')) {
             // FQN with specified module path (e.g. '"/home/../src/MyModule".MyClass') -> normalize module path
-            normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, fqn, globalContext.sourceFilePath);
+            normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(globalFqn, globalContext.sourceFilePathAbsolute);
         } else {
             // plain name (e.g. "SomeClass")
-            normalizedFQN = fqn;
+            normalizedFqn.globalFqn = globalFqn;
 
             // try to get source node for symbol and extract path
             if(symbol && symbol.declarations && symbol.declarations.length === 1) {
                 const fileName = sourceFile?.fileName;
                 if(fileName) {
-                    fqn = `"${fileName}".${fqn}`;
-                    normalizedFQN = PathUtils.normalizeTypeCheckerFQN(globalContext.projectRootPath, fqn, globalContext.sourceFilePath);
+                    globalFqn = `"${fileName}".${globalFqn}`;
+                    normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN( globalFqn, globalContext.sourceFilePathAbsolute);
                 } else {
                     // could not resolve via parent node -> try to resolve later
                     scheduleFqnResolution = true;
@@ -401,7 +413,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
             }
         }
 
-        if (normalizedFQN === excludedFQN) {
+        if (normalizedFqn.globalFqn === excludedFQN) {
             // if declared type would reference excluded fqn (e.g. variable name), treat as anonymous type
             return parseAnonymousType(processingContext, type, node, symbol, excludedFQN, ignoreDependencies);
         }
@@ -420,11 +432,11 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
         // TODO: handle locally defined (non-)anonymous types (e.g. with class expressions)
 
         if (!ignoreDependencies && !isStandardLibrary)
-            DependencyResolutionProcessor.registerDependency(processingContext.localContexts, normalizedFQN, scheduleFqnResolution);
+            DependencyResolutionProcessor.registerDependency(processingContext.localContexts, normalizedFqn.globalFqn, scheduleFqnResolution);
 
-        const result = new LCETypeDeclared(normalizedFQN, typeArguments);
+        const result = new LCETypeDeclared(normalizedFqn, typeArguments);
         if (scheduleFqnResolution) {
-            DependencyResolutionProcessor.scheduleFqnResolution(processingContext.localContexts, fqn, result);
+            DependencyResolutionProcessor.scheduleFqnResolution(processingContext.localContexts, normalizedFqn.globalFqn, result);
         }
         return result;
     }

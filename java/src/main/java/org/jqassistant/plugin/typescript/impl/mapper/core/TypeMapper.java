@@ -62,7 +62,7 @@ public interface TypeMapper extends DescriptorMapper<Type, TypeDescriptor> {
         }
         ScannerContext scannerContext = scanner.getContext();
         TypeDeclaredDescriptor descriptor = scannerContext.getStore().create(TypeDeclaredDescriptor.class);
-        descriptor.setReferencedFqn(value.getFqn());
+        descriptor.setReferencedGlobalFqn(value.getGlobalFqn());
         for(int i = 0; i < value.getTypeArguments().size(); i++) {
             Type arg = value.getTypeArguments().get(i);
             TypeDescriptor argDescriptor = toDescriptor(arg, scanner);

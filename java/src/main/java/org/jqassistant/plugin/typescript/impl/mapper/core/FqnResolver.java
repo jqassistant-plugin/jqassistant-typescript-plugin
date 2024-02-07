@@ -1,7 +1,7 @@
 package org.jqassistant.plugin.typescript.impl.mapper.core;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jqassistant.plugin.typescript.api.model.core.NamedConceptDescriptor;
+import org.jqassistant.plugin.typescript.api.model.core.GlobalFqnDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.TypeDeclaredDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.TypeScriptDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ValueDeclaredDescriptor;
@@ -14,7 +14,7 @@ import java.util.Map;
 @Slf4j
 public class FqnResolver {
 
-    private final Map<String, NamedConceptDescriptor> namedConcepts = new HashMap<>();
+    private final Map<String, GlobalFqnDescriptor> namedConcepts = new HashMap<>();
 
     private final List<TypeDeclaredDescriptor> typeDeclaredListToResolve = new ArrayList<>();
     private final List<ValueDeclaredDescriptor> valueDeclaredListToResolve = new ArrayList<>();
@@ -31,24 +31,24 @@ public class FqnResolver {
 
     public void resolveAll() {
         for(TypeDeclaredDescriptor descriptor : typeDeclaredListToResolve) {
-            descriptor.setReference(getByFqn(descriptor.getReferencedFqn()));
+            descriptor.setReference(getByGlobalFqn(descriptor.getReferencedGlobalFqn()));
         }
 
         for(ValueDeclaredDescriptor descriptor : valueDeclaredListToResolve) {
-            descriptor.setReference(getByFqn(descriptor.getReferencedFqn()));
+            descriptor.setReference(getByGlobalFqn(descriptor.getReferencedGlobalFqn()));
         }
     }
 
 
-    public void registerFqn(NamedConceptDescriptor concept) {
-        if(namedConcepts.containsKey(concept.getFqn())) {
-            log.warn("Language concept with fully qualified name \"" + concept.getFqn() + "\" already exists!");
+    public void registerGlobalFqn(GlobalFqnDescriptor concept) {
+        if(namedConcepts.containsKey(concept.getGlobalFqn())) {
+            log.warn("Language concept with global fully qualified name \"" + concept.getGlobalFqn() + "\" already exists!");
             return;
         }
-        namedConcepts.put(concept.getFqn(), concept);
+        namedConcepts.put(concept.getGlobalFqn(), concept);
     }
 
-    public TypeScriptDescriptor getByFqn(String fqn) {
+    public TypeScriptDescriptor getByGlobalFqn(String fqn) {
         if(namedConcepts.containsKey(fqn)) {
             return (TypeScriptDescriptor) namedConcepts.get(fqn);
         } else {

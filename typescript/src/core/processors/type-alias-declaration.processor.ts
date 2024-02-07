@@ -2,7 +2,7 @@ import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 import { ConceptMap, mergeConceptMaps, singleEntryConceptMap } from "../concept";
 import { LCETypeAliasDeclaration } from "../concepts/type-alias-declaration.concept";
-import { ProcessingContext } from "../context";
+import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
@@ -20,15 +20,18 @@ export class TypeAliasDeclarationProcessor extends Processor {
     });
 
     public override preChildrenProcessing({ node, localContexts }: ProcessingContext): void {
-        if (node.type === AST_NODE_TYPES.TSTypeAliasDeclaration && node.id) {
-            DependencyResolutionProcessor.addScopeContext(localContexts, node.id.name);
-            DependencyResolutionProcessor.createDependencyIndex(localContexts);
+        if (node.type === AST_NODE_TYPES.TSTypeAliasDeclaration) {
+            const fqnIdentifier = DependencyResolutionProcessor.isDefaultDeclaration(localContexts, node, node.id?.name) ? "default" : node.id.name;
+            if (fqnIdentifier) {
+                DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(node.id.name));
+                DependencyResolutionProcessor.createDependencyIndex(localContexts);
+            }
         }
     }
 
     public override postChildrenProcessing({ globalContext, localContexts, node, ...unusedProcessingContext }: ProcessingContext): ConceptMap {
         if (node.type === AST_NODE_TYPES.TSTypeAliasDeclaration) {
-            const typeAliasName = node.id.name;
+            const typeAliasName = DependencyResolutionProcessor.constructDeclarationIdentifier(localContexts, node, node.id.name);
             const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
             DependencyResolutionProcessor.registerDeclaration(localContexts, typeAliasName, fqn, true);
             const typeAliasDecl = new LCETypeAliasDeclaration(

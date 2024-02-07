@@ -1,6 +1,6 @@
 import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 import { ConceptMap } from "../../core/concept";
-import { MetadataAssignmentRule, ProcessingContext } from "../../core/context";
+import { FQN, MetadataAssignmentRule, ProcessingContext } from "../../core/context";
 import { ExecutionCondition } from "../../core/execution-condition";
 import { Processor } from "../../core/processor";
 import { LCEJSXDependency } from "../concepts/react-jsx-dependency";
@@ -19,7 +19,12 @@ export class JSXDependencyContextProcessor extends Processor {
     public static readonly JSX_DEPENDENCY_METADATA: "jsx-dependencies";
 
     public executionCondition: ExecutionCondition = new ExecutionCondition(
-        [AST_NODE_TYPES.VariableDeclarator, AST_NODE_TYPES.FunctionDeclaration, AST_NODE_TYPES.ClassDeclaration],
+        [
+            AST_NODE_TYPES.VariableDeclarator,
+            AST_NODE_TYPES.FunctionDeclaration,
+            AST_NODE_TYPES.ArrowFunctionExpression,
+            AST_NODE_TYPES.ClassDeclaration,
+        ],
         ({ localContexts, node }) =>
             !!localContexts.parentContexts?.get(VariableDeclarationProcessor.VARIABLE_DECLARATION_KIND_CONTEXT) ||
             (!!node.parent &&
@@ -39,10 +44,10 @@ export class JSXDependencyContextProcessor extends Processor {
 
         const aggregatedDependencies = new Map<string, LCEJSXDependency>();
         for (const dep of jsxContext) {
-            if (aggregatedDependencies.has(dep.fqn)) {
-                aggregatedDependencies.get(dep.fqn)!.cardinality++;
+            if (aggregatedDependencies.has(dep.fqn.globalFqn)) {
+                aggregatedDependencies.get(dep.fqn.globalFqn)!.cardinality++;
             } else {
-                aggregatedDependencies.set(dep.fqn, dep);
+                aggregatedDependencies.set(dep.fqn.globalFqn, dep);
             }
         }
 
@@ -92,7 +97,7 @@ export class JSXDependencyProcessor extends Processor {
                 return new Map();
             }
 
-            const dep = new LCEJSXDependency(name, name, 1);
+            const dep = new LCEJSXDependency(new FQN(name), name, 1);
             if(!STANDARD_HTML_ELEMENTS.includes(name)) {
                 // Custom Element: try to resolve reference and register dependency
                 DependencyResolutionProcessor.scheduleFqnResolution(localContexts, name, dep);

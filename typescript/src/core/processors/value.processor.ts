@@ -16,7 +16,7 @@ import {
     LCEValueObject,
     LCEValueObjectProperty,
 } from "../concepts/value.concept";
-import { ProcessingContext } from "../context";
+import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getAndDeleteAllValueChildConcepts, getAndDeleteChildConcepts, getParentPropName } from "../utils/processor.utils";
@@ -66,7 +66,7 @@ export class IdentifierValueProcessor extends Processor {
                     node,
                     localContexts,
                     ...unusedProcessingContext
-                }, node, node.name, true), node.name);
+                }, node, node.name, true), new FQN(node.name));
                 const resolve = localContexts.parentContexts?.get(IdentifierValueProcessor.DO_NOT_RESOLVE_VALUE_IDENTIFIER_FLAG) as
                     | number
                     | undefined;

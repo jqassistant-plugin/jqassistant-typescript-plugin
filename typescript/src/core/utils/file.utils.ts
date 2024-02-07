@@ -1,60 +1,17 @@
 import * as fs from "fs";
 import * as path from "path";
-import { match } from "minimatch";
-import json5 from "json5";
 
+/**
+ * Utility class that provides functionality with regard to file system interactions and the handling of file system paths.
+ */
 export class FileUtils {
+
     /**
-     * Returns the paths for all project source files with a given ending inside a directory. (scans recursively)
-     * @param projectPath path to the directory that shall be scanned
-     * @returns
+     * Normalizes a path, so that every '\' is replaced by a '/'
+     * This function should be used to convert all externally provided paths into a coherent internal representation.
      */
-    static getProjectSourceFileList(projectPath: string): string[] {
-        const tsconfig: {
-            include?: string[];
-            exclude?: string[];
-        } = json5.parse(fs.readFileSync(path.join(projectPath, "tsconfig.json"), "utf8"));
-        // CommonJS (.cts) files are ignored
-        const endings = [".ts", ".tsx", ".mts"];
-
-        const defaultIgnoredDirs = [".git", "node_modules"];
-
-        if (tsconfig.include) tsconfig.include = tsconfig.include.map((dirPattern) => path.join(projectPath, dirPattern).replace(/\\/g, "/"));
-        if (tsconfig.exclude) tsconfig.exclude = tsconfig.exclude.map((dirPattern) => path.join(projectPath, dirPattern).replace(/\\/g, "/"));
-
-        // TODO: ignoredDirs should be set to `tsconfig.include ? [] : defaultIgnoredDirs` (requires multi-project capability)
-        const allFiles = FileUtils.getAllFiles(projectPath, [], defaultIgnoredDirs);
-        return allFiles.filter((file) => {
-            let matched = false;
-            let included = true;
-            if (tsconfig.include) {
-                if (tsconfig.include.find((dirPattern) => match([file], dirPattern).length > 0 || file.replace(/\\/g, "/").startsWith(dirPattern))) {
-                    if (
-                        tsconfig.exclude &&
-                        tsconfig.exclude.find(
-                            (dirPattern) => match([file], dirPattern, { dot: true }).length > 0 || file.replace(/\\/g, "/").startsWith(dirPattern),
-                        )
-                    ) {
-                        included = false;
-                    }
-                } else {
-                    included = false;
-                }
-            }
-
-            if (included) {
-                for (const e of endings) {
-                    if (file.endsWith(e)) {
-                        matched = true;
-                        break;
-                    }
-                }
-            } else {
-                return false;
-            }
-
-            return matched;
-        });
+    public static normalizePath(path: string) {
+        return path.replace(/\\/g, "/");
     }
 
     /**
@@ -76,5 +33,33 @@ export class FileUtils {
         });
 
         return arrayOfFiles;
+    }
+
+    /**
+     * Determines the common directory for a list of paths.
+     */
+    public static commonDir(paths: string[]): string {
+        if (paths.length === 0) throw new Error("Provide a non-empty list of paths to determine the common path");
+
+        if(paths.length === 1) {
+            if(fs.statSync(paths[0]).isFile()) {
+                return path.dirname(paths[0]);
+            }
+        }
+
+        let commonSegments = paths[0].split(path.sep);
+
+        for (const filePath of paths) {
+            const segments = filePath.split(path.sep);
+            commonSegments = commonSegments.slice(0, segments.length);
+
+            for (let i = 0; i < segments.length; i++) {
+                if (commonSegments[i] !== segments[i]) {
+                    commonSegments = commonSegments.slice(0, i);
+                    break;
+                }
+            }
+        }
+        return commonSegments.join(path.sep);
     }
 }

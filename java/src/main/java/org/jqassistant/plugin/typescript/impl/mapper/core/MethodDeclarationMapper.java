@@ -33,7 +33,7 @@ public interface MethodDeclarationMapper extends
 
     @AfterMapping
     default void after(MethodDeclaration value, @MappingTarget MethodDeclarationDescriptor target, @Context Scanner scanner) {
-        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(target);
         scanner.getContext().peek(TypeParameterResolver.class).popScope();
     }
 

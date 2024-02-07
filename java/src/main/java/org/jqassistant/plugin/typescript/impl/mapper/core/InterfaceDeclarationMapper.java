@@ -35,7 +35,7 @@ public interface InterfaceDeclarationMapper extends
 
     @AfterMapping
     default void after(InterfaceDeclaration type, @MappingTarget InterfaceDeclarationDescriptor target, @Context Scanner scanner) {
-        scanner.getContext().peek(FqnResolver.class).registerFqn(target);
+        scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(target);
         scanner.getContext().peek(TypeParameterResolver.class).popScope();
     }
 

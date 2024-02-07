@@ -1,5 +1,6 @@
 import { LCEConcept } from "../concept";
 import { LCETypeParameterDeclaration } from "./type-parameter.concept";
+import { FQN } from "../context";
 
 /** Base class for all types. */
 export abstract class LCEType extends LCEConcept {
@@ -30,10 +31,10 @@ export class LCETypeDeclared extends LCEType {
     public static override conceptId = "declared-type";
 
     /**
-     * @param fqn fully qualified name of a class/interface/type alias
+     * @param fqn fully qualified name of a class/interface/type alias (only uses global FQN)
      * @param typeArguments list of type arguments provided for generics
      */
-    constructor(public fqn: string, public typeArguments: LCEType[]) {
+    constructor(public fqn: FQN, public typeArguments: LCEType[]) {
         super("declared");
     }
 }

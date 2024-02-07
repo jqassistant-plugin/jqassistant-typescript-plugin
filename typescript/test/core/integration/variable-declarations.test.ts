@@ -1,4 +1,4 @@
-import { processProject } from "../../../src/core/extractor";
+import { processProjects } from "../../../src/core/extractor";
 import { LCEVariableDeclaration } from "../../../src/core/concepts/variable-declaration.concept";
 import {
     LCEType,
@@ -35,20 +35,24 @@ import {
     expectObjectTypeMember,
     expectPrimitiveType,
     getDependenciesFromResult,
+    resolveGlobalFqn,
 } from "../../utils/test-utils";
 
 jest.setTimeout(30000);
 
 describe("variable declarations test", () => {
-
+    const projectRootPath = "./test/core/integration/sample-projects/variable-declarations";
     let result: Map<string, object[]>;
     const varDecls: Map<string, LCEVariableDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
     let mainModule: LCEModule;
 
     beforeAll(async () => {
-        const projectRoot = "./test/core/integration/sample-projects/variable-declarations";
-        result = await processProject(projectRoot);
+        const projects = await processProjects(projectRootPath);
+        if(projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        }
+        result = projects[0].concepts;
 
         if(!result.get(LCEVariableDeclaration.conceptId)) {
             throw new Error("Could not find variable declarations in result data.")
@@ -56,16 +60,16 @@ describe("variable declarations test", () => {
 
         for(const concept of (result.get(LCEVariableDeclaration.conceptId) ?? [])) {
             const varDecl: LCEVariableDeclaration = concept as LCEVariableDeclaration;
-            if(!varDecl.fqn) {
-                throw new Error("Variable declaration has no fqn " + JSON.stringify(varDecl));
+            if(!varDecl.fqn.globalFqn) {
+                throw new Error("Variable declaration has no global FQN " + JSON.stringify(varDecl));
             }
-            if(varDecls.has(varDecl.fqn)) {
-                throw new Error("Two variable declarations with same FQN were returned: " + varDecl.fqn);
+            if(varDecls.has(varDecl.fqn.globalFqn)) {
+                throw new Error("Two variable declarations with same global FQN were returned: " + varDecl.fqn.globalFqn);
             }
-            varDecls.set(varDecl.fqn, varDecl);
+            varDecls.set(varDecl.fqn.globalFqn, varDecl);
         }
         
-        const mainModuleConcept = result.get(LCEModule.conceptId)?.find(mod => (mod as LCEModule).fqn === "./src/main.ts");
+        const mainModuleConcept = result.get(LCEModule.conceptId)?.find(mod => (mod as LCEModule).fqn.localFqn === "./src/main.ts");
         if(!mainModuleConcept) {
             throw new Error("Could not find main module in result data");
         }
@@ -75,10 +79,11 @@ describe("variable declarations test", () => {
     });
 
     test("var x;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vVarUninitialized');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vVarUninitialized'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vVarUninitialized'));
             expect(decl.variableName).toBe("vVarUninitialized");
             expect(decl.kind).toBe("var");
 
@@ -89,10 +94,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vLetUninitialized');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vLetUninitialized'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vLetUninitialized'));
             expect(decl.variableName).toBe("vLetUninitialized");
             expect(decl.kind).toBe("let");
 
@@ -103,10 +109,11 @@ describe("variable declarations test", () => {
     });
 
     test("var x = 0;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vVarInit');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vVarInit'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vVarInit'));
             expect(decl.variableName).toBe("vVarInit");
             expect(decl.kind).toBe("var");
 
@@ -116,10 +123,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x = 0;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vLetInit');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vLetInit'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vLetInit'));
             expect(decl.variableName).toBe("vLetInit");
             expect(decl.kind).toBe("let");
 
@@ -129,10 +137,11 @@ describe("variable declarations test", () => {
     });
 
     test("const x = 0;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vConstInit');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vConstInit'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vConstInit'));
             expect(decl.variableName).toBe("vConstInit");
             expect(decl.kind).toBe("const");
 
@@ -143,10 +152,11 @@ describe("variable declarations test", () => {
 
     test("let x1 = 1, x2 = 2;", async () => {
         for(let i = 1; i <= 2; i++) {
-            const decl = varDecls.get('"./src/main.ts".vMulti' + i);
+            const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vMulti' + i));
             expect(decl).toBeDefined();
             if(decl) {
                 expect(decl.coordinates.fileName).toBe(mainModule.path);
+                expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vMulti' + i));
                 expect(decl.variableName).toBe("vMulti" + i);
                 expect(decl.kind).toBe("let");
 
@@ -157,10 +167,11 @@ describe("variable declarations test", () => {
     });
 
     test("export let x = 5;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vExported');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExported'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExported'));
             expect(decl.variableName).toBe("vExported");
             expect(decl.kind).toBe("let");
 
@@ -169,7 +180,7 @@ describe("variable declarations test", () => {
         }
 
         const exportDeclConcept = result.get(LCEExportDeclaration.conceptId)?.find(exp =>
-            (exp as LCEExportDeclaration).declFqn === '"./src/main.ts".vExported');
+            (exp as LCEExportDeclaration).globalDeclFqn === resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExported'));
 
         expect(exportDeclConcept).toBeDefined();
         if(exportDeclConcept) {
@@ -178,15 +189,16 @@ describe("variable declarations test", () => {
             expect(exportDecl.identifier).toBe("vExported");
             expect(exportDecl.alias).toBeUndefined();
             expect(exportDecl.isDefault).toBe(false);
-            expect(exportDecl.sourceFilePath).toBe(mainModule.fqn);
+            expect(exportDecl.sourceFilePathAbsolute).toBe(mainModule.fqn.globalFqn);
         }
     });
 
     test("let x = undefined;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vUndefined');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vUndefined'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vUndefined'));
             expect(decl.variableName).toBe("vUndefined");
             expect(decl.kind).toBe("let");
 
@@ -202,10 +214,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x = null;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vNull');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vNull'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vNull'));
             expect(decl.variableName).toBe("vNull");
             expect(decl.kind).toBe("let");
 
@@ -221,10 +234,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x = true;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vTrue');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vTrue'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vTrue'));
             expect(decl.variableName).toBe("vTrue");
             expect(decl.kind).toBe("let");
 
@@ -234,10 +248,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x = false;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vFalse');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vFalse'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vFalse'));
             expect(decl.variableName).toBe("vFalse");
             expect(decl.kind).toBe("let");
 
@@ -247,10 +262,11 @@ describe("variable declarations test", () => {
     });
 
     test('let x = "1";', async () => {
-        const decl = varDecls.get('"./src/main.ts".vString');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vString'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vString'));
             expect(decl.variableName).toBe("vString");
             expect(decl.kind).toBe("let");
 
@@ -260,10 +276,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x = {...};", async () => {
-        const decl = varDecls.get('"./src/main.ts".vObject');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vObject'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vObject'));
             expect(decl.variableName).toBe("vObject");
             expect(decl.kind).toBe("let");
 
@@ -287,18 +304,19 @@ describe("variable declarations test", () => {
                 expectLiteralValue(valueMembers.get("b"), "2", "string");
 
                 // TODO: change object value type behavior
-                // expect(decl.initValue.type).toBeDefined();
-                // expect(decl.initValue.type.type).toBe("object")
-                // checkObjectType(decl.initValue.type as LCETypeObject);
+                expect(decl.initValue.type).toBeDefined();
+                expect(decl.initValue.type.type).toBe("object")
+                checkObjectType(decl.initValue.type as LCETypeObject);
             }
         }
     });
 
     test("let x = [...];", async () => {
-        const decl = varDecls.get('"./src/main.ts".vArray');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vArray'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vArray'));
             expect(decl.variableName).toBe("vArray");
             expect(decl.kind).toBe("let");
 
@@ -326,10 +344,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x: [number, string] = [...];", async () => {
-        const decl = varDecls.get('"./src/main.ts".vTuple');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vTuple'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vTuple'));
             expect(decl.variableName).toBe("vTuple");
             expect(decl.kind).toBe("let");
 
@@ -360,10 +379,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x = function(...) {...}", async () => {
-        const decl = varDecls.get('"./src/main.ts".vFunction');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vFunction'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vFunction'));
             expect(decl.variableName).toBe("vFunction");
             expect(decl.kind).toBe("let");
 
@@ -391,10 +411,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x = (...) => {...}", async () => {
-        const decl = varDecls.get('"./src/main.ts".vArrowFunction');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vArrowFunction'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vArrowFunction'));
             expect(decl.variableName).toBe("vArrowFunction");
             expect(decl.kind).toBe("let");
 
@@ -422,10 +443,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x = class {...}", async () => {
-        const decl = varDecls.get('"./src/main.ts".vClass');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vClass'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vClass'));
             expect(decl.variableName).toBe("vClass");
             expect(decl.kind).toBe("let");
 
@@ -446,10 +468,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x: number | string = 1;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vUnion');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vUnion'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vUnion'));
             expect(decl.variableName).toBe("vUnion");
             expect(decl.kind).toBe("let");
 
@@ -472,10 +495,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x: {...} & {...} = {...};", async () => {
-        const decl = varDecls.get('"./src/main.ts".vIntersection');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vIntersection'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vIntersection'));
             expect(decl.variableName).toBe("vIntersection");
             expect(decl.kind).toBe("let");
 
@@ -513,10 +537,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x = 1 + 2;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vComplex');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vComplex'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vComplex'));
             expect(decl.variableName).toBe("vComplex");
             expect(decl.kind).toBe("let");
 
@@ -535,10 +560,11 @@ describe("variable declarations test", () => {
     });
 
     test("let x = y;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vRefDirect');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vRefDirect'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vRefDirect'));
             expect(decl.variableName).toBe("vRefDirect");
             expect(decl.kind).toBe("let");
 
@@ -547,20 +573,21 @@ describe("variable declarations test", () => {
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
                 expect(decl.initValue.valueType).toBe("declared")
-                expect((decl.initValue as LCEValueDeclared).fqn).toBe('"./src/main.ts".vString');
+                expect((decl.initValue as LCEValueDeclared).fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vString'));
 
                 expectPrimitiveType(decl.initValue.type, "string");
             }
         }
 
-        expectDependency(dependencies, '"./src/main.ts".vRefDirect', '"./src/main.ts".vString', 1);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vRefDirect', resolveGlobalFqn(projectRootPath, '"./src/main.ts".vString'), 1);
     });
 
     test("let x = obj.a;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vRefMember');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vRefMember'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vRefMember'));
             expect(decl.variableName).toBe("vRefMember");
             expect(decl.kind).toBe("let");
 
@@ -576,27 +603,28 @@ describe("variable declarations test", () => {
                 
                 const parentValue = (decl.initValue as LCEValueMember).parent;
                 expect(parentValue.valueType).toBe("declared");
-                expect((parentValue as LCEValueDeclared).fqn).toBe('"./src/main.ts".vObject');
+                expect((parentValue as LCEValueDeclared).fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vObject'));
                 const oType = expectObjectType(parentValue.type, 2);
                 expectObjectTypeMember(oType, "a", false, false, "number");
                 expectObjectTypeMember(oType, "b", false, false, "string");
 
                 const memberValue = (decl.initValue as LCEValueMember).member;
                 expect(memberValue.valueType).toBe("declared");
-                expect((memberValue as LCEValueDeclared).fqn).toBe("a");
+                expect((memberValue as LCEValueDeclared).fqn.globalFqn).toBe("a");
                 expectPrimitiveType(memberValue.type, "number");
 
             }
         }
 
-        expectDependency(dependencies, '"./src/main.ts".vRefMember', '"./src/main.ts".vObject', 1);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vRefMember', resolveGlobalFqn(projectRootPath, '"./src/main.ts".vObject'), 1);
     });
 
     test("let x = fun(3);", async () => {
-        const decl = varDecls.get('"./src/main.ts".vRefCall');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vRefCall'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vRefCall'));
             expect(decl.variableName).toBe("vRefCall");
             expect(decl.kind).toBe("let");
 
@@ -611,7 +639,7 @@ describe("variable declarations test", () => {
                 const callee = (decl.initValue as LCEValueCall).callee;
                 expect(callee).toBeDefined();
                 expect(callee.valueType).toBe("declared");
-                expect((callee as LCEValueDeclared).fqn).toBe('"./src/main.ts".vFunction')
+                expect((callee as LCEValueDeclared).fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vFunction'))
 
                 expect(callee.type).toBeDefined();
                 expect(callee.type.type).toBe("function");
@@ -635,18 +663,19 @@ describe("variable declarations test", () => {
             }
         }
 
-        expectDependency(dependencies, '"./src/main.ts".vRefCall', '"./src/main.ts".vFunction', 1);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vRefCall', resolveGlobalFqn(projectRootPath, '"./src/main.ts".vFunction'), 1);
     });
 
     test("let x: Interface = {...};", async () => {
-        const decl = varDecls.get('"./src/main.ts".vInterfaceObj');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vInterfaceObj'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vInterfaceObj'));
             expect(decl.variableName).toBe("vInterfaceObj");
             expect(decl.kind).toBe("let");
 
-            expectDeclaredType(decl.type, '"./src/main.ts".CustomInterface');
+            expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
@@ -659,24 +688,25 @@ describe("variable declarations test", () => {
                 // TODO: change object value type behavior
                 // expect(decl.initValue.type).toBeDefined();
                 // expect(decl.initValue.type.type).toBe("declared");
-                // expect((decl.initValue.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomInterface');
+                // expect((decl.initValue.type as LCETypeDeclared).fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
                 // expect((decl.initValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
             }
         }
 
-        expectDependency(dependencies, '"./src/main.ts".vInterfaceObj', '"./src/main.ts".CustomInterface', 1);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vInterfaceObj', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
     });
 
 
     test("let x = new Class();", async () => {
-        const decl = varDecls.get('"./src/main.ts".vClassObj');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vClassObj'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vClassObj'));
             expect(decl.variableName).toBe("vClassObj");
             expect(decl.kind).toBe("let");
 
-            expectDeclaredType(decl.type, '"./src/main.ts".CustomClass');
+            expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'));
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
@@ -690,18 +720,19 @@ describe("variable declarations test", () => {
         }
 
         // the cardinality is 2, because the class constructor is called during initialization
-        expectDependency(dependencies, '"./src/main.ts".vClassObj', '"./src/main.ts".CustomClass', 2);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vClassObj', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'), 2);
     });
 
     test("let x: TypeAlias = {...};", async () => {
-        const decl = varDecls.get('"./src/main.ts".vTypeObj');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vTypeObj'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vTypeObj'));
             expect(decl.variableName).toBe("vTypeObj");
             expect(decl.kind).toBe("let");
 
-            expectDeclaredType(decl.type, '"./src/main.ts".CustomType');
+            expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'));
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
@@ -714,56 +745,58 @@ describe("variable declarations test", () => {
                 // TODO: change object value type behavior
                 // expect(decl.initValue.type).toBeDefined();
                 // expect(decl.initValue.type.type).toBe("declared");
-                // expect((decl.initValue.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomInterface');
+                // expect((decl.initValue.type as LCETypeDeclared).fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
                 // expect((decl.initValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
             }
         }
-        expectDependency(dependencies, '"./src/main.ts".vTypeObj', '"./src/main.ts".CustomType', 1);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vTypeObj', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'), 1);
     });
 
     test("let x: = Enum.MEMBER;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vEnum');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vEnum'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vEnum'));
             expect(decl.variableName).toBe("vEnum");
             expect(decl.kind).toBe("let");
 
-            expectDeclaredType(decl.type, '"./src/main.ts".CustomEnum');
+            expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum'));
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
-                expectDeclaredType(decl.initValue.type, '"./src/main.ts".CustomEnum');
+                expectDeclaredType(decl.initValue.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum'));
 
                 expect(decl.initValue.valueType).toBe("member")
                 
                 const parentValue = (decl.initValue as LCEValueMember).parent;
                 expect(parentValue.valueType).toBe("declared");
-                expect((parentValue as LCEValueDeclared).fqn).toBe('"./src/main.ts".CustomEnum');
+                expect((parentValue as LCEValueDeclared).fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum'));
                 expect(parentValue.type.type).toBe("not-identified");
                 expect((parentValue.type as LCETypeNotIdentified).identifier).toBe("typeof CustomEnum");
 
                 const memberValue = (decl.initValue as LCEValueMember).member;
                 expect(memberValue.valueType).toBe("declared");
-                expect((memberValue as LCEValueDeclared).fqn).toBe('A');
+                expect((memberValue as LCEValueDeclared).fqn.globalFqn).toBe('A');
 
-                expectDeclaredType(memberValue.type, '"./src/main.ts".CustomEnum');
+                expectDeclaredType(memberValue.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum'));
             }
         }
 
         // the cardinality is 2, because the enum if referenced during initialization
-        expectDependency(dependencies, '"./src/main.ts".vEnum', '"./src/main.ts".CustomEnum', 2);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vEnum', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum'), 2);
     });
 
     test("let x: ExternalInterface = {...};", async () => {
-        const decl = varDecls.get('"./src/main.ts".vExtInterfaceObj');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExtInterfaceObj'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExtInterfaceObj'));
             expect(decl.variableName).toBe("vExtInterfaceObj");
             expect(decl.kind).toBe("let");
 
-            expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomInterface');
+            expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'));
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
@@ -776,24 +809,25 @@ describe("variable declarations test", () => {
                 // TODO: change object value type behavior
                 // expect(decl.initValue.type).toBeDefined();
                 // expect(decl.initValue.type.type).toBe("declared");
-                // expect((decl.initValue.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomInterface');
+                // expect((decl.initValue.type as LCETypeDeclared).fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
                 // expect((decl.initValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
             }
         }
 
-        expectDependency(dependencies, '"./src/main.ts".vExtInterfaceObj', '"./src/secondary.ts".ExternalCustomInterface', 1);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vExtInterfaceObj', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'), 1);
     });
 
 
     test("let x = new ExternalClass();", async () => {
-        const decl = varDecls.get('"./src/main.ts".vExtClassObj');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExtClassObj'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExtClassObj'));
             expect(decl.variableName).toBe("vExtClassObj");
             expect(decl.kind).toBe("let");
 
-            expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomClass');
+            expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'));
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
@@ -807,18 +841,19 @@ describe("variable declarations test", () => {
         }
 
         // the cardinality is 2, because the class constructor is called during initialization
-        expectDependency(dependencies, '"./src/main.ts".vExtClassObj', '"./src/secondary.ts".ExternalCustomClass', 2);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vExtClassObj', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'), 2);
     });
 
     test("let x: ExternalTypeAlias = {...};", async () => {
-        const decl = varDecls.get('"./src/main.ts".vExtTypeObj');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExtTypeObj'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExtTypeObj'));
             expect(decl.variableName).toBe("vExtTypeObj");
             expect(decl.kind).toBe("let");
 
-            expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomType');
+            expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomType'));
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
@@ -831,19 +866,20 @@ describe("variable declarations test", () => {
                 // TODO: change object value type behavior
                 // expect(decl.initValue.type).toBeDefined();
                 // expect(decl.initValue.type.type).toBe("declared");
-                // expect((decl.initValue.type as LCETypeDeclared).fqn).toBe('"./src/main.ts".CustomInterface');
+                // expect((decl.initValue.type as LCETypeDeclared).fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
                 // expect((decl.initValue.type as LCETypeDeclared).typeArguments).toHaveLength(0);
             }
         }
 
-        expectDependency(dependencies, '"./src/main.ts".vExtTypeObj', '"./src/secondary.ts".ExternalCustomType', 1);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vExtTypeObj', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomType'), 1);
     });
 
     test("let x: ExternalStringTypeAlias;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vExtStringTypeAlias');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExtStringTypeAlias'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExtStringTypeAlias'));
             expect(decl.variableName).toBe("vExtStringTypeAlias");
             expect(decl.kind).toBe("let");
 
@@ -857,36 +893,37 @@ describe("variable declarations test", () => {
     // Local Enum values show correct behavior
     // NOTE: The fix would require manually changing the external FQN determined by the TS TypeChecker in type.utils.ts
     test("let x: = ExternalEnum.MEMBER;", async () => {
-        const decl = varDecls.get('"./src/main.ts".vExtEnum');
+        const decl = varDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExtEnum'));
         expect(decl).toBeDefined();
         if(decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".vExtEnum'));
             expect(decl.variableName).toBe("vExtEnum");
             expect(decl.kind).toBe("let");
 
-            expectDeclaredType(decl.type, '"./src/secondary.ts".ExternalCustomEnum');
+            expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomEnum'));
 
             expect(decl.initValue).toBeDefined();
             if (decl.initValue) {
-                expectDeclaredType(decl.initValue.type, '"./src/secondary.ts".ExternalCustomEnum');
+                expectDeclaredType(decl.initValue.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomEnum'));
 
                 expect(decl.initValue.valueType).toBe("member")
 
                 const parentValue = (decl.initValue as LCEValueMember).parent;
                 expect(parentValue.valueType).toBe("declared");
-                expect((parentValue as LCEValueDeclared).fqn).toBe('"./src/secondary.ts".ExternalCustomEnum');
+                expect((parentValue as LCEValueDeclared).fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomEnum'));
                 // TODO: discrepancy between external and internal enum value parent type: typeof vs direct reference
-                expectDeclaredType(parentValue.type, '"./src/secondary.ts".ExternalCustomEnum');
+                expectDeclaredType(parentValue.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomEnum'));
 
                 const memberValue = (decl.initValue as LCEValueMember).member;
                 expect(memberValue.valueType).toBe("declared");
-                expect((memberValue as LCEValueDeclared).fqn).toBe('A');
-                expectDeclaredType(memberValue.type, '"./src/secondary.ts".ExternalCustomEnum');
+                expect((memberValue as LCEValueDeclared).fqn.globalFqn).toBe('A');
+                expectDeclaredType(memberValue.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomEnum'));
             }
         }
 
         // the cardinality is 2, because the enum if referenced during initialization
-        expectDependency(dependencies, '"./src/main.ts".vExtEnum', '"./src/secondary.ts".ExternalCustomEnum', 2);
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".vExtEnum', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomEnum'), 2);
     });
 
 });

@@ -9,6 +9,6 @@ import lombok.ToString;
 @ToString
 public class ValueDeclared extends Value {
 
-    private String fqn;
+    private String globalFqn;
 
 }

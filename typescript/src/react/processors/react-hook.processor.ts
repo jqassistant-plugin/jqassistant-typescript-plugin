@@ -27,7 +27,7 @@ export class ReactHookProcessor extends Processor {
                 node.id.elements[1] &&
                 node.id.elements[1].type === AST_NODE_TYPES.Identifier
             ) {
-                const fqn = localContexts.getNextContext(DependencyResolutionProcessor.DEPENDENCY_SOURCE_FQN_CONTEXT)?.[0] as string;
+                const fqn = localContexts.getNextContext(DependencyResolutionProcessor.DEPENDENCY_GLOBAL_SOURCE_FQN_CONTEXT)?.[0] as string;
                 return singleEntryConceptMap(
                     LCEReactStateHook.conceptId,
                     new LCEReactStateHook(fqn, node.id.elements[0].name, node.id.elements[1].name),

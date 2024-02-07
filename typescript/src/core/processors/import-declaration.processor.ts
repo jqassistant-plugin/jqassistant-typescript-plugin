@@ -1,12 +1,13 @@
 import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 import { ConceptMap, mergeConceptMaps } from "../concept";
-import { ProcessingContext } from "../context";
+import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
-import { PathUtils } from "../utils/path.utils";
+import { ModulePathUtils } from "../utils/modulepath.utils";
 import { Processor } from "../processor";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
 import { NodeUtils } from "../utils/node.utils";
+import path from "path";
 
 export class ImportDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.ImportDeclaration], () => true);
@@ -17,47 +18,55 @@ export class ImportDeclarationProcessor extends Processor {
         const concepts: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.ImportDeclaration) {
-            const sourceFileFQN = globalContext.sourceFilePath;
-            const importSource = PathUtils.normalizeImportPath(globalContext.projectRootPath, node.source.value, globalContext.sourceFilePath);
+            const importSource = ModulePathUtils.normalizeImportPath(
+                globalContext.projectInfo.rootPath,
+                node.source.value,
+                globalContext.sourceFilePathRelative,
+            );
             for (const specifier of node.specifiers) {
-                let target = "";
+                let target = new FQN("");
                 let isModule = false;
                 if (specifier.type === AST_NODE_TYPES.ImportSpecifier) {
-                    const node = globalContext.services.esTreeNodeToTSNodeMap.get(specifier);
-                    const type = globalContext.typeChecker.getTypeAtLocation(node);
-                    const symbol = globalContext.typeChecker.getSymbolAtLocation(node);
-                    target = PathUtils.toFQN(importSource) + "." + specifier.imported.name;
+                    const importSourceFqn = ModulePathUtils.toFQN(importSource);
+                    target = new FQN(
+                        importSourceFqn.globalFqn + "." + specifier.imported.name,
+                        importSourceFqn.localFqn + "." + specifier.imported.name,
+                    );
                 } else if (specifier.type === AST_NODE_TYPES.ImportDefaultSpecifier) {
-                    target = PathUtils.toFQN(importSource) + ".default";
+                    const importSourceFqn = ModulePathUtils.toFQN(importSource);
+                    target = new FQN(importSourceFqn.globalFqn + ".default", importSourceFqn.localFqn + ".default");
                 } else if (specifier.type === AST_NODE_TYPES.ImportNamespaceSpecifier) {
-                    target = importSource;
+                    target = new FQN(path.resolve(globalContext.projectInfo.rootPath, importSource), importSource);
                     isModule = true;
                 }
 
-                if (target.startsWith('"') && PathUtils.getPathType(PathUtils.extractFQNPath(target)) === "node") {
+                if (!isModule && ModulePathUtils.getPathType(ModulePathUtils.extractFQNPath(target.globalFqn)) === "node") {
                     // resolve node package names to the appropriate paths
                     try {
                         const resolvedModulePath = NodeUtils.resolveImportPath(
-                            PathUtils.extractFQNPath(target),
-                            globalContext.projectRootPath,
-                            globalContext.sourceFilePath,
+                            ModulePathUtils.extractFQNPath(target.globalFqn),
+                            globalContext.projectInfo.projectPath,
+                            globalContext.sourceFilePathAbsolute,
                         );
-                        const targetDeclName = PathUtils.extractFQNIdentifier(target);
-                        const packageName = NodeUtils.getPackageNameForPath(globalContext.projectRootPath, resolvedModulePath);
+                        const targetDeclName = ModulePathUtils.extractFQNIdentifier(target.globalFqn);
+                        const packageName = NodeUtils.getPackageNameForPath(globalContext.projectInfo.rootPath, resolvedModulePath);
                         if (packageName) {
-                            target = `"${packageName}".${targetDeclName}`;
+                            target = FQN.id(`"${packageName}".${targetDeclName}`);
                         } else {
-                            target = `"${PathUtils.normalize(globalContext.projectRootPath, resolvedModulePath)}".${targetDeclName}`;
+                            target = new FQN(
+                                `"${resolvedModulePath}".${targetDeclName}`,
+                                `"${ModulePathUtils.normalize(globalContext.projectInfo.rootPath, resolvedModulePath)}".${targetDeclName}`,
+                            );
                         }
                     } catch (e) {
-                        console.log("\n" + `Error: Could not resolve import path for: ${PathUtils.extractFQNPath(target)}`);
+                        console.log("\n" + `Error: Could not resolve import path for: ${ModulePathUtils.extractFQNPath(target.globalFqn)}`);
                     }
                 }
 
                 // TODO: The registered declaration does not work for Node.js modules and potentially aliased exports
                 DependencyResolutionProcessor.registerDeclaration(localContexts, specifier.local.name, target);
-                // NOTE: Disabled depdencencies due to unresolvable FQNs of imported declarations that have received an alias on export.
-                //       This means there will be no dependencies in the graph based on the existence of import statements.
+                // NOTE: Disabled depdenencies due to unresolvable FQNs of imported declarations that have received an alias on export.
+                //       This means there will be no dependencies in the graph based solely on the existence of import statements.
                 // concepts.push(
                 //     singleEntryConceptMap(
                 //         LCEDependency.conceptId,

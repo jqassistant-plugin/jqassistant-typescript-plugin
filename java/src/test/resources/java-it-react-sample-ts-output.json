@@ -1,170 +1,195 @@
-{
-  "project": [
-    {
-      "projectRoot": "java/src/test/resources/java-it-react-sample-project"
-    }
-  ],
-  "variable-declaration": [
-    {
-      "fqn": "\"./src/testComponents.tsx\".SomeComponent",
-      "variableName": "SomeComponent",
-      "kind": "const",
-      "type": {
-        "type": "function",
-        "returnType": {
-          "type": "declared",
-          "fqn": "\"react\".React.JSX.Element",
-          "typeArguments": []
-        },
-        "parameters": [],
-        "async": false,
-        "typeParameters": []
-      },
-      "initValue": {
-        "valueType": "function",
-        "type": {
-          "type": "function",
-          "returnType": {
-            "type": "declared",
-            "fqn": "\"react\".React.JSX.Element",
-            "typeArguments": []
+[
+  {
+    "rootPath": "/java/src/test/resources/java-it-react-sample-project",
+    "projectPath": "/java/src/test/resources/java-it-react-sample-project",
+    "subProjectPaths": [],
+    "sourceFilePaths": [
+      "/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx"
+    ],
+    "concepts": {
+      "variable-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".SomeComponent",
+          "localFqn": "\"./src/testComponents.tsx\".SomeComponent",
+          "variableName": "SomeComponent",
+          "kind": "const",
+          "type": {
+            "type": "function",
+            "returnType": {
+              "type": "declared",
+              "globalFqn": "\"react\".React.JSX.Element",
+              "localFqn": "",
+              "typeArguments": []
+            },
+            "parameters": [],
+            "async": false,
+            "typeParameters": []
           },
-          "parameters": [],
-          "async": false,
-          "typeParameters": []
-        },
-        "arrowFunction": true
-      },
-      "coordinates": {
-        "fileName": "/src/testComponents.tsx",
-        "startLine": 5,
-        "startColumn": 6,
-        "endLine": 7,
-        "endColumn": 1
-      }
-    },
-    {
-      "fqn": "\"./src/testComponents.tsx\".ComponentWithContent",
-      "variableName": "ComponentWithContent",
-      "kind": "const",
-      "type": {
-        "type": "function",
-        "returnType": {
-          "type": "declared",
-          "fqn": "\"react\".React.JSX.Element",
-          "typeArguments": []
-        },
-        "parameters": [],
-        "async": false,
-        "typeParameters": []
-      },
-      "initValue": {
-        "valueType": "function",
-        "type": {
-          "type": "function",
-          "returnType": {
-            "type": "declared",
-            "fqn": "\"react\".React.JSX.Element",
-            "typeArguments": []
+          "initValue": {
+            "valueType": "function",
+            "type": {
+              "type": "function",
+              "returnType": {
+                "type": "declared",
+                "globalFqn": "\"react\".React.JSX.Element",
+                "localFqn": "",
+                "typeArguments": []
+              },
+              "parameters": [],
+              "async": false,
+              "typeParameters": []
+            },
+            "arrowFunction": true
           },
-          "parameters": [],
-          "async": false,
-          "typeParameters": []
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx",
+            "startLine": 5,
+            "startColumn": 6,
+            "endLine": 7,
+            "endColumn": 1
+          }
         },
-        "arrowFunction": true
-      },
-      "coordinates": {
-        "fileName": "/src/testComponents.tsx",
-        "startLine": 9,
-        "startColumn": 6,
-        "endLine": 25,
-        "endColumn": 1
-      }
-    }
-  ],
-  "dependency": [
-    {
-      "fqn": "\"react\".React.JSX.Element",
-      "targetType": "declaration",
-      "sourceFQN": "\"./src/testComponents.tsx\".SomeComponent",
-      "sourceType": "declaration",
-      "cardinality": 2
-    },
-    {
-      "fqn": "\"./src/testComponents.tsx\".SomeComponent",
-      "targetType": "declaration",
-      "sourceFQN": "\"./src/testComponents.tsx\".ComponentWithContent",
-      "sourceType": "declaration",
-      "cardinality": 3
-    },
-    {
-      "fqn": "\"react\".React.JSX.Element",
-      "targetType": "declaration",
-      "sourceFQN": "\"./src/testComponents.tsx\".ComponentWithContent",
-      "sourceType": "declaration",
-      "cardinality": 2
-    }
-  ],
-  "module": [
-    {
-      "fqn": "./src/testComponents.tsx",
-      "path": "/src/testComponents.tsx"
-    }
-  ],
-  "external-module": [
-    {
-      "fqn": "react",
-      "declarations": [
         {
-          "fqn": "\"react\".React.JSX.Element",
-          "name": "React.JSX.Element"
+          "globalFqn": "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".ComponentWithContent",
+          "localFqn": "\"./src/testComponents.tsx\".ComponentWithContent",
+          "variableName": "ComponentWithContent",
+          "kind": "const",
+          "type": {
+            "type": "function",
+            "returnType": {
+              "type": "declared",
+              "globalFqn": "\"react\".React.JSX.Element",
+              "localFqn": "",
+              "typeArguments": []
+            },
+            "parameters": [],
+            "async": false,
+            "typeParameters": []
+          },
+          "initValue": {
+            "valueType": "function",
+            "type": {
+              "type": "function",
+              "returnType": {
+                "type": "declared",
+                "globalFqn": "\"react\".React.JSX.Element",
+                "localFqn": "",
+                "typeArguments": []
+              },
+              "parameters": [],
+              "async": false,
+              "typeParameters": []
+            },
+            "arrowFunction": true
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx",
+            "startLine": 9,
+            "startColumn": 6,
+            "endLine": 25,
+            "endColumn": 1
+          }
         }
-      ]
-    }
-  ],
-  "export-declaration": [],
-  "react-component": [
-    {
-      "fqn": "\"./src/testComponents.tsx\".SomeComponent",
-      "componentName": "SomeComponent",
-      "renderedElements": [
+      ],
+      "dependency": [
         {
-          "fqn": "div",
-          "name": "div",
-          "cardinality": 1
-        }
-      ]
-    },
-    {
-      "fqn": "\"./src/testComponents.tsx\".ComponentWithContent",
-      "componentName": "ComponentWithContent",
-      "renderedElements": [
-        {
-          "fqn": "div",
-          "name": "div",
+          "globalFqn": "\"react\".React.JSX.Element",
+          "localFqn": "",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".SomeComponent",
+          "sourceType": "declaration",
           "cardinality": 2
         },
         {
-          "fqn": "button",
-          "name": "button",
-          "cardinality": 1
-        },
-        {
-          "fqn": "h1",
-          "name": "h1",
-          "cardinality": 1
-        },
-        {
-          "fqn": "h2",
-          "name": "h2",
-          "cardinality": 2
-        },
-        {
-          "fqn": "\"./src/testComponents.tsx\".SomeComponent",
-          "name": "SomeComponent",
+          "globalFqn": "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".SomeComponent",
+          "localFqn": "\"./src/testComponents.tsx\".SomeComponent",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".ComponentWithContent",
+          "sourceType": "declaration",
           "cardinality": 3
+        },
+        {
+          "globalFqn": "\"react\".React.JSX.Element",
+          "localFqn": "",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".ComponentWithContent",
+          "sourceType": "declaration",
+          "cardinality": 2
+        }
+      ],
+      "module": [
+        {
+          "globalFqn": "/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx",
+          "localFqn": "./src/testComponents.tsx",
+          "path": "/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx"
+        }
+      ],
+      "external-module": [
+        {
+          "globalFqn": "react",
+          "localFqn": "",
+          "declarations": [
+            {
+              "globalFqn": "\"react\".React.JSX.Element",
+              "localFqn": "",
+              "name": "React.JSX.Element"
+            }
+          ]
+        }
+      ],
+      "export-declaration": [],
+      "react-component": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".SomeComponent",
+          "localFqn": "\"./src/testComponents.tsx\".SomeComponent",
+          "componentName": "SomeComponent",
+          "renderedElements": [
+            {
+              "globalFqn": "div",
+              "localFqn": "",
+              "name": "div",
+              "cardinality": 1
+            }
+          ]
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".ComponentWithContent",
+          "localFqn": "\"./src/testComponents.tsx\".ComponentWithContent",
+          "componentName": "ComponentWithContent",
+          "renderedElements": [
+            {
+              "globalFqn": "div",
+              "localFqn": "",
+              "name": "div",
+              "cardinality": 2
+            },
+            {
+              "globalFqn": "button",
+              "localFqn": "",
+              "name": "button",
+              "cardinality": 1
+            },
+            {
+              "globalFqn": "h1",
+              "localFqn": "",
+              "name": "h1",
+              "cardinality": 1
+            },
+            {
+              "globalFqn": "h2",
+              "localFqn": "",
+              "name": "h2",
+              "cardinality": 2
+            },
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".SomeComponent",
+              "localFqn": "\"./src/testComponents.tsx\".SomeComponent",
+              "name": "SomeComponent",
+              "cardinality": 3
+            }
+          ]
         }
       ]
     }
-  ]
-}
+  }
+]

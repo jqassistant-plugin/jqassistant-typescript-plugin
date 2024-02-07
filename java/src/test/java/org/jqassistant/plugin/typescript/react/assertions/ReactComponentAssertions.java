@@ -23,7 +23,7 @@ public class ReactComponentAssertions {
 
     public ReactComponentAssertions assertModulePresence() {
         Optional<ModuleDescriptor> moduleDescriptorOptional = project.getModules().stream()
-            .filter((mod) -> mod.getFqn().equals("./src/testComponents.tsx"))
+            .filter((mod) -> mod.getLocalFqn().equals("./src/testComponents.tsx"))
             .findFirst();
 
         assertThat(moduleDescriptorOptional.isPresent())
@@ -41,7 +41,8 @@ public class ReactComponentAssertions {
             .anySatisfy(comp -> {
                 assertThat(comp)
                     .as("component has properties set correctly")
-                    .hasFieldOrPropertyWithValue("fqn", "\"./src/testComponents.tsx\".ComponentWithContent")
+                    .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".ComponentWithContent")
+                    .hasFieldOrPropertyWithValue("localFqn", "\"./src/testComponents.tsx\".ComponentWithContent")
                     .hasFieldOrPropertyWithValue("componentName", "ComponentWithContent");
 
                 ReactComponentDescriptor otherComponent = components.stream()
@@ -54,7 +55,7 @@ public class ReactComponentAssertions {
                     .anySatisfy(elem -> {
                         assertThat(elem.getJSXElementType())
                             .as("rendered div element is defined correctly")
-                            .hasFieldOrPropertyWithValue("fqn", "div")
+                            .hasFieldOrPropertyWithValue("globalFqn", "div")
                             .hasFieldOrPropertyWithValue("name", "div");
                         assertThat(elem.getCardinality())
                             .as("rendered element relation has correct cardinality")
@@ -63,7 +64,7 @@ public class ReactComponentAssertions {
                     .anySatisfy(elem -> {
                         assertThat(elem.getJSXElementType())
                             .as("rendered button element is defined correctly")
-                            .hasFieldOrPropertyWithValue("fqn", "button")
+                            .hasFieldOrPropertyWithValue("globalFqn", "button")
                             .hasFieldOrPropertyWithValue("name", "button");
                         assertThat(elem.getCardinality())
                             .as("rendered element relation has correct cardinality")
@@ -72,7 +73,7 @@ public class ReactComponentAssertions {
                     .anySatisfy(elem -> {
                         assertThat(elem.getJSXElementType())
                             .as("rendered h1 element is defined correctly")
-                            .hasFieldOrPropertyWithValue("fqn", "h1")
+                            .hasFieldOrPropertyWithValue("globalFqn", "h1")
                             .hasFieldOrPropertyWithValue("name", "h1");
                         assertThat(elem.getCardinality())
                             .as("rendered element relation has correct cardinality")
@@ -81,7 +82,7 @@ public class ReactComponentAssertions {
                     .anySatisfy(elem -> {
                         assertThat(elem.getJSXElementType())
                             .as("rendered h2 element is defined correctly")
-                            .hasFieldOrPropertyWithValue("fqn", "h2")
+                            .hasFieldOrPropertyWithValue("globalFqn", "h2")
                             .hasFieldOrPropertyWithValue("name", "h2");
                         assertThat(elem.getCardinality())
                             .as("rendered element relation has correct cardinality")
@@ -90,7 +91,7 @@ public class ReactComponentAssertions {
                     .anySatisfy(elem -> {
                         assertThat(elem.getJSXElementType())
                             .as("rendered component element is defined correctly")
-                            .hasFieldOrPropertyWithValue("fqn", "\"./src/testComponents.tsx\".SomeComponent")
+                            .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".SomeComponent")
                             .hasFieldOrPropertyWithValue("name", "SomeComponent");
                         assertThat(elem.getCardinality())
                             .as("rendered element relation has correct cardinality")

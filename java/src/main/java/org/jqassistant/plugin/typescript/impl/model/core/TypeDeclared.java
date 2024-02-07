@@ -12,7 +12,7 @@ import java.util.List;
 @ToString
 public class TypeDeclared extends Type {
 
-    private String fqn;
+    private String globalFqn;
 
     private List<Type> typeArguments = new ArrayList<>();
 

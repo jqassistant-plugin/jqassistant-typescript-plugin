@@ -1,13 +1,17 @@
-import {LCENamedConcept} from "../concept";
+import { LCENamedConcept } from "../concept";
+import { FQN } from "../context";
 
+/**
+ * Represents a module that exists outside the processed projects
+ */
 export class LCEExternalModule extends LCENamedConcept {
     public static override conceptId = "external-module";
 
     constructor(
-        fqn: string,
+        globalFqn: string,
         public declarations: LCEExternalDeclaration[]
     ) {
-        super(fqn);
+        super(new FQN(globalFqn));
     }
 }
 
@@ -15,10 +19,10 @@ export class LCEExternalDeclaration extends LCENamedConcept {
     public static override conceptId = "external-declaration";
 
     constructor(
-        fqn: string,
+        globalFqn: string,
         public name: string
     ) {
-        super(fqn);
+        super(new FQN(globalFqn));
     }
 }
 
