@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { EXPORT_CONSTANT } from "./testDep1";
 
 

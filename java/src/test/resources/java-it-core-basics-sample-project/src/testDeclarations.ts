@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { BaseClass, BaseInterface, Decorator } from "./utils";
 
 const CONSTANT = 42;

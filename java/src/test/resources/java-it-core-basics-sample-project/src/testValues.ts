@@ -1,3 +1,4 @@
+/* eslint-disable */
 let valueNull = null;
 
 let valueLiteral = 5;

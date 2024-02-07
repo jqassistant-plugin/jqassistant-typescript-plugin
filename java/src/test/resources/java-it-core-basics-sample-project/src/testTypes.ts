@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { BaseInterface, BaseInterface2 } from "./utils";
 
 type typePrimitive = number;
