@@ -79,7 +79,7 @@ public class ModuleMapper {
             });
 
         for(Module module : conceptCollection.getModules()) {
-            FileDescriptor fileDescriptor = fileResolver.match(module.getPath(), FileDescriptor.class, scanner.getContext());
+            FileDescriptor fileDescriptor = fileResolver.require(module.getPath(), FileDescriptor.class, scanner.getContext());
             if(fileDescriptor != null) { // only represent modules in the graph that were previously scanned in the file system
                 ModuleDescriptor moduleDescriptor = scanner.getContext().getStore().addDescriptorType(fileDescriptor, ModuleDescriptor.class);
                 moduleDescriptor.setGlobalFqn(module.getGlobalFqn());

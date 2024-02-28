@@ -1,14 +1,17 @@
 package org.jqassistant.plugin.typescript.impl.mapper.core;
 
+import com.buschmais.jqassistant.core.scanner.api.DefaultScope;
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerContext;
 import com.buschmais.jqassistant.plugin.common.api.model.DirectoryDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
+import com.buschmais.jqassistant.plugin.common.api.scanner.ContainerFileResolver;
 import com.buschmais.jqassistant.plugin.common.api.scanner.FileResolver;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
 import org.jqassistant.plugin.typescript.impl.mapper.react.ReactComponentResolver;
 import org.jqassistant.plugin.typescript.impl.model.core.Project;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +23,6 @@ public class ProjectMapper {
 
     public List<ProjectDescriptor> map(List<Project> projects, Scanner scanner) {
         List<ProjectDescriptor> result = new ArrayList<>();
-        FileResolver fileResolver = scanner.getContext().peek(FileResolver.class);
-
         // TODO: scan project root directory for file/directory nodes of projects
         // 1. determine all independent root directories (exclude contained ones)
         // 2. scan determined directories while ignoring node_modules directory
@@ -34,10 +35,14 @@ public class ProjectMapper {
         for (var project : projects) {
             ProjectDescriptor projectDescriptor = scanner.getContext().getStore().create(ProjectDescriptor.class);
 
-            DirectoryDescriptor rootDirDescriptor = fileResolver.match(project.getRootPath(), DirectoryDescriptor.class, scanner.getContext());
+            String rootPath = project.getRootPath();
+            DirectoryDescriptor rootDirDescriptor = scanner.scan(new File(rootPath), rootPath, DefaultScope.NONE);
+
+            ContainerFileResolver containerFileResolver = new ContainerFileResolver(scanner.getContext(), rootDirDescriptor);
+            scanner.getContext().push(FileResolver.class, containerFileResolver);
             projectDescriptor.setRootDirectory(rootDirDescriptor);
 
-            FileDescriptor configFileDescriptor = fileResolver.match(project.getProjectPath() + "/tsconfig.json", FileDescriptor.class, scanner.getContext());
+            FileDescriptor configFileDescriptor = containerFileResolver.require(project.getProjectPath() + "/tsconfig.json", FileDescriptor.class, scanner.getContext());
             projectDescriptor.setConfigFile(configFileDescriptor);
 
             projectDescriptor.getModules().addAll(
@@ -50,6 +55,8 @@ public class ProjectMapper {
             ReactComponentResolver.resolve(scanner, project.getConcepts().getReactComponents());
 
             result.add(projectDescriptor);
+
+            scanner.getContext().pop(FileResolver.class);
         }
 
         // Set references projects and transitively add source files

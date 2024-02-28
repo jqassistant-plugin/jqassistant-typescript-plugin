@@ -57,6 +57,9 @@ The core model represents all basic TypeScript language concepts, independent of
 
 image::docs/jqa-ts-plugin-model-core.jpg[Neo4j model for the core model of the jQAssistant TypeScript plugin]
 
+==== Project and Directory Structure
+- each root directory of a project is resolved
+
 ==== References and Dependencies
 
 The destinations of the `REFERENCES` relations of `:Type:Declared` and `:Value:Declared` as well as all `:DEPENDS_ON` relations have been omitted for the sake of clarity.
