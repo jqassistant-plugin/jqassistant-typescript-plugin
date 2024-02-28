@@ -1,5 +1,6 @@
 package org.jqassistant.plugin.typescript.core.basics.assertions;
 
+import org.jqassistant.plugin.typescript.TestUtils;
 import org.jqassistant.plugin.typescript.api.model.core.*;
 
 import java.util.Optional;
@@ -9,16 +10,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TypeAssertions {
 
+    TestUtils utils;
     ProjectDescriptor project;
     ModuleDescriptor module;
 
-    public TypeAssertions(ProjectDescriptor project) {
+    public TypeAssertions(ProjectDescriptor project, TestUtils utils) {
         this.project = project;
+        this.utils = utils;
     }
 
     public TypeAssertions assertModulePresence() {
         Optional<ModuleDescriptor> moduleDescriptorOptional = project.getModules().stream()
-            .filter((mod) -> mod.getGlobalFqn().equals("/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts"))
+            .filter((mod) -> mod.getGlobalFqn().equals(utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts")))
             .findFirst();
 
         assertThat(moduleDescriptorOptional.isPresent())
@@ -67,7 +70,7 @@ public class TypeAssertions {
 
         assertThat(type)
             .as("declared type has all properties set correctly")
-            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".BaseInterface");
+            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts") + "\".BaseInterface");
 
         InterfaceDeclarationDescriptor interfaceDecl = project.getModules().stream()
             .filter(m -> m.getLocalFqn().equals("./src/utils.ts"))
@@ -131,12 +134,12 @@ public class TypeAssertions {
             .anySatisfy((t) -> {
                 assertThat(t)
                     .isInstanceOf(TypeDeclaredDescriptor.class)
-                    .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".BaseInterface");
+                    .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts") + "\".BaseInterface");
             })
             .anySatisfy((t) -> {
                 assertThat(t)
                     .isInstanceOf(TypeDeclaredDescriptor.class)
-                    .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".BaseInterface2");
+                    .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts") + "\".BaseInterface2");
             });
 
         return this;
@@ -211,7 +214,7 @@ public class TypeAssertions {
                     .hasFieldOrPropertyWithValue("index", 0);
                 assertThat(tp.getConstraint())
                     .isInstanceOf(TypeDeclaredDescriptor.class)
-                    .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts\".typeObject");
+                    .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts") + "\".typeObject");
             });
 
 

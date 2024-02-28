@@ -1,8 +1,8 @@
 package org.jqassistant.plugin.typescript.react;
 
-import com.buschmais.jqassistant.core.shared.io.ClasspathResource;
 import com.buschmais.jqassistant.core.store.api.model.Descriptor;
 import com.buschmais.jqassistant.core.test.plugin.AbstractPluginIT;
+import org.jqassistant.plugin.typescript.TestUtils;
 import org.jqassistant.plugin.typescript.api.TypescriptScope;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
 import org.jqassistant.plugin.typescript.api.model.react.ReactComponentDescriptor;
@@ -24,7 +24,8 @@ public class TypescriptScannerReactIT extends AbstractPluginIT {
 
     @Test
     void testScanner() {
-        File file = ClasspathResource.getFile(TypescriptScannerReactIT.class, "/java-it-react-sample-ts-output.json");
+        TestUtils utils = new TestUtils();
+        File file = utils.getReportJson("java-it-react-sample-ts-output");
         scannedDescriptor = getScanner().scan(file, file.getAbsolutePath(), TypescriptScope.PROJECT);
         store.beginTransaction();
 
@@ -50,9 +51,9 @@ public class TypescriptScannerReactIT extends AbstractPluginIT {
         // when regenerating the json, please crop the extracted path accordingly
         assertThat(project.getRootDirectory().getFileName())
             .as("project has correct path")
-            .isEqualTo("/java/src/test/resources/java-it-react-sample-project");
+            .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-react-sample-project"));
 
-        new ReactComponentAssertions(project, components)
+        new ReactComponentAssertions(project, components, utils)
             .assertModulePresence()
             .assertReactComponentWithContent();
 

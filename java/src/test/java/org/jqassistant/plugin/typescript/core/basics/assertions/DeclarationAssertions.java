@@ -1,6 +1,7 @@
 package org.jqassistant.plugin.typescript.core.basics.assertions;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.jqassistant.plugin.typescript.TestUtils;
 import org.jqassistant.plugin.typescript.api.model.core.*;
 
 import java.util.Optional;
@@ -9,16 +10,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DeclarationAssertions {
 
+    TestUtils utils;
     ProjectDescriptor project;
     ModuleDescriptor module;
 
-    public DeclarationAssertions(ProjectDescriptor projectDescriptor) {
+    public DeclarationAssertions(ProjectDescriptor projectDescriptor, TestUtils utils) {
         this.project = projectDescriptor;
+        this.utils = utils;
     }
 
     public DeclarationAssertions assertModulePresence() {
         Optional<ModuleDescriptor> moduleDescriptorOptional = project.getModules().stream()
-            .filter((mod) -> mod.getGlobalFqn().equals("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts"))
+            .filter((mod) -> mod.getGlobalFqn().equals(utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts")))
             .findFirst();
 
         assertThat(moduleDescriptorOptional.isPresent())
@@ -43,7 +46,7 @@ public class DeclarationAssertions {
 
         assertThat(decl)
             .as("variable declaration has all properties set correctly")
-            .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".CONSTANT")
+            .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".CONSTANT")
             .hasFieldOrPropertyWithValue("localFqn", "\"./src/testDeclarations.ts\".CONSTANT")
             .hasFieldOrPropertyWithValue("name", "CONSTANT")
             .hasFieldOrPropertyWithValue("kind", "const");
@@ -69,7 +72,7 @@ public class DeclarationAssertions {
 
         assertThat(decl)
             .as("function declaration has all properties set correctly")
-            .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".func")
+            .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".func")
             .hasFieldOrPropertyWithValue("localFqn", "\"./src/testDeclarations.ts\".func")
             .hasFieldOrPropertyWithValue("name", "func")
             .hasFieldOrPropertyWithValue("async", false);
@@ -99,7 +102,7 @@ public class DeclarationAssertions {
                     .hasFieldOrPropertyWithValue("index", 1);
                 assertThat(tp.getConstraint())
                     .isInstanceOf(TypeDeclaredDescriptor.class)
-                    .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".BaseInterface")
+                    .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts") + "\".BaseInterface")
                     .extracting("typeArguments", InstanceOfAssertFactories.LIST)
                         .hasSize(0);
             });
@@ -141,7 +144,7 @@ public class DeclarationAssertions {
 
         assertThat(decl)
             .as("class declaration has all properties set correctly")
-            .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class")
+            .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Class")
             .hasFieldOrPropertyWithValue("localFqn", "\"./src/testDeclarations.ts\".Class")
             .hasFieldOrPropertyWithValue("name", "Class")
             .hasFieldOrPropertyWithValue("abstract", false);
@@ -150,7 +153,7 @@ public class DeclarationAssertions {
             .as("class declaration has extends relationship set correctly")
             .isNotNull()
             .isInstanceOf(TypeDeclaredDescriptor.class)
-            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".BaseClass")
+            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts") + "\".BaseClass")
             .extracting("typeArguments", InstanceOfAssertFactories.LIST)
                 .hasSize(0);
 
@@ -159,7 +162,7 @@ public class DeclarationAssertions {
             .hasSize(1)
             .first()
             .isInstanceOf(TypeDeclaredDescriptor.class)
-            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".BaseInterface")
+            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts") + "\".BaseInterface")
             .extracting("typeArguments", InstanceOfAssertFactories.LIST)
                 .hasSize(0);
 
@@ -176,7 +179,7 @@ public class DeclarationAssertions {
             .hasSize(2)
             .anySatisfy((p) -> {
                 assertThat(p)
-                    .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.x")
+                    .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Class.x")
                     .hasFieldOrPropertyWithValue("localFqn", "\"./src/testDeclarations.ts\".Class.x")
                     .hasFieldOrPropertyWithValue("name", "x")
                     .hasFieldOrPropertyWithValue("optional", false)
@@ -194,7 +197,7 @@ public class DeclarationAssertions {
             })
             .anySatisfy((p) -> {
                 assertThat(p)
-                    .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.z")
+                    .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Class.z")
                     .hasFieldOrPropertyWithValue("localFqn", "\"./src/testDeclarations.ts\".Class.z")
                     .hasFieldOrPropertyWithValue("name", "z")
                     .hasFieldOrPropertyWithValue("optional", false)
@@ -215,7 +218,7 @@ public class DeclarationAssertions {
             .as("class declaration has accessor properties that are defined correctly")
             .hasSize(2)
             .anySatisfy((a) -> {
-                assertThat(a.getGlobalFqn()).isEqualTo("\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.y");
+                assertThat(a.getGlobalFqn()).isEqualTo("\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Class.y");
                 assertThat(a.getLocalFqn()).isEqualTo("\"./src/testDeclarations.ts\".Class.y");
                 assertThat(a.getName()).isEqualTo("y");
                 assertThat(a.getAutoAccessor()).isNull();
@@ -244,7 +247,7 @@ public class DeclarationAssertions {
                 assertThat(a.getSetter().getDecorators()).hasSize(0);
             })
             .anySatisfy((a) -> {
-                assertThat(a.getGlobalFqn()).isEqualTo("\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.w");
+                assertThat(a.getGlobalFqn()).isEqualTo("\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Class.w");
                 assertThat(a.getLocalFqn()).isEqualTo("\"./src/testDeclarations.ts\".Class.w");
                 assertThat(a.getName()).isEqualTo("w");
                 assertThat(a.getAutoAccessor())
@@ -271,7 +274,7 @@ public class DeclarationAssertions {
 
         assertThat(methodDecl)
             .as("method declaration has all properties set correctly")
-            .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.method")
+            .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Class.method")
             .hasFieldOrPropertyWithValue("localFqn", "\"./src/testDeclarations.ts\".Class.method")
             .hasFieldOrPropertyWithValue("name", "method")
             .hasFieldOrPropertyWithValue("visibility", "private")
@@ -358,7 +361,7 @@ public class DeclarationAssertions {
 
         assertThat(decl)
             .as("interface declaration has all properties set correctly")
-            .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Interface")
+            .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Interface")
             .hasFieldOrPropertyWithValue("localFqn", "\"./src/testDeclarations.ts\".Interface")
             .hasFieldOrPropertyWithValue("name", "Interface");
 
@@ -368,7 +371,7 @@ public class DeclarationAssertions {
             .as("interface declaration has extends relationship set correctly")
             .isNotNull()
             .isInstanceOf(TypeDeclaredDescriptor.class)
-            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".BaseInterface")
+            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts") + "\".BaseInterface")
             .extracting("typeArguments", InstanceOfAssertFactories.LIST)
             .hasSize(0);
 
@@ -377,7 +380,7 @@ public class DeclarationAssertions {
             .hasSize(1)
             .anySatisfy((p) -> {
                 assertThat(p)
-                    .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Interface.prop")
+                    .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Interface.prop")
                     .hasFieldOrPropertyWithValue("localFqn", "\"./src/testDeclarations.ts\".Interface.prop")
                     .hasFieldOrPropertyWithValue("name", "prop")
                     .hasFieldOrPropertyWithValue("optional", false)
@@ -398,7 +401,7 @@ public class DeclarationAssertions {
             .as("interface declaration has accessor properties that are defined correctly")
             .hasSize(2)
             .anySatisfy((a) -> {
-                assertThat(a.getGlobalFqn()).isEqualTo("\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Interface.getter");
+                assertThat(a.getGlobalFqn()).isEqualTo("\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Interface.getter");
                 assertThat(a.getLocalFqn()).isEqualTo("\"./src/testDeclarations.ts\".Interface.getter");
                 assertThat(a.getName()).isEqualTo("getter");
                 assertThat(a.getAutoAccessor()).isNull();
@@ -415,7 +418,7 @@ public class DeclarationAssertions {
                 assertThat(a.getSetter()).isNull();
             })
             .anySatisfy((a) -> {
-                assertThat(a.getGlobalFqn()).isEqualTo("\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Interface.setter");
+                assertThat(a.getGlobalFqn()).isEqualTo("\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Interface.setter");
                 assertThat(a.getLocalFqn()).isEqualTo("\"./src/testDeclarations.ts\".Interface.setter");
                 assertThat(a.getName()).isEqualTo("setter");
                 assertThat(a.getAutoAccessor()).isNull();
@@ -442,7 +445,7 @@ public class DeclarationAssertions {
 
         assertThat(methodDecl)
             .as("method declaration has all properties set correctly")
-            .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Interface.method")
+            .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Interface.method")
             .hasFieldOrPropertyWithValue("localFqn", "\"./src/testDeclarations.ts\".Interface.method")
             .hasFieldOrPropertyWithValue("name", "method")
             .hasFieldOrPropertyWithValue("visibility", "public")
@@ -489,7 +492,7 @@ public class DeclarationAssertions {
 
         assertThat(decl)
             .as("enum declaration has all properties set correctly")
-            .hasFieldOrPropertyWithValue("globalFqn",  "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Enum")
+            .hasFieldOrPropertyWithValue("globalFqn",  "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Enum")
             .hasFieldOrPropertyWithValue("localFqn", "\"./src/testDeclarations.ts\".Enum")
             .hasFieldOrPropertyWithValue("name", "Enum")
             .hasFieldOrPropertyWithValue("constant", false)
@@ -499,12 +502,12 @@ public class DeclarationAssertions {
             .as("enum declaration has two members that are defined correctly")
             .hasSize(2)
             .anySatisfy((em) -> {
-                assertThat(em.getGlobalFqn()).isEqualTo("\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Enum.ELEM1");
+                assertThat(em.getGlobalFqn()).isEqualTo("\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Enum.ELEM1");
                 assertThat(em.getLocalFqn()).isEqualTo("\"./src/testDeclarations.ts\".Enum.ELEM1");
                 assertThat(em.getName()).isEqualTo("ELEM1");
             })
             .anySatisfy((em) -> {
-                assertThat(em.getGlobalFqn()).isEqualTo("\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Enum.ELEM2");
+                assertThat(em.getGlobalFqn()).isEqualTo("\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts") + "\".Enum.ELEM2");
                 assertThat(em.getLocalFqn()).isEqualTo("\"./src/testDeclarations.ts\".Enum.ELEM2");
                 assertThat(em.getName()).isEqualTo("ELEM2");
             });

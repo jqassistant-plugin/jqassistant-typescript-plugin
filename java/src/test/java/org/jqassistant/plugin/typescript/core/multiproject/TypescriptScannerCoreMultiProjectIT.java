@@ -1,8 +1,8 @@
 package org.jqassistant.plugin.typescript.core.multiproject;
 
-import com.buschmais.jqassistant.core.shared.io.ClasspathResource;
 import com.buschmais.jqassistant.core.store.api.model.Descriptor;
 import com.buschmais.jqassistant.core.test.plugin.AbstractPluginIT;
+import org.jqassistant.plugin.typescript.TestUtils;
 import org.jqassistant.plugin.typescript.api.TypescriptScope;
 import org.jqassistant.plugin.typescript.api.model.core.ModuleDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
@@ -24,7 +24,8 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
 
     @Test
     void testScanner() {
-        File file = ClasspathResource.getFile(TypescriptScannerCoreMultiProjectIT.class, "/java-it-core-multi-sample-ts-output.json");
+        TestUtils utils = new TestUtils();
+        File file = utils.getReportJson("java-it-core-multi-sample-ts-output");
         scannedDescriptor = getScanner().scan(file, file.getAbsolutePath(), TypescriptScope.PROJECT);
         store.beginTransaction();
 
@@ -40,13 +41,13 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
             .hasSize(7);
 
         // project nodes
-        ProjectDescriptor project1 = projects.get("/java/src/test/resources/java-it-core-multi-sample-projects/project1");
-        ProjectDescriptor project2 = projects.get("/java/src/test/resources/java-it-core-multi-sample-projects/project2");
-        ProjectDescriptor project3 = projects.get("/java/src/test/resources/java-it-core-multi-sample-projects/project3");
-        ProjectDescriptor project31 = projects.get("/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31");
-        ProjectDescriptor project32 = projects.get("/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32");
-        ProjectDescriptor projectCommon = projects.get("/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon");
-        ProjectDescriptor project331 = projects.get("/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331");
+        ProjectDescriptor project1 = projects.get(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project1"));
+        ProjectDescriptor project2 = projects.get(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project2"));
+        ProjectDescriptor project3 = projects.get(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project3"));
+        ProjectDescriptor project31 = projects.get(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31"));
+        ProjectDescriptor project32 = projects.get(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32"));
+        ProjectDescriptor projectCommon = projects.get(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon"));
+        ProjectDescriptor project331 = projects.get(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331"));
 
 
         // basic project (project1)
@@ -55,7 +56,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
             .isNotNull();
         assertThat(project1.getConfigFile().getFileName())
             .as("project has correct config path")
-            .isEqualTo("/java/src/test/resources/java-it-core-multi-sample-projects/project1/tsconfig.json");
+            .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project1/tsconfig.json"));
         assertThat(project1.getReferencedProjects())
             .as("project has no references")
             .hasSize(0);
@@ -105,7 +106,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
             .isNotNull();
         assertThat(project2.getConfigFile().getFileName())
             .as("project has correct config path")
-            .isEqualTo("/java/src/test/resources/java-it-core-multi-sample-projects/project2/tsconfig.json");
+            .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project2/tsconfig.json"));
         assertThat(project2.getReferencedProjects())
             .as("project has correct references")
             .containsExactlyInAnyOrder(project331, projectCommon);
@@ -155,7 +156,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
             .isNotNull();
         assertThat(project3.getConfigFile().getFileName())
             .as("project has correct config path")
-            .isEqualTo("/java/src/test/resources/java-it-core-multi-sample-projects/project3/tsconfig.json");
+            .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project3/tsconfig.json"));
         assertThat(project3.getReferencedProjects())
             .as("project has correct references")
             .containsExactlyInAnyOrder(project331, projectCommon, project31, project32);
@@ -187,7 +188,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
             .isNotNull();
         assertThat(project31.getConfigFile().getFileName())
             .as("project has correct config path")
-            .isEqualTo("/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/tsconfig.json");
+            .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/tsconfig.json"));
         assertThat(project31.getReferencedProjects())
             .as("project has no references")
             .hasSize(0);
@@ -218,7 +219,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
             .isNotNull();
         assertThat(project32.getConfigFile().getFileName())
             .as("project has correct config path")
-            .isEqualTo("/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/tsconfig.json");
+            .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/tsconfig.json"));
         assertThat(project32.getReferencedProjects())
             .as("project has no references")
             .hasSize(0);
@@ -250,7 +251,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
             .isNotNull();
         assertThat(projectCommon.getConfigFile().getFileName())
             .as("project has correct config path")
-            .isEqualTo("/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/tsconfig.json");
+            .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/tsconfig.json"));
         assertThat(projectCommon.getReferencedProjects())
             .as("project has correct references")
             .containsExactlyInAnyOrder(project331);
@@ -282,7 +283,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
             .isNotNull();
         assertThat(project331.getConfigFile().getFileName())
             .as("project has correct config path")
-            .isEqualTo("/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/tsconfig.json");
+            .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/tsconfig.json"));
         assertThat(project331.getReferencedProjects())
             .as("project has no references")
             .hasSize(0);

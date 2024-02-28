@@ -1,5 +1,6 @@
 package org.jqassistant.plugin.typescript.react.assertions;
 
+import org.jqassistant.plugin.typescript.TestUtils;
 import org.jqassistant.plugin.typescript.api.model.core.ModuleDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
 import org.jqassistant.plugin.typescript.api.model.react.ReactComponentDescriptor;
@@ -11,14 +12,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReactComponentAssertions {
 
+    TestUtils utils;
     ProjectDescriptor project;
     ModuleDescriptor module;
 
     List<ReactComponentDescriptor> components;
 
-    public ReactComponentAssertions(ProjectDescriptor projectDescriptor, List<ReactComponentDescriptor> components) {
+    public ReactComponentAssertions(ProjectDescriptor projectDescriptor, List<ReactComponentDescriptor> components, TestUtils utils) {
         this.project = projectDescriptor;
         this.components = components;
+        this.utils = utils;
     }
 
     public ReactComponentAssertions assertModulePresence() {
@@ -41,7 +44,7 @@ public class ReactComponentAssertions {
             .anySatisfy(comp -> {
                 assertThat(comp)
                     .as("component has properties set correctly")
-                    .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".ComponentWithContent")
+                    .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx") + "\".ComponentWithContent")
                     .hasFieldOrPropertyWithValue("localFqn", "\"./src/testComponents.tsx\".ComponentWithContent")
                     .hasFieldOrPropertyWithValue("componentName", "ComponentWithContent");
 
@@ -91,7 +94,7 @@ public class ReactComponentAssertions {
                     .anySatisfy(elem -> {
                         assertThat(elem.getJSXElementType())
                             .as("rendered component element is defined correctly")
-                            .hasFieldOrPropertyWithValue("globalFqn", "\"/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx\".SomeComponent")
+                            .hasFieldOrPropertyWithValue("globalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx") + "\".SomeComponent")
                             .hasFieldOrPropertyWithValue("name", "SomeComponent");
                         assertThat(elem.getCardinality())
                             .as("rendered element relation has correct cardinality")

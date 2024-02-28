@@ -1,5 +1,6 @@
 package org.jqassistant.plugin.typescript.core.basics.assertions;
 
+import org.jqassistant.plugin.typescript.TestUtils;
 import org.jqassistant.plugin.typescript.api.model.core.*;
 
 import java.util.Optional;
@@ -11,16 +12,18 @@ import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 public class ValueAssertions {
 
+    TestUtils utils;
     ProjectDescriptor project;
     ModuleDescriptor module;
 
-    public ValueAssertions(ProjectDescriptor project) {
+    public ValueAssertions(ProjectDescriptor project, TestUtils utils) {
         this.project = project;
+        this.utils = utils;
     }
 
     public ValueAssertions assertModulePresence() {
         Optional<ModuleDescriptor> moduleDescriptorOptional = project.getModules().stream()
-            .filter((mod) -> mod.getGlobalFqn().equals("/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts"))
+            .filter((mod) -> mod.getGlobalFqn().equals(utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts")))
             .findFirst();
 
         assertThat(moduleDescriptorOptional.isPresent())
@@ -98,7 +101,7 @@ public class ValueAssertions {
 
         assertThat(value)
             .as("declared value has all properties set correctly")
-            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts\".valueNull");
+            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts") + "\".valueNull");
 
         var nullVariableDeclaration = module.getVariableDeclarations().stream()
             .filter(vd -> vd.getName().equals("valueNull")).findFirst().orElseThrow();
@@ -329,7 +332,7 @@ public class ValueAssertions {
             .as("call value has callee set correctly")
             .isNotNull()
             .isInstanceOf(ValueDeclaredDescriptor.class)
-            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts\".valueFunction");
+            .hasFieldOrPropertyWithValue("referencedGlobalFqn", "\"" + utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts") + "\".valueFunction");
 
         assertThat(value.getArguments())
             .hasSize(2)

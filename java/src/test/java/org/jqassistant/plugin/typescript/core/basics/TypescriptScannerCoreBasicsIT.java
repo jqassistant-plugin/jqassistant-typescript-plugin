@@ -1,8 +1,8 @@
 package org.jqassistant.plugin.typescript.core.basics;
 
-import com.buschmais.jqassistant.core.shared.io.ClasspathResource;
 import com.buschmais.jqassistant.core.store.api.model.Descriptor;
 import com.buschmais.jqassistant.core.test.plugin.AbstractPluginIT;
+import org.jqassistant.plugin.typescript.TestUtils;
 import org.jqassistant.plugin.typescript.api.TypescriptScope;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
 import org.jqassistant.plugin.typescript.core.basics.assertions.DeclarationAssertions;
@@ -26,7 +26,8 @@ public class TypescriptScannerCoreBasicsIT extends AbstractPluginIT {
 
     @Test
     void testScanner() {
-        File file = ClasspathResource.getFile(TypescriptScannerCoreBasicsIT.class, "/java-it-core-basics-sample-ts-output.json");
+        TestUtils utils = new TestUtils();
+        File file = utils.getReportJson("java-it-core-basics-sample-ts-output");
         scannedDescriptor = getScanner().scan(file, file.getAbsolutePath(), TypescriptScope.PROJECT);
         store.beginTransaction();
 
@@ -45,17 +46,17 @@ public class TypescriptScannerCoreBasicsIT extends AbstractPluginIT {
         // when regenerating the json, please crop the extracted path accordingly
         assertThat(project.getRootDirectory().getFileName())
             .as("project has correct path")
-            .isEqualTo("/java/src/test/resources/java-it-core-basics-sample-project");
+            .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project"));
 
         assertThat(project.getConfigFile().getFileName())
             .as("project has correct config file")
-            .isEqualTo("/java/src/test/resources/java-it-core-basics-sample-project/tsconfig.json");
+            .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-basics-sample-project/tsconfig.json"));
 
         assertThat(project.getReferencedProjects())
             .as("project has no references")
             .hasSize(0);
 
-        new DeclarationAssertions(project)
+        new DeclarationAssertions(project, utils)
             .assertModulePresence()
             .assertVariableDeclaration()
             .assertFunctionDeclaration()
@@ -63,7 +64,7 @@ public class TypescriptScannerCoreBasicsIT extends AbstractPluginIT {
             .assertInterfaceDeclaration()
             .assertEnumDeclaration();
 
-        new TypeAssertions(project)
+        new TypeAssertions(project, utils)
             .assertModulePresence()
             .assertPrimitiveType()
             .assertDeclaredType()
@@ -74,7 +75,7 @@ public class TypescriptScannerCoreBasicsIT extends AbstractPluginIT {
             .assertLiteralType()
             .assertTupleType();
 
-        new ValueAssertions(project)
+        new ValueAssertions(project, utils)
             .assertModulePresence()
             .assertValueNull()
             .assertValueLiteral()
