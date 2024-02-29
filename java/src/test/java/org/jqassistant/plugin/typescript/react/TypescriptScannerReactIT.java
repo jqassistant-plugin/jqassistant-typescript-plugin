@@ -49,7 +49,7 @@ public class TypescriptScannerReactIT extends AbstractPluginIT {
 
         // normally, the following path would be absolute
         // when regenerating the json, please crop the extracted path accordingly
-        assertThat(project.getRootDirectory().getFileName())
+        assertThat(project.getRootDirectory().getAbsoluteFileName())
             .as("project has correct path")
             .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-react-sample-project"));
 

@@ -2,9 +2,8 @@ package org.jqassistant.plugin.typescript.impl.mapper.core;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerContext;
-import com.buschmais.jqassistant.plugin.common.api.model.DirectoryDescriptor;
-import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.FileResolver;
+import org.jqassistant.plugin.typescript.api.model.core.LocalFileDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
 import org.jqassistant.plugin.typescript.impl.filesystem.LocalFileResolver;
 import org.jqassistant.plugin.typescript.impl.mapper.react.ReactComponentResolver;
@@ -38,10 +37,10 @@ public class ProjectMapper {
 
             ProjectDescriptor projectDescriptor = scanner.getContext().getStore().create(ProjectDescriptor.class);
 
-            DirectoryDescriptor rootDirDescriptor = fileResolver.require(project.getRootPath(), DirectoryDescriptor.class, scanner.getContext());
+            LocalFileDescriptor rootDirDescriptor = fileResolver.require(project.getRootPath(), LocalFileDescriptor.class, scanner.getContext());
             projectDescriptor.setRootDirectory(rootDirDescriptor);
 
-            FileDescriptor configFileDescriptor = fileResolver.require(project.getProjectPath() + "/tsconfig.json", FileDescriptor.class, scanner.getContext());
+            LocalFileDescriptor configFileDescriptor = fileResolver.require(project.getProjectPath() + "/tsconfig.json", LocalFileDescriptor.class, scanner.getContext());
             projectDescriptor.setConfigFile(configFileDescriptor);
 
             projectDescriptor.getModules().addAll(
@@ -61,7 +60,7 @@ public class ProjectMapper {
         for (ProjectDescriptor projectDescriptor : result) {
             Optional<Project> projectOpt = projects.stream()
                 .filter(p -> {
-                    var configFilePath = projectDescriptor.getConfigFile().getFileName();
+                    var configFilePath = projectDescriptor.getConfigFile().getAbsoluteFileName();
                     var projectDir = configFilePath.substring(0, configFilePath.length() - "/tsconfig.json".length());
                     return projectDir.equals(p.getProjectPath());
                 })
@@ -71,7 +70,7 @@ public class ProjectMapper {
 
                 project.getSubProjectPaths().forEach(spp -> {
                     Optional<ProjectDescriptor> subprojectDescriptorOpt = result.stream()
-                        .filter(pd -> pd.getConfigFile().getFileName().equals(spp + "/tsconfig.json"))
+                        .filter(pd -> pd.getConfigFile().getAbsoluteFileName().equals(spp + "/tsconfig.json"))
                         .findFirst();
 
                     if (subprojectDescriptorOpt.isPresent()) {

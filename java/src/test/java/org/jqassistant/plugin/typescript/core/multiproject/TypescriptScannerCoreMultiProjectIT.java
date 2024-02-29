@@ -23,6 +23,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
     Descriptor scannedDescriptor;
 
     @Test
+    @TestStore(type = TestStore.Type.REMOTE)
     void testScanner() {
         TestUtils utils = new TestUtils();
         File file = utils.getReportJson("java-it-core-multi-sample-ts-output");
@@ -35,7 +36,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
             .containsKey("project");
         Map<String, ProjectDescriptor> projects = new HashMap<>();
         testResult.getColumn("project")
-            .forEach(p -> projects.put(((ProjectDescriptor) p).getRootDirectory().getFileName(), (ProjectDescriptor) p));
+            .forEach(p -> projects.put(((ProjectDescriptor) p).getRootDirectory().getAbsoluteFileName(), (ProjectDescriptor) p));
         assertThat(projects)
             .as("there's only one scanned project")
             .hasSize(7);
@@ -54,7 +55,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
         assertThat(project1)
             .as("project has correct root path")
             .isNotNull();
-        assertThat(project1.getConfigFile().getFileName())
+        assertThat(project1.getConfigFile().getAbsoluteFileName())
             .as("project has correct config path")
             .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project1/tsconfig.json"));
         assertThat(project1.getReferencedProjects())
@@ -104,7 +105,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
         assertThat(project2)
             .as("project has correct root path")
             .isNotNull();
-        assertThat(project2.getConfigFile().getFileName())
+        assertThat(project2.getConfigFile().getAbsoluteFileName())
             .as("project has correct config path")
             .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project2/tsconfig.json"));
         assertThat(project2.getReferencedProjects())
@@ -154,7 +155,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
         assertThat(project3)
             .as("project has correct root path")
             .isNotNull();
-        assertThat(project3.getConfigFile().getFileName())
+        assertThat(project3.getConfigFile().getAbsoluteFileName())
             .as("project has correct config path")
             .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project3/tsconfig.json"));
         assertThat(project3.getReferencedProjects())
@@ -186,7 +187,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
         assertThat(project31)
             .as("project has correct root path")
             .isNotNull();
-        assertThat(project31.getConfigFile().getFileName())
+        assertThat(project31.getConfigFile().getAbsoluteFileName())
             .as("project has correct config path")
             .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/tsconfig.json"));
         assertThat(project31.getReferencedProjects())
@@ -217,7 +218,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
         assertThat(project32)
             .as("project has correct root path")
             .isNotNull();
-        assertThat(project32.getConfigFile().getFileName())
+        assertThat(project32.getConfigFile().getAbsoluteFileName())
             .as("project has correct config path")
             .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/tsconfig.json"));
         assertThat(project32.getReferencedProjects())
@@ -249,7 +250,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
         assertThat(projectCommon)
             .as("project has correct root path")
             .isNotNull();
-        assertThat(projectCommon.getConfigFile().getFileName())
+        assertThat(projectCommon.getConfigFile().getAbsoluteFileName())
             .as("project has correct config path")
             .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/tsconfig.json"));
         assertThat(projectCommon.getReferencedProjects())
@@ -281,7 +282,7 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
         assertThat(project331)
             .as("project has correct root path")
             .isNotNull();
-        assertThat(project331.getConfigFile().getFileName())
+        assertThat(project331.getConfigFile().getAbsoluteFileName())
             .as("project has correct config path")
             .isEqualTo(utils.resolvePath("/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/tsconfig.json"));
         assertThat(project331.getReferencedProjects())
