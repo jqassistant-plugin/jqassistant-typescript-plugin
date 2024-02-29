@@ -78,22 +78,22 @@ export class ProjectUtils {
         if(tsConfig.projectReferences) {
             for (const ref of tsConfig.projectReferences) {
                 const subProjectInfos = this.getProjectInfo(ref.path);
-                subProjectPaths.push(...subProjectInfos.map(spi => spi.projectPath));
+                subProjectPaths.push(...subProjectInfos.map(spi => spi.projectPath.replace(/\\/g, "/")));
                 result.push(...subProjectInfos);
             }
         }
 
         let rootPath = projectPath;
         // if project root is descendant of configured root directory use the configured one
-        if(path.resolve(projectPath).startsWith(path.resolve(tsConfig.options.rootDir!))) {
-            rootPath = path.resolve(tsConfig.options.rootDir!);
+        if(path.resolve(projectPath).startsWith(path.resolve(projectPath, tsConfig.options.rootDir!))) {
+            rootPath = path.resolve(projectPath, tsConfig.options.rootDir!);
         }
 
         result.push({
-            rootPath,
-            projectPath,
+            rootPath: rootPath.replace(/\\/g, "/"),
+            projectPath: projectPath.replace(/\\/g, "/"),
             subProjectPaths: subProjectPaths,
-            sourceFilePaths: tsConfig.fileNames
+            sourceFilePaths: tsConfig.fileNames.map(fn => fn.replace(/\\/g, "/"))
         });
 
         return result;

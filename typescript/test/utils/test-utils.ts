@@ -393,9 +393,9 @@ export function resolveGlobalFqn(projectRootPath: string, localFqn: string): str
     const fqnIdentifier = ModulePathUtils.extractFQNIdentifier(localFqn);
     if(fqnPath) {
         // standard declaration FQN
-        return `"${path.resolve(projectRootPath, fqnPath)}".${fqnIdentifier}`
+        return `"${path.resolve(projectRootPath, fqnPath)}".${fqnIdentifier}`.replace(/\\/g, "/");
     } else {
         // module FQN
-        return path.resolve(projectRootPath, fqnIdentifier);
+        return path.resolve(projectRootPath, fqnIdentifier).replace(/\\/g, "/");
     }
 }

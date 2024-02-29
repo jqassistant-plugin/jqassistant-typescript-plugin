@@ -21,6 +21,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
+    "glob": "^10.3.10",
     "json5": "^2.2.3",
     "minimatch": "^9.0.3",
     "readdirp": "^3.6.0",

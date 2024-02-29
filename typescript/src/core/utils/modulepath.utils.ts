@@ -5,6 +5,7 @@ import { FQN } from "../context";
 import { LCEProject, LCEProjectInfo } from "../project";
 import { LCEModule } from "../concepts/typescript-module.concept";
 import { FileUtils } from "./file.utils";
+import {glob} from "glob";
 
 /**
  * describes the three variants of regular paths:
@@ -116,7 +117,13 @@ export class ModulePathUtils {
             if(pathType === "node") {
                 return tcFQN;
             } else if(pathType === "absolute") {
-                return (`"${this.addFileEnding(fqnPath)}"${tcFQN.slice(tcFQN.lastIndexOf('"') + 1)}`).replace(/\\/g, "/");
+                let sourceFileName = this.addFileEnding(fqnPath);
+
+                // re-introduce case-sensitive naming in Windows platforms
+                if(process.platform === "win32") {
+                    sourceFileName = glob.sync(sourceFileName)[0];
+                }
+                return (`"${sourceFileName}"${tcFQN.slice(tcFQN.lastIndexOf('"') + 1)}`).replace(/\\/g, "/");
             } else {
                 throw new Error("Encountered relative TypeChecker FQN path: " + tcFQN);
             }

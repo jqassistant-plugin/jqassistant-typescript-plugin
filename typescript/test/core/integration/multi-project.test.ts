@@ -23,7 +23,9 @@ describe("Multi-Project test", () => {
             if(projects.has(p.projectInfo.projectPath)) {
                 throw new Error("Encountered processed project duplicate: " + p.projectInfo.projectPath);
             }
-            projects.set(path.relative(path.resolve("./test/core/integration/sample-projects/multi-project"), p.projectInfo.projectPath), p);
+            projects.set(path.relative(
+                path.resolve("./test/core/integration/sample-projects/multi-project"), p.projectInfo.projectPath
+            ).replace(/\\/g, "/"), p);
         }
     });
 
