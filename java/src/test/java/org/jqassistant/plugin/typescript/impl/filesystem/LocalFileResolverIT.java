@@ -1,17 +1,14 @@
 package org.jqassistant.plugin.typescript.impl.filesystem;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import com.buschmais.jqassistant.core.scanner.api.ScannerContext;
-import com.buschmais.jqassistant.core.shared.io.ClasspathResource;
 import com.buschmais.jqassistant.core.test.plugin.AbstractPluginIT;
 import com.buschmais.jqassistant.plugin.common.api.model.DirectoryDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
-
 import org.jqassistant.plugin.typescript.api.model.core.LocalFileDescriptor;
 import org.junit.jupiter.api.Test;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,9 +60,5 @@ class LocalFileResolverIT extends AbstractPluginIT {
         assertThat(fileDescriptor).isInstanceOf(LocalFileDescriptor.class);
         LocalFileDescriptor localFileDescriptor = (LocalFileDescriptor) fileDescriptor;
         assertThat(Paths.get(localFileDescriptor.getAbsoluteFileName())).isEqualTo(expectedAbsolutePath.toAbsolutePath());
-    }
-
-    protected File getClassesDirectory(Class<?> rootClass) {
-        return ClasspathResource.getFile(rootClass, "/");
     }
 }

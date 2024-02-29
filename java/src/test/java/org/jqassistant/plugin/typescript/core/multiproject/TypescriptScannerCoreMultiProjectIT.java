@@ -23,7 +23,6 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
     Descriptor scannedDescriptor;
 
     @Test
-    @TestStore(type = TestStore.Type.REMOTE)
     void testScanner() {
         TestUtils utils = new TestUtils();
         File file = utils.getReportJson("java-it-core-multi-sample-ts-output");
