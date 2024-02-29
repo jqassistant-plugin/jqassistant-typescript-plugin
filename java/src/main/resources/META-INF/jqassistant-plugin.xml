@@ -64,6 +64,8 @@
         <class>org.jqassistant.plugin.typescript.api.model.react.JSXElementTypeDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.react.ReactComponentDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.react.ReactComponentRendersDescriptor</class>
+
+        <class>org.jqassistant.plugin.typescript.api.model.core.LocalFileDescriptor</class>
     </model>
     <scope>
         <class>org.jqassistant.plugin.typescript.api.TypescriptScope</class>
