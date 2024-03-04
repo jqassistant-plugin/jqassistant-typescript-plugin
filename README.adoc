@@ -9,7 +9,6 @@ NOTE: This plugin has not been officially released yet.
 
 == Installation
 
-- Clone this repository and build it using Maven `mvn install`
 - Download the https://repo1.maven.org/maven2/com/buschmais/jqassistant/cli/jqassistant-commandline-distribution/[ZIP distribution] of the jQAssistant command line utility and unpack it. A directory `jqassistant-commandline-distribution-2.x.x` will be created.
 
 === NPM Installation (global):
@@ -29,25 +28,34 @@ NOTE: This plugin has not been officially released yet.
 
 == Usage
 
-* create a file `.jqassistant.yml` in your project root*
+* create a file `.jqassistant.yml` in the directory that contains your project(s)
 +
 ----
 jqassistant:
   plugins:
     - group-id: org.jqassistant.plugin.typescript
       artifact-id: jqassistant-typescript-plugin
-      version: 1.0.0-SNAPSHOT
+      version: 1.0.0-RC1
   scan:
     include:
       files:
         - typescript:project::build/jqa-ts-output.json
 ----
-* execute `jqa-ts-lce`(global installation) or `npm run jqa`(local installation) from your project root (this will generate a file `.reports/jqa/ts-output.json`)
+* execute `jqa-ts-lce`(global installation) or `npm run jqa`(local installation) from the directory that contains your project(s) (this will generate a file `.reports/jqa/ts-output.json`)
 ** use `--help` option to show available options for the command (when using local installation, options have to be specified in the `package.json`)
 * run the jQAssistant command line utility using `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh scan` (imports `.reports/jqa/ts-output.json` into the graph database)
 * start exploring the graph by starting the embedded server `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh server` and opening your browser at `http://localhost:7474`
-
-*project root does refer to the directory that contains the (root) `tsconfig.json`
+- to exclude unwanted scans of directories like `node_modules` you can exclude them in the `jqassistant.yml`:
++
+----
+jqassistant:
+  scan:
+    properties:
+      file.exclude:
+        - /node_modules/**
+        - /dist/**
+        - /jqassistant/**
+----
 
 == Model
 
@@ -56,11 +64,6 @@ jqassistant:
 The core model represents all basic TypeScript language concepts, independent of any used frameworks or libraries.
 
 image::docs/jqa-ts-plugin-model-core.jpg[Neo4j model for the core model of the jQAssistant TypeScript plugin]
-
-==== Project and Directory Structure
-- each root directory of a project is resolved
-
-==== References and Dependencies
 
 The destinations of the `REFERENCES` relations of `:Type:Declared` and `:Value:Declared` as well as all `:DEPENDS_ON` relations have been omitted for the sake of clarity.
 
@@ -111,7 +114,23 @@ and can target one or more of the following nodes:
 * `:Variable`
 * `:Function`
 
-==== Additional Information about the Core Graph Structure
+==== Project and Directory Structure
+* the directory provided to the language concept extractor is scanned for TypeScript projects
+** each project that is discovered is associated with two `:File:Local` nodes:
+*** the path to the `tsconfig.json`
+*** the resolved root directory of the project (either the directory of the `tsconfig.json` or the https://www.typescriptlang.org/tsconfig#rootDir[rootDir] path, if it located above the `tsconfig.json` path)
+** projects may be nested and/or https://www.typescriptlang.org/docs/handbook/project-references.html[referenced]
+* all scanned files and directories are represented by `:File:Local` nodes that hold an absolute path (`absoluteFileName`) and optionally a path relative to the root of the containing project (`fileName`)
+** all directories also have the additional label `:Directory`
+** all scanned files and directories share a common tree of nodes (the root of this tree represents the system root directory, i.e. `/` or `C:\`)
+*** NOTE: only the directory provided to the language concept extractor is fully traversed
+
+==== References and Dependencies
+
+
+* dependencies are registered on a statement/expression level and propagated upwards
+** import statements are ignored during this process which means declarations of unused imports will not be represented in the graph
+** the number of concrete usages within a code construct is represented by the `cardinality` property of the `DEPENDS_ON` relation
 * Re-exports are resolved transitively as far as possible, that means dependencies are always targeting the original declaration, never some intermediary re-exporting module
 
 === React Extension
