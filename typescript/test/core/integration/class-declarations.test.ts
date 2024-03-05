@@ -27,6 +27,7 @@ describe("class declarations test", () => {
     const classDecls: Map<string, LCEClassDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
     let mainModule: LCEModule;
+    let indexModule: LCEModule;
 
     beforeAll(async () => {
         const projects = await processProjects(projectRootPath);
@@ -55,6 +56,11 @@ describe("class declarations test", () => {
             throw new Error("Could not find main module in result data");
         }
         mainModule = mainModuleConcept as LCEModule;
+        const indexModuleConcept = result.get(LCEModule.conceptId)?.find((mod) => (mod as LCEModule).fqn.localFqn === "./src/subdir/index.ts");
+        if (!indexModuleConcept) {
+            throw new Error("Could not find index module in result data");
+        }
+        indexModule = indexModuleConcept as LCEModule;
 
         dependencies = getDependenciesFromResult(result);
     });
@@ -686,6 +692,31 @@ describe("class declarations test", () => {
             expect(methodNested.typeParameters).toHaveLength(1);
             expectTypeParameterDeclaration(methodNested.typeParameters, 0,"U");
 
+            expect(decl.accessorProperties).toHaveLength(0);
+
+            expect(decl.decorators).toHaveLength(0);
+        }
+    });
+
+    test("class in index.ts", async () => {
+        const decl = classDecls.get('"./src/subdir".cIndex');
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(indexModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/subdir".cIndex'));
+            expect(decl.className).toBe("cIndex");
+            expect(decl.abstract).toBe(false);
+
+            expect(decl.typeParameters).toHaveLength(0);
+
+            expect(decl.extendsClass).toBeUndefined();
+            expect(decl.implementsInterfaces).toHaveLength(0);
+
+            expect(decl.constr).toBeUndefined();
+            expect(decl.properties).toHaveLength(1);
+            expectProperty(decl.properties, '"./src/subdir".cIndex.x', "x", false, "public", false, false, false, false, "number");
+
+            expect(decl.methods).toHaveLength(0);
             expect(decl.accessorProperties).toHaveLength(0);
 
             expect(decl.decorators).toHaveLength(0);

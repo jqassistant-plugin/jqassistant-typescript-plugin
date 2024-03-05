@@ -10,6 +10,7 @@ import {
 import { LCEVariableDeclaration } from "../../../src/core/concepts/variable-declaration.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
+import { IndexEnum, IndexVar } from "./sample-projects/import-export/src/subdir";
 
 jest.setTimeout(30000);
 
@@ -127,6 +128,19 @@ describe("import/export test", () => {
         expect(exports!).toHaveLength(18);
     });
 
+    test("exports (subdir/index.ts)", async () => {
+        const exports = exportDecls.get(resolveGlobalFqn(projectRootPath, './src/subdir/index.ts'));
+        expect(exports).toBeDefined();
+        expect(exports!).toHaveLength(7);
+        expectExport(projectRootPath, exports!, '"./src/subdir".IndexClass', "IndexClass");
+        expectExport(projectRootPath, exports!, '"./src/subdir".IndexInterface', "IndexInterface");
+        expectExport(projectRootPath, exports!, '"./src/subdir".IndexType', "IndexType");
+        expectExport(projectRootPath, exports!, '"./src/subdir".IndexVar', "IndexVar");
+        expectExport(projectRootPath, exports!, '"./src/subdir".IndexFunction', "IndexFunction");
+        expectExport(projectRootPath, exports!, '"./src/subdir".IndexEnum', "IndexEnum");
+        expectExport(projectRootPath, exports!, '"./src/subdir".AliasClass', "AliasClass", "AliasAliasClass");
+    });
+
     test("imports (imports1.ts)", async () => {
         expectDeclaredType(varDecls.get('"./src/imports1.ts".v1')?.type, resolveGlobalFqn(projectRootPath, '"./src/source3.ts".CustomInterface3'));
         expectDependency(projectRootPath, dependencies, '"./src/imports1.ts".v1', resolveGlobalFqn(projectRootPath, '"./src/source3.ts".CustomInterface3'), 1);
@@ -178,6 +192,24 @@ describe("import/export test", () => {
 
         // ensure that no module wide dependencies are present
         expect(dependencies.get('./src/imports2.ts')).toBeUndefined();
+    });
+
+    test("imports (importsIndex.ts)", async () => {
+        expectDeclaredType(varDecls.get('"./src/importsIndex.ts".a')?.type, resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexClass'));
+        expectDependency(projectRootPath, dependencies, '"./src/importsIndex.ts".a', resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexClass'), 1);
+        expectDeclaredType(varDecls.get('"./src/importsIndex.ts".b')?.type, resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexInterface'));
+        expectDependency(projectRootPath, dependencies, '"./src/importsIndex.ts".b', resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexInterface'), 1);
+        expectDeclaredType(varDecls.get('"./src/importsIndex.ts".c')?.type, resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexType'));
+        expectDependency(projectRootPath, dependencies, '"./src/importsIndex.ts".c', resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexType'), 1);
+        expectDependency(projectRootPath, dependencies, '"./src/importsIndex.ts".d', resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexVar'), 1);
+        expectDeclaredType(varDecls.get('"./src/importsIndex.ts".e')?.type, resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexEnum'));
+        expectDependency(projectRootPath, dependencies, '"./src/importsIndex.ts".e', resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexEnum'), 1);
+        expectDeclaredType(varDecls.get('"./src/importsIndex.ts".f')?.type, resolveGlobalFqn(projectRootPath, '"./src/subdir".AliasClass'));
+        expectDependency(projectRootPath, dependencies, '"./src/importsIndex.ts".f', resolveGlobalFqn(projectRootPath, '"./src/subdir".AliasClass'), 1);
+        expectDependency(projectRootPath, dependencies, '"./src/importsIndex.ts".g', resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexFunction'), 1);
+
+        // ensure that no module wide dependencies are present
+        expect(dependencies.get('./src/importsIndex.ts')).toBeUndefined();
     });
 
 });

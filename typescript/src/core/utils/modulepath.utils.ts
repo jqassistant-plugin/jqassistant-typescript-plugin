@@ -5,7 +5,7 @@ import { FQN } from "../context";
 import { LCEProject, LCEProjectInfo } from "../project";
 import { LCEModule } from "../concepts/typescript-module.concept";
 import { FileUtils } from "./file.utils";
-import {glob} from "glob";
+import { glob } from "glob";
 
 /**
  * describes the three variants of regular paths:
@@ -123,6 +123,12 @@ export class ModulePathUtils {
                 if(process.platform === "win32") {
                     sourceFileName = glob.sync(sourceFileName)[0];
                 }
+
+                // remove index.* filename from FQN path
+                if(sourceFileName.match(/\/index\.[a-z]+$/)){
+                    sourceFileName = sourceFileName.replace(/\/index\.[a-z]+$/, "");
+                }
+
                 return (`"${sourceFileName}"${tcFQN.slice(tcFQN.lastIndexOf('"') + 1)}`).replace(/\\/g, "/");
             } else {
                 throw new Error("Encountered relative TypeChecker FQN path: " + tcFQN);

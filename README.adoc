@@ -125,9 +125,23 @@ and can target one or more of the following nodes:
 ** all scanned files and directories share a common tree of nodes (the root of this tree represents the system root directory, i.e. `/` or `C:\`)
 *** NOTE: only the directory provided to the language concept extractor is fully traversed
 
+==== Fully Qualified Names (FQNs)
+Fully qualified names are used to uniquely identify different code constructs in the graph.
+
+We distinguish between:
+
+* `localFqn`: uniquely identifies a construct within a project
+** for modules the relative file path is used (identical to `fileName`)
+** all declarations and their members follow the pattern: `"./relative/path/to/module.ts".DeclarationName.MemberName`
+* `globalFqn`: uniquely identifies a construct, even across projects
+** for modules the absolute file path is used (identical to `absoluteFileName`)
+** all declarations and their members follow the patter: `"/absolute/path/to/module.ts".DeclarationName.MemberName`
+
+NOTE: For declarations that are part of a `index.ts`(`x`) module, the module path ends in the declaration FQNs with the containing directory, omitting the file name.
+E.g. a localFqn for the class `MyClass` in the file `./some/path/index.ts` would look like `"./some/path".MyClass`
+
+
 ==== References and Dependencies
-
-
 * dependencies are registered on a statement/expression level and propagated upwards
 ** import statements are ignored during this process which means declarations of unused imports will not be represented in the graph
 ** the number of concrete usages within a code construct is represented by the `cardinality` property of the `DEPENDS_ON` relation

@@ -1,6 +1,6 @@
 {
   "name": "@jqassistant/ts-lce",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Tool to extract language concepts from a TypeScript codebase and export them to a JSON file.",
   "main": "dist/src/main.js",
   "author": "BUSCHMAIS GbR",
