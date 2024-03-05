@@ -6,6 +6,7 @@ node_modules/
 
 dist/jest.config.js
 .reports/jqa/ts-output.json
+jqassistant/
 
 .eslintignore
 .eslintrc.cjs
