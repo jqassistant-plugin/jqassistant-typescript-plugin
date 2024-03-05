@@ -5,7 +5,6 @@ import { FQN } from "../context";
 import { LCEProject, LCEProjectInfo } from "../project";
 import { LCEModule } from "../concepts/typescript-module.concept";
 import { FileUtils } from "./file.utils";
-import { glob } from "glob";
 
 /**
  * describes the three variants of regular paths:
@@ -105,7 +104,6 @@ export class ModulePathUtils {
     }
 
     /**
-     * @param projectPath absolute path to project Root
      * @param tcFQN FQN obtained using `getFullyQualifiedName(symbol)` of TS TypeChecker
      * @param sourceFilePathAbsolute absolute path to the source file of the symbol
      * @returns normalized FQN with absolute/node module path
@@ -117,24 +115,26 @@ export class ModulePathUtils {
             if(pathType === "node") {
                 return tcFQN;
             } else if(pathType === "absolute") {
-                let sourceFileName = this.addFileEnding(fqnPath);
+                let sourceFilePath = this.addFileEnding(fqnPath);
 
-                // re-introduce case-sensitive naming in Windows platforms
+                // re-introduce case-sensitive naming in Windows platforms and normalize paths
                 if(process.platform === "win32") {
-                    sourceFileName = glob.sync(sourceFileName)[0];
+                    sourceFilePath = fs.realpathSync.native(sourceFilePath).replace(/\\/g, "/");
                 }
 
                 // remove index.* filename from FQN path
-                if(sourceFileName.match(/\/index\.[a-z]+$/)){
-                    sourceFileName = sourceFileName.replace(/\/index\.[a-z]+$/, "");
-                }
+                sourceFilePath = sourceFilePath.replace(/\/index\.\w+$/, "");
 
-                return (`"${sourceFileName}"${tcFQN.slice(tcFQN.lastIndexOf('"') + 1)}`).replace(/\\/g, "/");
+                return (`"${sourceFilePath}"${tcFQN.slice(tcFQN.lastIndexOf('"') + 1)}`);
             } else {
                 throw new Error("Encountered relative TypeChecker FQN path: " + tcFQN);
             }
         } else {
-            return this.toFQN(sourceFilePathAbsolute).globalFqn + "." + tcFQN;
+            let sourceFilePath = sourceFilePathAbsolute;
+            if(process.platform === "win32") {
+                sourceFilePath = fs.realpathSync.native(sourceFilePath).replace(/\\/g, "/");
+            }
+            return this.toFQN(sourceFilePath).globalFqn + "." + tcFQN;
         }
     }
 
@@ -143,13 +143,13 @@ export class ModulePathUtils {
      * Use relative paths for local FQNs and absolute paths for global FQNs.
      */
     static toFQN(globalPath: string, localPath?: string): FQN {
-        const indexSourceFileRegEx = /\/index\.\w+/;
-        const basicGlobalFQN = '"' + (globalPath.replace(/\\/g, "/")) + '"';
-        const basicLocalFQN = localPath ? '"' + (localPath.replace(/\\/g, "/")) + '"' : "";
+        const indexSourceFileRegEx = /\/index\.\w+$/;
+        const basicGlobalFQN = '"' + (globalPath.replace(/\\/g, "/")).replace(indexSourceFileRegEx, "") + '"';
+        const basicLocalFQN = localPath ? '"' + (localPath.replace(/\\/g, "/")).replace(indexSourceFileRegEx, "") + '"' : "";
 
         return new FQN(
-            basicGlobalFQN.replace(indexSourceFileRegEx, ""),
-            basicLocalFQN.replace(indexSourceFileRegEx, "")
+            basicGlobalFQN,
+            basicLocalFQN
         );
     }
 
@@ -213,7 +213,12 @@ export class ModulePathUtils {
 
                 const modules = subproject.concepts.get(LCEModule.conceptId) as LCEModule[];
                 for (const module of modules) {
-                    moduleIndex.set(module.fqn.globalFqn, true);
+                    if(module.fqn.globalFqn.match(/\/index\.[a-z]+$/)) {
+                        // use directory path for index.* modules
+                        moduleIndex.set(module.fqn.globalFqn.replace(/\/index\.[a-z]+$/, ""), true);
+                    } else {
+                        moduleIndex.set(module.fqn.globalFqn, true);
+                    }
                 }
             }
             this.moduleIndexes.set(projectInfo.projectPath, moduleIndex)
