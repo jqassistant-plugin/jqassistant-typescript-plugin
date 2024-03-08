@@ -16,7 +16,9 @@ export class ReactComponentPostProcessor extends PostProcessor {
             // Function Components (standard functions)
             const allFunctions: LCEFunctionDeclaration[] = (concepts.get(LCEFunctionDeclaration.conceptId) ?? []) as LCEFunctionDeclaration[];
             for (const func of allFunctions) {
-                if (func.returnType instanceof LCETypeDeclared && func.returnType.fqn.globalFqn === '"react".React.JSX.Element') {
+                if (func.returnType instanceof LCETypeDeclared &&
+                    (func.returnType.fqn.globalFqn === '"react".React.JSX.Element' ||
+                        func.returnType.fqn.globalFqn === '"react".JSX.Element')) {
                     const component = new LCEReactComponent(func.fqn, func.functionName, []);
                     if (func.metadata.has(JSXDependencyContextProcessor.JSX_DEPENDENCY_METADATA)) {
                         component.renderedElements.push(...func.metadata.get(JSXDependencyContextProcessor.JSX_DEPENDENCY_METADATA));
@@ -31,7 +33,8 @@ export class ReactComponentPostProcessor extends PostProcessor {
                 if (
                     variable.type instanceof LCETypeFunction &&
                     variable.type.returnType instanceof LCETypeDeclared &&
-                    variable.type.returnType.fqn.globalFqn === '"react".React.JSX.Element'
+                    (variable.type.returnType.fqn.globalFqn === '"react".React.JSX.Element' ||
+                        variable.type.returnType.fqn.globalFqn === '"react".JSX.Element')
                 ) {
                     const component = new LCEReactComponent(variable.fqn, variable.variableName, []);
                     if (variable.metadata.has(JSXDependencyContextProcessor.JSX_DEPENDENCY_METADATA)) {
