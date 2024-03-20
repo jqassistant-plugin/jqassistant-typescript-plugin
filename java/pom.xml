@@ -12,7 +12,7 @@
     <properties>
         <jqa-plugin-common.version>${com.buschmais.jqassistant.version}</jqa-plugin-common.version>
         <jqa-json-plugin.version>${com.buschmais.jqassistant.version}</jqa-json-plugin.version>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.32</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
     </properties>
 
