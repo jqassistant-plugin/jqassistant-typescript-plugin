@@ -363,8 +363,6 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
             const isStandardLibrary = !!sourceFile && globalContext.services.program.isSourceFileDefaultLibrary(sourceFile);
             const relativeSrcPath = !!sourceFile ? path.relative(globalContext.projectInfo.rootPath, sourceFile.fileName).replace(/\\/g, "/") : undefined;
             const isExternal = !!sourceFile && (globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile) || relativeSrcPath!.startsWith("node_modules"));
-            // const isExternal = hasSource ? globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile!) :
-            //     !!symbol?.declarations && symbol.declarations[0] && globalContext.services.program.isSourceFileFromExternalLibrary(symbol.declarations[0].getSourceFile());
 
             let normalizedFqn = new FQN("");
             let scheduleFqnResolution = false;
