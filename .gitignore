@@ -16,6 +16,7 @@ target
 **/tmp/
 **/dist/
 **/jqassistant/store/
+**/jqassistant/report/
 **/tsconfig.tsbuildinfo
 
 # jQA
