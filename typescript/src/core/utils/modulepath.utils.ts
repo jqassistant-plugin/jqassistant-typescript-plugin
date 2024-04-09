@@ -117,9 +117,12 @@ export class ModulePathUtils {
             } else if(pathType === "absolute") {
                 let sourceFilePath = this.addFileEnding(fqnPath);
 
-                // re-introduce case-sensitive naming in Windows platforms and normalize paths
+                // re-introduce case-sensitive naming
+                sourceFilePath = fs.realpathSync.native(sourceFilePath);
+
+                // normalize paths on Windows platforms
                 if(process.platform === "win32") {
-                    sourceFilePath = fs.realpathSync.native(sourceFilePath).replace(/\\/g, "/");
+                    sourceFilePath = sourceFilePath.replace(/\\/g, "/");
                 }
 
                 // remove index.* filename from FQN path
@@ -130,9 +133,9 @@ export class ModulePathUtils {
                 throw new Error("Encountered relative TypeChecker FQN path: " + tcFQN);
             }
         } else {
-            let sourceFilePath = sourceFilePathAbsolute;
+            let sourceFilePath = fs.realpathSync.native(sourceFilePathAbsolute);
             if(process.platform === "win32") {
-                sourceFilePath = fs.realpathSync.native(sourceFilePath).replace(/\\/g, "/");
+                sourceFilePath = sourceFilePath.replace(/\\/g, "/");
             }
             return this.toFQN(sourceFilePath).globalFqn + "." + tcFQN;
         }
