@@ -29,7 +29,10 @@
           sonar_token: ${{ secrets.SONAR_TOKEN }}
 
       typescript-test:
-        runs-on: ubuntu-latest
+        runs-on: ${{ matrix.os }}
+        strategy:
+          matrix:
+            os: [ ubuntu-latest, windows-latest, macos-latest ]
         steps:
           - uses: actions/checkout@v3
           - name: Setup Node.js (LTS)
