@@ -23,7 +23,7 @@ export class NodeUtils {
         if (ModulePathUtils.getPathType(pathToPackageFile) === "relative") {
             pathToPackageFile = path.resolve(projectRootPath, pathToPackageFile);
         }
-        const packagePath = path.dirname(pathToPackageFile);
+        const packagePath = fs.realpathSync.native(path.dirname(pathToPackageFile));
         if (this.packageMappings.has(packagePath)) {
             return this.packageMappings.get(packagePath)!;
         }
