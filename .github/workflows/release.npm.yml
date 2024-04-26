@@ -24,29 +24,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Change to typescript directory
-        run: cd typescript
-
       - name: Setup Node.js (LTS)
         uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
 
       - name: Update package.json to release version
+        working-directory: typescript
         run: npm version ${{ github.event.inputs.releaseVersion }} --no-git-tag-version
 
       - name: Install dependencies
+        working-directory: typescript
         run: npm install
 
       - name: Build package
+        working-directory: typescript
         run: npm run build
 
       - name: Publish to npm
+        working-directory: typescript
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Update package.json to development version
+        working-directory: typescript
         run: npm version ${{ github.event.inputs.developmentVersion }} --no-git-tag-version
 
       - name: Push development version commit
