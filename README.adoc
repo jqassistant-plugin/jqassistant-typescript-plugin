@@ -41,6 +41,7 @@ jqassistant:
       files:
         - typescript:project::build/jqa-ts-output.json
 ----
+* if not already done, run `npm install` to completely download all dependencies
 * execute `jqa-ts-lce`(global installation) or `npm run jqa`(local installation) from the directory that contains your project(s) (this will generate a file `.reports/jqa/ts-output.json`)
 ** use `--help` option to show available options for the command (when using local installation, options have to be specified in the `package.json`)
 * run the jQAssistant command line utility using `jqassistant-commandline-distribution-2.x.x/bin/jqassistant.sh scan` (imports `.reports/jqa/ts-output.json` into the graph database)

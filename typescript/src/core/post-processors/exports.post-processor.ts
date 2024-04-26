@@ -91,9 +91,10 @@ export class ExportsPostProcessor extends PostProcessor {
                                 this.addDependency(concepts, modulePathAbsolute, originalExport.globalDeclFqn);
                             }
                         } else {
-                            console.log(
-                                "\n" + `Error: could not find exported declaration "${exp.identifier}" in "${exp.importSource}": Ignoring export...`,
+                            console.error(
+                                `Error: could not find exported declaration "${exp.identifier}" in "${exp.importSource}": Ignoring export...`,
                             );
+                            console.error(`\toccurred at ${exp.sourceFilePathAbsolute}}`);
                         }
                     }
                 } else {
@@ -106,7 +107,8 @@ export class ExportsPostProcessor extends PostProcessor {
                         try {
                             resolvedModulePath = NodeUtils.resolveImportPath(exp.importSource, projectInfo.rootPath, exp.sourceFilePathAbsolute);
                         } catch (e) {
-                            console.log("\n" + `Error: Could not resolve module: ${exp.importSource}`);
+                            console.error(`Error: Could not resolve module: ${exp.importSource}`);
+                            console.error(`\toccurred at ${exp.sourceFilePathAbsolute}}`);
                         }
 
                         if (resolvedModulePath) {
@@ -165,14 +167,16 @@ export class ExportsPostProcessor extends PostProcessor {
                                 );
                                 this.addDependency(concepts, modulePathAbsolute, eDecl.fqn.globalFqn);
                             } else {
-                                console.log(
-                                    "\n" +
-                                        `Error: external declaration with identifier "${exp.identifier}" in module "${exp.importSource}" could not be found: Ignoring export...`,
+                                console.error(
+                                    `Error: external declaration with identifier "${exp.identifier}" in module "${exp.importSource}" could not be found: Ignoring export...`,
                                 );
                             }
                         }
                     } else {
-                        console.log("\n" + `Error: external module "${exp.importSource}" for re-export could not be found: Ignoring export...`);
+                        console.error(
+                            `Error: external module "${exp.importSource}" for re-export of "${exp.identifier}" could not be found. Ignoring export...`,
+                        );
+                        console.error(`\toccurred at ${exp.sourceFilePathAbsolute}}`);
                     }
                 }
             } else {
