@@ -41,11 +41,11 @@ jobs:
         working-directory: ./typescript
         run: npm run build
 
-      - name: Publish to npm
-        working-directory: ./typescript
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish package
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./typescript
 
       - name: Update package.json to development version
         working-directory: ./typescript
