@@ -24,6 +24,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Change to typescript directory
+        run: cd typescript
+
       - name: Setup Node.js (LTS)
         uses: actions/setup-node@v3
         with:
