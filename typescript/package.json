@@ -11,21 +11,17 @@
   "homepage": "https://github.com/jqassistant-plugin/jqassistant-typescript-plugin/blob/main/typescript/README.md",
   "license": "GNU GENERAL PUBLIC LICENSE",
   "dependencies": {
-    "@types/node": "^20.11.28",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
-    "@typescript-eslint/typescript-estree": "^7.2.0",
+    "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "@typescript-eslint/typescript-estree": "^7.7.1",
     "cli-progress": "^3.12.0",
     "commander": "^12.0.0",
     "eslint": "^8.57.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-promise": "^6.1.1",
     "json5": "^2.2.3",
-    "minimatch": "^9.0.3",
+    "minimatch": "^9.0.4",
     "readdirp": "^3.6.0",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.5"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.5",
