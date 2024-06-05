@@ -1,7 +1,7 @@
 import { LCEConcept } from "./concept";
 
 /**
- * Represents basic information about a TypeScript project, its source files and references to all
+ * Represents basic information about a TypeScript project, its source files and references to all subprojects
  */
 export interface LCEProjectInfo {
 
