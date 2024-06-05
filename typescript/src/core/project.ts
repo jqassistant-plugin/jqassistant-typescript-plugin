@@ -31,7 +31,7 @@ export interface LCEProjectInfo {
 }
 
 /**
- * Represents a TypeScript project along with all concepts contained with it.
+ * Represents a TypeScript project along with all concepts contained within it.
  */
 export class LCEProject {
     constructor(public projectInfo: LCEProjectInfo,
