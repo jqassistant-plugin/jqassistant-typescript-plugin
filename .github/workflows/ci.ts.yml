@@ -1,0 +1,41 @@
+---
+    name: CI-TypeScript
+    
+    on:
+      push:
+        branches:
+          - main
+        tags-ignore:
+          - "*"
+        paths-ignore:
+          - 'docs/**'
+          - 'java/**'
+          - 'README.md'
+      pull_request:
+        branches:
+          - main
+      workflow_dispatch: {}
+    
+    concurrency:
+      group: build-ts-${{ github.ref }}
+      cancel-in-progress: true
+    
+    jobs:
+      typescript-test:
+        runs-on: ${{ matrix.os }}
+        strategy:
+          fail-fast: false
+          matrix:
+            os: [ ubuntu-latest, windows-latest, macos-latest ]
+        steps:
+          - uses: actions/checkout@v3
+          - name: Setup Node.js (LTS)
+            uses: actions/setup-node@v3
+            with:
+              node-version: 'lts/*'
+          - name: Install dependencies
+            run: npm install
+            working-directory: ./typescript
+          - name: Run tests
+            run: npm run test
+            working-directory: ./typescript
