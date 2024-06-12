@@ -55,8 +55,8 @@ export abstract class Traverser {
             const rule = processingContext.metadataAssignments[i];
             let applied = false;
             for(const conceptMap of concepts) {
-                conceptMap.forEach((innerMap, outerKey) => {
-                    innerMap.forEach((innerConcepts, innerKey) => {
+                conceptMap.forEach((innerMap) => {
+                    innerMap.forEach((innerConcepts) => {
                         innerConcepts.forEach(innerConcept => {
                             applied = applied || rule.apply(innerConcept);
                         });
