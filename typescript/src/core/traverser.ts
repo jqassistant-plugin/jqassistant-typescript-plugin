@@ -22,7 +22,7 @@ export abstract class Traverser {
         // add traverser context to local context
         processingContext.localContexts.currentContexts.set(Traverser.LOCAL_TRAVERSER_CONTEXT, traverserContext);
 
-        // find processors for current
+        // find matching processors for current context
         const processorCandidates = processors.get(processingContext.node.type);
         let validProcessors: Processor[] = [];
         if (processorCandidates) {

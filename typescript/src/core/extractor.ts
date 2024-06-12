@@ -61,7 +61,7 @@ export async function processProjects(scanRoot: string): Promise<LCEProject[]> {
         processedProjects.push(await processProject(project));
     }
 
-    // Post-process for projectS
+    // post-processing projects
     console.log("Post-Processing Results...")
     for(const postProcessor of POST_PROCESSORS) {
         postProcessor.postProcess(processedProjects);

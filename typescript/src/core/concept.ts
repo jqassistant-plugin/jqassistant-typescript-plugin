@@ -56,7 +56,7 @@ export function isNamedConcept(concept: LCEConcept): concept is LCENamedConcept 
 }
 
 /**
- * Represents a set of language concepts identified by their child concept id, given by their parent and their concept id representing their type.
+ * Represents a set of language concepts identified by their child concept id given by their parent, and their concept id representing their type.
  *
  * Key Structure: conceptMap.get(parentPropName).get(conceptId)
  * */

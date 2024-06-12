@@ -26,57 +26,45 @@ public class ModuleMapper {
 
         Map<String, List<ClassDeclarationDescriptor>> classDeclarations = new HashMap<>();
         ClassDeclarationMapper.INSTANCE.mapList(conceptCollection.getClassDeclarations(), scanner)
-            .forEach(classDeclarationDescriptor -> {
-                classDeclarations.merge(classDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(classDeclarationDescriptor)), (o, n) -> {
-                    o.addAll(n);
-                    return  o;
-                });
-            });
+            .forEach(classDeclarationDescriptor -> classDeclarations.merge(classDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(classDeclarationDescriptor)), (o, n) -> {
+                o.addAll(n);
+                return  o;
+            }));
 
         Map<String, List<InterfaceDeclarationDescriptor>> interfaceDeclarations = new HashMap<>();
         InterfaceDeclarationMapper.INSTANCE.mapList(conceptCollection.getInterfaceDeclarations(), scanner)
-            .forEach(interfaceDeclarationDescriptor -> {
-                interfaceDeclarations.merge(interfaceDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(interfaceDeclarationDescriptor)), (o, n) -> {
-                    o.addAll(n);
-                    return  o;
-                });
-            });
+            .forEach(interfaceDeclarationDescriptor -> interfaceDeclarations.merge(interfaceDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(interfaceDeclarationDescriptor)), (o, n) -> {
+                o.addAll(n);
+                return  o;
+            }));
 
         Map<String, List<TypeAliasDeclarationDescriptor>> typeAliasDeclarations = new HashMap<>();
         TypeAliasDeclarationMapper.INSTANCE.mapList(conceptCollection.getTypeAliasDeclarations(), scanner)
-            .forEach(typeAliasDeclarationDescriptor -> {
-                typeAliasDeclarations.merge(typeAliasDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(typeAliasDeclarationDescriptor)), (o, n) -> {
-                    o.addAll(n);
-                    return  o;
-                });
-            });
+            .forEach(typeAliasDeclarationDescriptor -> typeAliasDeclarations.merge(typeAliasDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(typeAliasDeclarationDescriptor)), (o, n) -> {
+                o.addAll(n);
+                return  o;
+            }));
 
         Map<String, List<EnumDeclarationDescriptor>> enumDeclarations = new HashMap<>();
         EnumDeclarationMapper.INSTANCE.mapList(conceptCollection.getEnumDeclarations(), scanner)
-            .forEach(enumDeclarationDescriptor -> {
-                enumDeclarations.merge(enumDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(enumDeclarationDescriptor)), (o, n) -> {
-                    o.addAll(n);
-                    return  o;
-                });
-            });
+            .forEach(enumDeclarationDescriptor -> enumDeclarations.merge(enumDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(enumDeclarationDescriptor)), (o, n) -> {
+                o.addAll(n);
+                return  o;
+            }));
 
         Map<String, List<FunctionDeclarationDescriptor>> functionDeclarations = new HashMap<>();
         FunctionDeclarationMapper.INSTANCE.mapList(conceptCollection.getFunctionDeclarations(), scanner)
-            .forEach(functionDeclarationDescriptor -> {
-                functionDeclarations.merge(functionDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(functionDeclarationDescriptor)), (o, n) -> {
-                    o.addAll(n);
-                    return  o;
-                });
-            });
+            .forEach(functionDeclarationDescriptor -> functionDeclarations.merge(functionDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(functionDeclarationDescriptor)), (o, n) -> {
+                o.addAll(n);
+                return  o;
+            }));
 
         Map<String, List<VariableDeclarationDescriptor>> variableDeclarations = new HashMap<>();
         VariableDeclarationMapper.INSTANCE.mapList(conceptCollection.getVariableDeclarations(), scanner)
-            .forEach(variableDeclarationDescriptor -> {
-                variableDeclarations.merge(variableDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(variableDeclarationDescriptor)), (o, n) -> {
-                    o.addAll(n);
-                    return  o;
-                });
-            });
+            .forEach(variableDeclarationDescriptor -> variableDeclarations.merge(variableDeclarationDescriptor.getFileName(), new ArrayList<>(List.of(variableDeclarationDescriptor)), (o, n) -> {
+                o.addAll(n);
+                return  o;
+            }));
 
         for(Module module : conceptCollection.getModules()) {
             FileDescriptor fileDescriptor = fileResolver.require(module.getPath(), FileDescriptor.class, scanner.getContext());
@@ -85,12 +73,12 @@ public class ModuleMapper {
                 moduleDescriptor.setGlobalFqn(module.getGlobalFqn());
                 moduleDescriptor.setLocalFqn(module.getLocalFqn());
 
-                moduleDescriptor.getTypeAliasDeclarations().addAll(typeAliasDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
-                moduleDescriptor.getClassDeclarations().addAll(classDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
-                moduleDescriptor.getInterfaceDeclarations().addAll(interfaceDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
-                moduleDescriptor.getEnumDeclarations().addAll(enumDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
-                moduleDescriptor.getFunctionDeclarations().addAll(functionDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
-                moduleDescriptor.getVariableDeclarations().addAll(variableDeclarations.getOrDefault(module.getPath(), new ArrayList<>(List.of())));
+                moduleDescriptor.getTypeAliasDeclarations().addAll(typeAliasDeclarations.getOrDefault(module.getPath(), new ArrayList<>()));
+                moduleDescriptor.getClassDeclarations().addAll(classDeclarations.getOrDefault(module.getPath(), new ArrayList<>()));
+                moduleDescriptor.getInterfaceDeclarations().addAll(interfaceDeclarations.getOrDefault(module.getPath(), new ArrayList<>()));
+                moduleDescriptor.getEnumDeclarations().addAll(enumDeclarations.getOrDefault(module.getPath(), new ArrayList<>()));
+                moduleDescriptor.getFunctionDeclarations().addAll(functionDeclarations.getOrDefault(module.getPath(), new ArrayList<>()));
+                moduleDescriptor.getVariableDeclarations().addAll(variableDeclarations.getOrDefault(module.getPath(), new ArrayList<>()));
 
                 scanner.getContext().peek(FqnResolver.class).registerGlobalFqn(moduleDescriptor);
                 result.add(moduleDescriptor);
