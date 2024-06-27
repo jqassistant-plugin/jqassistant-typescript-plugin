@@ -175,3 +175,8 @@ class cGeneric<T> {
         return p2;
     }
 }
+
+class cRecursive {
+    a: string = "";
+    r?: cRecursive = undefined;
+}

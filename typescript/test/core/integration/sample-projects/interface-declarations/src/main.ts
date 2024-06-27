@@ -77,3 +77,8 @@ interface iGeneric<T> {
     method(p1: T): T;
     methodNested<U>(p1: T, p2: U): U;
 }
+
+interface iRecursive {
+    a: string;
+    r?: iRecursive;
+}

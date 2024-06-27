@@ -83,3 +83,8 @@ type tGeneric<K, V extends CustomType> = {
 type tLit1 = 'welcome_email' | 'email_heading';
 type tLit2 = 'footer_title' | 'footer_sendoff';
 type tTemplateLiteralType = `${tLit1 | tLit2}_id`;
+
+type tRecursive = {
+    a: string;
+    r?: tRecursive;
+}

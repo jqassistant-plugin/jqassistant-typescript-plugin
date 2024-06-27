@@ -17,6 +17,7 @@ import {
 } from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCEInterfaceDeclaration } from "../../../src/core/concepts/interface-declaration.concept";
+import { LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
 
 jest.setTimeout(30000);
 
@@ -360,6 +361,35 @@ describe("interface declarations test", () => {
             expect(methodNested.typeParameters).toHaveLength(1);
             expectTypeParameterDeclaration(methodNested.typeParameters, 0,"U");
 
+            expect(decl.accessorProperties).toHaveLength(0);
+        }
+    });
+
+    test("interface with recursive property", async () => {
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRecursive'));
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRecursive'));
+            expect(decl.interfaceName).toBe("iRecursive");
+
+            expect(decl.typeParameters).toHaveLength(0);
+
+            expect(decl.extendsInterfaces).toHaveLength(0);
+
+            expect(decl.properties).toHaveLength(2);
+            expectProperty(decl.properties, '"./src/main.ts".iRecursive.a', "a", false, "public", false, undefined, undefined, undefined, "string");
+            const propR = expectProperty(decl.properties, '"./src/main.ts".iRecursive.r', "r", true, "public", false, undefined, undefined, undefined);
+            expect(propR.type).toBeDefined();
+            expect(propR.type.type).toBe("union");
+            expect((propR.type as LCETypeUnion).types).toBeDefined();
+            expect((propR.type as LCETypeUnion).types).toHaveLength(2);
+            const propRTypes = (propR.type as LCETypeUnion).types;
+            expect(propRTypes.find(t => t.type === "primitive" && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
+            const propRDeclType = propRTypes.find(t => t.type === "declared");
+            expectDeclaredType(propRDeclType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRecursive'));
+
+            expect(decl.methods).toHaveLength(0);
             expect(decl.accessorProperties).toHaveLength(0);
         }
     });

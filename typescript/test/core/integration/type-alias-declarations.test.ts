@@ -18,7 +18,7 @@ import {
 } from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCETypeAliasDeclaration } from "../../../src/core/concepts/type-alias-declaration.concept";
-import { LCETypeFunctionParameter, LCETypeIntersection, LCETypeTuple, LCETypeUnion } from "../../../src/core/concepts/type.concept";
+import { LCETypeFunctionParameter, LCETypeIntersection, LCETypePrimitive, LCETypeTuple, LCETypeUnion } from "../../../src/core/concepts/type.concept";
 
 jest.setTimeout(30000);
 
@@ -402,5 +402,31 @@ describe("type alias declarations test", () => {
                 expect(t.type).toBe("literal");
             })
         }
+    });
+
+    test("type alias of recursive type", async () => {
+        const decl = taDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".tRecursive'));
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".tRecursive'));
+            expect(decl.typeAliasName).toBe("tRecursive");
+
+            expect(decl.typeParameters).toHaveLength(0);
+
+            const oType = expectObjectType(decl.type, 2);
+            expectObjectTypeMember(oType, "a", false, false, "string");
+            const memR = expectObjectTypeMember(oType, "r", true, false);
+            expect(memR.type).toBeDefined();
+            expect(memR.type.type).toBe("union");
+            expect((memR.type as LCETypeUnion).types).toBeDefined();
+            expect((memR.type as LCETypeUnion).types).toHaveLength(2);
+            const memRTypes = (memR.type as LCETypeUnion).types;
+            expect(memRTypes.find(t => t.type === "primitive" && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
+            const memRDeclType = memRTypes.find(t => t.type === "declared");
+            expectDeclaredType(memRDeclType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".tRecursive'));
+        }
+
+        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tObject', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'), 1);
     });
 });

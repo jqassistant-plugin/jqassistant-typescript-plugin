@@ -18,6 +18,7 @@ import {
 } from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCEClassDeclaration } from "../../../src/core/concepts/class-declaration.concept";
+import { LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
 
 jest.setTimeout(30000);
 
@@ -715,6 +716,40 @@ describe("class declarations test", () => {
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(1);
             expectProperty(decl.properties, '"./src/subdir".cIndex.x', "x", false, "public", false, false, false, false, "number");
+
+            expect(decl.methods).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
+
+            expect(decl.decorators).toHaveLength(0);
+        }
+    });
+
+    test("class with recursive property", async () => {
+        const decl = classDecls.get('"./src/main.ts".cRecursive');
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".cRecursive'));
+            expect(decl.className).toBe("cRecursive");
+            expect(decl.abstract).toBe(false);
+
+            expect(decl.typeParameters).toHaveLength(0);
+
+            expect(decl.extendsClass).toBeUndefined();
+            expect(decl.implementsInterfaces).toHaveLength(0);
+
+            expect(decl.constr).toBeUndefined();
+            expect(decl.properties).toHaveLength(2);
+            expectProperty(decl.properties, '"./src/main.ts".cRecursive.a', "a", false, "public", false, false, false, false, "string");
+            const propR = expectProperty(decl.properties, '"./src/main.ts".cRecursive.r', "r", true, "public", false, false, false, false);
+            expect(propR.type).toBeDefined();
+            expect(propR.type.type).toBe("union");
+            expect((propR.type as LCETypeUnion).types).toBeDefined();
+            expect((propR.type as LCETypeUnion).types).toHaveLength(2);
+            const propRTypes = (propR.type as LCETypeUnion).types;
+            expect(propRTypes.find(t => t.type === "primitive" && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
+            const propRDeclType = propRTypes.find(t => t.type === "declared");
+            expectDeclaredType(propRDeclType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".cRecursive'));
 
             expect(decl.methods).toHaveLength(0);
             expect(decl.accessorProperties).toHaveLength(0);

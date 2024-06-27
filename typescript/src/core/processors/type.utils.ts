@@ -499,7 +499,7 @@ function parseAnonymousType(
                 const propType = tc.getTypeOfSymbolAtLocation(prop, node);
                 members.push(new LCETypeObjectMember(
                     prop.name,
-                    parseType(processingContext, propType, node, excludedFQN, ignoreDependencies),
+                    parseType(processingContext, propType, node, undefined, ignoreDependencies),
                     optional,
                     readonly
                 ));
