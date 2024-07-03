@@ -5,8 +5,6 @@ It provides a tool to extract language concepts from TypeScript code and a scann
 
 For more information on jQAssistant see https://jqassistant.org[^].
 
-NOTE: This plugin has not been officially released yet.
-
 == Installation
 
 - Download the https://repo1.maven.org/maven2/com/buschmais/jqassistant/cli/jqassistant-commandline-distribution/[ZIP distribution] of the jQAssistant command line utility and unpack it. A directory `jqassistant-commandline-distribution-2.x.x` will be created.
