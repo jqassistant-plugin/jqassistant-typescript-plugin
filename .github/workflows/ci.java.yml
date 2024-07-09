@@ -10,7 +10,7 @@
         paths-ignore:
           - 'docs/**'
           - 'typescript/**'
-          - 'README.adoc'
+          - 'README.md'
       pull_request:
         branches:
           - main
