@@ -25,7 +25,7 @@ export class ModulePathUtils {
     static getPathType(path: string): PathType {
         if (p.isAbsolute(path)) {
             return "absolute";
-        } else if (path.startsWith(".") && !path.replace(/\\/g, "/").startsWith("./node_modules")) {
+        } else if (path.startsWith(".") && !FileUtils.normalizePath(path).startsWith("./node_modules")) {
             return "relative";
         } else {
             return "node";
@@ -47,10 +47,10 @@ export class ModulePathUtils {
         } else {
             let relPath;
             if (pathType === "absolute") {
-                relPath = p.relative(projectPath, path).replace(/\\/g, "/");
+                relPath = FileUtils.normalizePath(p.relative(projectPath, path));
             } else {
                 if (!originPath) throw new Error("originPath is required if path is relative");
-                relPath = p.relative(projectPath, p.resolve(projectPath, originPath.slice(0, originPath.lastIndexOf("/")), path)).replace(/\\/g, "/");
+                relPath = FileUtils.normalizePath(p.relative(projectPath, p.resolve(projectPath, originPath.slice(0, originPath.lastIndexOf("/")), path)));
             }
 
             if (!relPath.startsWith(".")) {
@@ -122,7 +122,7 @@ export class ModulePathUtils {
 
                 // normalize paths on Windows platforms
                 if(process.platform === "win32") {
-                    sourceFilePath = sourceFilePath.replace(/\\/g, "/");
+                    sourceFilePath = FileUtils.normalizePath(sourceFilePath);
                 }
 
                 // remove index.* filename from FQN path
@@ -135,7 +135,7 @@ export class ModulePathUtils {
         } else {
             let sourceFilePath = fs.realpathSync.native(sourceFilePathAbsolute);
             if(process.platform === "win32") {
-                sourceFilePath = sourceFilePath.replace(/\\/g, "/");
+                sourceFilePath = FileUtils.normalizePath(sourceFilePath);
             }
             return this.toFQN(sourceFilePath).globalFqn + "." + tcFQN;
         }
@@ -147,8 +147,8 @@ export class ModulePathUtils {
      */
     static toFQN(globalPath: string, localPath?: string): FQN {
         const indexSourceFileRegEx = /\/index\.\w+$/;
-        const basicGlobalFQN = '"' + (globalPath.replace(/\\/g, "/")).replace(indexSourceFileRegEx, "") + '"';
-        const basicLocalFQN = localPath ? '"' + (localPath.replace(/\\/g, "/")).replace(indexSourceFileRegEx, "") + '"' : "";
+        const basicGlobalFQN = '"' + (FileUtils.normalizePath(globalPath)).replace(indexSourceFileRegEx, "") + '"';
+        const basicLocalFQN = localPath ? '"' + (FileUtils.normalizePath(localPath)).replace(indexSourceFileRegEx, "") + '"' : "";
 
         return new FQN(
             basicGlobalFQN,

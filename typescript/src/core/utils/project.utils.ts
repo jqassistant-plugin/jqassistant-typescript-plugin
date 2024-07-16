@@ -78,7 +78,7 @@ export class ProjectUtils {
         if(tsConfig.projectReferences) {
             for (const ref of tsConfig.projectReferences) {
                 const subProjectInfos = this.getProjectInfo(ref.path);
-                subProjectPaths.push(...subProjectInfos.map(spi => spi.projectPath.replace(/\\/g, "/")));
+                subProjectPaths.push(...subProjectInfos.map(spi => FileUtils.normalizePath(spi.projectPath)));
                 result.push(...subProjectInfos);
             }
         }
@@ -90,10 +90,10 @@ export class ProjectUtils {
         }
 
         result.push({
-            rootPath: rootPath.replace(/\\/g, "/"),
-            projectPath: projectPath.replace(/\\/g, "/"),
+            rootPath: FileUtils.normalizePath(rootPath),
+            projectPath: FileUtils.normalizePath(projectPath),
             subProjectPaths: subProjectPaths,
-            sourceFilePaths: tsConfig.fileNames.map(fn => fn.replace(/\\/g, "/"))
+            sourceFilePaths: tsConfig.fileNames.map(fn => FileUtils.normalizePath(fn))
         });
 
         return result;

@@ -30,7 +30,7 @@ export class NodeUtils {
 
         let currentPath = packagePath;
         while (currentPath !== projectRootPath && !path.relative(projectRootPath, currentPath).startsWith("..")) {
-            const allFiles = FileUtils.getAllFiles(currentPath).map((f) => f.replace(/\\/g, "/"));
+            const allFiles = FileUtils.getAllFiles(currentPath).map((f) => FileUtils.normalizePath(f));
             for (const file of allFiles) {
                 if (path.basename(file) === "package.json") {
                     const data = fs.readFileSync(file, "utf8");
@@ -68,14 +68,14 @@ export class NodeUtils {
             tsResolvedModule = module.resolvedModule?.resolvedFileName;
         } catch (e) {}
         if (tsResolvedModule) {
-            return tsResolvedModule.replace(/\\/g, "/");
+            return FileUtils.normalizePath(tsResolvedModule);
         } else {
             let jsResolvedModule: string | undefined;
             try {
                 jsResolvedModule = require.resolve(importPath, { paths: [projectPath] });
             } catch (e) {}
             if (jsResolvedModule) {
-                return jsResolvedModule.replace(/\\/g, "/");
+                return FileUtils.normalizePath(jsResolvedModule);
             } else {
                 throw new Error(`Could not resolve import: ${importPath}`);
             }
