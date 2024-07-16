@@ -44,3 +44,12 @@ The tool currently only supports projects using ECMAScript modules.
 
 ## Development
 This plugin is based on the [LCE Architecture](https://jqassistant-plugin.github.io/jqassistant-lce-docs/).
+- [[Codebase Layout]]
+- [[Extensions]]
+
+**LCE:**
+- [[Concepts]]
+- [[Traversers]]
+- [[Processors]]
+- [[Post-Processors]]
+- [[Utilities]]
