@@ -1,0 +1,29 @@
+/.idea
+*.iml
+*.ipr
+*~
+*.log
+.DS_Store
+.java-version
+*.backup
+
+# Maven related files and directories
+target
+/.mvn
+
+# TS
+**/node_modules/
+**/tmp/
+**/dist/
+**/jqassistant/store/
+**/jqassistant/report/
+**/tsconfig.tsbuildinfo
+
+# jQA
+**/.reports/jqa/
+
+# Docs
+docs/content/.obsidian/workspace.json
+
+# DrawIO
+*.drawio.bkp

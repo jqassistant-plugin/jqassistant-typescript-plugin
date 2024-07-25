@@ -1,0 +1,20 @@
+{
+    "include": ["./src/**/*"],
+    "compilerOptions": {
+        "target": "ESNext",
+        "experimentalDecorators": true,
+         "module": "Node16",
+         "moduleResolution": "node16",
+         "paths": {
+             "@typescript-eslint/types/dist/generated/ast-spec": ["./node_modules/@typescript-eslint/types/dist/generated/ast-spec"]
+         },
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "outDir": "dist",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitOverride": true,
+        "skipLibCheck": true
+    }
+}

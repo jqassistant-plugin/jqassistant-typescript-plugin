@@ -1,0 +1,11 @@
+{
+  "baseUrl": "jqassistant-plugin.github.io/jqassistant-typescript-plugin",
+  "pageTitle": "jQA Typescript Plugin",
+  "footerLinks": {
+    "Maven": "https://central.sonatype.com/artifact/org.jqassistant.plugin.typescript/jqassistant-typescript-plugin/overview",
+    "NPM": "https://www.npmjs.com/package/@jqassistant/ts-lce",
+    "Source": "https://github.com/jqassistant-plugin/jqassistant-typescript-plugin",
+    "Issues": "https://github.com/jqassistant-plugin/jqassistant-typescript-plugin/issues",
+    "Sonar": "https://sonarcloud.io/project/overview?id=org.jqassistant.plugin.typescript%3Aparent"
+  }
+}

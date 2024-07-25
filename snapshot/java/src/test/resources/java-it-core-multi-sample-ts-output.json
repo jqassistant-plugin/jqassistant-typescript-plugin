@@ -1,0 +1,988 @@
+[
+  {
+    "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project1",
+    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project1",
+    "subProjectPaths": [],
+    "sourceFilePaths": [
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts",
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts"
+    ],
+    "concepts": {
+      "variable-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts\".PROJECT1_EXPORT",
+          "localFqn": "\"./src/module1.ts\".PROJECT1_EXPORT",
+          "variableName": "PROJECT1_EXPORT",
+          "kind": "const",
+          "type": {
+            "type": "primitive",
+            "name": "number"
+          },
+          "initValue": {
+            "valueType": "literal",
+            "type": {
+              "type": "primitive",
+              "name": "number"
+            },
+            "value": 1
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts",
+            "startLine": 5,
+            "startColumn": 13,
+            "endLine": 5,
+            "endColumn": 40
+          }
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts\".PROJECT1_EXPORT2",
+          "localFqn": "\"./src/module1.ts\".PROJECT1_EXPORT2",
+          "variableName": "PROJECT1_EXPORT2",
+          "kind": "const",
+          "type": {
+            "type": "declared",
+            "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class",
+            "localFqn": "",
+            "typeArguments": []
+          },
+          "initValue": {
+            "valueType": "complex",
+            "type": {
+              "type": "not-identified",
+              "identifier": "complex"
+            },
+            "expression": "new Project1Class(1, 1)"
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts",
+            "startLine": 7,
+            "startColumn": 13,
+            "endLine": 7,
+            "endColumn": 70
+          }
+        }
+      ],
+      "export-declaration": [
+        {
+          "identifier": "PROJECT1_EXPORT",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts\".PROJECT1_EXPORT",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts"
+        },
+        {
+          "identifier": "PROJECT1_EXPORT2",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts\".PROJECT1_EXPORT2",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts"
+        },
+        {
+          "identifier": "Project1Class",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts"
+        },
+        {
+          "identifier": "Project1Interface",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Interface",
+          "isDefault": false,
+          "kind": "type",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts"
+        },
+        {
+          "identifier": "Project1Type",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Type",
+          "isDefault": false,
+          "kind": "type",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts"
+        }
+      ],
+      "dependency": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class",
+          "localFqn": ".Project1Class",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts\".PROJECT1_EXPORT2",
+          "sourceType": "declaration",
+          "cardinality": 2
+        }
+      ],
+      "module": [
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts",
+          "localFqn": "./src/module1.ts",
+          "path": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts"
+        },
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts",
+          "localFqn": "./src/module2.ts",
+          "path": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts"
+        }
+      ],
+      "class-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class",
+          "localFqn": "\"./src/module2.ts\".Project1Class",
+          "className": "Project1Class",
+          "abstract": false,
+          "typeParameters": [],
+          "implementsInterfaces": [],
+          "constr": {
+            "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class.constructor",
+            "localFqn": "\"./src/module2.ts\".Project1Class.constructor",
+            "parameters": [
+              {
+                "index": 0,
+                "name": "x",
+                "type": {
+                  "type": "primitive",
+                  "name": "number"
+                },
+                "optional": false,
+                "decorators": [],
+                "coordinates": {
+                  "startLine": 6,
+                  "startColumn": 16,
+                  "endLine": 6,
+                  "endColumn": 25
+                }
+              },
+              {
+                "index": 1,
+                "name": "y",
+                "type": {
+                  "type": "primitive",
+                  "name": "number"
+                },
+                "optional": false,
+                "decorators": [],
+                "coordinates": {
+                  "startLine": 6,
+                  "startColumn": 27,
+                  "endLine": 6,
+                  "endColumn": 36
+                }
+              }
+            ],
+            "parameterProperties": [],
+            "coordinates": {
+              "startLine": 6,
+              "startColumn": 4,
+              "endLine": 9,
+              "endColumn": 5
+            }
+          },
+          "properties": [
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class.x",
+              "localFqn": "\"./src/module2.ts\".Project1Class.x",
+              "propertyName": "x",
+              "optional": false,
+              "type": {
+                "type": "primitive",
+                "name": "number"
+              },
+              "decorators": [],
+              "visibility": "public",
+              "readonly": false,
+              "coordinates": {
+                "startLine": 3,
+                "startColumn": 4,
+                "endLine": 3,
+                "endColumn": 21
+              },
+              "override": false,
+              "abstract": false,
+              "isStatic": false
+            },
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class.y",
+              "localFqn": "\"./src/module2.ts\".Project1Class.y",
+              "propertyName": "y",
+              "optional": false,
+              "type": {
+                "type": "primitive",
+                "name": "number"
+              },
+              "decorators": [],
+              "visibility": "public",
+              "readonly": false,
+              "coordinates": {
+                "startLine": 4,
+                "startColumn": 4,
+                "endLine": 4,
+                "endColumn": 21
+              },
+              "override": false,
+              "abstract": false,
+              "isStatic": false
+            }
+          ],
+          "methods": [],
+          "accessorProperties": [],
+          "decorators": [],
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts",
+            "startLine": 2,
+            "startColumn": 7,
+            "endLine": 10,
+            "endColumn": 1
+          }
+        }
+      ],
+      "interface-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Interface",
+          "localFqn": "\"./src/module2.ts\".Project1Interface",
+          "interfaceName": "Project1Interface",
+          "typeParameters": [],
+          "extendsInterfaces": [],
+          "properties": [
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Interface.x",
+              "localFqn": "\"./src/module2.ts\".Project1Interface.x",
+              "propertyName": "x",
+              "optional": false,
+              "type": {
+                "type": "primitive",
+                "name": "number"
+              },
+              "decorators": [],
+              "visibility": "public",
+              "readonly": false,
+              "coordinates": {
+                "startLine": 13,
+                "startColumn": 4,
+                "endLine": 13,
+                "endColumn": 14
+              }
+            },
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Interface.y",
+              "localFqn": "\"./src/module2.ts\".Project1Interface.y",
+              "propertyName": "y",
+              "optional": false,
+              "type": {
+                "type": "primitive",
+                "name": "number"
+              },
+              "decorators": [],
+              "visibility": "public",
+              "readonly": false,
+              "coordinates": {
+                "startLine": 14,
+                "startColumn": 4,
+                "endLine": 14,
+                "endColumn": 14
+              }
+            }
+          ],
+          "methods": [],
+          "accessorProperties": [],
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts",
+            "startLine": 12,
+            "startColumn": 7,
+            "endLine": 15,
+            "endColumn": 1
+          }
+        }
+      ],
+      "type-alias-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Type",
+          "localFqn": "\"./src/module2.ts\".Project1Type",
+          "typeAliasName": "Project1Type",
+          "typeParameters": [],
+          "type": {
+            "type": "object",
+            "members": [
+              {
+                "name": "x",
+                "type": {
+                  "type": "primitive",
+                  "name": "number"
+                },
+                "optional": false,
+                "readonly": false
+              },
+              {
+                "name": "y",
+                "type": {
+                  "type": "primitive",
+                  "name": "number"
+                },
+                "optional": false,
+                "readonly": false
+              }
+            ]
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts",
+            "startLine": 17,
+            "startColumn": 7,
+            "endLine": 20,
+            "endColumn": 2
+          }
+        }
+      ],
+      "external-module": []
+    }
+  },
+  {
+    "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331",
+    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331",
+    "subProjectPaths": [],
+    "sourceFilePaths": [
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts"
+    ],
+    "concepts": {
+      "variable-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts\".PROJECT_COMMON_EXPORT",
+          "localFqn": "\"./src/module1.ts\".PROJECT_COMMON_EXPORT",
+          "variableName": "PROJECT_COMMON_EXPORT",
+          "kind": "const",
+          "type": {
+            "type": "literal",
+            "value": 123456789
+          },
+          "initValue": {
+            "valueType": "literal",
+            "type": {
+              "type": "primitive",
+              "name": "number"
+            },
+            "value": 123456789
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts",
+            "startLine": 3,
+            "startColumn": 13,
+            "endLine": 3,
+            "endColumn": 46
+          }
+        }
+      ],
+      "export-declaration": [
+        {
+          "identifier": "PROJECT_COMMON_EXPORT",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts\".PROJECT_COMMON_EXPORT",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts"
+        }
+      ],
+      "module": [
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts",
+          "localFqn": "./src/module1.ts",
+          "path": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts"
+        }
+      ],
+      "external-module": []
+    }
+  },
+  {
+    "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon",
+    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon",
+    "subProjectPaths": [
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331"
+    ],
+    "sourceFilePaths": [
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts"
+    ],
+    "concepts": {
+      "variable-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts\".PROJECT33_EXPORT",
+          "localFqn": "\"./src/module1.ts\".PROJECT33_EXPORT",
+          "variableName": "PROJECT33_EXPORT",
+          "kind": "const",
+          "type": {
+            "type": "literal",
+            "value": 33
+          },
+          "initValue": {
+            "valueType": "literal",
+            "type": {
+              "type": "primitive",
+              "name": "number"
+            },
+            "value": 33
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts",
+            "startLine": 3,
+            "startColumn": 13,
+            "endLine": 3,
+            "endColumn": 34
+          }
+        }
+      ],
+      "export-declaration": [
+        {
+          "identifier": "PROJECT33_EXPORT",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts\".PROJECT33_EXPORT",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts"
+        }
+      ],
+      "module": [
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts",
+          "localFqn": "./src/module1.ts",
+          "path": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts"
+        }
+      ],
+      "external-module": []
+    }
+  },
+  {
+    "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project2",
+    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project2",
+    "subProjectPaths": [
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331",
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon"
+    ],
+    "sourceFilePaths": [
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts",
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts"
+    ],
+    "concepts": {
+      "variable-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts\".PROJECT2_EXPORT",
+          "localFqn": "\"./src/module1.ts\".PROJECT2_EXPORT",
+          "variableName": "PROJECT2_EXPORT",
+          "kind": "const",
+          "type": {
+            "type": "primitive",
+            "name": "number"
+          },
+          "initValue": {
+            "valueType": "complex",
+            "type": {
+              "type": "not-identified",
+              "identifier": "complex"
+            },
+            "expression": "2 + PROJECT_COMMON_EXPORT"
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts",
+            "startLine": 6,
+            "startColumn": 13,
+            "endLine": 6,
+            "endColumn": 64
+          }
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts\".PROJECT2_EXPORT2",
+          "localFqn": "\"./src/module1.ts\".PROJECT2_EXPORT2",
+          "variableName": "PROJECT2_EXPORT2",
+          "kind": "const",
+          "type": {
+            "type": "declared",
+            "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class",
+            "localFqn": "",
+            "typeArguments": []
+          },
+          "initValue": {
+            "valueType": "complex",
+            "type": {
+              "type": "not-identified",
+              "identifier": "complex"
+            },
+            "expression": "new Project2Class(2, 2)"
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts",
+            "startLine": 8,
+            "startColumn": 13,
+            "endLine": 8,
+            "endColumn": 70
+          }
+        }
+      ],
+      "export-declaration": [
+        {
+          "identifier": "PROJECT2_EXPORT",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts\".PROJECT2_EXPORT",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts"
+        },
+        {
+          "identifier": "PROJECT2_EXPORT2",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts\".PROJECT2_EXPORT2",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts"
+        },
+        {
+          "identifier": "Project2Class",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts"
+        },
+        {
+          "identifier": "Project2Interface",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Interface",
+          "isDefault": false,
+          "kind": "type",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts"
+        },
+        {
+          "identifier": "Project2Type",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Type",
+          "isDefault": false,
+          "kind": "type",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts"
+        }
+      ],
+      "dependency": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts\".PROJECT_COMMON_EXPORT",
+          "localFqn": ".PROJECT_COMMON_EXPORT",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts\".PROJECT2_EXPORT",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class",
+          "localFqn": ".Project2Class",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts\".PROJECT2_EXPORT2",
+          "sourceType": "declaration",
+          "cardinality": 2
+        }
+      ],
+      "module": [
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts",
+          "localFqn": "./src/module1.ts",
+          "path": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts"
+        },
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts",
+          "localFqn": "./src/module2.ts",
+          "path": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts"
+        }
+      ],
+      "class-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class",
+          "localFqn": "\"./src/module2.ts\".Project2Class",
+          "className": "Project2Class",
+          "abstract": false,
+          "typeParameters": [],
+          "implementsInterfaces": [],
+          "constr": {
+            "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class.constructor",
+            "localFqn": "\"./src/module2.ts\".Project2Class.constructor",
+            "parameters": [
+              {
+                "index": 0,
+                "name": "x",
+                "type": {
+                  "type": "primitive",
+                  "name": "number"
+                },
+                "optional": false,
+                "decorators": [],
+                "coordinates": {
+                  "startLine": 6,
+                  "startColumn": 16,
+                  "endLine": 6,
+                  "endColumn": 25
+                }
+              },
+              {
+                "index": 1,
+                "name": "y",
+                "type": {
+                  "type": "primitive",
+                  "name": "number"
+                },
+                "optional": false,
+                "decorators": [],
+                "coordinates": {
+                  "startLine": 6,
+                  "startColumn": 27,
+                  "endLine": 6,
+                  "endColumn": 36
+                }
+              }
+            ],
+            "parameterProperties": [],
+            "coordinates": {
+              "startLine": 6,
+              "startColumn": 4,
+              "endLine": 9,
+              "endColumn": 5
+            }
+          },
+          "properties": [
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class.x",
+              "localFqn": "\"./src/module2.ts\".Project2Class.x",
+              "propertyName": "x",
+              "optional": false,
+              "type": {
+                "type": "primitive",
+                "name": "number"
+              },
+              "decorators": [],
+              "visibility": "public",
+              "readonly": false,
+              "coordinates": {
+                "startLine": 3,
+                "startColumn": 4,
+                "endLine": 3,
+                "endColumn": 21
+              },
+              "override": false,
+              "abstract": false,
+              "isStatic": false
+            },
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class.y",
+              "localFqn": "\"./src/module2.ts\".Project2Class.y",
+              "propertyName": "y",
+              "optional": false,
+              "type": {
+                "type": "primitive",
+                "name": "number"
+              },
+              "decorators": [],
+              "visibility": "public",
+              "readonly": false,
+              "coordinates": {
+                "startLine": 4,
+                "startColumn": 4,
+                "endLine": 4,
+                "endColumn": 21
+              },
+              "override": false,
+              "abstract": false,
+              "isStatic": false
+            }
+          ],
+          "methods": [],
+          "accessorProperties": [],
+          "decorators": [],
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts",
+            "startLine": 2,
+            "startColumn": 7,
+            "endLine": 10,
+            "endColumn": 1
+          }
+        }
+      ],
+      "interface-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Interface",
+          "localFqn": "\"./src/module2.ts\".Project2Interface",
+          "interfaceName": "Project2Interface",
+          "typeParameters": [],
+          "extendsInterfaces": [],
+          "properties": [
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Interface.x",
+              "localFqn": "\"./src/module2.ts\".Project2Interface.x",
+              "propertyName": "x",
+              "optional": false,
+              "type": {
+                "type": "primitive",
+                "name": "number"
+              },
+              "decorators": [],
+              "visibility": "public",
+              "readonly": false,
+              "coordinates": {
+                "startLine": 13,
+                "startColumn": 4,
+                "endLine": 13,
+                "endColumn": 14
+              }
+            },
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Interface.y",
+              "localFqn": "\"./src/module2.ts\".Project2Interface.y",
+              "propertyName": "y",
+              "optional": false,
+              "type": {
+                "type": "primitive",
+                "name": "number"
+              },
+              "decorators": [],
+              "visibility": "public",
+              "readonly": false,
+              "coordinates": {
+                "startLine": 14,
+                "startColumn": 4,
+                "endLine": 14,
+                "endColumn": 14
+              }
+            }
+          ],
+          "methods": [],
+          "accessorProperties": [],
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts",
+            "startLine": 12,
+            "startColumn": 7,
+            "endLine": 15,
+            "endColumn": 1
+          }
+        }
+      ],
+      "type-alias-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Type",
+          "localFqn": "\"./src/module2.ts\".Project2Type",
+          "typeAliasName": "Project2Type",
+          "typeParameters": [],
+          "type": {
+            "type": "object",
+            "members": [
+              {
+                "name": "x",
+                "type": {
+                  "type": "primitive",
+                  "name": "number"
+                },
+                "optional": false,
+                "readonly": false
+              },
+              {
+                "name": "y",
+                "type": {
+                  "type": "primitive",
+                  "name": "number"
+                },
+                "optional": false,
+                "readonly": false
+              }
+            ]
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts",
+            "startLine": 17,
+            "startColumn": 7,
+            "endLine": 20,
+            "endColumn": 2
+          }
+        }
+      ],
+      "external-module": []
+    }
+  },
+  {
+    "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31",
+    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31",
+    "subProjectPaths": [],
+    "sourceFilePaths": [
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts"
+    ],
+    "concepts": {
+      "variable-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts\".PROJECT31_EXPORT",
+          "localFqn": "\"./src/module1.ts\".PROJECT31_EXPORT",
+          "variableName": "PROJECT31_EXPORT",
+          "kind": "const",
+          "type": {
+            "type": "literal",
+            "value": 31
+          },
+          "initValue": {
+            "valueType": "literal",
+            "type": {
+              "type": "primitive",
+              "name": "number"
+            },
+            "value": 31
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts",
+            "startLine": 3,
+            "startColumn": 13,
+            "endLine": 3,
+            "endColumn": 34
+          }
+        }
+      ],
+      "export-declaration": [
+        {
+          "identifier": "PROJECT31_EXPORT",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts\".PROJECT31_EXPORT",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts"
+        }
+      ],
+      "module": [
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts",
+          "localFqn": "./src/module1.ts",
+          "path": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts"
+        }
+      ],
+      "external-module": []
+    }
+  },
+  {
+    "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32",
+    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32",
+    "subProjectPaths": [],
+    "sourceFilePaths": [
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts"
+    ],
+    "concepts": {
+      "variable-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts\".PROJECT32_EXPORT",
+          "localFqn": "\"./src/module1.ts\".PROJECT32_EXPORT",
+          "variableName": "PROJECT32_EXPORT",
+          "kind": "const",
+          "type": {
+            "type": "literal",
+            "value": 32
+          },
+          "initValue": {
+            "valueType": "literal",
+            "type": {
+              "type": "primitive",
+              "name": "number"
+            },
+            "value": 32
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts",
+            "startLine": 3,
+            "startColumn": 13,
+            "endLine": 3,
+            "endColumn": 34
+          }
+        }
+      ],
+      "export-declaration": [
+        {
+          "identifier": "PROJECT32_EXPORT",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts\".PROJECT32_EXPORT",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts"
+        }
+      ],
+      "module": [
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts",
+          "localFqn": "./src/module1.ts",
+          "path": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts"
+        }
+      ],
+      "external-module": []
+    }
+  },
+  {
+    "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3",
+    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3",
+    "subProjectPaths": [
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31",
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32",
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331",
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon"
+    ],
+    "sourceFilePaths": [
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts"
+    ],
+    "concepts": {
+      "variable-declaration": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts\".PROJECT3_EXPORT",
+          "localFqn": "\"./src/module1.ts\".PROJECT3_EXPORT",
+          "variableName": "PROJECT3_EXPORT",
+          "kind": "const",
+          "type": {
+            "type": "primitive",
+            "name": "any"
+          },
+          "initValue": {
+            "valueType": "complex",
+            "type": {
+              "type": "not-identified",
+              "identifier": "complex"
+            },
+            "expression": "PROJECT31_EXPORT + PROJECT32_EXPORT + PROJECT33_EXPORT + PROJECT_COMMON_EXPORT"
+          },
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts",
+            "startLine": 8,
+            "startColumn": 13,
+            "endLine": 8,
+            "endColumn": 109
+          }
+        }
+      ],
+      "export-declaration": [
+        {
+          "identifier": "PROJECT3_EXPORT",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts\".PROJECT3_EXPORT",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts"
+        }
+      ],
+      "dependency": [
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts\".PROJECT31_EXPORT",
+          "localFqn": ".PROJECT31_EXPORT",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts\".PROJECT3_EXPORT",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts\".PROJECT32_EXPORT",
+          "localFqn": ".PROJECT32_EXPORT",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts\".PROJECT3_EXPORT",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts\".PROJECT33_EXPORT",
+          "localFqn": ".PROJECT33_EXPORT",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts\".PROJECT3_EXPORT",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts\".PROJECT_COMMON_EXPORT",
+          "localFqn": ".PROJECT_COMMON_EXPORT",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts\".PROJECT3_EXPORT",
+          "sourceType": "declaration",
+          "cardinality": 1
+        }
+      ],
+      "module": [
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts",
+          "localFqn": "./src/module1.ts",
+          "path": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts"
+        }
+      ],
+      "external-module": []
+    }
+  }
+]
