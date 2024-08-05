@@ -12,7 +12,7 @@
   "license": "GNU GENERAL PUBLIC LICENSE",
   "dependencies": {
     "@types/node": "^20.14.10",
-    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^7.16.0",
     "@typescript-eslint/typescript-estree": "^7.16.0",
     "cli-progress": "^3.12.0",
