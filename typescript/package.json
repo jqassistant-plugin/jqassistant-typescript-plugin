@@ -11,7 +11,7 @@
   "homepage": "https://github.com/jqassistant-plugin/jqassistant-typescript-plugin/blob/main/typescript/README.md",
   "license": "GNU GENERAL PUBLIC LICENSE",
   "dependencies": {
-    "@types/node": "^20.14.10",
+    "@types/node": "^22.1.0",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
     "@typescript-eslint/parser": "^7.16.0",
     "@typescript-eslint/typescript-estree": "^7.16.0",
