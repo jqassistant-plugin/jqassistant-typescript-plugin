@@ -1,0 +1,7 @@
+{
+    "extends": "./tsconfig",
+    "files": ["ui.ts"],
+    "compilerOptions": {
+        "composite": true
+    }
+}
