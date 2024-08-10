@@ -43,7 +43,7 @@ export class ProjectUtils {
             const projectRoot = dirsToScan[0];
             const tsConfigPath = path.join(projectRoot, "tsconfig.json");
             if(fs.existsSync(tsConfigPath)) {
-                result.push(...this.getProjectInfo(projectRoot));
+                result.push(...this.getProjectInfo(projectRoot, 'tsconfig.json'));
             } else {
                 // add all subdirectories as potential project candidates
                 fs.readdirSync(projectRoot).forEach(file => {
@@ -69,15 +69,22 @@ export class ProjectUtils {
         });
     }
 
-    private static getProjectInfo(projectPath: string): LCEProjectInfo[] {
+    private static getConfigFileName(rawConfigPath : string) {
+        const pathIsADirectory = fs.statSync(rawConfigPath).isDirectory();
+        const defaultConfigFileName = 'tsconfig.json';
+        return pathIsADirectory? path.join(rawConfigPath, defaultConfigFileName) : rawConfigPath;
+    }
+
+    private static getProjectInfo(projectPath: string, configFileName: string): LCEProjectInfo[] {
         const result: LCEProjectInfo[] = [];
-        const tsConfig = this.parseTsConfig(projectPath);
+        const tsConfig = this.parseTsConfig(projectPath, configFileName);
 
         const subProjectPaths: string[] = [];
 
         if(tsConfig.projectReferences) {
             for (const ref of tsConfig.projectReferences) {
-                const subProjectInfos = this.getProjectInfo(ref.path);
+                const referencedConfigFileName = this.getConfigFileName(ref.path);
+                const subProjectInfos = this.getProjectInfo(path.dirname(referencedConfigFileName), path.basename(referencedConfigFileName));
                 subProjectPaths.push(...subProjectInfos.map(spi => FileUtils.normalizePath(spi.projectPath)));
                 result.push(...subProjectInfos);
             }
@@ -99,11 +106,11 @@ export class ProjectUtils {
         return result;
     }
 
-    private static parseTsConfig(projectRoot: string): ParsedCommandLine {
-        const tsConfigPath = path.join(projectRoot, "tsconfig.json");
+    private static parseTsConfig(projectRoot: string, configFile: string): ParsedCommandLine {
+        const tsConfigPath = path.join(projectRoot, configFile);
         const configFileText = fs.readFileSync(tsConfigPath, 'utf8');
         const configFileSourceFile = createSourceFile(
-            'tsconfig.json', configFileText, ScriptTarget.JSON
+            configFile, configFileText, ScriptTarget.JSON
         );
 
         // Parse the tsconfig.json
