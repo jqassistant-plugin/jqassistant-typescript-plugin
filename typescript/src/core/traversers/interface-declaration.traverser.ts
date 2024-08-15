@@ -9,7 +9,7 @@ import { runTraverserForNode, runTraverserForNodes } from "../utils/traverser.ut
 export class InterfaceDeclarationTraverser extends Traverser {
     public static readonly TYPE_PARAMETERS_PROP = "type-parameters";
     public static readonly EXTENDS_PROP = "extends";
-    public static readonly MEMBERS_PROP = "members";
+    public static readonly BODY_PROP = "body";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
@@ -38,13 +38,22 @@ export class InterfaceDeclarationTraverser extends Traverser {
                     conceptMaps,
                 );
             }
-            runTraverserForNodes(
-                node.body.body,
-                { parentPropName: InterfaceDeclarationTraverser.MEMBERS_PROP },
-                processingContext,
-                processors,
-                conceptMaps,
-            );
+            runTraverserForNode(node.body, { parentPropName: InterfaceDeclarationTraverser.BODY_PROP }, processingContext, processors, conceptMaps);
+        }
+
+        return mergeConceptMaps(...conceptMaps);
+    }
+}
+
+export class InterfaceBodyTraverser extends Traverser {
+    public static readonly MEMBERS_PROP = "members";
+
+    public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
+        const { node } = processingContext;
+        const conceptMaps: ConceptMap[] = [];
+
+        if (node.type === AST_NODE_TYPES.TSInterfaceBody) {
+            runTraverserForNodes(node.body, { parentPropName: InterfaceDeclarationTraverser.BODY_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -56,7 +65,7 @@ export class InterfaceHeritageTraverser extends Traverser {
     public static readonly EXPRESSION_PROP = "expression";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSInterfaceHeritage) {
@@ -68,15 +77,15 @@ export class InterfaceHeritageTraverser extends Traverser {
                     },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
             }
             runTraverserForNode(
                 node.expression,
-                {parentPropName: InterfaceHeritageTraverser.EXPRESSION_PROP},
+                { parentPropName: InterfaceHeritageTraverser.EXPRESSION_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 

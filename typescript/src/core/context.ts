@@ -69,13 +69,13 @@ export class LocalContexts {
 
     /**
      * @param name name of the context type to searched for
-     * @returns closest context with given name to the current contexts, along with its position inside the stack, or
+     * @returns closest context with given name to the current contexts, along with its position inside the stack (0 being the current context), or
      * `undefined` if no context with the given name exists
      */
     getNextContext(name: string): [unknown, number] | undefined {
         for (let i = this.contexts.length - 1; i >= 0; i--) {
             const context = this.contexts[i].get(name);
-            if (context) return [context, i - this.contexts.length];
+            if (context) return [context, this.contexts.length - i - 1];
         }
         return undefined;
     }

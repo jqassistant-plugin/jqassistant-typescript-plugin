@@ -40,7 +40,7 @@ export class EnumDeclarationProcessor extends Processor {
             const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
             DependencyResolutionProcessor.registerDeclaration(localContexts, enumName, fqn, true);
 
-            const members: LCEEnumMember[] = getAndDeleteChildConcepts(EnumDeclarationTraverser.MEMBERS_PROP, LCEEnumMember.conceptId, childConcepts);
+            const members: LCEEnumMember[] = getAndDeleteChildConcepts(EnumDeclarationTraverser.BODY_PROP, LCEEnumMember.conceptId, childConcepts);
 
             const enumeration = new LCEEnumDeclaration(
                 enumName,
@@ -58,19 +58,16 @@ export class EnumDeclarationProcessor extends Processor {
 }
 
 export class EnumMemberProcessor extends Processor {
-    public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.TSEnumMember], ({localContexts}) => {
-        return !!localContexts.parentContexts?.has(EnumDeclarationProcessor.PARSE_ENUM_MEMBERS_CONTEXT);
+    public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.TSEnumMember], ({ localContexts }) => {
+        const context = localContexts.getNextContext(EnumDeclarationProcessor.PARSE_ENUM_MEMBERS_CONTEXT);
+        return !!context && context[1] === 2;
     });
 
-    public override preChildrenProcessing({node, localContexts}: ProcessingContext): void {
+    public override preChildrenProcessing({ node, localContexts }: ProcessingContext): void {
         if (node.type === AST_NODE_TYPES.TSEnumMember && node.initializer) localContexts.currentContexts.set(VALUE_PROCESSING_FLAG, true);
     }
 
-    public override postChildrenProcessing({
-                                               node,
-                                               localContexts,
-                                               globalContext
-                                           }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
+    public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (node.type === AST_NODE_TYPES.TSEnumMember && !node.computed) {
             const init = getAndDeleteAllValueChildConcepts(EnumMemberTraverser.INIT_PROP, childConcepts);
 
@@ -81,7 +78,7 @@ export class EnumMemberProcessor extends Processor {
                 memberName,
                 new FQN(fqnPrefix.globalFqn + memberName, fqnPrefix.localFqn + memberName),
                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
-                init.length === 1 ? init[0] : undefined
+                init.length === 1 ? init[0] : undefined,
             );
             return singleEntryConceptMap(LCEEnumMember.conceptId, member);
         }

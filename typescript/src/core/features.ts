@@ -42,9 +42,9 @@ import {
 } from "./processors/value.processor";
 import { VariableDeclarationProcessor, VariableDeclaratorProcessor } from "./processors/variable-declaration.processor";
 import { SimpleTraverser, Traverser } from "./traverser";
-import { ClassTraverser, StaticBlockTraverser } from "./traversers/class.traverser";
+import { ClassBodyTraverser, ClassTraverser, StaticBlockTraverser } from "./traversers/class.traverser";
 import { DecoratorTraverser } from "./traversers/decorator.traverser";
-import { EnumDeclarationTraverser, EnumMemberTraverser } from "./traversers/enum.traverser";
+import { EnumBodyTraverser, EnumDeclarationTraverser, EnumMemberTraverser } from "./traversers/enum.traverser";
 import {
     ExportAssignmentTraverser,
     ExportDefaultDeclarationTraverser,
@@ -80,6 +80,7 @@ import {
 } from "./traversers/expression.traverser";
 import { FunctionTraverser } from "./traversers/function.traverser";
 import {
+    InterfaceBodyTraverser,
     InterfaceDeclarationTraverser,
     InterfaceHeritageTraverser
 } from "./traversers/interface-declaration.traverser";
@@ -139,6 +140,7 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
     [AST_NODE_TYPES.BlockStatement, new BlockStatementTraverser()],
     [AST_NODE_TYPES.CallExpression, new CallExpressionTraverser()],
     [AST_NODE_TYPES.ChainExpression, new ChainExpressionTraverser()],
+    [AST_NODE_TYPES.ClassBody, new ClassBodyTraverser()],
     [AST_NODE_TYPES.ClassDeclaration, new ClassTraverser()],
     [AST_NODE_TYPES.ClassExpression, new ClassTraverser()],
     [AST_NODE_TYPES.ConditionalExpression, new ConditionalExpressionTraverser()],
@@ -192,9 +194,11 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
     [AST_NODE_TYPES.TSAsExpression, new AsExpressionTraverser()],
     [AST_NODE_TYPES.TSClassImplements, new SimpleTraverser()],
     [AST_NODE_TYPES.TSDeclareFunction, new FunctionTraverser()],
+    [AST_NODE_TYPES.TSEnumBody, new EnumBodyTraverser()],
     [AST_NODE_TYPES.TSEnumDeclaration, new EnumDeclarationTraverser()],
     [AST_NODE_TYPES.TSEnumMember, new EnumMemberTraverser()],
     [AST_NODE_TYPES.TSExportAssignment, new ExportAssignmentTraverser()],
+    [AST_NODE_TYPES.TSInterfaceBody, new InterfaceBodyTraverser()],
     [AST_NODE_TYPES.TSInterfaceDeclaration, new InterfaceDeclarationTraverser()],
     [AST_NODE_TYPES.TSInterfaceHeritage, new InterfaceHeritageTraverser()],
     [AST_NODE_TYPES.TSMethodSignature, new MethodTraverser()],

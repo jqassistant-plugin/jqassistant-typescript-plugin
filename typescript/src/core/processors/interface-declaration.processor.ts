@@ -46,7 +46,7 @@ export class InterfaceDeclarationProcessor extends Processor {
 
             // merge accessor properties
             const childAccProps = getAndDeleteChildConcepts<LCEAccessorProperty>(
-                InterfaceDeclarationTraverser.MEMBERS_PROP,
+                InterfaceDeclarationTraverser.BODY_PROP,
                 LCEAccessorProperty.conceptId,
                 childConcepts,
             );
@@ -70,8 +70,8 @@ export class InterfaceDeclarationProcessor extends Processor {
                 fqn,
                 parseClassLikeTypeParameters({ globalContext, localContexts, node, ...unusedProcessingContext }, node),
                 getAndDeleteChildConcepts(InterfaceDeclarationTraverser.EXTENDS_PROP, LCETypeDeclared.conceptId, childConcepts),
-                getAndDeleteChildConcepts(InterfaceDeclarationTraverser.MEMBERS_PROP, LCEPropertyDeclaration.conceptId, childConcepts),
-                getAndDeleteChildConcepts(InterfaceDeclarationTraverser.MEMBERS_PROP, LCEMethodDeclaration.conceptId, childConcepts),
+                getAndDeleteChildConcepts(InterfaceDeclarationTraverser.BODY_PROP, LCEPropertyDeclaration.conceptId, childConcepts),
+                getAndDeleteChildConcepts(InterfaceDeclarationTraverser.BODY_PROP, LCEMethodDeclaration.conceptId, childConcepts),
                 [...accessorProperties.values()],
                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true),
             );
@@ -87,18 +87,22 @@ export class InterfaceDeclarationProcessor extends Processor {
 export class SuperInterfaceDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.Identifier],
-        ({node, localContexts}) =>
+        ({ node, localContexts }) =>
             !!node.parent &&
             node.parent.type === AST_NODE_TYPES.TSInterfaceHeritage &&
-            getParentPropName(localContexts) === InterfaceHeritageTraverser.EXPRESSION_PROP
+            getParentPropName(localContexts) === InterfaceHeritageTraverser.EXPRESSION_PROP,
     );
 
-    public override postChildrenProcessing({node, ...unusedProcessingContext}: ProcessingContext): ConceptMap {
+    public override postChildrenProcessing({ node, ...unusedProcessingContext }: ProcessingContext): ConceptMap {
         if (node.type === AST_NODE_TYPES.Identifier && node.parent?.type === AST_NODE_TYPES.TSInterfaceHeritage) {
-            const superType = parseClassLikeBaseType({
+            const superType = parseClassLikeBaseType(
+                {
+                    node,
+                    ...unusedProcessingContext,
+                },
                 node,
-                ...unusedProcessingContext
-            }, node, node.parent.typeArguments?.params);
+                node.parent.typeArguments?.params,
+            );
             if (superType) {
                 return singleEntryConceptMap(LCETypeDeclared.conceptId, superType);
             }

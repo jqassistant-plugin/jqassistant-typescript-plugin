@@ -50,13 +50,7 @@ export class MethodTraverser extends Traverser {
                         conceptMaps,
                     );
                 if (node.value.body)
-                    runTraverserForNodes(
-                        node.value.body.body,
-                        { parentPropName: MethodTraverser.BODY_PROP },
-                        processingContext,
-                        processors,
-                        conceptMaps,
-                    );
+                    runTraverserForNode(node.value.body, { parentPropName: MethodTraverser.BODY_PROP }, processingContext, processors, conceptMaps);
             } else {
                 runTraverserForNodes(node.params, { parentPropName: MethodTraverser.PARAMETERS_PROP }, processingContext, processors, conceptMaps);
             }
@@ -70,7 +64,7 @@ export class ParameterPropertyTraverser extends Traverser {
     public static readonly DECORATORS_PROP = "decorators";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         if (node.type === AST_NODE_TYPES.TSParameterProperty && node.decorators) {
             return (
                 runTraverserForNodes(
@@ -79,7 +73,7 @@ export class ParameterPropertyTraverser extends Traverser {
                         parentPropName: ParameterPropertyTraverser.DECORATORS_PROP,
                     },
                     processingContext,
-                    processors
+                    processors,
                 ) ?? new Map()
             );
         }

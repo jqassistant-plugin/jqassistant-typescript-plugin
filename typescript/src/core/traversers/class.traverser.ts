@@ -12,7 +12,7 @@ export class ClassTraverser extends Traverser {
     public static readonly EXTENDS_PROP = "extends";
     public static readonly IMPLEMENTS_PROP = "implements";
     public static readonly EXTENDS_TYPE_PARAMETERS_PROP = "extends-type-parameters";
-    public static readonly MEMBERS_PROP = "members";
+    public static readonly BODY_PROP = "body";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
@@ -48,7 +48,22 @@ export class ClassTraverser extends Traverser {
                     conceptMaps,
                 );
             }
-            runTraverserForNodes(node.body.body, { parentPropName: ClassTraverser.MEMBERS_PROP }, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.body, { parentPropName: ClassTraverser.BODY_PROP }, processingContext, processors, conceptMaps);
+        }
+
+        return mergeConceptMaps(...conceptMaps);
+    }
+}
+
+export class ClassBodyTraverser extends Traverser {
+    public static readonly MEMBERS_PROP = "members";
+
+    public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
+        const { node } = processingContext;
+        const conceptMaps: ConceptMap[] = [];
+
+        if (node.type === AST_NODE_TYPES.ClassBody) {
+            runTraverserForNodes(node.body, { parentPropName: ClassBodyTraverser.MEMBERS_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -59,11 +74,11 @@ export class StaticBlockTraverser extends Traverser {
     public static readonly BODY_PROP = "body";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.StaticBlock) {
-            runTraverserForNodes(node.body, {parentPropName: StaticBlockTraverser.BODY_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNodes(node.body, { parentPropName: StaticBlockTraverser.BODY_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);

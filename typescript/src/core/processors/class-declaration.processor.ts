@@ -47,7 +47,7 @@ export class ClassDeclarationProcessor extends Processor {
 
             // merge accessor properties
             const childAccProps = getAndDeleteChildConcepts<LCEAccessorProperty>(
-                ClassTraverser.MEMBERS_PROP,
+                ClassTraverser.BODY_PROP,
                 LCEAccessorProperty.conceptId,
                 childConcepts,
             );
@@ -76,13 +76,9 @@ export class ClassDeclarationProcessor extends Processor {
                 parseClassLikeTypeParameters({ globalContext, localContexts, node, ...unusedProcessingContext }, node),
                 getAndDeleteChildConcepts<LCETypeDeclared>(ClassTraverser.EXTENDS_PROP, LCETypeDeclared.conceptId, childConcepts)[0],
                 getAndDeleteChildConcepts(ClassTraverser.IMPLEMENTS_PROP, LCETypeDeclared.conceptId, childConcepts),
-                getAndDeleteChildConcepts<LCEConstructorDeclaration>(
-                    ClassTraverser.MEMBERS_PROP,
-                    LCEConstructorDeclaration.conceptId,
-                    childConcepts,
-                )[0],
-                getAndDeleteChildConcepts(ClassTraverser.MEMBERS_PROP, LCEPropertyDeclaration.conceptId, childConcepts),
-                getAndDeleteChildConcepts(ClassTraverser.MEMBERS_PROP, LCEMethodDeclaration.conceptId, childConcepts),
+                getAndDeleteChildConcepts<LCEConstructorDeclaration>(ClassTraverser.BODY_PROP, LCEConstructorDeclaration.conceptId, childConcepts)[0],
+                getAndDeleteChildConcepts(ClassTraverser.BODY_PROP, LCEPropertyDeclaration.conceptId, childConcepts),
+                getAndDeleteChildConcepts(ClassTraverser.BODY_PROP, LCEMethodDeclaration.conceptId, childConcepts),
                 [...accessorProperties.values()],
                 getAndDeleteChildConcepts(ClassTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true),
@@ -101,17 +97,21 @@ export class ClassDeclarationProcessor extends Processor {
 export class SuperClassDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.Identifier, AST_NODE_TYPES.MemberExpression],
-        ({node, localContexts}) =>
-            !!node.parent && node.parent.type === AST_NODE_TYPES.ClassDeclaration && getParentPropName(localContexts) === ClassTraverser.EXTENDS_PROP
+        ({ node, localContexts }) =>
+            !!node.parent && node.parent.type === AST_NODE_TYPES.ClassDeclaration && getParentPropName(localContexts) === ClassTraverser.EXTENDS_PROP,
     );
 
-    public override postChildrenProcessing({node, ...unusedProcessingContext}: ProcessingContext): ConceptMap {
-        if(node.parent?.type === AST_NODE_TYPES.ClassDeclaration) {
+    public override postChildrenProcessing({ node, ...unusedProcessingContext }: ProcessingContext): ConceptMap {
+        if (node.parent?.type === AST_NODE_TYPES.ClassDeclaration) {
             if (node.type === AST_NODE_TYPES.Identifier || node.type === AST_NODE_TYPES.MemberExpression) {
-                const superType = parseClassLikeBaseType({
+                const superType = parseClassLikeBaseType(
+                    {
+                        node,
+                        ...unusedProcessingContext,
+                    },
                     node,
-                    ...unusedProcessingContext
-                }, node, node.parent.superTypeArguments?.params);
+                    node.parent.superTypeArguments?.params,
+                );
                 if (superType) {
                     return singleEntryConceptMap(LCETypeDeclared.conceptId, superType);
                 }
@@ -124,18 +124,22 @@ export class SuperClassDeclarationProcessor extends Processor {
 export class ImplementsDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.TSClassImplements],
-        ({node, localContexts}) =>
+        ({ node, localContexts }) =>
             !!node.parent &&
             node.parent.type === AST_NODE_TYPES.ClassDeclaration &&
-            getParentPropName(localContexts) === ClassTraverser.IMPLEMENTS_PROP
+            getParentPropName(localContexts) === ClassTraverser.IMPLEMENTS_PROP,
     );
 
-    public override postChildrenProcessing({node, ...unusedProcessingContext}: ProcessingContext): ConceptMap {
+    public override postChildrenProcessing({ node, ...unusedProcessingContext }: ProcessingContext): ConceptMap {
         if (node.type === AST_NODE_TYPES.TSClassImplements) {
-            const implementsType = parseClassLikeBaseType({
+            const implementsType = parseClassLikeBaseType(
+                {
+                    node,
+                    ...unusedProcessingContext,
+                },
                 node,
-                ...unusedProcessingContext
-            }, node, node.typeArguments?.params);
+                node.typeArguments?.params,
+            );
             if (implementsType) {
                 return singleEntryConceptMap(LCETypeDeclared.conceptId, implementsType);
             }

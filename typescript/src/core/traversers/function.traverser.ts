@@ -4,7 +4,7 @@ import { ConceptMap, mergeConceptMaps } from "../concept";
 import { ProcessingContext } from "../context";
 import { ProcessorMap } from "../processor";
 import { Traverser } from "../traverser";
-import { runTraverserForNodes } from "../utils/traverser.utils";
+import { runTraverserForNode, runTraverserForNodes } from "../utils/traverser.utils";
 
 export class FunctionTraverser extends Traverser {
     public static readonly TYPE_PARAMETERS_PROP = "type-parameters";
@@ -31,7 +31,7 @@ export class FunctionTraverser extends Traverser {
             }
             runTraverserForNodes(node.params, { parentPropName: FunctionTraverser.PARAMETERS_PROP }, processingContext, processors, conceptMaps);
             if (node.body)
-                runTraverserForNodes(node.body.body, { parentPropName: FunctionTraverser.BODY_PROP }, processingContext, processors, conceptMaps);
+                runTraverserForNode(node.body, { parentPropName: FunctionTraverser.BODY_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
