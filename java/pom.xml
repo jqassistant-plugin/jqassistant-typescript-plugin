@@ -13,7 +13,6 @@
         <jqa-plugin-common.version>${com.buschmais.jqassistant.version}</jqa-plugin-common.version>
         <jqa-json-plugin.version>${com.buschmais.jqassistant.version}</jqa-json-plugin.version>
         <lombok.version>1.18.34</lombok.version>
-        <mapstruct.version>1.6.0</mapstruct.version>
     </properties>
 
     <build>
@@ -33,38 +32,6 @@
                 <filtering>false</filtering>
             </resource>
         </resources>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <!-- Maven Compiler Plugin with Lombok/Mapstruct configuration -->
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${lombok.version}</version>
-                            </path>
-                            <dependency>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok-mapstruct-binding</artifactId>
-                                <version>0.2.0</version>
-                            </dependency>
-                            <path>
-                                <groupId>org.mapstruct</groupId>
-                                <artifactId>mapstruct-processor</artifactId>
-                                <version>${mapstruct.version}</version>
-                            </path>
-                        </annotationProcessorPaths>
-                        <compilerArgs>
-                            <arg>-Amapstruct.unmappedTargetPolicy=ERROR</arg>
-                            <arg>-Amapstruct.unmappedSourcePolicy=ERROR</arg>
-                        </compilerArgs>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -100,7 +67,6 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
