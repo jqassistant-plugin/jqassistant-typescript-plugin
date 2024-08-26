@@ -3,9 +3,9 @@ package org.jqassistant.plugin.typescript.impl;
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerPlugin;
 import com.buschmais.jqassistant.core.scanner.api.Scope;
+import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
 import com.buschmais.jqassistant.plugin.common.api.scanner.AbstractScannerPlugin;
 import com.buschmais.jqassistant.plugin.common.api.scanner.filesystem.FileResource;
-import com.buschmais.jqassistant.plugin.json.api.model.JSONFileDescriptor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jqassistant.plugin.typescript.api.TypescriptScope;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-@ScannerPlugin.Requires(JSONFileDescriptor.class)
+@ScannerPlugin.Requires(FileDescriptor.class)
 public class TypescriptProjectScannerPlugin extends AbstractScannerPlugin<FileResource, TypeScriptScanDescriptor> {
 
     private ObjectMapper objectMapper;
