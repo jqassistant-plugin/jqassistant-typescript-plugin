@@ -73,3 +73,7 @@ function fNested() {
 async function fAsync(p1: string, p2: number): Promise<number> {
     return 0;
 }
+
+function fGenericDependency(): void {
+    fGenericConstraint<CustomType>({x: 1, y: 2});
+}

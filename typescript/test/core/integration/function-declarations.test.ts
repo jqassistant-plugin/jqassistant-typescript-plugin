@@ -28,28 +28,28 @@ describe("function declarations test", () => {
 
     beforeAll(async () => {
         const projects = await processProjects(projectRootPath);
-        if(projects.length !== 1) {
-            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        if (projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.");
         }
         result = projects[0].concepts;
 
-        if(!result.get(LCEFunctionDeclaration.conceptId)) {
-            throw new Error("Could not find function declarations in result data.")
+        if (!result.get(LCEFunctionDeclaration.conceptId)) {
+            throw new Error("Could not find function declarations in result data.");
         }
-        
-        for(const concept of (result.get(LCEFunctionDeclaration.conceptId) ?? [])) {
+
+        for (const concept of result.get(LCEFunctionDeclaration.conceptId) ?? []) {
             const funDecl: LCEFunctionDeclaration = concept as LCEFunctionDeclaration;
-            if(!funDecl.fqn.localFqn) {
+            if (!funDecl.fqn.localFqn) {
                 throw new Error("Function declaration has no local FQN " + JSON.stringify(funDecl));
             }
-            if(funDecls.has(funDecl.fqn.localFqn)) {
+            if (funDecls.has(funDecl.fqn.localFqn)) {
                 throw new Error("Two function declarations with same local FQN were returned: " + funDecl.fqn.localFqn);
             }
             funDecls.set(funDecl.fqn.localFqn, funDecl);
         }
-        
-        const mainModuleConcept = result.get(LCEModule.conceptId)?.find(mod => (mod as LCEModule).fqn.localFqn === "./src/main.ts");
-        if(!mainModuleConcept) {
+
+        const mainModuleConcept = result.get(LCEModule.conceptId)?.find((mod) => (mod as LCEModule).fqn.localFqn === "./src/main.ts");
+        if (!mainModuleConcept) {
             throw new Error("Could not find main module in result data");
         }
         mainModule = mainModuleConcept as LCEModule;
@@ -60,7 +60,7 @@ describe("function declarations test", () => {
     test("empty function", async () => {
         const decl = funDecls.get('"./src/main.ts".fEmpty');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fEmpty'));
             expect(decl.functionName).toBe("fEmpty");
@@ -78,7 +78,7 @@ describe("function declarations test", () => {
     test("simple function that returns number", async () => {
         const decl = funDecls.get('"./src/main.ts".fReturn');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fReturn'));
             expect(decl.functionName).toBe("fReturn");
@@ -96,7 +96,7 @@ describe("function declarations test", () => {
     test("simple function that returns interface instance", async () => {
         const decl = funDecls.get('"./src/main.ts".fReturnRef');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fReturnRef'));
             expect(decl.functionName).toBe("fReturnRef");
@@ -110,13 +110,19 @@ describe("function declarations test", () => {
             expect(decl.typeParameters).toHaveLength(0);
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".fReturnRef', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".fReturnRef',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+            1,
+        );
     });
 
     test("simple function that returns interface instance of different module", async () => {
         const decl = funDecls.get('"./src/main.ts".fReturnRefExt');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fReturnRefExt'));
             expect(decl.functionName).toBe("fReturnRefExt");
@@ -130,13 +136,19 @@ describe("function declarations test", () => {
             expect(decl.typeParameters).toHaveLength(0);
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".fReturnRefExt', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".fReturnRefExt',
+            resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'),
+            1,
+        );
     });
 
     test("exported empty function", async () => {
         const decl = funDecls.get('"./src/main.ts".fExported');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fExported'));
             expect(decl.functionName).toBe("fExported");
@@ -149,11 +161,12 @@ describe("function declarations test", () => {
 
             expect(decl.typeParameters).toHaveLength(0);
 
-            const exportDeclConcept = result.get(LCEExportDeclaration.conceptId)?.find(exp =>
-                (exp as LCEExportDeclaration).globalDeclFqn === resolveGlobalFqn(projectRootPath, '"./src/main.ts".fExported'));
+            const exportDeclConcept = result
+                .get(LCEExportDeclaration.conceptId)
+                ?.find((exp) => (exp as LCEExportDeclaration).globalDeclFqn === resolveGlobalFqn(projectRootPath, '"./src/main.ts".fExported'));
 
             expect(exportDeclConcept).toBeDefined();
-            if(exportDeclConcept) {
+            if (exportDeclConcept) {
                 const exportDecl = exportDeclConcept as LCEExportDeclaration;
                 expect(exportDecl.kind).toBe("value");
                 expect(exportDecl.identifier).toBe("fExported");
@@ -167,7 +180,7 @@ describe("function declarations test", () => {
     test("function with dependencies in body", async () => {
         const decl = funDecls.get('"./src/main.ts".fBodyRef');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fBodyRef'));
             expect(decl.functionName).toBe("fBodyRef");
@@ -182,13 +195,19 @@ describe("function declarations test", () => {
         }
 
         expectDependency(projectRootPath, dependencies, '"./src/main.ts".fBodyRef', resolveGlobalFqn(projectRootPath, '"./src/main.ts".fEmpty'), 1);
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".fBodyRef', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".fBodyRef',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'),
+            1,
+        );
     });
 
     test("function with single parameter", async () => {
         const decl = funDecls.get('"./src/main.ts".fParam');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fParam'));
             expect(decl.functionName).toBe("fParam");
@@ -207,7 +226,7 @@ describe("function declarations test", () => {
     test("function with multiple parameters", async () => {
         const decl = funDecls.get('"./src/main.ts".fMultiParam');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fMultiParam'));
             expect(decl.functionName).toBe("fMultiParam");
@@ -226,7 +245,7 @@ describe("function declarations test", () => {
             expect(unionTypes).toHaveLength(2);
             expect(unionTypes[0].type).toBe("primitive");
             expect(unionTypes[1].type).toBe("primitive");
-            unionTypes.sort((a, b) => (a as LCETypePrimitive).name.localeCompare((b as LCETypePrimitive).name))
+            unionTypes.sort((a, b) => (a as LCETypePrimitive).name.localeCompare((b as LCETypePrimitive).name));
             expect((unionTypes[0] as LCETypePrimitive).name).toBe("string");
             expect((unionTypes[1] as LCETypePrimitive).name).toBe("undefined");
 
@@ -239,7 +258,7 @@ describe("function declarations test", () => {
     test("function with single parameter of referenced class type", async () => {
         const decl = funDecls.get('"./src/main.ts".fParamRef');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fParamRef'));
             expect(decl.functionName).toBe("fParamRef");
@@ -255,13 +274,19 @@ describe("function declarations test", () => {
             expect(decl.typeParameters).toHaveLength(0);
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".fParamRef', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".fParamRef',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'),
+            1,
+        );
     });
 
     test("function with single parameter of referenced class type of different module", async () => {
         const decl = funDecls.get('"./src/main.ts".fParamRefExt');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fParamRefExt'));
             expect(decl.functionName).toBe("fParamRefExt");
@@ -277,13 +302,19 @@ describe("function declarations test", () => {
             expect(decl.typeParameters).toHaveLength(0);
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".fParamRefExt', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".fParamRefExt',
+            resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'),
+            1,
+        );
     });
 
     test("generic function with single type parameter", async () => {
         const decl = funDecls.get('"./src/main.ts".fGeneric');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fGeneric'));
             expect(decl.functionName).toBe("fGeneric");
@@ -304,7 +335,7 @@ describe("function declarations test", () => {
     test("generic function with multiple type parameters", async () => {
         const decl = funDecls.get('"./src/main.ts".fGenericMulti');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fGenericMulti'));
             expect(decl.functionName).toBe("fGenericMulti");
@@ -328,7 +359,7 @@ describe("function declarations test", () => {
     test("generic function with constrained type parameter", async () => {
         const decl = funDecls.get('"./src/main.ts".fGenericConstraint');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fGenericConstraint'));
             expect(decl.functionName).toBe("fGenericConstraint");
@@ -352,7 +383,7 @@ describe("function declarations test", () => {
     test("generic function with type parameter constrained by type declaration", async () => {
         const decl = funDecls.get('"./src/main.ts".fGenericConstraintRef');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fGenericConstraintRef'));
             expect(decl.functionName).toBe("fGenericConstraintRef");
@@ -370,13 +401,19 @@ describe("function declarations test", () => {
             expectDeclaredType(decl.typeParameters[0].constraint, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".fGenericConstraintRef', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".fGenericConstraintRef',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+            1,
+        );
     });
 
     test("generic function with type parameter constrained by type declaration of different module", async () => {
         const decl = funDecls.get('"./src/main.ts".fGenericConstraintRefExt');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fGenericConstraintRefExt'));
             expect(decl.functionName).toBe("fGenericConstraintRefExt");
@@ -394,13 +431,19 @@ describe("function declarations test", () => {
             expectDeclaredType(decl.typeParameters[0].constraint, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".fGenericConstraintRefExt', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".fGenericConstraintRefExt',
+            resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'),
+            1,
+        );
     });
 
     test("nested function", async () => {
         const decl = funDecls.get('"./src/main.ts".fNested');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fNested'));
             expect(decl.functionName).toBe("fNested");
@@ -418,7 +461,7 @@ describe("function declarations test", () => {
     test("async function", async () => {
         const decl = funDecls.get('"./src/main.ts".fAsync');
         expect(decl).toBeDefined();
-        if(decl) {
+        if (decl) {
             expect(decl.coordinates.fileName).toBe(mainModule.path);
             expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fAsync'));
             expect(decl.functionName).toBe("fAsync");
@@ -437,4 +480,36 @@ describe("function declarations test", () => {
         }
     });
 
+    test("function with call to generic function", async () => {
+        const decl = funDecls.get('"./src/main.ts".fGenericDependency');
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fGenericDependency'));
+            expect(decl.functionName).toBe("fGenericDependency");
+
+            expectPrimitiveType(decl.returnType, "void");
+
+            expect(decl.parameters).toHaveLength(0);
+
+            expect(decl.async).toBe(false);
+
+            expect(decl.typeParameters).toHaveLength(0);
+        }
+
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".fGenericDependency',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".fGenericConstraint'),
+            1,
+        );
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".fGenericDependency',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'),
+            1,
+        );
+    });
 });

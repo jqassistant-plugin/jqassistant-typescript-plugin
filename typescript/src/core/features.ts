@@ -124,6 +124,14 @@ import {
     JSXSpreadChildTraverser
 } from "./traversers/jsx.traverser";
 import { ExportsPostProcessor } from "./post-processors/exports.post-processor";
+import {
+    ArrayTypeTraverser,
+    IntersectionTypeTraverser,
+    TupleTypeTraverser,
+    TypeAnnotationTraverser,
+    TypeReferenceTraverser,
+    UnionTypeTraverser
+} from "./traversers/type.traverser";
 
 /**
  * Central index of all traversers natively supported by the LCE.
@@ -191,6 +199,7 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
     [AST_NODE_TYPES.TSAbstractAccessorProperty, new AccessorPropertyTraverser()],
     [AST_NODE_TYPES.TSAbstractMethodDefinition, new MethodTraverser()],
     [AST_NODE_TYPES.TSAbstractPropertyDefinition, new PropertyTraverser()],
+    [AST_NODE_TYPES.TSArrayType, new ArrayTypeTraverser()],
     [AST_NODE_TYPES.TSAsExpression, new AsExpressionTraverser()],
     [AST_NODE_TYPES.TSClassImplements, new SimpleTraverser()],
     [AST_NODE_TYPES.TSDeclareFunction, new FunctionTraverser()],
@@ -201,15 +210,20 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
     [AST_NODE_TYPES.TSInterfaceBody, new InterfaceBodyTraverser()],
     [AST_NODE_TYPES.TSInterfaceDeclaration, new InterfaceDeclarationTraverser()],
     [AST_NODE_TYPES.TSInterfaceHeritage, new InterfaceHeritageTraverser()],
+    [AST_NODE_TYPES.TSIntersectionType, new IntersectionTypeTraverser()],
     [AST_NODE_TYPES.TSMethodSignature, new MethodTraverser()],
     [AST_NODE_TYPES.TSNonNullExpression, new NonNullExpressionTraverser()],
     [AST_NODE_TYPES.TSParameterProperty, new ParameterPropertyTraverser()],
     [AST_NODE_TYPES.TSPropertySignature, new PropertyTraverser()],
+    [AST_NODE_TYPES.TSTupleType, new TupleTypeTraverser()],
     [AST_NODE_TYPES.TSTypeAliasDeclaration, new TypeAliasDeclarationTraverser()],
+    [AST_NODE_TYPES.TSTypeAnnotation, new TypeAnnotationTraverser()],
     [AST_NODE_TYPES.TSTypeAssertion, new TypeAssertionTraverser()],
     [AST_NODE_TYPES.TSTypeParameter, new TypeParameterTraverser()],
     [AST_NODE_TYPES.TSTypeParameterDeclaration, new TypeParameterDeclarationTraverser()],
     [AST_NODE_TYPES.TSTypeParameterInstantiation, new TypeParameterInstantiationTraverser()],
+    [AST_NODE_TYPES.TSTypeReference, new TypeReferenceTraverser()],
+    [AST_NODE_TYPES.TSUnionType, new UnionTypeTraverser()],
     [AST_NODE_TYPES.UnaryExpression, new UnaryExpressionTraverser()],
     [AST_NODE_TYPES.UpdateExpression, new UpdateExpressionTraverser()],
     [AST_NODE_TYPES.VariableDeclaration, new VariableDeclarationTraverser()],

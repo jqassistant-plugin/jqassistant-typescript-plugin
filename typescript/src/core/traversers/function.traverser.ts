@@ -20,15 +20,6 @@ export class FunctionTraverser extends Traverser {
             node.type === AST_NODE_TYPES.FunctionExpression ||
             node.type === AST_NODE_TYPES.TSDeclareFunction
         ) {
-            if (node.typeParameters) {
-                runTraverserForNodes(
-                    node.typeParameters.params,
-                    { parentPropName: FunctionTraverser.TYPE_PARAMETERS_PROP },
-                    processingContext,
-                    processors,
-                    conceptMaps,
-                );
-            }
             runTraverserForNodes(node.params, { parentPropName: FunctionTraverser.PARAMETERS_PROP }, processingContext, processors, conceptMaps);
             if (node.body)
                 runTraverserForNode(node.body, { parentPropName: FunctionTraverser.BODY_PROP }, processingContext, processors, conceptMaps);

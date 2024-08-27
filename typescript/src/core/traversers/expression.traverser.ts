@@ -31,11 +31,11 @@ export class SpreadElementTraverser extends Traverser {
     public static readonly ARGUMENT_PROP = "argument";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.SpreadElement) {
-            runTraverserForNode(node.argument, {parentPropName: SpreadElementTraverser.ARGUMENT_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.argument, { parentPropName: SpreadElementTraverser.ARGUMENT_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -47,19 +47,19 @@ export class ArrayPatternTraverser extends Traverser {
     public static readonly ELEMENTS_PROP = "elements";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.ArrayPattern) {
             if (node.decorators)
                 runTraverserForNodes(
                     node.decorators,
-                    {parentPropName: ArrayPatternTraverser.DECORATORS_PROP},
+                    { parentPropName: ArrayPatternTraverser.DECORATORS_PROP },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
-            runTraverserForNodes(node.elements, {parentPropName: ArrayPatternTraverser.ELEMENTS_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNodes(node.elements, { parentPropName: ArrayPatternTraverser.ELEMENTS_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -72,7 +72,7 @@ export class ArrowFunctionExpressionTraverser extends Traverser {
     public static readonly BODY_PROP = "body";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.ArrowFunctionExpression) {
@@ -84,7 +84,7 @@ export class ArrowFunctionExpressionTraverser extends Traverser {
                     },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
             runTraverserForNodes(
                 node.params,
@@ -93,14 +93,14 @@ export class ArrowFunctionExpressionTraverser extends Traverser {
                 },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
             runTraverserForNode(
                 node.body,
-                {parentPropName: ArrowFunctionExpressionTraverser.BODY_PROP},
+                { parentPropName: ArrowFunctionExpressionTraverser.BODY_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -113,12 +113,12 @@ export class AssignmentExpressionTraverser extends Traverser {
     public static readonly RIGHT_PROP = "right";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.AssignmentExpression) {
-            runTraverserForNode(node.left, {parentPropName: AssignmentExpressionTraverser.LEFT_PROP}, processingContext, processors, conceptMaps);
-            runTraverserForNode(node.right, {parentPropName: AssignmentExpressionTraverser.RIGHT_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.left, { parentPropName: AssignmentExpressionTraverser.LEFT_PROP }, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.right, { parentPropName: AssignmentExpressionTraverser.RIGHT_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -129,16 +129,16 @@ export class AwaitExpressionTraverser extends Traverser {
     public static readonly ARGUMENT_PROP = "argument";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.AwaitExpression) {
             runTraverserForNode(
                 node.argument,
-                {parentPropName: AwaitExpressionTraverser.ARGUMENT_PROP},
+                { parentPropName: AwaitExpressionTraverser.ARGUMENT_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -151,12 +151,12 @@ export class BinaryExpressionTraverser extends Traverser {
     public static readonly RIGHT_PROP = "right";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.BinaryExpression) {
-            runTraverserForNode(node.left, {parentPropName: BinaryExpressionTraverser.LEFT_PROP}, processingContext, processors, conceptMaps);
-            runTraverserForNode(node.right, {parentPropName: BinaryExpressionTraverser.RIGHT_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.left, { parentPropName: BinaryExpressionTraverser.LEFT_PROP }, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.right, { parentPropName: BinaryExpressionTraverser.RIGHT_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -169,28 +169,28 @@ export class CallExpressionTraverser extends Traverser {
     public static readonly CALLEE_PROP = "callee";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.CallExpression) {
             if (node.typeArguments)
-                runTraverserForNodes(
-                    node.typeArguments.params,
+                runTraverserForNode(
+                    node.typeArguments,
                     {
                         parentPropName: CallExpressionTraverser.TYPE_PARAMETERS_PROP,
                     },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
             runTraverserForNodes(
                 node.arguments,
-                {parentPropName: CallExpressionTraverser.ARGUMENTS_PROP},
+                { parentPropName: CallExpressionTraverser.ARGUMENTS_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
-            runTraverserForNode(node.callee, {parentPropName: CallExpressionTraverser.CALLEE_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.callee, { parentPropName: CallExpressionTraverser.CALLEE_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -201,16 +201,16 @@ export class ChainExpressionTraverser extends Traverser {
     public static readonly EXPRESSION_PROP = "expression";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.ChainExpression) {
             runTraverserForNode(
                 node.expression,
-                {parentPropName: ChainExpressionTraverser.EXPRESSION_PROP},
+                { parentPropName: ChainExpressionTraverser.EXPRESSION_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -224,11 +224,11 @@ export class ConditionalExpressionTraverser extends Traverser {
     public static readonly ALTERNATE_PROP = "alternate";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.ConditionalExpression) {
-            runTraverserForNode(node.test, {parentPropName: ConditionalExpressionTraverser.TEST_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.test, { parentPropName: ConditionalExpressionTraverser.TEST_PROP }, processingContext, processors, conceptMaps);
             runTraverserForNode(
                 node.consequent,
                 {
@@ -236,7 +236,7 @@ export class ConditionalExpressionTraverser extends Traverser {
                 },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
             runTraverserForNode(
                 node.alternate,
@@ -245,7 +245,7 @@ export class ConditionalExpressionTraverser extends Traverser {
                 },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -258,27 +258,17 @@ export class IdentifierTraverser extends Traverser {
     public static readonly TYPE_ANNOTATIONS_PROP = "type-annotations";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.Identifier) {
             if (node.decorators)
                 runTraverserForNodes(
                     node.decorators,
-                    {parentPropName: IdentifierTraverser.DECORATORS_PROP},
+                    { parentPropName: IdentifierTraverser.DECORATORS_PROP },
                     processingContext,
                     processors,
-                    conceptMaps
-                );
-            if (node.typeAnnotation)
-                runTraverserForNode(
-                    node.typeAnnotation,
-                    {
-                        parentPropName: IdentifierTraverser.TYPE_ANNOTATIONS_PROP,
-                    },
-                    processingContext,
-                    processors,
-                    conceptMaps
+                    conceptMaps,
                 );
         }
 
@@ -291,11 +281,11 @@ export class ImportExpressionTraverser extends Traverser {
     public static readonly SOURCE_PROP = "source";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.ImportExpression) {
-            runTraverserForNode(node.source, {parentPropName: ImportExpressionTraverser.SOURCE_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.source, { parentPropName: ImportExpressionTraverser.SOURCE_PROP }, processingContext, processors, conceptMaps);
             if (node.attributes)
                 runTraverserForNode(
                     node.attributes,
@@ -304,7 +294,7 @@ export class ImportExpressionTraverser extends Traverser {
                     },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
         }
 
@@ -317,12 +307,12 @@ export class LogicalExpressionTraverser extends Traverser {
     public static readonly RIGHT_PROP = "right";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.LogicalExpression) {
-            runTraverserForNode(node.left, {parentPropName: LogicalExpressionTraverser.LEFT_PROP}, processingContext, processors, conceptMaps);
-            runTraverserForNode(node.right, {parentPropName: LogicalExpressionTraverser.RIGHT_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.left, { parentPropName: LogicalExpressionTraverser.LEFT_PROP }, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.right, { parentPropName: LogicalExpressionTraverser.RIGHT_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -334,17 +324,17 @@ export class MemberExpressionTraverser extends Traverser {
     public static readonly PROPERTY_PROP = "property";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.MemberExpression) {
-            runTraverserForNode(node.object, {parentPropName: MemberExpressionTraverser.OBJECT_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.object, { parentPropName: MemberExpressionTraverser.OBJECT_PROP }, processingContext, processors, conceptMaps);
             runTraverserForNode(
                 node.property,
-                {parentPropName: MemberExpressionTraverser.PROPERTY_PROP},
+                { parentPropName: MemberExpressionTraverser.PROPERTY_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -358,7 +348,7 @@ export class NewExpressionTraverser extends Traverser {
     public static readonly CALLEE_PROP = "callee";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.NewExpression) {
@@ -370,16 +360,16 @@ export class NewExpressionTraverser extends Traverser {
                     },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
             runTraverserForNodes(
                 node.arguments,
-                {parentPropName: NewExpressionTraverser.ARGUMENTS_PROP},
+                { parentPropName: NewExpressionTraverser.ARGUMENTS_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
-            runTraverserForNode(node.callee, {parentPropName: NewExpressionTraverser.CALLEE_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.callee, { parentPropName: NewExpressionTraverser.CALLEE_PROP }, processingContext, processors, conceptMaps);
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -390,16 +380,16 @@ export class ObjectExpressionTraverser extends Traverser {
     public static readonly PROPERTIES_PROP = "properties";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.ObjectExpression) {
             runTraverserForNodes(
                 node.properties,
-                {parentPropName: ObjectExpressionTraverser.PROPERTIES_PROP},
+                { parentPropName: ObjectExpressionTraverser.PROPERTIES_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -412,24 +402,24 @@ export class ObjectPatternTraverser extends Traverser {
     public static readonly PROPERTIES_PROP = "properties";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.ObjectPattern) {
             if (node.decorators)
                 runTraverserForNodes(
                     node.decorators,
-                    {parentPropName: ObjectPatternTraverser.DECORATORS_PROP},
+                    { parentPropName: ObjectPatternTraverser.DECORATORS_PROP },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
             runTraverserForNodes(
                 node.properties,
-                {parentPropName: ObjectPatternTraverser.PROPERTIES_PROP},
+                { parentPropName: ObjectPatternTraverser.PROPERTIES_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -441,7 +431,7 @@ export class SequenceExpressionTraverser extends Traverser {
     public static readonly EXPRESSIONS_PROP = "expressions";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.SequenceExpression) {
@@ -452,7 +442,7 @@ export class SequenceExpressionTraverser extends Traverser {
                 },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -466,7 +456,7 @@ export class TaggedTemplateExpressionTraverser extends Traverser {
     public static readonly TYPE_PARAMETER_PROP = "type-parameters";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TaggedTemplateExpression) {
@@ -478,9 +468,9 @@ export class TaggedTemplateExpressionTraverser extends Traverser {
                     },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
-            runTraverserForNode(node.tag, {parentPropName: TaggedTemplateExpressionTraverser.TAG_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNode(node.tag, { parentPropName: TaggedTemplateExpressionTraverser.TAG_PROP }, processingContext, processors, conceptMaps);
             runTraverserForNode(
                 node.quasi,
                 {
@@ -488,7 +478,7 @@ export class TaggedTemplateExpressionTraverser extends Traverser {
                 },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -501,17 +491,17 @@ export class TemplateLiteralTraverser extends Traverser {
     public static readonly EXPRESSIONS_PROP = "expressions";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TemplateLiteral) {
-            runTraverserForNodes(node.quasis, {parentPropName: TemplateLiteralTraverser.QUASIS_PROP}, processingContext, processors, conceptMaps);
+            runTraverserForNodes(node.quasis, { parentPropName: TemplateLiteralTraverser.QUASIS_PROP }, processingContext, processors, conceptMaps);
             runTraverserForNodes(
                 node.expressions,
-                {parentPropName: TemplateLiteralTraverser.EXPRESSIONS_PROP},
+                { parentPropName: TemplateLiteralTraverser.EXPRESSIONS_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -523,16 +513,16 @@ export class AsExpressionTraverser extends Traverser {
     public static readonly EXPRESSION_PROP = "expression";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSAsExpression) {
             runTraverserForNode(
                 node.expression,
-                {parentPropName: AsExpressionTraverser.EXPRESSION_PROP},
+                { parentPropName: AsExpressionTraverser.EXPRESSION_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -544,7 +534,7 @@ export class NonNullExpressionTraverser extends Traverser {
     public static readonly EXPRESSION_PROP = "expression";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSNonNullExpression) {
@@ -556,7 +546,7 @@ export class NonNullExpressionTraverser extends Traverser {
                     },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
         }
 
@@ -568,16 +558,16 @@ export class TypeAssertionTraverser extends Traverser {
     public static readonly EXPRESSION_PROP = "expression";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSTypeAssertion) {
             runTraverserForNode(
                 node.expression,
-                {parentPropName: TypeAssertionTraverser.EXPRESSION_PROP},
+                { parentPropName: TypeAssertionTraverser.EXPRESSION_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -589,16 +579,16 @@ export class UnaryExpressionTraverser extends Traverser {
     public static readonly ARGUMENT_PROP = "argument";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.UnaryExpression) {
             runTraverserForNode(
                 node.argument,
-                {parentPropName: UnaryExpressionTraverser.ARGUMENT_PROP},
+                { parentPropName: UnaryExpressionTraverser.ARGUMENT_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -610,16 +600,16 @@ export class UpdateExpressionTraverser extends Traverser {
     public static readonly ARGUMENT_PROP = "argument";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.UpdateExpression) {
             runTraverserForNode(
                 node.argument,
-                {parentPropName: UpdateExpressionTraverser.ARGUMENT_PROP},
+                { parentPropName: UpdateExpressionTraverser.ARGUMENT_PROP },
                 processingContext,
                 processors,
-                conceptMaps
+                conceptMaps,
             );
         }
 
@@ -631,17 +621,17 @@ export class YieldExpressionTraverser extends Traverser {
     public static readonly ARGUMENT_PROP = "argument";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
-        const {node} = processingContext;
+        const { node } = processingContext;
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.YieldExpression) {
             if (node.argument)
                 runTraverserForNode(
                     node.argument,
-                    {parentPropName: YieldExpressionTraverser.ARGUMENT_PROP},
+                    { parentPropName: YieldExpressionTraverser.ARGUMENT_PROP },
                     processingContext,
                     processors,
-                    conceptMaps
+                    conceptMaps,
                 );
         }
 
