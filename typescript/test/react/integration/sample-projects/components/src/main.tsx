@@ -30,6 +30,10 @@ const ArrFuncComponentWithContent = () => {
     </>;
 }
 
+const ArrFuncComponentReactFC: React.FC<void> = () => {
+    return <></>;
+}
+
 class ClassComponentWithContent extends React.Component<unknown, {}> {
     public render(): ReactNode {
         return <>

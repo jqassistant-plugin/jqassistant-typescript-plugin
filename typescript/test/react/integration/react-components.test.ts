@@ -17,21 +17,21 @@ describe("React Components test", () => {
         initNodeSampleProject(projectRootPath);
         initializeReactExtractor();
         const projects = await processProjects(projectRootPath);
-        if(projects.length !== 1) {
-            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        if (projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.");
         }
         result = projects[0].concepts;
 
-        if(!result.get(LCEReactComponent.conceptId)) {
-            throw new Error("Could not find React components in result data.")
+        if (!result.get(LCEReactComponent.conceptId)) {
+            throw new Error("Could not find React components in result data.");
         }
 
-        for(const concept of (result.get(LCEReactComponent.conceptId) ?? [])) {
+        for (const concept of result.get(LCEReactComponent.conceptId) ?? []) {
             const component: LCEReactComponent = concept as LCEReactComponent;
-            if(!component.fqn.globalFqn) {
+            if (!component.fqn.globalFqn) {
                 throw new Error("React component has no globalFQN " + JSON.stringify(component));
             }
-            if(components.has(component.fqn.globalFqn)) {
+            if (components.has(component.fqn.globalFqn)) {
                 throw new Error("Two React components with same global FQN were returned: " + component.fqn.globalFqn);
             }
             components.set(component.fqn.globalFqn, component);
@@ -43,7 +43,7 @@ describe("React Components test", () => {
     test("basic function component", async () => {
         const comp = components.get(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".BasicFunctionComponent'));
         expect(comp).toBeDefined();
-        if(comp) {
+        if (comp) {
             expect(comp.componentName).toBe("BasicFunctionComponent");
             expect(comp.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".BasicFunctionComponent'));
             expect(comp.renderedElements).toHaveLength(0);
@@ -53,7 +53,7 @@ describe("React Components test", () => {
     test("basic arrow function component", async () => {
         const comp = components.get(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".BasicArrowFunctionComponent'));
         expect(comp).toBeDefined();
-        if(comp) {
+        if (comp) {
             expect(comp.componentName).toBe("BasicArrowFunctionComponent");
             expect(comp.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".BasicArrowFunctionComponent'));
             expect(comp.renderedElements).toHaveLength(0);
@@ -63,7 +63,7 @@ describe("React Components test", () => {
     test("basic class component", async () => {
         const comp = components.get(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".BasicClassComponent'));
         expect(comp).toBeDefined();
-        if(comp) {
+        if (comp) {
             expect(comp.componentName).toBe("BasicClassComponent");
             expect(comp.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".BasicClassComponent'));
             expect(comp.renderedElements).toHaveLength(0);
@@ -73,27 +73,36 @@ describe("React Components test", () => {
     test("arrow function component with content", async () => {
         const comp = components.get(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ArrFuncComponentWithContent'));
         expect(comp).toBeDefined();
-        if(comp) {
+        if (comp) {
             expect(comp.componentName).toBe("ArrFuncComponentWithContent");
             expect(comp.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ArrFuncComponentWithContent'));
             expect(comp.renderedElements).toHaveLength(3);
-            expectJSXDependency(comp, 'h1', 'h1', 1);
-            expectJSXDependency(comp, 'h2', 'h2', 2);
-            expectJSXDependency(comp, resolveGlobalFqn(projectRootPath, '"./src/main.tsx".SomeComponent'), 'SomeComponent', 1);
-
+            expectJSXDependency(comp, "h1", "h1", 1);
+            expectJSXDependency(comp, "h2", "h2", 2);
+            expectJSXDependency(comp, resolveGlobalFqn(projectRootPath, '"./src/main.tsx".SomeComponent'), "SomeComponent", 1);
         }
     });
 
-    test("class function component with content", async () => {
+    test("arrow function component with React.FC type", async () => {
+        const comp = components.get(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ArrFuncComponentReactFC'));
+        expect(comp).toBeDefined();
+        if (comp) {
+            expect(comp.componentName).toBe("ArrFuncComponentReactFC");
+            expect(comp.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ArrFuncComponentReactFC'));
+            expect(comp.renderedElements).toHaveLength(0);
+        }
+    });
+
+    test("class component with content", async () => {
         const comp = components.get(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ClassComponentWithContent'));
         expect(comp).toBeDefined();
-        if(comp) {
+        if (comp) {
             expect(comp.componentName).toBe("ClassComponentWithContent");
             expect(comp.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ClassComponentWithContent'));
             expect(comp.renderedElements).toHaveLength(3);
-            expectJSXDependency(comp, 'h1', 'h1', 1);
-            expectJSXDependency(comp, 'div', 'div', 1);
-            expectJSXDependency(comp, resolveGlobalFqn(projectRootPath, '"./src/main.tsx".SomeComponent'), 'SomeComponent', 3);
+            expectJSXDependency(comp, "h1", "h1", 1);
+            expectJSXDependency(comp, "div", "div", 1);
+            expectJSXDependency(comp, resolveGlobalFqn(projectRootPath, '"./src/main.tsx".SomeComponent'), "SomeComponent", 3);
         }
     });
 
@@ -102,19 +111,30 @@ describe("React Components test", () => {
         const comp = components.get(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ComponentWithUnnamedIndexDefaultComponent'));
 
         expect(compDef).toBeDefined();
-        if(compDef) {
+        if (compDef) {
             expect(compDef.componentName).toBe("UnnamedIndexComponent");
             expect(compDef.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/components/UnnamedIndexComponent".default'));
             expect(compDef.renderedElements).toHaveLength(1);
-            expectJSXDependency(compDef, 'div', 'div', 1);
+            expectJSXDependency(compDef, "div", "div", 1);
         }
         expect(comp).toBeDefined();
-        if(comp) {
+        if (comp) {
             expect(comp.componentName).toBe("ComponentWithUnnamedIndexDefaultComponent");
             expect(comp.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ComponentWithUnnamedIndexDefaultComponent'));
             expect(comp.renderedElements).toHaveLength(1);
-            expectJSXDependency(comp, resolveGlobalFqn(projectRootPath, '"./src/components/UnnamedIndexComponent".default'), 'UnnamedIndexComponent', 1);
-            expectDependency(projectRootPath, dependencies, '"./src/main.tsx".ComponentWithUnnamedIndexDefaultComponent', resolveGlobalFqn(projectRootPath, '"./src/components/UnnamedIndexComponent".default'), 1);
+            expectJSXDependency(
+                comp,
+                resolveGlobalFqn(projectRootPath, '"./src/components/UnnamedIndexComponent".default'),
+                "UnnamedIndexComponent",
+                1,
+            );
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.tsx".ComponentWithUnnamedIndexDefaultComponent',
+                resolveGlobalFqn(projectRootPath, '"./src/components/UnnamedIndexComponent".default'),
+                1,
+            );
         }
     });
 
@@ -124,28 +144,44 @@ describe("React Components test", () => {
         const compAlias = components.get(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ComponentWithNamedAliasIndexDefaultComponent'));
 
         expect(compDef).toBeDefined();
-        if(compDef) {
+        if (compDef) {
             expect(compDef.componentName).toBe("MyNamedIndexComponent");
             expect(compDef.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/components/NamedIndexComponent".default'));
             expect(compDef.renderedElements).toHaveLength(1);
-            expectJSXDependency(compDef, 'div', 'div', 1);
+            expectJSXDependency(compDef, "div", "div", 1);
         }
         expect(comp).toBeDefined();
-        if(comp) {
+        if (comp) {
             expect(comp.componentName).toBe("ComponentWithNamedIndexDefaultComponent");
             expect(comp.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ComponentWithNamedIndexDefaultComponent'));
             expect(comp.renderedElements).toHaveLength(1);
-            expectJSXDependency(comp, resolveGlobalFqn(projectRootPath, '"./src/components/NamedIndexComponent".default'), 'NamedIndexComponent', 1);
-            expectDependency(projectRootPath, dependencies, '"./src/main.tsx".ComponentWithNamedIndexDefaultComponent', resolveGlobalFqn(projectRootPath, '"./src/components/NamedIndexComponent".default'), 1);
+            expectJSXDependency(comp, resolveGlobalFqn(projectRootPath, '"./src/components/NamedIndexComponent".default'), "NamedIndexComponent", 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.tsx".ComponentWithNamedIndexDefaultComponent',
+                resolveGlobalFqn(projectRootPath, '"./src/components/NamedIndexComponent".default'),
+                1,
+            );
         }
         expect(compAlias).toBeDefined();
-        if(compAlias) {
+        if (compAlias) {
             expect(compAlias.componentName).toBe("ComponentWithNamedAliasIndexDefaultComponent");
             expect(compAlias.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.tsx".ComponentWithNamedAliasIndexDefaultComponent'));
             expect(compAlias.renderedElements).toHaveLength(1);
-            expectJSXDependency(compAlias, resolveGlobalFqn(projectRootPath, '"./src/components/NamedIndexComponent".default'), 'MyNamedIndexComponent', 1);
-            expectDependency(projectRootPath, dependencies, '"./src/main.tsx".ComponentWithNamedAliasIndexDefaultComponent', resolveGlobalFqn(projectRootPath, '"./src/components/NamedIndexComponent".default'), 1);
+            expectJSXDependency(
+                compAlias,
+                resolveGlobalFqn(projectRootPath, '"./src/components/NamedIndexComponent".default'),
+                "MyNamedIndexComponent",
+                1,
+            );
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.tsx".ComponentWithNamedAliasIndexDefaultComponent',
+                resolveGlobalFqn(projectRootPath, '"./src/components/NamedIndexComponent".default'),
+                1,
+            );
         }
     });
-
 });
