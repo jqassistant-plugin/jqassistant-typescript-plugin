@@ -3,6 +3,7 @@ import path from "path";
 import { FileUtils } from "./file.utils";
 import * as fs from "fs";
 import ts, { ParsedCommandLine } from "typescript";
+import { LCEProjectInfo } from "../project";
 
 export class NodeUtils {
     private static packageMappings = new Map();
@@ -56,11 +57,11 @@ export class NodeUtils {
      *
      * NOTE: Throws Error on failure of both resolution methods.
      */
-    public static resolveImportPath(importPath: string, projectPath: string, sourceFilePathAbsolute: string): string {
-        if (!this.tsConfigs.has(projectPath)) {
-            this.tsConfigs.set(projectPath, this.parseTsConfig(projectPath));
+    public static resolveImportPath(importPath: string, projectInfo: LCEProjectInfo, sourceFilePathAbsolute: string): string {
+        if (!this.tsConfigs.has(projectInfo.configPath)) {
+            this.tsConfigs.set(projectInfo.configPath, this.parseTsConfig(projectInfo.configPath));
         }
-        const tsconfig = this.tsConfigs.get(projectPath)!;
+        const tsconfig = this.tsConfigs.get(projectInfo.configPath)!;
 
         let tsResolvedModule: string | undefined;
         try {
@@ -72,7 +73,7 @@ export class NodeUtils {
         } else {
             let jsResolvedModule: string | undefined;
             try {
-                jsResolvedModule = require.resolve(importPath, { paths: [projectPath] });
+                jsResolvedModule = require.resolve(importPath, { paths: [projectInfo.rootPath] });
             } catch (e) {}
             if (jsResolvedModule) {
                 return FileUtils.normalizePath(jsResolvedModule);
@@ -91,8 +92,8 @@ export class NodeUtils {
         getDirectories: ts.sys.getDirectories,
     };
 
-    private static parseTsConfig(projectRootPath: string): ParsedCommandLine {
-        const configFile = ts.readConfigFile(path.join(projectRootPath, "tsconfig.json"), ts.sys.readFile);
+    private static parseTsConfig(configPath: string): ParsedCommandLine {
+        const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
         const parseConfigHost: ts.ParseConfigHost = {
             useCaseSensitiveFileNames: ts.sys.useCaseSensitiveFileNames,
             readDirectory: ts.sys.readDirectory,
@@ -100,6 +101,6 @@ export class NodeUtils {
             readFile: ts.sys.readFile,
         };
 
-        return ts.parseJsonConfigFileContent(configFile.config, parseConfigHost, projectRootPath, {});
+        return ts.parseJsonConfigFileContent(configFile.config, parseConfigHost, path.dirname(configPath), {});
     }
 }

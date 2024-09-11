@@ -105,7 +105,7 @@ export class ExportsPostProcessor extends PostProcessor {
                         // if import source is a node module identifier try to resolve it
                         let resolvedModulePath;
                         try {
-                            resolvedModulePath = NodeUtils.resolveImportPath(exp.importSource, projectInfo.rootPath, exp.sourceFilePathAbsolute);
+                            resolvedModulePath = NodeUtils.resolveImportPath(exp.importSource, projectInfo, exp.sourceFilePathAbsolute);
                         } catch (e) {
                             console.error(`Error: Could not resolve module: ${exp.importSource}`);
                             console.error(`\toccurred at ${exp.sourceFilePathAbsolute}}`);

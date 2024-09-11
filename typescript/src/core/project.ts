@@ -6,20 +6,20 @@ import { LCEConcept } from "./concept";
 export interface LCEProjectInfo {
 
     /**
-     * Either identical to `projectPath`, or, if configured in the `tsconfig.json`, the absolute path to the `rootDir`.
+     * Either identical to directory path containing the `tsconfig.json`, or, if configured in the `tsconfig.json`, the absolute path to the `rootDir`.
      * All local FQNs are relative to this path.
      * Multiple projects may have the same root path.
      */
     rootPath: string;
 
     /**
-     * The absolute path to the directory containing the tsconfig.json (it may be equal to or a subdirectory to `rootPath`)
+     * The absolute path to the `tsconfig.json` (may have different name) of the project
      * This path is unique for every project.
      */
-    projectPath: string;
+    configPath: string;
 
     /**
-     * The absolute paths to all subprojects (including transitive ones) that have a `tsconfig.json`.
+     * The absolute paths to all `tsconfig.json` files of subprojects (including transitive ones).
      * The term "subproject" is used synonymous to project references defined in the `tsconfig.json` of the main project.
      */
     subProjectPaths: string[];
@@ -46,7 +46,7 @@ export class LCEProject {
 
         return {
             rootPath: this.projectInfo.rootPath,
-            projectPath: this.projectInfo.projectPath,
+            projectPath: this.projectInfo.configPath,
             subProjectPaths: this.projectInfo.subProjectPaths,
             sourceFilePaths: this.projectInfo.sourceFilePaths,
             concepts: Object.fromEntries(jsonConcepts)

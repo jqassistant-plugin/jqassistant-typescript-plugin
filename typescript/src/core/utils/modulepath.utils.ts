@@ -205,12 +205,12 @@ export class ModulePathUtils {
      * @returns whether the path is outside the project (or one of its subprojects) or not
      */
     static isExternal(modulePath: string, projectInfo: LCEProjectInfo, projects: LCEProject[]): boolean {
-        let moduleIndex: ModuleIndex | undefined = this.moduleIndexes.get(projectInfo.projectPath);
+        let moduleIndex: ModuleIndex | undefined = this.moduleIndexes.get(projectInfo.configPath);
         if(!moduleIndex) {
             moduleIndex = new Map();
             // create module index by registering all processed modules for project and all subprojects
             for(const subproject of projects) {
-                if(!projectInfo.subProjectPaths.includes(subproject.projectInfo.projectPath) && subproject.projectInfo.projectPath !== projectInfo.projectPath) {
+                if(!projectInfo.subProjectPaths.includes(subproject.projectInfo.configPath) && subproject.projectInfo.configPath !== projectInfo.configPath) {
                     continue;
                 }
 
@@ -224,7 +224,7 @@ export class ModulePathUtils {
                     }
                 }
             }
-            this.moduleIndexes.set(projectInfo.projectPath, moduleIndex)
+            this.moduleIndexes.set(projectInfo.configPath, moduleIndex)
         }
 
         const pathType = this.getPathType(modulePath);

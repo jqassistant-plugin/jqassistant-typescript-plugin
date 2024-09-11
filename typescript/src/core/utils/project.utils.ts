@@ -24,7 +24,7 @@ export class ProjectUtils {
     public static normalizeProjectInfo(projectInfo: LCEProjectInfo): LCEProjectInfo {
         return {
             rootPath: FileUtils.normalizePath(projectInfo.rootPath),
-            projectPath: FileUtils.normalizePath(projectInfo.projectPath),
+            configPath: FileUtils.normalizePath(projectInfo.configPath),
             subProjectPaths: projectInfo.subProjectPaths.map(path => FileUtils.normalizePath(path)),
             sourceFilePaths: projectInfo.sourceFilePaths.map(path => FileUtils.normalizePath(path))
         }
@@ -60,10 +60,10 @@ export class ProjectUtils {
         // filter out duplicates
         const seen: string[] = [];
         return result.filter(pi => {
-            if(seen.includes(pi.projectPath)) {
+            if(seen.includes(pi.configPath)) {
                 return false;
             } else {
-                seen.push(pi.projectPath);
+                seen.push(pi.configPath);
                 return true;
             }
         });
@@ -85,7 +85,7 @@ export class ProjectUtils {
             for (const ref of tsConfig.projectReferences) {
                 const referencedConfigFileName = this.getConfigFileName(ref.path);
                 const subProjectInfos = this.getProjectInfo(path.dirname(referencedConfigFileName), path.basename(referencedConfigFileName));
-                subProjectPaths.push(...subProjectInfos.map(spi => FileUtils.normalizePath(spi.projectPath)));
+                subProjectPaths.push(...subProjectInfos.map(spi => FileUtils.normalizePath(spi.configPath)));
                 result.push(...subProjectInfos);
             }
         }
@@ -98,7 +98,7 @@ export class ProjectUtils {
 
         result.push({
             rootPath: FileUtils.normalizePath(rootPath),
-            projectPath: FileUtils.normalizePath(projectPath),
+            configPath: FileUtils.normalizePath(path.join(projectPath, configFileName)),
             subProjectPaths: subProjectPaths,
             sourceFilePaths: tsConfig.fileNames.map(fn => FileUtils.normalizePath(fn))
         });

@@ -45,7 +45,7 @@ export class ImportDeclarationProcessor extends Processor {
                     try {
                         const resolvedModulePath = NodeUtils.resolveImportPath(
                             ModulePathUtils.extractFQNPath(target.globalFqn),
-                            globalContext.projectInfo.projectPath,
+                            globalContext.projectInfo,
                             globalContext.sourceFilePathAbsolute,
                         );
                         const targetDeclName = ModulePathUtils.extractFQNIdentifier(target.globalFqn);

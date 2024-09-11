@@ -22,19 +22,23 @@ export async function processProjectsAndOutputResult(scanRoot: string, options: 
     const processedProjects = await processProjects(scanRoot);
 
     // output JSON file
-    const json = JSON.stringify(processedProjects.map(p => p.toJSON()), (_, value) => {
-        if(typeof  value === 'bigint') {
-            return value.toString();
-        } else if(typeof value === 'object' && value instanceof Map) {
-            return Object.fromEntries(Array.from(value.entries()))
-        } else {
-            return value;
-        }
-    }, options.prettyPrint ? 2 : undefined);
+    const json = JSON.stringify(
+        processedProjects.map((p) => p.toJSON()),
+        (_, value) => {
+            if (typeof value === "bigint") {
+                return value.toString();
+            } else if (typeof value === "object" && value instanceof Map) {
+                return Object.fromEntries(Array.from(value.entries()));
+            } else {
+                return value;
+            }
+        },
+        options.prettyPrint ? 2 : undefined,
+    );
 
     let dirPath = path.join(scanRoot, ".reports", "jqa");
-    let filePath = path.join(dirPath, 'ts-output.json');
-    fs.mkdir(dirPath, {recursive: true}, (errDir) => {
+    let filePath = path.join(dirPath, "ts-output.json");
+    fs.mkdir(dirPath, { recursive: true }, (errDir) => {
         if (errDir) {
             console.log("Could not create directory: " + dirPath);
         } else {
@@ -55,15 +59,15 @@ export async function processProjects(scanRoot: string): Promise<LCEProject[]> {
 
     // process projects
     const processedProjects: LCEProject[] = [];
-    for (let i = 0; i < projects.length; i++){
+    for (let i = 0; i < projects.length; i++) {
         const project = projects[i];
         console.log("Processing project " + i + " of " + projects.length);
         processedProjects.push(await processProject(project));
     }
 
     // post-processing projects
-    console.log("Post-Processing Results...")
-    for(const postProcessor of POST_PROCESSORS) {
+    console.log("Post-Processing Results...");
+    for (const postProcessor of POST_PROCESSORS) {
         postProcessor.postProcess(processedProjects);
     }
 
@@ -86,22 +90,22 @@ export async function processProject(project: LCEProjectInfo): Promise<LCEProjec
 
     // Traverse and process all individual project files
     const traverser = new AstTraverser();
-    for (let i = 0; i < fileList.length; i++){
-        progressBar.update(i+1);
+    for (let i = 0; i < fileList.length; i++) {
+        progressBar.update(i + 1);
         const file = fileList[i];
 
         const frStartTime = process.hrtime();
         const code: string = fs.readFileSync(file, "utf8");
         const frEndTime = process.hrtime();
-        fileReadingTime += (frEndTime[0] + frEndTime[1]/10**9) - (frStartTime[0] + frStartTime[1]/10**9);
+        fileReadingTime += frEndTime[0] + frEndTime[1] / 10 ** 9 - (frStartTime[0] + frStartTime[1] / 10 ** 9);
 
         try {
-            const {ast, services} = parseAndGenerateServices(code, {
+            const { ast, services } = parseAndGenerateServices(code, {
                 loc: true,
                 range: true,
                 tokens: false,
                 filePath: file,
-                project: path.join(project.projectPath, "tsconfig.json"),
+                project: project.configPath,
             });
             if (!services.program) {
                 continue;
@@ -118,7 +122,7 @@ export async function processProject(project: LCEProjectInfo): Promise<LCEProjec
             };
 
             concepts = mergeConceptMaps(concepts, unifyConceptMap(traverser.traverse(globalContext), globalContext.sourceFilePathAbsolute));
-        } catch(e) {
+        } catch (e) {
             console.log("Error occurred while processing file: " + file);
             console.log(e);
         }
@@ -127,12 +131,9 @@ export async function processProject(project: LCEProjectInfo): Promise<LCEProjec
     const normalizedConcepts: Map<string, LCEConcept[]> = unifyConceptMap(concepts, "").get("") ?? new Map();
 
     const endTime = process.hrtime();
-    const diffTime = (endTime[0] + endTime[1]/10**9) - (startTime[0] + startTime[1]/10**9);
+    const diffTime = endTime[0] + endTime[1] / 10 ** 9 - (startTime[0] + startTime[1] / 10 ** 9);
     console.log("Finished analyzing project files.");
     console.log("Runtime: " + diffTime.toFixed(3) + "s (" + fileReadingTime.toFixed(3) + "s reading files)");
 
-    return new LCEProject(
-        project,
-        normalizedConcepts
-    );
+    return new LCEProject(project, normalizedConcepts);
 }
