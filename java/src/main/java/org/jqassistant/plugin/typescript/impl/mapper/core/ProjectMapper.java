@@ -22,7 +22,6 @@ public class ProjectMapper {
     public List<ProjectDescriptor> map(List<Project> projects, Scanner scanner) {
         List<ProjectDescriptor> result = new ArrayList<>();
 
-        // TODO: scan project root directory for file/directory nodes of projects
         // 1. determine all independent root directories (exclude contained ones)
         // 2. scan determined directories while ignoring node_modules directory
 
@@ -40,7 +39,7 @@ public class ProjectMapper {
             LocalFileDescriptor rootDirDescriptor = fileResolver.require(project.getRootPath(), LocalFileDescriptor.class, scanner.getContext());
             projectDescriptor.setRootDirectory(rootDirDescriptor);
 
-            LocalFileDescriptor configFileDescriptor = fileResolver.require(project.getProjectPath() + "/tsconfig.json", LocalFileDescriptor.class, scanner.getContext());
+            LocalFileDescriptor configFileDescriptor = fileResolver.require(project.getConfigPath(), LocalFileDescriptor.class, scanner.getContext());
             projectDescriptor.setConfigFile(configFileDescriptor);
 
             projectDescriptor.getModules().addAll(
@@ -61,8 +60,7 @@ public class ProjectMapper {
             Optional<Project> projectOpt = projects.stream()
                 .filter(p -> {
                     var configFilePath = projectDescriptor.getConfigFile().getAbsoluteFileName();
-                    var projectDir = configFilePath.substring(0, configFilePath.length() - "/tsconfig.json".length());
-                    return projectDir.equals(p.getProjectPath());
+                    return configFilePath.equals(p.getConfigPath());
                 })
                 .findFirst();
             if (projectOpt.isPresent()) {
@@ -70,7 +68,7 @@ public class ProjectMapper {
 
                 project.getSubProjectPaths().forEach(spp -> {
                     Optional<ProjectDescriptor> subprojectDescriptorOpt = result.stream()
-                        .filter(pd -> pd.getConfigFile().getAbsoluteFileName().equals(spp + "/tsconfig.json"))
+                        .filter(pd -> pd.getConfigFile().getAbsoluteFileName().equals(spp))
                         .findFirst();
 
                     if (subprojectDescriptorOpt.isPresent()) {
@@ -80,11 +78,6 @@ public class ProjectMapper {
                     }
                 });
 
-                // TODO: Should we transitively add modules? Maybe with flagged relationships?
-//                context.getStore().executeQuery(
-//                    "MATCH (project:TS:Project)-[:REFERENCES]->(subproject:TS:Project)-[:CONTAINS]->(module:TS:Module)" +
-//                        "CREATE (project)-[:CONTAINS]->(module)"
-//                );
             } else {
                 throw new IllegalStateException("Could not find project for config file path: " + projectDescriptor.getConfigFile().getFileName());
             }

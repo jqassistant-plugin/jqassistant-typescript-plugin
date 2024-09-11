@@ -1,7 +1,7 @@
 [
   {
     "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project1",
-    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project1",
+    "configPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/tsconfig.json",
     "subProjectPaths": [],
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts",
@@ -328,12 +328,13 @@
           }
         }
       ],
-      "external-module": []
+      "external-module": [],
+      "react-component": []
     }
   },
   {
     "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331",
-    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331",
+    "configPath": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/tsconfig.json",
     "subProjectPaths": [],
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts"
@@ -382,14 +383,15 @@
           "path": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts"
         }
       ],
-      "external-module": []
+      "external-module": [],
+      "react-component": []
     }
   },
   {
     "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon",
-    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon",
+    "configPath": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/tsconfig.json",
     "subProjectPaths": [
-      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331"
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/tsconfig.json"
     ],
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts"
@@ -438,15 +440,16 @@
           "path": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts"
         }
       ],
-      "external-module": []
+      "external-module": [],
+      "react-component": []
     }
   },
   {
     "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project2",
-    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project2",
+    "configPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/tsconfig.json",
     "subProjectPaths": [
-      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331",
-      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon"
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/tsconfig.json",
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/tsconfig.json"
     ],
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts",
@@ -781,12 +784,13 @@
           }
         }
       ],
-      "external-module": []
+      "external-module": [],
+      "react-component": []
     }
   },
   {
     "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31",
-    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31",
+    "configPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/tsconfig.json",
     "subProjectPaths": [],
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts"
@@ -835,12 +839,13 @@
           "path": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts"
         }
       ],
-      "external-module": []
+      "external-module": [],
+      "react-component": []
     }
   },
   {
     "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32",
-    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32",
+    "configPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/tsconfig.json",
     "subProjectPaths": [],
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts"
@@ -889,17 +894,18 @@
           "path": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts"
         }
       ],
-      "external-module": []
+      "external-module": [],
+      "react-component": []
     }
   },
   {
     "rootPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3",
-    "projectPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3",
+    "configPath": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/tsconfig.json",
     "subProjectPaths": [
-      "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31",
-      "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32",
-      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331",
-      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon"
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/tsconfig.json",
+      "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/tsconfig.json",
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/tsconfig.json",
+      "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/tsconfig.json"
     ],
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts"
@@ -982,7 +988,8 @@
           "path": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts"
         }
       ],
-      "external-module": []
+      "external-module": [],
+      "react-component": []
     }
   }
 ]

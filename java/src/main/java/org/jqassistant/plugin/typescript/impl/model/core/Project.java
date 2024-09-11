@@ -15,7 +15,7 @@ public class Project {
 
     private String rootPath;
 
-    private String projectPath;
+    private String configPath;
 
     private List<String> subProjectPaths = new ArrayList<>();
 

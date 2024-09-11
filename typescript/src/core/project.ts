@@ -46,7 +46,7 @@ export class LCEProject {
 
         return {
             rootPath: this.projectInfo.rootPath,
-            projectPath: this.projectInfo.configPath,
+            configPath: this.projectInfo.configPath,
             subProjectPaths: this.projectInfo.subProjectPaths,
             sourceFilePaths: this.projectInfo.sourceFilePaths,
             concepts: Object.fromEntries(jsonConcepts)

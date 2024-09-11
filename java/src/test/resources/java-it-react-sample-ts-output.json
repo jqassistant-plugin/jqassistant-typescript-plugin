@@ -1,7 +1,7 @@
 [
   {
     "rootPath": "/java/src/test/resources/java-it-react-sample-project",
-    "projectPath": "/java/src/test/resources/java-it-react-sample-project",
+    "configPath": "/java/src/test/resources/java-it-react-sample-project/tsconfig.json",
     "subProjectPaths": [],
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx"

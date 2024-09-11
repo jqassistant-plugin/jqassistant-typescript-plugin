@@ -1,7 +1,7 @@
 [
   {
     "rootPath": "/java/src/test/resources/java-it-core-basics-sample-project",
-    "projectPath": "/java/src/test/resources/java-it-core-basics-sample-project",
+    "configPath": "/java/src/test/resources/java-it-core-basics-sample-project/tsconfig.json",
     "subProjectPaths": [],
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts",
@@ -32,9 +32,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts",
-            "startLine": 3,
+            "startLine": 4,
             "startColumn": 6,
-            "endLine": 3,
+            "endLine": 4,
             "endColumn": 19
           }
         },
@@ -83,9 +83,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts",
-            "startLine": 4,
+            "startLine": 5,
             "startColumn": 6,
-            "endLine": 4,
+            "endLine": 5,
             "endColumn": 39
           }
         },
@@ -108,9 +108,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
-            "startLine": 1,
+            "startLine": 2,
             "startColumn": 4,
-            "endLine": 1,
+            "endLine": 2,
             "endColumn": 20
           }
         },
@@ -133,9 +133,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
-            "startLine": 3,
+            "startLine": 4,
             "startColumn": 4,
-            "endLine": 3,
+            "endLine": 4,
             "endColumn": 20
           }
         },
@@ -159,9 +159,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
-            "startLine": 5,
+            "startLine": 6,
             "startColumn": 4,
-            "endLine": 5,
+            "endLine": 6,
             "endColumn": 29
           }
         },
@@ -239,9 +239,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
-            "startLine": 7,
+            "startLine": 8,
             "startColumn": 4,
-            "endLine": 10,
+            "endLine": 11,
             "endColumn": 1
           }
         },
@@ -300,9 +300,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
-            "startLine": 12,
+            "startLine": 13,
             "startColumn": 4,
-            "endLine": 12,
+            "endLine": 13,
             "endColumn": 31
           }
         },
@@ -364,9 +364,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
-            "startLine": 14,
+            "startLine": 15,
             "startColumn": 4,
-            "endLine": 14,
+            "endLine": 15,
             "endColumn": 26
           }
         },
@@ -457,9 +457,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
-            "startLine": 16,
+            "startLine": 17,
             "startColumn": 4,
-            "endLine": 18,
+            "endLine": 19,
             "endColumn": 1
           }
         },
@@ -548,9 +548,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
-            "startLine": 20,
+            "startLine": 21,
             "startColumn": 4,
-            "endLine": 20,
+            "endLine": 21,
             "endColumn": 44
           }
         },
@@ -574,9 +574,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
-            "startLine": 22,
+            "startLine": 23,
             "startColumn": 4,
-            "endLine": 22,
+            "endLine": 23,
             "endColumn": 27
           }
         },
@@ -599,9 +599,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
-            "startLine": 24,
+            "startLine": 25,
             "startColumn": 4,
-            "endLine": 24,
+            "endLine": 25,
             "endColumn": 35
           }
         }
@@ -622,9 +622,9 @@
               "optional": false,
               "decorators": [],
               "coordinates": {
-                "startLine": 5,
+                "startLine": 6,
                 "startColumn": 42,
-                "endLine": 5,
+                "endLine": 6,
                 "endColumn": 47
               }
             },
@@ -638,9 +638,9 @@
               "optional": false,
               "decorators": [],
               "coordinates": {
-                "startLine": 5,
+                "startLine": 6,
                 "startColumn": 49,
-                "endLine": 5,
+                "endLine": 6,
                 "endColumn": 59
               }
             }
@@ -672,9 +672,9 @@
           ],
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts",
-            "startLine": 5,
+            "startLine": 6,
             "startColumn": 0,
-            "endLine": 5,
+            "endLine": 6,
             "endColumn": 69
           }
         },
@@ -695,9 +695,9 @@
               "optional": false,
               "decorators": [],
               "coordinates": {
-                "startLine": 14,
+                "startLine": 15,
                 "startColumn": 26,
-                "endLine": 14,
+                "endLine": 15,
                 "endColumn": 47
               }
             }
@@ -710,9 +710,9 @@
           "typeParameters": [],
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts",
-            "startLine": 14,
+            "startLine": 15,
             "startColumn": 7,
-            "endLine": 16,
+            "endLine": 17,
             "endColumn": 1
           }
         }
@@ -752,9 +752,9 @@
                 "optional": false,
                 "decorators": [],
                 "coordinates": {
-                  "startLine": 20,
+                  "startLine": 21,
                   "startColumn": 14,
-                  "endLine": 20,
+                  "endLine": 21,
                   "endColumn": 23
                 }
               },
@@ -768,9 +768,9 @@
                 "optional": false,
                 "decorators": [],
                 "coordinates": {
-                  "startLine": 20,
+                  "startLine": 21,
                   "startColumn": 25,
-                  "endLine": 20,
+                  "endLine": 21,
                   "endColumn": 34
                 }
               },
@@ -784,9 +784,9 @@
                 "optional": false,
                 "decorators": [],
                 "coordinates": {
-                  "startLine": 20,
+                  "startLine": 21,
                   "startColumn": 36,
-                  "endLine": 20,
+                  "endLine": 21,
                   "endColumn": 55
                 }
               }
@@ -805,9 +805,9 @@
                 "visibility": "protected",
                 "readonly": false,
                 "coordinates": {
-                  "startLine": 20,
+                  "startLine": 21,
                   "startColumn": 36,
-                  "endLine": 20,
+                  "endLine": 21,
                   "endColumn": 55
                 },
                 "override": false,
@@ -817,9 +817,9 @@
               }
             ],
             "coordinates": {
-              "startLine": 20,
+              "startLine": 21,
               "startColumn": 2,
-              "endLine": 24,
+              "endLine": 25,
               "endColumn": 3
             }
           },
@@ -837,9 +837,9 @@
               "visibility": "public",
               "readonly": false,
               "coordinates": {
-                "startLine": 9,
+                "startLine": 10,
                 "startColumn": 2,
-                "endLine": 9,
+                "endLine": 10,
                 "endColumn": 12
               },
               "override": false,
@@ -863,9 +863,9 @@
                   "optional": false,
                   "decorators": [],
                   "coordinates": {
-                    "startLine": 26,
+                    "startLine": 27,
                     "startColumn": 51,
-                    "endLine": 26,
+                    "endLine": 27,
                     "endColumn": 62
                   }
                 },
@@ -879,9 +879,9 @@
                   "optional": false,
                   "decorators": [],
                   "coordinates": {
-                    "startLine": 26,
+                    "startLine": 27,
                     "startColumn": 64,
-                    "endLine": 26,
+                    "endLine": 27,
                     "endColumn": 74
                   }
                 }
@@ -923,9 +923,9 @@
               "visibility": "private",
               "async": false,
               "coordinates": {
-                "startLine": 26,
+                "startLine": 27,
                 "startColumn": 2,
-                "endLine": 26,
+                "endLine": 27,
                 "endColumn": 84
               },
               "override": false,
@@ -946,9 +946,9 @@
                 "decorators": [],
                 "visibility": "public",
                 "coordinates": {
-                  "startLine": 11,
+                  "startLine": 12,
                   "startColumn": 2,
-                  "endLine": 13,
+                  "endLine": 14,
                   "endColumn": 3
                 },
                 "override": false,
@@ -967,9 +967,9 @@
                     "optional": false,
                     "decorators": [],
                     "coordinates": {
-                      "startLine": 15,
+                      "startLine": 16,
                       "startColumn": 8,
-                      "endLine": 15,
+                      "endLine": 16,
                       "endColumn": 20
                     }
                   }
@@ -977,9 +977,9 @@
                 "decorators": [],
                 "visibility": "public",
                 "coordinates": {
-                  "startLine": 15,
+                  "startLine": 16,
                   "startColumn": 2,
-                  "endLine": 16,
+                  "endLine": 17,
                   "endColumn": 3
                 },
                 "override": false,
@@ -999,9 +999,9 @@
                 "decorators": [],
                 "visibility": "public",
                 "coordinates": {
-                  "startLine": 18,
+                  "startLine": 19,
                   "startColumn": 2,
-                  "endLine": 18,
+                  "endLine": 19,
                   "endColumn": 25
                 },
                 "override": false,
@@ -1024,18 +1024,18 @@
                 "localFqn": ".Decorator"
               },
               "coordinates": {
-                "startLine": 7,
+                "startLine": 8,
                 "startColumn": 0,
-                "endLine": 7,
+                "endLine": 8,
                 "endColumn": 10
               }
             }
           ],
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts",
-            "startLine": 7,
+            "startLine": 8,
             "startColumn": 0,
-            "endLine": 27,
+            "endLine": 28,
             "endColumn": 1
           }
         },
@@ -1060,9 +1060,9 @@
               "visibility": "public",
               "readonly": false,
               "coordinates": {
-                "startLine": 11,
+                "startLine": 12,
                 "startColumn": 4,
-                "endLine": 11,
+                "endLine": 12,
                 "endColumn": 29
               },
               "override": false,
@@ -1075,9 +1075,9 @@
           "decorators": [],
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts",
-            "startLine": 10,
+            "startLine": 11,
             "startColumn": 7,
-            "endLine": 12,
+            "endLine": 13,
             "endColumn": 1
           }
         }
@@ -1110,9 +1110,9 @@
               "visibility": "public",
               "readonly": false,
               "coordinates": {
-                "startLine": 30,
+                "startLine": 31,
                 "startColumn": 4,
-                "endLine": 30,
+                "endLine": 31,
                 "endColumn": 17
               }
             }
@@ -1133,9 +1133,9 @@
                   "optional": false,
                   "decorators": [],
                   "coordinates": {
-                    "startLine": 33,
+                    "startLine": 34,
                     "startColumn": 11,
-                    "endLine": 33,
+                    "endLine": 34,
                     "endColumn": 21
                   }
                 }
@@ -1149,9 +1149,9 @@
               "visibility": "public",
               "async": false,
               "coordinates": {
-                "startLine": 33,
+                "startLine": 34,
                 "startColumn": 4,
-                "endLine": 33,
+                "endLine": 34,
                 "endColumn": 32
               }
             }
@@ -1169,9 +1169,9 @@
                 "decorators": [],
                 "visibility": "public",
                 "coordinates": {
-                  "startLine": 31,
+                  "startLine": 32,
                   "startColumn": 4,
-                  "endLine": 31,
+                  "endLine": 32,
                   "endColumn": 25
                 }
               }
@@ -1201,9 +1201,9 @@
                     "optional": false,
                     "decorators": [],
                     "coordinates": {
-                      "startLine": 32,
+                      "startLine": 33,
                       "startColumn": 15,
-                      "endLine": 32,
+                      "endLine": 33,
                       "endColumn": 37
                     }
                   }
@@ -1211,9 +1211,9 @@
                 "decorators": [],
                 "visibility": "public",
                 "coordinates": {
-                  "startLine": 32,
+                  "startLine": 33,
                   "startColumn": 4,
-                  "endLine": 32,
+                  "endLine": 33,
                   "endColumn": 39
                 }
               }
@@ -1221,9 +1221,9 @@
           ],
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts",
-            "startLine": 29,
+            "startLine": 30,
             "startColumn": 0,
-            "endLine": 34,
+            "endLine": 35,
             "endColumn": 1
           }
         },
@@ -1247,9 +1247,9 @@
               "visibility": "public",
               "readonly": false,
               "coordinates": {
-                "startLine": 2,
+                "startLine": 3,
                 "startColumn": 4,
-                "endLine": 2,
+                "endLine": 3,
                 "endColumn": 14
               }
             }
@@ -1258,9 +1258,9 @@
           "accessorProperties": [],
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts",
-            "startLine": 1,
+            "startLine": 2,
             "startColumn": 7,
-            "endLine": 3,
+            "endLine": 4,
             "endColumn": 1
           }
         },
@@ -1284,9 +1284,9 @@
               "visibility": "public",
               "readonly": false,
               "coordinates": {
-                "startLine": 6,
+                "startLine": 7,
                 "startColumn": 4,
-                "endLine": 6,
+                "endLine": 7,
                 "endColumn": 14
               }
             },
@@ -1303,9 +1303,9 @@
               "visibility": "public",
               "readonly": false,
               "coordinates": {
-                "startLine": 7,
+                "startLine": 8,
                 "startColumn": 4,
-                "endLine": 7,
+                "endLine": 8,
                 "endColumn": 14
               }
             }
@@ -1314,9 +1314,9 @@
           "accessorProperties": [],
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts",
-            "startLine": 5,
+            "startLine": 6,
             "startColumn": 7,
-            "endLine": 8,
+            "endLine": 9,
             "endColumn": 1
           }
         }
@@ -1332,9 +1332,9 @@
               "localFqn": "\"./src/testDeclarations.ts\".Enum.ELEM1",
               "enumMemberName": "ELEM1",
               "coordinates": {
-                "startLine": 37,
+                "startLine": 38,
                 "startColumn": 4,
-                "endLine": 37,
+                "endLine": 38,
                 "endColumn": 9
               }
             },
@@ -1343,9 +1343,9 @@
               "localFqn": "\"./src/testDeclarations.ts\".Enum.ELEM2",
               "enumMemberName": "ELEM2",
               "coordinates": {
-                "startLine": 38,
+                "startLine": 39,
                 "startColumn": 4,
-                "endLine": 38,
+                "endLine": 39,
                 "endColumn": 9
               }
             }
@@ -1354,9 +1354,9 @@
           "declared": false,
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts",
-            "startLine": 36,
+            "startLine": 37,
             "startColumn": 0,
-            "endLine": 39,
+            "endLine": 40,
             "endColumn": 1
           }
         }
@@ -1564,9 +1564,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts",
-            "startLine": 3,
+            "startLine": 4,
             "startColumn": 0,
-            "endLine": 3,
+            "endLine": 4,
             "endColumn": 28
           }
         },
@@ -1583,9 +1583,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts",
-            "startLine": 5,
+            "startLine": 6,
             "startColumn": 0,
-            "endLine": 5,
+            "endLine": 6,
             "endColumn": 34
           }
         },
@@ -1609,9 +1609,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts",
-            "startLine": 7,
+            "startLine": 8,
             "startColumn": 0,
-            "endLine": 7,
+            "endLine": 8,
             "endColumn": 33
           }
         },
@@ -1639,9 +1639,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts",
-            "startLine": 9,
+            "startLine": 10,
             "startColumn": 0,
-            "endLine": 9,
+            "endLine": 10,
             "endColumn": 55
           }
         },
@@ -1675,9 +1675,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts",
-            "startLine": 11,
+            "startLine": 12,
             "startColumn": 0,
-            "endLine": 14,
+            "endLine": 15,
             "endColumn": 2
           }
         },
@@ -1728,9 +1728,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts",
-            "startLine": 16,
+            "startLine": 17,
             "startColumn": 0,
-            "endLine": 16,
+            "endLine": 17,
             "endColumn": 70
           }
         },
@@ -1745,9 +1745,9 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts",
-            "startLine": 18,
+            "startLine": 19,
             "startColumn": 0,
-            "endLine": 18,
+            "endLine": 19,
             "endColumn": 21
           }
         },
@@ -1771,14 +1771,15 @@
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts",
-            "startLine": 20,
+            "startLine": 21,
             "startColumn": 0,
-            "endLine": 20,
+            "endLine": 21,
             "endColumn": 34
           }
         }
       ],
-      "external-module": []
+      "external-module": [],
+      "react-component": []
     }
   }
 ]
