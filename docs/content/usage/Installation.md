@@ -30,6 +30,10 @@
 		    - typescript:project::build/jqa-ts-output.json
 	```
 	- for the most recent versions of the plugin see the [Maven](https://central.sonatype.com/artifact/org.jqassistant.plugin.typescript/jqassistant-typescript-plugin/versions)
+
+> [!NOTE]
+> From version `1.2.0` onward, the version of the `@jqassistant/ts-lce` Node package and the version of the jQA plugin have to match to avoid incompatibility issues.
+
 - to exclude unwanted scans of directories like `node_modules` you can exclude them in the `jqassistant.yml`:
 	```yaml
 	jqassistant:
