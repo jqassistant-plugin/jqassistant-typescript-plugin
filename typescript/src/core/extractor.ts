@@ -61,7 +61,7 @@ export async function processProjects(scanRoot: string): Promise<LCEProject[]> {
     const processedProjects: LCEProject[] = [];
     for (let i = 0; i < projects.length; i++) {
         const project = projects[i];
-        console.log("Processing project " + i + " of " + projects.length);
+        console.log("Processing project " + (i + 1) + " of " + projects.length);
         processedProjects.push(await processProject(project));
     }
 
