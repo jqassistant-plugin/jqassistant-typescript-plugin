@@ -36,7 +36,7 @@ export class ReactComponentPostProcessor extends PostProcessor {
                         variable.type.returnType instanceof LCETypeDeclared &&
                         (variable.type.returnType.fqn.globalFqn === '"react".React.JSX.Element' ||
                             variable.type.returnType.fqn.globalFqn === '"react".JSX.Element')) ||
-                    (variable.type instanceof LCETypeDeclared && variable.type.fqn.globalFqn === '"react".React.FC')
+                    (variable.type instanceof LCETypeDeclared && isReactFunctionComponentType(variable.type.fqn.globalFqn))
                 ) {
                     const component = new LCEReactComponent(variable.fqn, variable.variableName, []);
                     if (variable.metadata.has(JSXDependencyContextProcessor.JSX_DEPENDENCY_METADATA)) {
@@ -60,5 +60,21 @@ export class ReactComponentPostProcessor extends PostProcessor {
 
             concepts.set(LCEReactComponent.conceptId, [...reactComponents.values()]);
         }
+    }
+}
+
+/**
+ * returns whether the provided fqn belongs to an interface/type describing a React function component
+ */
+function isReactFunctionComponentType(globalFqn: string): boolean {
+    switch (globalFqn) {
+        case '"react".React.FC':
+        case '"react".React.ExoticComponent':
+        case '"react".React.NamedExoticComponent':
+        case '"react".React.ForwardRefExoticComponent':
+        case '"react".React.MemoExoticComponent':
+            return true;
+        default:
+            return false;
     }
 }
