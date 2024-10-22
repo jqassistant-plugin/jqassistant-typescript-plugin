@@ -28,10 +28,8 @@ export class ImportDeclarationProcessor extends Processor {
                 let isModule = false;
                 if (specifier.type === AST_NODE_TYPES.ImportSpecifier) {
                     const importSourceFqn = ModulePathUtils.toFQN(importSource);
-                    target = new FQN(
-                        importSourceFqn.globalFqn + "." + specifier.imported.name,
-                        importSourceFqn.localFqn + "." + specifier.imported.name,
-                    );
+                    const importedName = specifier.imported.type === AST_NODE_TYPES.Identifier ? specifier.imported.name : specifier.imported.raw;
+                    target = new FQN(importSourceFqn.globalFqn + "." + importedName, importSourceFqn.localFqn + "." + importedName);
                 } else if (specifier.type === AST_NODE_TYPES.ImportDefaultSpecifier) {
                     const importSourceFqn = ModulePathUtils.toFQN(importSource);
                     target = new FQN(importSourceFqn.globalFqn + ".default", importSourceFqn.localFqn + ".default");

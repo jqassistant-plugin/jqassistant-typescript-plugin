@@ -58,18 +58,18 @@ export class ExportDeclarationProcessor extends Processor {
                 // may also contain a default export using the "default" specifier
                 // may also be a re-export
                 for (const specifier of node.specifiers) {
-                    const globalDeclFqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + specifier.local.name;
+                    const localName = specifier.local.type === AST_NODE_TYPES.Identifier ? specifier.local.name : specifier.local.raw;
+                    const exportedName = specifier.exported.type === AST_NODE_TYPES.Identifier ? specifier.exported.name : specifier.exported.raw;
+                    const globalDeclFqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + localName;
                     concepts.push(
                         singleEntryConceptMap(
                             LCEExportDeclaration.conceptId,
                             new LCEExportDeclaration(
-                                specifier.local.name,
-                                specifier.exported.name === "default" || specifier.exported.name === specifier.local.name
-                                    ? undefined
-                                    : specifier.exported.name,
+                                localName,
+                                exportedName === "default" || exportedName === localName ? undefined : exportedName,
                                 globalDeclFqn,
                                 source,
-                                specifier.exported.name === "default",
+                                exportedName === "default",
                                 node.exportKind,
                                 globalContext.sourceFilePathAbsolute,
                             ),
