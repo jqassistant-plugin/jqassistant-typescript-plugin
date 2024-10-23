@@ -47,7 +47,13 @@ export class ImportDeclarationProcessor extends Processor {
                             globalContext.sourceFilePathAbsolute,
                         );
                         const targetDeclName = ModulePathUtils.extractFQNIdentifier(target.globalFqn);
-                        const packageName = NodeUtils.getPackageNameForPath(globalContext.projectInfo.rootPath, resolvedModulePath);
+
+                        let packageName: string | undefined = undefined;
+                        if(resolvedModulePath.startsWith(globalContext.projectInfo.rootPath + "/node_modules")) {
+                            // only resolve node package name, if it's an actual node module, not some re-mapped source file (see tsconfig.json -> "paths" option)
+                            packageName = NodeUtils.getPackageNameForPath(globalContext.projectInfo.rootPath, resolvedModulePath);
+                        }
+
                         if (packageName) {
                             target = FQN.id(`"${packageName}".${targetDeclName}`);
                         } else {
