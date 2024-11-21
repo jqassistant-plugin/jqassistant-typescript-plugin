@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>jQA Typescript Plugin</title>
+      <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin</link>
+      <description>Last 10 notes on jQA Typescript Plugin</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>Node - TS JSXElementType</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-JSXElementType</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-JSXElementType</guid>
+    <description>:TS:JSXElementType Node → represents an element type that is used as a JSX element Properties NameDescriptionglobalFqnglobal FQN of the element (either equal to the global FQN ...</description>
+    <pubDate>Thu, 21 Nov 2024 11:57:34 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Method</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Method</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Method</guid>
+    <description>:TS:Method Node → represents a declared method of a :TS:Class or :TS:Interface Properties NameDescriptionglobalFqnglobal FQN of the methodlocalFqnlocal FQN of the methodnamename ...</description>
+    <pubDate>Thu, 21 Nov 2024 11:57:34 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Module</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Module</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Module</guid>
+    <description>:TS:Module Node → represents a TypeScript module (a single .ts(x) file) is realized as an extension of the matching :File:Local node fileName is relative to the :TS:Project root ...</description>
+    <pubDate>Thu, 21 Nov 2024 11:57:34 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Parameter</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Parameter</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Parameter</guid>
+    <description>:TS:Parameter Node → represents a function/method parameter not to be confused with :TS:Type:FunctionParameter which is exclusive for :TS:Type:Function Properties NameDescriptionindexposition ...</description>
+    <pubDate>Thu, 21 Nov 2024 11:57:34 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Project</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Project</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Project</guid>
+    <description>:TS:Project Node → represents an individual TypeScript project identified via a tsconfig.json file Relations NameTarget Label(s)CardinalityDescriptionHAS_CONFIGFile:Local1tsconfig.json ...</description>
+    <pubDate>Thu, 21 Nov 2024 11:57:34 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Property</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Property</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Property</guid>
+    <description>:TS:Property Node → represents a declared property of a :TS:Class or :TS:Interface Properties NameDescriptionglobalFqnglobal FQN of the propertylocalFqnlocal FQN of the propertynamename ...</description>
+    <pubDate>Thu, 21 Nov 2024 11:57:34 GMT</pubDate>
+  </item><item>
+    <title>Node - TS ReactComponent</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-ReactComponent</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-ReactComponent</guid>
+    <description>:TS:ReactComponent Node → represents a React component definition acts as an extension to either a :TS:Class, :TS:Function, or :TS:Variable node Properties NameDescriptioncomponentNamename ...</description>
+    <pubDate>Thu, 21 Nov 2024 11:57:34 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Setter</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Setter</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Setter</guid>
+    <description>:TS:Setter Node → represents a declared setter of a :TS:Class or :TS:Interface Properties NameDescriptionvisibilityvisibility of the setter, i.e. public(default), protected, private, or js_private(for setters declared using the # prefix)static (boolean)only for :TS:Class setters: indicates, if the setter has an static modifierabstract (boolean)only for :TS:Class setters: indicates, if the setter has an abstract modifieroverride (boolean)only for :TS:Class setters: indicates, if the setter has an override modifiercode coordinatescode coordinates of the setter declaration (without fileName) Relations NameTarget Label(s)CardinalityDescriptionHAS:TS:Parameter0..*parameter(s) of the setterDECORATED_BY:TS:Decorator0..*only for :TS:Class setters: all decorators of the setter.</description>
+    <pubDate>Thu, 21 Nov 2024 11:57:34 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Type Declared</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Declared</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Declared</guid>
+    <description>:TS:Type:Declared Node → represents the type of a type declaration (i.e. a :TS:Class) Properties NameDescriptionreferencedGlobalFqnglobal FQN of the type declaration that is referenced by the type node (this mainly serves as a convenience property to simplify queries) Relations NameTarget Label(s)CardinalityDescriptionREFERENCES:TS:Class:TS:Interface:TS:TypeAlias:TS:Enum:TS:ExternalDeclaration1declaration that defines the referenced typeHAS_TYPE_ARGUMENT:TS:Type0..*type arguments that are specified for generic typesProperties: - index: position of the type argument in the type parameter list (zero-based).</description>
+    <pubDate>Thu, 21 Nov 2024 11:57:34 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Type Function</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Function</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Function</guid>
+    <description>:TS:Type:Function Node → represents a function type Properties NameDescriptionasync (boolean)indicates, if the function type has an async modifier Relations NameTarget Label(s)CardinalityDescriptionDECLARES:TS:TypeParameter0..*type ...</description>
+    <pubDate>Thu, 21 Nov 2024 11:57:34 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>
