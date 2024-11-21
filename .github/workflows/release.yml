@@ -41,7 +41,7 @@
         runs-on: ubuntu-latest
         steps:
           - name: Checkout repository
-            uses: actions/checkout@v3
+            uses: actions/checkout@v4
 
           - name: Setup Node.js (LTS)
             uses: actions/setup-node@v3
@@ -66,7 +66,17 @@
               token: ${{ secrets.NPM_TOKEN }}
               package: ./typescript
 
+          - name: Publish Versioned Quartz GitHub Pages
+            uses: RelativeProgramming/versioned-quartz-gh-pages-deploy@v1.0.0
+            with:
+              quartz-repo: 'jqassistant-tooling/jqassistant-quartz-docs'
+              deployment-version: ${{ github.event.inputs.releaseVersion }}
+
           - name: Update package.json to development version
             working-directory: ./typescript
-            run: npm version ${{ github.event.inputs.developmentVersion }} --no-git-tag-version
-      
+            run: |
+              npm version ${{ github.event.inputs.developmentVersion }} --no-git-tag-version
+              git config --global user.name "${{ github.actor }}"
+              git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+              git commit -m "Updated package.json to development version"
+              git push

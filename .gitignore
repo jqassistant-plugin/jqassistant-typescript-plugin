@@ -23,7 +23,7 @@ target
 **/.reports/jqa/
 
 # Docs
-docs/content/.obsidian/workspace.json
+docs/.obsidian/workspace.json
 
 # DrawIO
 *.drawio.bkp
