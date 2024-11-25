@@ -13,6 +13,7 @@ The codebase of the plugin is structured the following way:
 			- `mapper`: MapStruct-based mappers and resolvers for POJO-to-Descriptor Mappings (*contains main logic of the plugin*)
 			- `model`: POJOs that model the JSON output of the [LCE tool](https://jqassistant-plugin.github.io/jqassistant-lce-docs/architecture/LCE-Tool)
 	- `src/test/`: integration tests for the [jQA-Plugin](https://jqassistant-plugin.github.io/jqassistant-lce-docs/architecture/jQAssistant-Plugin)
+		- use the `regenerate-test-data.sh` under `src/test/resources` to generate test reports with the current TypeScript LCE implementation
 - `typescript/`: contains the implementation and tests for the TypeScript [LCE tool](https://jqassistant-plugin.github.io/jqassistant-lce-docs/architecture/LCE-Tool)
 	- `src/`: implementation of the [LCE tool](https://jqassistant-plugin.github.io/jqassistant-lce-docs/architecture/LCE-Tool)
 		- `core/`: code for the [LCE framework](https://jqassistant-plugin.github.io/jqassistant-lce-docs/) and all core language features
