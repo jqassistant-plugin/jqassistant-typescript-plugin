@@ -11,6 +11,16 @@
       "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
       "/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts"
     ],
+    "tsConfig": {
+      "target": "Latest",
+      "experimentalDecorators": true,
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "rootDir": "/java/src/test/resources/java-it-core-basics-sample-project/src"
+    },
     "concepts": {
       "variable-declaration": [
         {

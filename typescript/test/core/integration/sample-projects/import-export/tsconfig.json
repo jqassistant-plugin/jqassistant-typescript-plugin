@@ -4,7 +4,7 @@
       "@internal": ["src/internal"],
       "@internal/*": ["src/internal/*"]
     },
-    "target": "es2022",
+    "target": "esnext",
     "experimentalDecorators": true,
     "module": "commonjs",
     "esModuleInterop": true,

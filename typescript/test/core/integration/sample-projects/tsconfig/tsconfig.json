@@ -1,9 +1,10 @@
 {
-  "include": ["root-included.ts", "src/**/*", "src2/*", "src4"],
-  "exclude": ["src/excluded/**"],
+  "extends": "./base.json",
   "compilerOptions": {
-    "target": "esnext",
-    "experimentalDecorators": true,
+    "paths": {
+      "@internal": ["src/internal"],
+      "@internal/*": ["src/internal/*"]
+    },
     "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

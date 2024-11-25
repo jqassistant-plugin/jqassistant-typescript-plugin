@@ -6,6 +6,17 @@
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-react-sample-project/src/testComponents.tsx"
     ],
+    "tsConfig": {
+      "target": "Latest",
+      "jsx": 2,
+      "experimentalDecorators": true,
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "rootDir": "/java/src/test/resources/java-it-react-sample-project/src"
+    },
     "concepts": {
       "variable-declaration": [
         {

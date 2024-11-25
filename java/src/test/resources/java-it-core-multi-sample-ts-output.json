@@ -7,6 +7,16 @@
       "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts",
       "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts"
     ],
+    "tsConfig": {
+      "target": "Latest",
+      "experimentalDecorators": true,
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "rootDir": "/java/src/test/resources/java-it-core-multi-sample-projects/project1/src"
+    },
     "concepts": {
       "variable-declaration": [
         {
@@ -339,6 +349,17 @@
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331/src/module1.ts"
     ],
+    "tsConfig": {
+      "composite": true,
+      "target": "ES2022",
+      "experimentalDecorators": true,
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "rootDir": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/subproject331"
+    },
     "concepts": {
       "variable-declaration": [
         {
@@ -396,6 +417,17 @@
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon/src/module1.ts"
     ],
+    "tsConfig": {
+      "composite": true,
+      "target": "ES2022",
+      "experimentalDecorators": true,
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "rootDir": "/java/src/test/resources/java-it-core-multi-sample-projects/subprojectCommon"
+    },
     "concepts": {
       "variable-declaration": [
         {
@@ -455,6 +487,16 @@
       "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts",
       "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts"
     ],
+    "tsConfig": {
+      "target": "ES2022",
+      "experimentalDecorators": true,
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "rootDir": "/java/src/test/resources/java-it-core-multi-sample-projects/project2/src"
+    },
     "concepts": {
       "variable-declaration": [
         {
@@ -795,6 +837,17 @@
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31/src/module1.ts"
     ],
+    "tsConfig": {
+      "composite": true,
+      "target": "ES2022",
+      "experimentalDecorators": true,
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "rootDir": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject31"
+    },
     "concepts": {
       "variable-declaration": [
         {
@@ -850,6 +903,17 @@
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32/src/module1.ts"
     ],
+    "tsConfig": {
+      "composite": true,
+      "target": "ES2022",
+      "experimentalDecorators": true,
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "rootDir": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/subproject32"
+    },
     "concepts": {
       "variable-declaration": [
         {
@@ -910,6 +974,16 @@
     "sourceFilePaths": [
       "/java/src/test/resources/java-it-core-multi-sample-projects/project3/src/module1.ts"
     ],
+    "tsConfig": {
+      "target": "ES2022",
+      "experimentalDecorators": true,
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "rootDir": "/java/src/test/resources/java-it-core-multi-sample-projects/project3/src"
+    },
     "concepts": {
       "variable-declaration": [
         {

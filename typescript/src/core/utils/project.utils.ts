@@ -26,7 +26,8 @@ export class ProjectUtils {
             rootPath: FileUtils.normalizePath(projectInfo.rootPath),
             configPath: FileUtils.normalizePath(projectInfo.configPath),
             subProjectPaths: projectInfo.subProjectPaths.map(path => FileUtils.normalizePath(path)),
-            sourceFilePaths: projectInfo.sourceFilePaths.map(path => FileUtils.normalizePath(path))
+            sourceFilePaths: projectInfo.sourceFilePaths.map(path => FileUtils.normalizePath(path)),
+            tsConfig: projectInfo.tsConfig
         }
     }
 
@@ -100,7 +101,8 @@ export class ProjectUtils {
             rootPath: FileUtils.normalizePath(rootPath),
             configPath: FileUtils.normalizePath(path.join(projectPath, configFileName)),
             subProjectPaths: subProjectPaths,
-            sourceFilePaths: tsConfig.fileNames.map(fn => FileUtils.normalizePath(fn))
+            sourceFilePaths: tsConfig.fileNames.map(fn => FileUtils.normalizePath(fn)),
+            tsConfig
         });
 
         return result;

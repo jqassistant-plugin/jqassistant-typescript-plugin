@@ -1,4 +1,12 @@
 import { LCEConcept } from "./concept";
+import {
+    ModuleDetectionKind,
+    ModuleKind,
+    ModuleResolutionKind,
+    NewLineKind,
+    ParsedCommandLine,
+    ScriptTarget
+} from "typescript";
 
 /**
  * Represents basic information about a TypeScript project, its source files and references to all subprojects
@@ -28,6 +36,11 @@ export interface LCEProjectInfo {
      * List of absolute paths to all source files contained in the project (excluding subprojects).
      */
     sourceFilePaths: string[];
+
+    /**
+     * Object representing the natively resolved tsconfig.json
+     */
+    tsConfig: ParsedCommandLine;
 }
 
 /**
@@ -49,7 +62,32 @@ export class LCEProject {
             configPath: this.projectInfo.configPath,
             subProjectPaths: this.projectInfo.subProjectPaths,
             sourceFilePaths: this.projectInfo.sourceFilePaths,
+            tsConfig: this.tsConfigToJSON(),
             concepts: Object.fromEntries(jsonConcepts)
         }
+    }
+
+    /**
+     * converts the natively resolved tsconfig object to a human-readable JSON object with enum values replaced with their respective names
+     */
+    private tsConfigToJSON(): object {
+        const options = this.projectInfo.tsConfig.options;
+        const result: any = structuredClone(options)
+        if(options.module) {
+            result.module = ModuleKind[options.module];
+        }
+        if(options.moduleResolution) {
+            result.moduleResolution = ModuleResolutionKind[options.moduleResolution];
+        }
+        if(options.moduleDetection) {
+            result.moduleDetection = ModuleDetectionKind[options.moduleDetection];
+        }
+        if(options.newLine) {
+            result.newLine = NewLineKind[options.newLine];
+        }
+        if(options.target) {
+            result.target = ScriptTarget[options.target];
+        }
+        return result;
     }
 }
