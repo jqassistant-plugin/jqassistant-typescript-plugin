@@ -10,61 +10,61 @@
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Basic-Usage</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Basic-Usage</guid>
     <description>Basic Usage go through the installation and project setup process if not done already, run npm install to completely download all dependencies execute jqa-ts-lce(global installation) ...</description>
-    <pubDate>Thu, 21 Nov 2024 12:07:23 GMT</pubDate>
+    <pubDate>Mon, 25 Nov 2024 14:02:23 GMT</pubDate>
   </item><item>
     <title>Installation</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Installation</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Installation</guid>
     <description>Installation 1. jQA CLI Installation Download the ZIP-distribution of the jQAssistant command line utility (Neo4j 4 or Neo4j 5) and unpack it 2. npm LCE Tool Installation Global Installation: run npm install --global @jqassistant/ts-lce Local Installation: Run npm install --save-dev @jqassistant/ts-lce Add the following section to the package.json (add additional options as needed) &quot;scripts&quot;: { &quot;jqa&quot;: &quot;jqa-ts-lce&quot; } 3.</description>
-    <pubDate>Thu, 21 Nov 2024 12:07:23 GMT</pubDate>
+    <pubDate>Mon, 25 Nov 2024 14:02:23 GMT</pubDate>
   </item><item>
     <title>Node - TS AccessorProperty</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-AccessorProperty</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-AccessorProperty</guid>
     <description>:TS:AccessorProperty Node → represents a property of a :TS:Class or :TS:Interface that is described by getter, setter, or auto accessor constructs Properties NameDescriptionglobalFqnglobal ...</description>
-    <pubDate>Thu, 21 Nov 2024 12:07:23 GMT</pubDate>
+    <pubDate>Mon, 25 Nov 2024 14:02:23 GMT</pubDate>
   </item><item>
     <title>Node - TS AutoAccessor</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-AutoAccessor</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-AutoAccessor</guid>
     <description>:TS:AutoAccessor Node → represents a declared auto accessor of a :TS:Class or :TS:Interface Properties NameDescriptionvisibilityvisibility of the accessor, i.e ...</description>
-    <pubDate>Thu, 21 Nov 2024 12:07:23 GMT</pubDate>
+    <pubDate>Mon, 25 Nov 2024 14:02:23 GMT</pubDate>
   </item><item>
     <title>Node - TS Class</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Class</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Class</guid>
     <description>:TS:Class Node → represents a top-level TypeScript class declaration Properties NameDescriptionglobalFqnglobal FQN of the classlocalFqnlocal FQN of the classnamename of the ...</description>
-    <pubDate>Thu, 21 Nov 2024 12:07:23 GMT</pubDate>
+    <pubDate>Mon, 25 Nov 2024 14:02:23 GMT</pubDate>
   </item><item>
     <title>Node - TS Constructor</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Constructor</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Constructor</guid>
     <description>:TS:Constructor Node → represents a TypeScript class constructor declaration Properties NameDescriptionglobalFqnglobal FQN of the constructor (always ends with .constructor)localFqnlocal ...</description>
-    <pubDate>Thu, 21 Nov 2024 12:07:23 GMT</pubDate>
+    <pubDate>Mon, 25 Nov 2024 14:02:23 GMT</pubDate>
   </item><item>
     <title>Node - TS Decorator</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Decorator</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Decorator</guid>
     <description>:TS:Decorator Node → represents a decorator of a declaration Properties NameDescriptioncode coordinatescode coordinates of the decorator (without fileName) Relations NameTarget ...</description>
-    <pubDate>Thu, 21 Nov 2024 12:07:23 GMT</pubDate>
+    <pubDate>Mon, 25 Nov 2024 14:02:23 GMT</pubDate>
   </item><item>
     <title>Node - TS Enum</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Enum</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Enum</guid>
     <description>:TS:Enum Node → represents a top-level TypeScript enum declaration Properties NameDescriptionglobalFqnglobal FQN of the enumlocalFqnlocal FQN of the enumnamename of the enumconstant ...</description>
-    <pubDate>Thu, 21 Nov 2024 12:07:23 GMT</pubDate>
+    <pubDate>Mon, 25 Nov 2024 14:02:23 GMT</pubDate>
   </item><item>
     <title>Node - TS EnumMember</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-EnumMember</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-EnumMember</guid>
     <description>:TS:EnumMember Node → represents a TypeScript enum element Properties NameDescriptionglobalFqnglobal FQN of the enum memberlocalFqnlocal FQN of the enum membernamename of ...</description>
-    <pubDate>Thu, 21 Nov 2024 12:07:23 GMT</pubDate>
+    <pubDate>Mon, 25 Nov 2024 14:02:23 GMT</pubDate>
   </item><item>
     <title>Node - TS ExternalDeclaration</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-ExternalDeclaration</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-ExternalDeclaration</guid>
     <description>:TS:ExternalDeclaration Node → some kind of declaration (variable, function, class, type, etc.) that is not directly part of a scanned :TS:Project always declared in the context ...</description>
-    <pubDate>Thu, 21 Nov 2024 12:07:23 GMT</pubDate>
+    <pubDate>Mon, 25 Nov 2024 14:02:23 GMT</pubDate>
   </item>
     </channel>
   </rss>
