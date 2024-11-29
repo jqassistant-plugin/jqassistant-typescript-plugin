@@ -1,7 +1,7 @@
 import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 import { ConceptMap, mergeConceptMaps } from "../concept";
-import { FQN, ProcessingContext } from "../context";
+import { FQN, GlobalContext, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { ModulePathUtils } from "../utils/modulepath.utils";
 import { Processor } from "../processor";
@@ -27,11 +27,11 @@ export class ImportDeclarationProcessor extends Processor {
                 let target = new FQN("");
                 let isModule = false;
                 if (specifier.type === AST_NODE_TYPES.ImportSpecifier) {
-                    const importSourceFqn = ModulePathUtils.toFQN(NodeUtils.resolveImportPath(importSource, globalContext.projectInfo, globalContext.sourceFilePathAbsolute));
+                    const importSourceFqn = this.importSourceToFqn(importSource, globalContext);
                     const importedName = specifier.imported.type === AST_NODE_TYPES.Identifier ? specifier.imported.name : specifier.imported.raw;
                     target = new FQN(importSourceFqn.globalFqn + "." + importedName, importSourceFqn.localFqn + "." + importedName);
                 } else if (specifier.type === AST_NODE_TYPES.ImportDefaultSpecifier) {
-                    const importSourceFqn = ModulePathUtils.toFQN(NodeUtils.resolveImportPath(importSource, globalContext.projectInfo, globalContext.sourceFilePathAbsolute));
+                    const importSourceFqn = this.importSourceToFqn(importSource, globalContext);
                     target = new FQN(importSourceFqn.globalFqn + ".default", importSourceFqn.localFqn + ".default");
                 } else if (specifier.type === AST_NODE_TYPES.ImportNamespaceSpecifier) {
                     target = new FQN(path.resolve(globalContext.projectInfo.rootPath, importSource), importSource);
@@ -49,7 +49,7 @@ export class ImportDeclarationProcessor extends Processor {
                         const targetDeclName = ModulePathUtils.extractFQNIdentifier(target.globalFqn);
 
                         let packageName: string | undefined = undefined;
-                        if(resolvedModulePath.startsWith(globalContext.projectInfo.rootPath + "/node_modules")) {
+                        if (resolvedModulePath.startsWith(globalContext.projectInfo.rootPath + "/node_modules")) {
                             // only resolve node package name, if it's an actual node module, not some re-mapped source file (see tsconfig.json -> "paths" option)
                             packageName = NodeUtils.getPackageNameForPath(globalContext.projectInfo.rootPath, resolvedModulePath);
                         }
@@ -80,5 +80,14 @@ export class ImportDeclarationProcessor extends Processor {
             }
         }
         return mergeConceptMaps(...concepts);
+    }
+
+    private importSourceToFqn(importSource: string, globalContext: GlobalContext): FQN {
+        const importPath = NodeUtils.resolveImportPath(importSource, globalContext.projectInfo, globalContext.sourceFilePathAbsolute);
+        if (path.relative(globalContext.projectInfo.rootPath, importPath).startsWith("node_modules")) {
+            return ModulePathUtils.toFQN(importSource);
+        } else {
+            return ModulePathUtils.toFQN(importPath);
+        }
     }
 }
