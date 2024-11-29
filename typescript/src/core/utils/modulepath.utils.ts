@@ -202,7 +202,7 @@ export class ModulePathUtils {
      * @param modulePath absolute, relative, or node path
      * @param projectInfo ProjectInfo of the project that is currently being post-processed
      * @param projects list of all processed projects
-     * @returns whether the path is outside the project (or one of its subprojects) or not
+     * @returns whether the path is outside the project (and its subprojects) or not
      */
     static isExternal(modulePath: string, projectInfo: LCEProjectInfo, projects: LCEProject[]): boolean {
         let moduleIndex: ModuleIndex | undefined = this.moduleIndexes.get(projectInfo.configPath);

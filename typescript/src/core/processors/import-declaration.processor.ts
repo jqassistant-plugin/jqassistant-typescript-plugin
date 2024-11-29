@@ -27,11 +27,11 @@ export class ImportDeclarationProcessor extends Processor {
                 let target = new FQN("");
                 let isModule = false;
                 if (specifier.type === AST_NODE_TYPES.ImportSpecifier) {
-                    const importSourceFqn = ModulePathUtils.toFQN(importSource);
+                    const importSourceFqn = ModulePathUtils.toFQN(NodeUtils.resolveImportPath(importSource, globalContext.projectInfo, globalContext.sourceFilePathAbsolute));
                     const importedName = specifier.imported.type === AST_NODE_TYPES.Identifier ? specifier.imported.name : specifier.imported.raw;
                     target = new FQN(importSourceFqn.globalFqn + "." + importedName, importSourceFqn.localFqn + "." + importedName);
                 } else if (specifier.type === AST_NODE_TYPES.ImportDefaultSpecifier) {
-                    const importSourceFqn = ModulePathUtils.toFQN(importSource);
+                    const importSourceFqn = ModulePathUtils.toFQN(NodeUtils.resolveImportPath(importSource, globalContext.projectInfo, globalContext.sourceFilePathAbsolute));
                     target = new FQN(importSourceFqn.globalFqn + ".default", importSourceFqn.localFqn + ".default");
                 } else if (specifier.type === AST_NODE_TYPES.ImportNamespaceSpecifier) {
                     target = new FQN(path.resolve(globalContext.projectInfo.rootPath, importSource), importSource);
