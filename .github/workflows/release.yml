@@ -36,9 +36,13 @@
           ossrh_signing_key: ${{ secrets.OSSRH_SIGNING_KEY }}
           ossrh_signing_password: ${{ secrets.OSSRH_SIGNING_PASSWORD }}
           sonar_token: ${{ secrets.SONAR_TOKEN }}
-      npm_release:
+      npm-release:
         needs: [ maven-release ]
         runs-on: ubuntu-latest
+        permissions:
+          contents: write
+          pages: write
+          id-token: write
         steps:
           - name: Checkout repository
             uses: actions/checkout@v4
