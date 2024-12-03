@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>jQA Typescript Plugin</title>
+      <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin</link>
+      <description>Last 10 notes on jQA Typescript Plugin</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>Node - TS Type Tuple</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Tuple</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Tuple</guid>
+    <description>:TS:Type:Tuple Node → represents a tuple type Relations NameTarget Label(s)CardinalityDescriptionCONTAINS:TS:Type1..*types of the tuple itemsProperties:- index: position ...</description>
+    <pubDate>Tue, 03 Dec 2024 15:34:43 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Type TypeParameterReference</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-TypeParameterReference</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-TypeParameterReference</guid>
+    <description>:TS:Type:TypeParameterReference Node → represents a reference to a generic type that is defined in a type parameter list Properties NameDescriptionnamename of the type parameter ...</description>
+    <pubDate>Tue, 03 Dec 2024 15:34:43 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Type Union</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Union</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Union</guid>
+    <description>:TS:Type:Union Node → represents a union type Relations NameTarget Label(s)CardinalityDescriptionCONTAINS:TS:Type2..*constituent types of the union.</description>
+    <pubDate>Tue, 03 Dec 2024 15:34:43 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Type</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type</guid>
+    <description>:TS:Type Node → represents a TypeScript type Only occurs as one of the following sub-variants: :TS:Type:Primitive :TS:Type:Declared :TS:Type:TypeParameterReference :TS:Type:Union ...</description>
+    <pubDate>Tue, 03 Dec 2024 15:34:43 GMT</pubDate>
+  </item><item>
+    <title>Node - TS TypeAlias</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-TypeAlias</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-TypeAlias</guid>
+    <description>:TS:TypeAlias Node → represents a top-level TypeScript type alias declaration Properties NameDescriptionglobalFqnglobal FQN of the type aliaslocalFqnlocal FQN of the type ...</description>
+    <pubDate>Tue, 03 Dec 2024 15:34:43 GMT</pubDate>
+  </item><item>
+    <title>Node - TS TypeParameter</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-TypeParameter</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-TypeParameter</guid>
+    <description>:TS:TypeParameter Node → represents a type parameter for a generic :TS:Function or :TS:Method Properties NameDescriptionnamename of the type parameterindexposition of the ...</description>
+    <pubDate>Tue, 03 Dec 2024 15:34:43 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Array</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Array</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Array</guid>
+    <description>:TS:Value:Array Node → represents an array value Relations NameTarget Label(s)CardinalityDescriptionCONTAINS:TS:Value0..*values of the individual array itemsProperties:- ...</description>
+    <pubDate>Tue, 03 Dec 2024 15:34:43 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Call</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Call</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Call</guid>
+    <description>:TS:Value:Call Node → represents the return value of a function call of some value Relations NameTarget Label(s)CardinalityDescriptionCALLS:TS:Value1value on which the call ...</description>
+    <pubDate>Tue, 03 Dec 2024 15:34:43 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Class</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Class</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Class</guid>
+    <description>:TS:Value:Class Node → represents a class value Example: let x = class { // .. }.</description>
+    <pubDate>Tue, 03 Dec 2024 15:34:43 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Complex</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Complex</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Complex</guid>
+    <description>:TS:Value:Complex Node → represents values that cannot be represented via the other :TS:Value sub-variants Properties NameDescriptionexpressionstring representation of ...</description>
+    <pubDate>Tue, 03 Dec 2024 15:34:43 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>
