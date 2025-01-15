@@ -15,10 +15,14 @@ import { FunctionTraverser } from "../traversers/function.traverser";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
 import { parseFunctionType } from "./type.utils";
 import { CodeCoordinateUtils } from "./code-coordinate.utils";
+import { CoreContextKeys } from "../context.keys";
 
+/**
+ * Extracts concepts for globally declared functions.
+ *
+ * Note: Nested functions are not processed.
+ */
 export class FunctionDeclarationProcessor extends Processor {
-    /** is used to provide an LCETypeFunction object of the currently traversed function */
-    public static readonly FUNCTION_TYPE_CONTEXT_ID = "function-type";
 
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.FunctionDeclaration, AST_NODE_TYPES.TSDeclareFunction, AST_NODE_TYPES.ArrowFunctionExpression],
@@ -46,7 +50,7 @@ export class FunctionDeclarationProcessor extends Processor {
 
             const functionType = parseFunctionType({ localContexts, node, globalContext, ...unusedProcessingContext }, node);
             if (functionType) {
-                localContexts.currentContexts.set(FunctionDeclarationProcessor.FUNCTION_TYPE_CONTEXT_ID, functionType);
+                localContexts.currentContexts.set(CoreContextKeys.FUNCTION_TYPE, functionType);
                 if (fqnIdentifier) {
                     const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
                     let id = DependencyResolutionProcessor.constructDeclarationIdentifier(localContexts, node, node.id?.name);
@@ -63,7 +67,7 @@ export class FunctionDeclarationProcessor extends Processor {
             node.type === AST_NODE_TYPES.ArrowFunctionExpression
         ) {
             // TODO: handle overloads
-            const functionType = localContexts.currentContexts.get(FunctionDeclarationProcessor.FUNCTION_TYPE_CONTEXT_ID) as
+            const functionType = localContexts.currentContexts.get(CoreContextKeys.FUNCTION_TYPE) as
                 | LCETypeFunction
                 | undefined;
             if (functionType) {
@@ -92,11 +96,14 @@ export class FunctionDeclarationProcessor extends Processor {
     }
 }
 
+/**
+ * Extracts concepts for functions parameters of functions that are processed by the `FunctionDeclarationProcessor`
+ */
 export class FunctionParameterProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.Identifier], // TODO: add other parameter patterns
         ({localContexts}) =>
-            !!localContexts.parentContexts && localContexts.parentContexts.has(FunctionDeclarationProcessor.FUNCTION_TYPE_CONTEXT_ID)
+            !!localContexts.parentContexts && localContexts.parentContexts.has(CoreContextKeys.FUNCTION_TYPE)
     );
 
     public override postChildrenProcessing({
@@ -105,7 +112,7 @@ export class FunctionParameterProcessor extends Processor {
                                                globalContext
                                            }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (localContexts.parentContexts) {
-            const functionType = localContexts.parentContexts.get(FunctionDeclarationProcessor.FUNCTION_TYPE_CONTEXT_ID) as LCETypeFunction;
+            const functionType = localContexts.parentContexts.get(CoreContextKeys.FUNCTION_TYPE) as LCETypeFunction;
             if (functionType) {
                 const paramIndex = getParentPropIndex(localContexts);
                 if (paramIndex !== undefined) {

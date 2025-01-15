@@ -1,7 +1,8 @@
 import { ConceptMap, LCEConcept } from "../concept";
 import { LCEValue, valueConceptIds } from "../concepts/value.concept";
 import { LocalContexts } from "../context";
-import { Traverser, TraverserContext } from "../traverser";
+import { TraverserContext } from "../traverser";
+import { CoreContextKeys } from "../context.keys";
 
 export function getAndDeleteChildConcepts<T extends LCEConcept>(propName: string, conceptId: string, childConcepts: ConceptMap): T[] {
     const propConcepts = childConcepts.get(propName);
@@ -29,13 +30,13 @@ export function getChildConcepts<T extends LCEConcept>(propName: string, concept
 }
 
 export function getParentPropName(localContexts: LocalContexts): string {
-    const traverserContext = localContexts.currentContexts.get(Traverser.LOCAL_TRAVERSER_CONTEXT) as TraverserContext;
+    const traverserContext = localContexts.currentContexts.get(CoreContextKeys.TRAVERSER_CONTEXT) as TraverserContext;
     if (!traverserContext) throw new Error("No traverser context found");
     return traverserContext.parentPropName;
 }
 
 export function getParentPropIndex(localContexts: LocalContexts): number | undefined {
-    const traverserContext = localContexts.currentContexts.get(Traverser.LOCAL_TRAVERSER_CONTEXT) as TraverserContext;
+    const traverserContext = localContexts.currentContexts.get(CoreContextKeys.TRAVERSER_CONTEXT) as TraverserContext;
     if (!traverserContext) throw new Error("No traverser context found");
     return traverserContext.parentPropIndex;
 }

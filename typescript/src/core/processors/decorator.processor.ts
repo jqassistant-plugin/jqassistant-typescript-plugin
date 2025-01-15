@@ -7,14 +7,14 @@ import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getAndDeleteAllValueChildConcepts } from "../utils/processor.utils";
 import { DecoratorTraverser } from "../traversers/decorator.traverser";
-import { VALUE_PROCESSING_FLAG } from "./value.processor";
 import { CodeCoordinateUtils } from "./code-coordinate.utils";
+import { CoreContextKeys } from "../context.keys";
 
 export class DecoratorProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.Decorator], () => true);
 
     public override preChildrenProcessing({ localContexts }: ProcessingContext): void {
-        localContexts.currentContexts.set(VALUE_PROCESSING_FLAG, true);
+        localContexts.currentContexts.set(CoreContextKeys.VALUE_PROCESSING_FLAG, true);
     }
 
     public override postChildrenProcessing({ globalContext, node }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {

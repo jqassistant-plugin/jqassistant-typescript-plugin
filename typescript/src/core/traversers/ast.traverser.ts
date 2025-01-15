@@ -1,6 +1,6 @@
 import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
-import { ConceptMap } from "../concept";
+import { ConceptMap, mergeConceptMaps } from "../concept";
 import { GlobalContext, LocalContexts } from "../context";
 import { PROCESSORS } from "../features";
 import { Processor } from "../processor";
@@ -16,19 +16,21 @@ export class AstTraverser {
     }
 
     public traverse(globalContext: GlobalContext): ConceptMap {
-        const conceptMap =
-            runTraverserForNode(
-                globalContext.ast,
-                { parentPropName: "ast" },
-                {
-                    globalContext: globalContext,
-                    localContexts: new LocalContexts(),
-                    node: globalContext.ast,
-                    metadataAssignments: [],
-                },
-                this.processorMap,
-            ) ?? new Map();
+        const conceptMaps: ConceptMap[] = [];
 
-        return conceptMap;
+        runTraverserForNode(
+            globalContext.ast,
+            { parentPropName: "ast" },
+            {
+                globalContext: globalContext,
+                localContexts: new LocalContexts(),
+                node: globalContext.ast,
+                metadataAssignments: [],
+            },
+            this.processorMap,
+            conceptMaps,
+        );
+
+        return mergeConceptMaps(...conceptMaps);
     }
 }

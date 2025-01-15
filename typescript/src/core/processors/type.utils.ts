@@ -74,7 +74,7 @@ export function parseClassPropertyType(processingContext: ProcessingContext, esP
  */
 export function parseMethodType(
     processingContext: ProcessingContext,
-    esClassLikeDecl: ClassDeclaration | TSInterfaceDeclaration,
+    esClassLikeDecl: ESNode,
     esMethodDecl: MethodDefinitionNonComputedName | TSAbstractMethodDefinitionNonComputedName | TSMethodSignatureNonComputedName,
     methodName: string,
     jsPrivate: boolean
@@ -137,8 +137,7 @@ export function parseMethodType(
             // setter
             const param = "value" in esMethodDecl ? esMethodDecl.value.params[0] : esMethodDecl.params[0];
             const paramName = (param as Identifier).name;
-            const esParam = param;
-            const paramNode = globalContext.services.esTreeNodeToTSNodeMap.get(esParam);
+            const paramNode = globalContext.services.esTreeNodeToTSNodeMap.get(param);
             const paramType = tc.getTypeAtLocation(paramNode);
             return new LCETypeFunction(
                 new LCETypeNotIdentified("setter"),

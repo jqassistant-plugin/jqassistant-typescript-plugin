@@ -9,6 +9,7 @@ import { ModulePathUtils } from "../utils/modulepath.utils";
 import { Processor } from "../processor";
 import { getAndDeleteChildConcepts } from "../utils/processor.utils";
 import { ProgramTraverser } from "../traversers/program.traverser";
+import { CoreContextKeys } from "../context.keys";
 
 /**
  * Maps (global) namespace identifier and local name to a FQN for all global and local declarations made within the current file.
@@ -32,45 +33,28 @@ export interface FQNScope {
  * Manages FQN contexts, provides index for registering declarations and resolves FQN references.
  */
 export class DependencyResolutionProcessor extends Processor {
-    /** key to the dependency index, used for registering all declarations made within a module (`DeclarationIndex`) */
-    public static readonly DECLARATION_INDEX_CONTEXT = "declaration-index";
-
-    /** key to the current scope object, used to introduce new FQN scoping levels (`FQNScope`) */
-    public static readonly FQN_SCOPE_CONTEXT = "fqn-scope";
-
-    /** key to the FQN resolver index, used to schedule FQN resolutions (`FQNResolverContext`) */
-    public static readonly FQN_RESOLVER_CONTEXT = "fqn-resolver";
-
-    /** key to the FQN of the declaration that any newly discovered dependencies are added to (`string`) */
-    public static readonly DEPENDENCY_GLOBAL_SOURCE_FQN_CONTEXT = "dependency-global-fqn";
-
-    /** key to the dependency index of the current dependency fqn (`Array<LCEDependency>`) */
-    public static readonly DEPENDENCY_INDEX_CONTEXT = "dependency-index";
-
-    /** key to the identifier of the declaration that is default-exported in the current module (not used for inline default exports, e.g. `export default class MyClass { ... }`) */
-    public static readonly DEFAULT_EXPORT_IDENTIFIER_CONTEXT = "default-export-identifier-context"
 
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.Program], () => true);
 
     public override preChildrenProcessing({localContexts, globalContext, node}: ProcessingContext): void {
-        localContexts.currentContexts.set(DependencyResolutionProcessor.DECLARATION_INDEX_CONTEXT, new Map());
+        localContexts.currentContexts.set(CoreContextKeys.DECLARATION_INDEX, new Map());
 
         const scopeIdentifier = ModulePathUtils.toFQN(globalContext.sourceFilePathAbsolute, globalContext.sourceFilePathRelative);
-        localContexts.currentContexts.set(DependencyResolutionProcessor.FQN_SCOPE_CONTEXT, {
+        localContexts.currentContexts.set(CoreContextKeys.FQN_SCOPE, {
             globalIdentifier: scopeIdentifier.globalFqn,
             localIdentifier: scopeIdentifier.localFqn,
             internalScopeId: 0,
         } as FQNScope);
 
-        localContexts.currentContexts.set(DependencyResolutionProcessor.FQN_RESOLVER_CONTEXT, []);
-        localContexts.currentContexts.set(DependencyResolutionProcessor.DEPENDENCY_GLOBAL_SOURCE_FQN_CONTEXT, ModulePathUtils.toFQN(globalContext.sourceFilePathAbsolute).globalFqn);
-        localContexts.currentContexts.set(DependencyResolutionProcessor.DEPENDENCY_INDEX_CONTEXT, []);
+        localContexts.currentContexts.set(CoreContextKeys.FQN_RESOLVER, []);
+        localContexts.currentContexts.set(CoreContextKeys.DEPENDENCY_GLOBAL_SOURCE_FQN, ModulePathUtils.toFQN(globalContext.sourceFilePathAbsolute).globalFqn);
+        localContexts.currentContexts.set(CoreContextKeys.DEPENDENCY_INDEX, []);
 
         // if a declaration is default-exported: register its name
         if(node.type === AST_NODE_TYPES.Program) {
             for(const statement of node.body) {
                 if(statement.type === AST_NODE_TYPES.ExportDefaultDeclaration && statement.declaration.type === AST_NODE_TYPES.Identifier) {
-                    localContexts.currentContexts.set(DependencyResolutionProcessor.DEFAULT_EXPORT_IDENTIFIER_CONTEXT, statement.declaration.name);
+                    localContexts.currentContexts.set(CoreContextKeys.DEFAULT_EXPORT_IDENTIFIER, statement.declaration.name);
                     break;
                 }
             }
@@ -78,8 +62,8 @@ export class DependencyResolutionProcessor extends Processor {
     }
 
     public override postChildrenProcessing({localContexts}: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
-        const [declIndex] = localContexts.getNextContext(DependencyResolutionProcessor.DECLARATION_INDEX_CONTEXT) as [DeclarationIndex, number];
-        const [resolutionList] = localContexts.getNextContext(DependencyResolutionProcessor.FQN_RESOLVER_CONTEXT) as [FQNResolverContext, number];
+        const [declIndex] = localContexts.getNextContext(CoreContextKeys.DECLARATION_INDEX) as [DeclarationIndex, number];
+        const [resolutionList] = localContexts.getNextContext(CoreContextKeys.FQN_RESOLVER) as [FQNResolverContext, number];
 
         // resolve FQNs
         for (const [namespaces, identifier, concept] of resolutionList) {
@@ -117,7 +101,7 @@ export class DependencyResolutionProcessor extends Processor {
             ProgramTraverser.PROGRAM_BODY_PROP,
             LCEDependency.conceptId,
             childConcepts
-        ).concat(localContexts.currentContexts.get(DependencyResolutionProcessor.DEPENDENCY_INDEX_CONTEXT) as LCEDependency[]);
+        ).concat(localContexts.currentContexts.get(CoreContextKeys.DEPENDENCY_INDEX) as LCEDependency[]);
         const depIndex: Map<string, Map<string, LCEDependency>> = new Map();
         for (const dep of dependencies) {
             if (!dep.fqn.globalFqn) continue;
@@ -173,8 +157,8 @@ export class DependencyResolutionProcessor extends Processor {
         let result = FQN.id("");
         for (let i = 0; i < localContexts.contexts.length - (skipLastScope ? 1 : 0); i++) {
             const context = localContexts.contexts[i];
-            const globalName: string | undefined = (context.get(DependencyResolutionProcessor.FQN_SCOPE_CONTEXT) as FQNScope)?.globalIdentifier;
-            const localName: string | undefined = (context.get(DependencyResolutionProcessor.FQN_SCOPE_CONTEXT) as FQNScope)?.localIdentifier;
+            const globalName: string | undefined = (context.get(CoreContextKeys.FQN_SCOPE) as FQNScope)?.globalIdentifier;
+            const localName: string | undefined = (context.get(CoreContextKeys.FQN_SCOPE) as FQNScope)?.localIdentifier;
             if (globalName && localName) {
                 result.globalFqn += globalName + ".";
                 result.localFqn += localName + ".";
@@ -211,7 +195,7 @@ export class DependencyResolutionProcessor extends Processor {
             if(nodeIdentifier) {
                 id = nodeIdentifier;
             } else {
-                const srcPath = (localContexts.contexts[0].get(DependencyResolutionProcessor.FQN_SCOPE_CONTEXT) as FQNScope).globalIdentifier;
+                const srcPath = (localContexts.contexts[0].get(CoreContextKeys.FQN_SCOPE) as FQNScope).globalIdentifier;
                 id = srcPath.substring(srcPath.lastIndexOf("/") + 1, srcPath.includes(".") ? srcPath.indexOf(".") : (srcPath.length - 1));
             }
         }
@@ -241,7 +225,7 @@ export class DependencyResolutionProcessor extends Processor {
      * @param insideScopeDeclaration specifies whether the declaration is registered while traversing its own scope
      */
     public static registerDeclaration(localContexts: LocalContexts, localName: string, fqn: FQN, insideScopeDeclaration = false): void {
-        const [declIndex] = localContexts.getNextContext(DependencyResolutionProcessor.DECLARATION_INDEX_CONTEXT) as [DeclarationIndex, number];
+        const [declIndex] = localContexts.getNextContext(CoreContextKeys.DECLARATION_INDEX) as [DeclarationIndex, number];
         const scope = this.constructScopeFQN(localContexts, insideScopeDeclaration);
         if (!declIndex.has(scope.globalFqn)) declIndex.set(scope.globalFqn, new Map());
         declIndex.get(scope.globalFqn)?.set(localName, fqn);
@@ -256,12 +240,12 @@ export class DependencyResolutionProcessor extends Processor {
     public static scheduleFqnResolution(localContexts: LocalContexts, localName: string, concept: LCENamedConcept): void {
         const namespaces: string[] = [];
         for (const context of localContexts.contexts) {
-            const name: string | undefined = (context.get(DependencyResolutionProcessor.FQN_SCOPE_CONTEXT) as FQNScope)?.globalIdentifier;
+            const name: string | undefined = (context.get(CoreContextKeys.FQN_SCOPE) as FQNScope)?.globalIdentifier;
             if (name) {
                 namespaces.push(name);
             }
         }
-        const [resolutionList] = localContexts.getNextContext(DependencyResolutionProcessor.FQN_RESOLVER_CONTEXT) as [FQNResolverContext, number];
+        const [resolutionList] = localContexts.getNextContext(CoreContextKeys.FQN_RESOLVER) as [FQNResolverContext, number];
         resolutionList.push([namespaces, localName, concept]);
     }
 
@@ -272,17 +256,17 @@ export class DependencyResolutionProcessor extends Processor {
      * if undefined the scope will be identified by a unique number
      */
     public static addScopeContext(localContexts: LocalContexts, scopeIdentifier?: FQN): void {
-        if (localContexts.currentContexts.has(DependencyResolutionProcessor.FQN_SCOPE_CONTEXT)) {
+        if (localContexts.currentContexts.has(CoreContextKeys.FQN_SCOPE)) {
             // if scope context is already present, ignore this call
             return;
         }
 
         if (!scopeIdentifier) {
-            const internalScopeId = (localContexts.getNextContext(DependencyResolutionProcessor.FQN_SCOPE_CONTEXT) as FQNScope[])[0].internalScopeId.toString();
+            const internalScopeId = (localContexts.getNextContext(CoreContextKeys.FQN_SCOPE) as FQNScope[])[0].internalScopeId.toString();
             scopeIdentifier = FQN.id(internalScopeId);
-            (localContexts.getNextContext(DependencyResolutionProcessor.FQN_SCOPE_CONTEXT) as FQNScope[])[0].internalScopeId++;
+            (localContexts.getNextContext(CoreContextKeys.FQN_SCOPE) as FQNScope[])[0].internalScopeId++;
         }
-        localContexts.currentContexts.set(DependencyResolutionProcessor.FQN_SCOPE_CONTEXT, {
+        localContexts.currentContexts.set(CoreContextKeys.FQN_SCOPE, {
             globalIdentifier: scopeIdentifier.globalFqn,
             localIdentifier: scopeIdentifier.localFqn,
             internalScopeId: 0,
@@ -296,10 +280,10 @@ export class DependencyResolutionProcessor extends Processor {
      */
     public static createDependencyIndex(localContexts: LocalContexts, globalFqn?: string): void {
         localContexts.currentContexts.set(
-            DependencyResolutionProcessor.DEPENDENCY_GLOBAL_SOURCE_FQN_CONTEXT,
+            CoreContextKeys.DEPENDENCY_GLOBAL_SOURCE_FQN,
             globalFqn ?? DependencyResolutionProcessor.constructScopeFQN(localContexts).globalFqn
         );
-        localContexts.currentContexts.set(DependencyResolutionProcessor.DEPENDENCY_INDEX_CONTEXT, []);
+        localContexts.currentContexts.set(CoreContextKeys.DEPENDENCY_INDEX, []);
     }
 
     /**
@@ -308,8 +292,8 @@ export class DependencyResolutionProcessor extends Processor {
      * @param resolveFQN if set to true(default) automatically schedules resolution of the dependency FQN
      */
     public static registerDependency(localContexts: LocalContexts, depGlobalFQN: string, resolveFQN = true): void {
-        const [depIndex] = localContexts.getNextContext(DependencyResolutionProcessor.DEPENDENCY_INDEX_CONTEXT) as [LCEDependency[], number];
-        const [depSourceFQN] = localContexts.getNextContext(DependencyResolutionProcessor.DEPENDENCY_GLOBAL_SOURCE_FQN_CONTEXT) as [string, number];
+        const [depIndex] = localContexts.getNextContext(CoreContextKeys.DEPENDENCY_INDEX) as [LCEDependency[], number];
+        const [depSourceFQN] = localContexts.getNextContext(CoreContextKeys.DEPENDENCY_GLOBAL_SOURCE_FQN) as [string, number];
         const dep = new LCEDependency(depGlobalFQN, "declaration", depSourceFQN, ModulePathUtils.isFQNModule(depSourceFQN) ? "module" : "declaration", 1);
         if (resolveFQN) {
             this.scheduleFqnResolution(localContexts, depGlobalFQN, dep);
@@ -323,7 +307,7 @@ export class DependencyResolutionProcessor extends Processor {
     public static getRegisteredDependencies(localContexts: LocalContexts): ConceptMap {
         return createConceptMap(
             LCEDependency.conceptId,
-            (localContexts.getNextContext(DependencyResolutionProcessor.DEPENDENCY_INDEX_CONTEXT) as [LCEDependency[], number])[0]
+            (localContexts.getNextContext(CoreContextKeys.DEPENDENCY_INDEX) as [LCEDependency[], number])[0]
         );
     }
 
@@ -331,7 +315,7 @@ export class DependencyResolutionProcessor extends Processor {
      * @returns whether a declaration is default-exported.
      */
     public static isDefaultDeclaration(localContexts: LocalContexts, declarationNode: Node, identifier?: string): boolean {
-        const defaultIdentifierContext  = localContexts.getNextContext(DependencyResolutionProcessor.DEFAULT_EXPORT_IDENTIFIER_CONTEXT) as [string, number] | undefined;
+        const defaultIdentifierContext  = localContexts.getNextContext(CoreContextKeys.DEFAULT_EXPORT_IDENTIFIER) as [string, number] | undefined;
         return declarationNode.parent?.type === AST_NODE_TYPES.ExportDefaultDeclaration ||
             (!!identifier && !!defaultIdentifierContext && defaultIdentifierContext[0] === identifier);
     }

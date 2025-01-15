@@ -7,6 +7,8 @@ import {
     expectDependency,
     expectFunctionParameter,
     expectMethod,
+    expectObjectType,
+    expectObjectTypeMember,
     expectOptionalPrimitiveType,
     expectPrimitiveType,
     expectProperty,
@@ -17,7 +19,7 @@ import {
 } from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCEInterfaceDeclaration } from "../../../src/core/concepts/interface-declaration.concept";
-import { LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
+import { LCETypeNotIdentified, LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
 
 jest.setTimeout(30000);
 
@@ -30,8 +32,8 @@ describe("interface declarations test", () => {
 
     beforeAll(async () => {
         const projects = await processProjects(projectRootPath);
-        if(projects.length !== 1) {
-            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        if (projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.");
         }
         result = projects[0].concepts;
 
@@ -124,7 +126,17 @@ describe("interface declarations test", () => {
             expect(decl.properties).toHaveLength(3);
             expectProperty(decl.properties, '"./src/main.ts".iProperties.x', "x", false, "public", false, undefined, undefined, undefined, "number");
             expectProperty(decl.properties, '"./src/main.ts".iProperties.a', "a", false, "public", true, undefined, undefined, undefined, "number");
-            const propB = expectProperty(decl.properties, '"./src/main.ts".iProperties.b', "b", true, "public", false, undefined, undefined, undefined);
+            const propB = expectProperty(
+                decl.properties,
+                '"./src/main.ts".iProperties.b',
+                "b",
+                true,
+                "public",
+                false,
+                undefined,
+                undefined,
+                undefined,
+            );
             expectOptionalPrimitiveType(propB.type, "number");
 
             expect(decl.methods).toHaveLength(0);
@@ -217,10 +229,27 @@ describe("interface declarations test", () => {
 
             expect(decl.extendsInterfaces).toHaveLength(1);
             expectDeclaredType(decl.extendsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
-            expectDependency(projectRootPath, dependencies,'"./src/main.ts".iExtends', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".iExtends',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+                1,
+            );
 
             expect(decl.properties).toHaveLength(1);
-            expectProperty(decl.properties, '"./src/main.ts".iExtends.newProp', "newProp", false, "public", false, undefined, undefined, undefined, "string");
+            expectProperty(
+                decl.properties,
+                '"./src/main.ts".iExtends.newProp',
+                "newProp",
+                false,
+                "public",
+                false,
+                undefined,
+                undefined,
+                undefined,
+                "string",
+            );
 
             expect(decl.methods).toHaveLength(0);
             expect(decl.accessorProperties).toHaveLength(0);
@@ -239,12 +268,35 @@ describe("interface declarations test", () => {
 
             expect(decl.extendsInterfaces).toHaveLength(2);
             expectDeclaredType(decl.extendsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
-            expectDependency(projectRootPath, dependencies,'"./src/main.ts".iExtendsMulti', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".iExtendsMulti',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+                1,
+            );
             expectDeclaredType(decl.extendsInterfaces[1], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface2'));
-            expectDependency(projectRootPath, dependencies,'"./src/main.ts".iExtendsMulti', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface2'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".iExtendsMulti',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface2'),
+                1,
+            );
 
             expect(decl.properties).toHaveLength(1);
-            expectProperty(decl.properties, '"./src/main.ts".iExtendsMulti.newProp', "newProp", false, "public", false, undefined, undefined, undefined, "string");
+            expectProperty(
+                decl.properties,
+                '"./src/main.ts".iExtendsMulti.newProp',
+                "newProp",
+                false,
+                "public",
+                false,
+                undefined,
+                undefined,
+                undefined,
+                "string",
+            );
 
             expect(decl.methods).toHaveLength(0);
             expect(decl.accessorProperties).toHaveLength(0);
@@ -266,14 +318,26 @@ describe("interface declarations test", () => {
             expect(decl.properties).toHaveLength(1);
             const prop = expectProperty(decl.properties, '"./src/main.ts".iRef.x', "x", false, "public", false, undefined, undefined, undefined);
             expectDeclaredType(prop.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
-            expectDependency(projectRootPath, dependencies, '"./src/main.ts".iRef.x', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".iRef.x',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+                1,
+            );
 
             expect(decl.methods).toHaveLength(1);
             const method = expectMethod(decl.methods, '"./src/main.ts".iRef.method', "method", "public", undefined, undefined, undefined);
             expectDeclaredType(method.returnType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'));
             expect(method.parameters).toHaveLength(0);
             expect(method.typeParameters).toHaveLength(0);
-            expectDependency(projectRootPath, dependencies, '"./src/main.ts".iRef.method', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".iRef.method',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'),
+                1,
+            );
 
             expect(decl.accessorProperties).toHaveLength(0);
         }
@@ -291,7 +355,13 @@ describe("interface declarations test", () => {
 
             expect(decl.extendsInterfaces).toHaveLength(1);
             expectDeclaredType(decl.extendsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'));
-            expectDependency(projectRootPath, dependencies,'"./src/main.ts".iExtendsExt', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".iExtendsExt',
+                resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'),
+                1,
+            );
 
             expect(decl.properties).toHaveLength(0);
 
@@ -315,14 +385,26 @@ describe("interface declarations test", () => {
             expect(decl.properties).toHaveLength(1);
             const prop = expectProperty(decl.properties, '"./src/main.ts".iRefExt.x', "x", false, "public", false, undefined, undefined, undefined);
             expectDeclaredType(prop.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'));
-            expectDependency(projectRootPath, dependencies, '"./src/main.ts".iRefExt.x', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".iRefExt.x',
+                resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'),
+                1,
+            );
 
             expect(decl.methods).toHaveLength(1);
             const method = expectMethod(decl.methods, '"./src/main.ts".iRefExt.method', "method", "public", undefined, undefined, undefined);
             expectDeclaredType(method.returnType, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'));
             expect(method.parameters).toHaveLength(0);
             expect(method.typeParameters).toHaveLength(0);
-            expectDependency(projectRootPath, dependencies, '"./src/main.ts".iRefExt.method', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".iRefExt.method',
+                resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'),
+                1,
+            );
 
             expect(decl.accessorProperties).toHaveLength(0);
         }
@@ -350,7 +432,15 @@ describe("interface declarations test", () => {
             expectTypeParameterReference(method.parameters[0]!.type, "T");
             expect(method.typeParameters).toHaveLength(0);
 
-            const methodNested = expectMethod(decl.methods, '"./src/main.ts".iGeneric.methodNested', "methodNested", "public", undefined, undefined, undefined);
+            const methodNested = expectMethod(
+                decl.methods,
+                '"./src/main.ts".iGeneric.methodNested',
+                "methodNested",
+                "public",
+                undefined,
+                undefined,
+                undefined,
+            );
             expectTypeParameterReference(methodNested.returnType, "U");
             expect(methodNested.parameters).toHaveLength(2);
             expectFunctionParameter(methodNested.parameters, 0, "p1", false);
@@ -359,7 +449,7 @@ describe("interface declarations test", () => {
             expectTypeParameterReference(methodNested.parameters[1]!.type, "U");
 
             expect(methodNested.typeParameters).toHaveLength(1);
-            expectTypeParameterDeclaration(methodNested.typeParameters, 0,"U");
+            expectTypeParameterDeclaration(methodNested.typeParameters, 0, "U");
 
             expect(decl.accessorProperties).toHaveLength(0);
         }
@@ -379,15 +469,95 @@ describe("interface declarations test", () => {
 
             expect(decl.properties).toHaveLength(2);
             expectProperty(decl.properties, '"./src/main.ts".iRecursive.a', "a", false, "public", false, undefined, undefined, undefined, "string");
-            const propR = expectProperty(decl.properties, '"./src/main.ts".iRecursive.r', "r", true, "public", false, undefined, undefined, undefined);
+            const propR = expectProperty(
+                decl.properties,
+                '"./src/main.ts".iRecursive.r',
+                "r",
+                true,
+                "public",
+                false,
+                undefined,
+                undefined,
+                undefined,
+            );
             expect(propR.type).toBeDefined();
             expect(propR.type.type).toBe("union");
             expect((propR.type as LCETypeUnion).types).toBeDefined();
             expect((propR.type as LCETypeUnion).types).toHaveLength(2);
             const propRTypes = (propR.type as LCETypeUnion).types;
-            expect(propRTypes.find(t => t.type === "primitive" && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
-            const propRDeclType = propRTypes.find(t => t.type === "declared");
+            expect(propRTypes.find((t) => t.type === "primitive" && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
+            const propRDeclType = propRTypes.find((t) => t.type === "declared");
             expectDeclaredType(propRDeclType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRecursive'));
+
+            expect(decl.methods).toHaveLength(0);
+            expect(decl.accessorProperties).toHaveLength(0);
+        }
+    });
+
+    test.skip("interface with recursive indexed access types", async () => {
+        const decl = interfaceDecls.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRecursiveIndexAccess'));
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRecursiveIndexAccess'));
+            expect(decl.interfaceName).toBe("iRecursiveIndexAccess");
+
+            expect(decl.typeParameters).toHaveLength(0);
+
+            expect(decl.extendsInterfaces).toHaveLength(0);
+
+            expect(decl.properties).toHaveLength(3);
+
+            const propA = expectProperty(
+                decl.properties,
+                '"./src/main.ts".iRecursiveIndexAccess.a',
+                "a",
+                false,
+                "public",
+                false,
+                undefined,
+                undefined,
+                undefined,
+            );
+            const propAObjType = expectObjectType(propA.type, 3);
+            expectObjectTypeMember(propAObjType, "a1", false, false, "string");
+            const propAObjTypeA2Member = expectObjectTypeMember(propAObjType, "a2", false, false);
+            const propAObjTypeA2MemberObjType = expectObjectType(propAObjTypeA2Member.type, 2);
+            expectObjectTypeMember(propAObjTypeA2MemberObjType, "a21", false, false, "string");
+            expectObjectTypeMember(propAObjTypeA2MemberObjType, "a22", false, false, "number");
+            const propAObjTypeAbMember = expectObjectTypeMember(propAObjType, "ab", true, false);
+            expect(propAObjTypeAbMember.type).toBeDefined();
+            expect(propAObjTypeAbMember.type.type).toBe("union");
+            expect((propAObjTypeAbMember.type as LCETypeUnion).types).toBeDefined();
+            const propAObjTypeAbMemberTypes = (propAObjTypeAbMember.type as LCETypeUnion).types;
+            expect(propAObjTypeAbMemberTypes).toHaveLength(2);
+            expect(propAObjTypeAbMemberTypes.find((t) => t.type === "primitive" && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
+            const propAObjTypeAbMemberTypesIndexedAccessType = propAObjTypeAbMemberTypes.find((t) => t.type === "not-identified");
+            expect(propAObjTypeAbMemberTypesIndexedAccessType).toBeDefined();
+            expect((propAObjTypeAbMemberTypesIndexedAccessType as LCETypeNotIdentified).identifier).toBe(
+                "Indexed Access Type (potentially recursive)",
+            );
+
+            const propB = expectProperty(
+                decl.properties,
+                '"./src/main.ts".iRecursiveIndexAccess.b',
+                "b",
+                false,
+                "public",
+                false,
+                undefined,
+                undefined,
+                undefined,
+            );
+            const propBObjType = expectObjectType(propB.type, 3);
+            expectObjectTypeMember(propBObjType, "b1", false, false, "string");
+            const propBObjTypeBaMember = expectObjectTypeMember(propBObjType, "ba", false, false);
+            const propBObjTypeBaMemberDeclType = expectDeclaredType(propBObjTypeBaMember.type, "Array", false);
+            expect(propBObjTypeBaMemberDeclType.typeArguments).toHaveLength(1);
+            expect(propBObjTypeBaMemberDeclType.typeArguments[0].type).toBe("not-identified");
+            expect((propBObjTypeBaMemberDeclType.typeArguments[0] as LCETypeNotIdentified).identifier).toBe(
+                "Indexed Access Type (potentially recursive)",
+            );
 
             expect(decl.methods).toHaveLength(0);
             expect(decl.accessorProperties).toHaveLength(0);

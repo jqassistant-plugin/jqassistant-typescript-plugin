@@ -64,6 +64,7 @@ export type ConceptMap = Map<string, Map<string, LCEConcept[]>>;
 
 /**
  * Merges the given ConceptMaps. Array values of the same keys are concatenated.
+ * The original maps are not modified.
  */
 export function mergeConceptMaps(...maps: ConceptMap[]): ConceptMap {
     const result: ConceptMap = new Map();
@@ -71,7 +72,7 @@ export function mergeConceptMaps(...maps: ConceptMap[]): ConceptMap {
         for (const [kO, vMap] of map.entries()) {
             const outerRes = result.get(kO);
             if (!outerRes) {
-                result.set(kO, vMap);
+                result.set(kO, new Map(vMap));
                 continue;
             }
             for (const [kI, vArr] of vMap.entries()) {
@@ -79,7 +80,7 @@ export function mergeConceptMaps(...maps: ConceptMap[]): ConceptMap {
                 if (innerRes) {
                     outerRes.set(kI, innerRes.concat(vArr));
                 } else {
-                    outerRes.set(kI, vArr);
+                    outerRes.set(kI, [...vArr]);
                 }
             }
         }
@@ -88,12 +89,13 @@ export function mergeConceptMaps(...maps: ConceptMap[]): ConceptMap {
 }
 
 /**
- * takes all concepts and their conceptIds and unifies them under a single outer common key
- * @returns a ConceptMap with a single key which maps to all concepts contained in the original map
+ * Takes all concepts and their conceptIds and unifies them under a single outer common key.
+ * The original map is not modified.
+ * @returns a new ConceptMap with a single key which maps to all concepts contained in the original map
  */
 export function unifyConceptMap(conceptMap: ConceptMap, commonKey: string): ConceptMap {
     const result: ConceptMap = new Map();
-    let innerMap = result.get(commonKey);
+    let innerMap: Map<string, LCEConcept[]> | undefined = undefined;
     for (const [, vMap] of conceptMap.entries()) {
         if (innerMap) {
             for (const [kI, vArr] of vMap.entries()) {
@@ -101,12 +103,12 @@ export function unifyConceptMap(conceptMap: ConceptMap, commonKey: string): Conc
                 if (innerRes) {
                     innerMap.set(kI, innerRes.concat(vArr));
                 } else {
-                    innerMap.set(kI, vArr);
+                    innerMap.set(kI, [...vArr]);
                 }
             }
         } else {
-            result.set(commonKey, vMap);
-            innerMap = vMap;
+            innerMap = new Map(vMap);
+            result.set(commonKey, innerMap);
         }
     }
     return result;

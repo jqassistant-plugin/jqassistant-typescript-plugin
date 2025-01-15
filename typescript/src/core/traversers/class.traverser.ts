@@ -6,6 +6,12 @@ import { ProcessorMap } from "../processor";
 import { Traverser } from "../traverser";
 import { runTraverserForNode, runTraverserForNodes } from "../utils/traverser.utils";
 
+/**
+ * Traversal of class declaration and class expressions
+ *
+ * Note that this Traverser mainly delegates to Traversers that handle "class signature" constructs like decorators, inheritance, or type parameters.
+ * The traversal of the actual class members is handled one level below via the `ClassBodyTraverser`
+ */
 export class ClassTraverser extends Traverser {
     public static readonly DECORATORS_PROP = "decorators";
     public static readonly TYPE_PARAMETERS_PROP = "type-parameters";
@@ -24,7 +30,7 @@ export class ClassTraverser extends Traverser {
             }
             if (node.typeParameters) {
                 runTraverserForNodes(
-                    node.typeParameters.params,
+                    node.typeParameters.params, // TODO: remove direct hoisting
                     { parentPropName: ClassTraverser.TYPE_PARAMETERS_PROP },
                     processingContext,
                     processors,
@@ -55,6 +61,9 @@ export class ClassTraverser extends Traverser {
     }
 }
 
+/**
+ * Traversal of the members of a class declaration/expression
+ */
 export class ClassBodyTraverser extends Traverser {
     public static readonly MEMBERS_PROP = "members";
 
@@ -70,6 +79,9 @@ export class ClassBodyTraverser extends Traverser {
     }
 }
 
+/**
+ * Traversal of static blocks of a class declaration/expression that are part of the class body (see `ClassBodyTraverser`)
+ */
 export class StaticBlockTraverser extends Traverser {
     public static readonly BODY_PROP = "body";
 

@@ -18,7 +18,7 @@ export class InterfaceDeclarationTraverser extends Traverser {
         if (node.type === AST_NODE_TYPES.TSInterfaceDeclaration) {
             if (node.typeParameters) {
                 runTraverserForNodes(
-                    node.typeParameters.params,
+                    node.typeParameters.params, // TODO: remove direct hoisting
                     {
                         parentPropName: InterfaceDeclarationTraverser.TYPE_PARAMETERS_PROP,
                     },

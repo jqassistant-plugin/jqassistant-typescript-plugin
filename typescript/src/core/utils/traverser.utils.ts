@@ -1,6 +1,6 @@
 import { Node } from "@typescript-eslint/types/dist/generated/ast-spec";
 
-import { ConceptMap, mergeConceptMaps } from "../concept";
+import { ConceptMap, mergeConceptMaps, unifyConceptMap } from "../concept";
 import { ProcessingContext } from "../context";
 import { TRAVERSERS } from "../features";
 import { ProcessorMap } from "../processor";
@@ -13,7 +13,7 @@ import { TraverserContext } from "../traverser";
  * @param traverserContext `TraverserContext` containing the property name of provided child node
  * @param parentNode/unusedProcessingContext current processing context
  * @param processors processors provided to a traverser
- * @param conceptMaps array of `ConceptMap`s to which extracted child concepts will be added
+ * @param conceptMaps array of `ConceptMap`s to which extracted child concepts will be added under the property name of the parent node
  * @returns the concepts generated for the node and/or its children or `undefined` if no `Traverser` could be found
  */
 export function runTraverserForNode(
@@ -34,7 +34,7 @@ export function runTraverserForNode(
             },
             processors
         );
-        if (conceptMaps) conceptMaps.push(result);
+        if (conceptMaps) conceptMaps.push(unifyConceptMap(result, traverserContext.parentPropName));
         return result;
     } else {
         return undefined;
@@ -58,17 +58,21 @@ export function runTraverserForNodes(
     processors: ProcessorMap,
     conceptMaps?: ConceptMap[]
 ): ConceptMap | undefined {
-    const concepts: ConceptMap[] = [];
+    const unifiedConcepts: ConceptMap[] = [];
+    let rawResults: ConceptMap = new Map();
     for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
         if (n) {
-            runTraverserForNode(n, {parentPropName, parentPropIndex: i}, processingContext, processors, concepts);
+            const result = runTraverserForNode(n, {parentPropName, parentPropIndex: i}, processingContext, processors, unifiedConcepts);
+            if(result) {
+                rawResults = mergeConceptMaps(result, rawResults);
+            }
         }
     }
-    if (concepts.length > 0) {
-        const result = mergeConceptMaps(...concepts);
-        if (conceptMaps) conceptMaps.push(result);
-        return result;
+    if (unifiedConcepts.length > 0) {
+        const mergedUnifiedConcepts = mergeConceptMaps(...unifiedConcepts);
+        if (conceptMaps) conceptMaps.push(mergedUnifiedConcepts);
+        return rawResults;
     } else {
         return undefined;
     }

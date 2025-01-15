@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { ReactNode } from "react";
+import React, { forwardRef, ReactNode } from "react";
 import UnnamedIndexComponent from "./components/UnnamedIndexComponent";
 import MyNamedIndexComponent from "./components/NamedIndexComponent";
 import NamedIndexComponent from "./components/NamedIndexComponent";
@@ -50,3 +50,11 @@ class ClassComponentWithContent extends React.Component<unknown, {}> {
 const ComponentWithUnnamedIndexDefaultComponent = () => <><UnnamedIndexComponent /></>;
 const ComponentWithNamedIndexDefaultComponent = () => <><NamedIndexComponent /></>;
 const ComponentWithNamedAliasIndexDefaultComponent = () => <><MyNamedIndexComponent /></>;
+
+// TODO: test dependencies between RefType and ForwardRefComponent
+type RefType = {
+    a: string;
+}
+const ForwardRefComponent = forwardRef<RefType>((props, ref) => {
+    return <></>;
+});

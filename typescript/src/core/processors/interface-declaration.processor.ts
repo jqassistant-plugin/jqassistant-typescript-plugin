@@ -14,6 +14,7 @@ import { DependencyResolutionProcessor } from "./dependency-resolution.processor
 import { parseClassLikeBaseType, parseClassLikeTypeParameters } from "./type.utils";
 import { CodeCoordinateUtils } from "./code-coordinate.utils";
 import { LCEAccessorProperty } from "../concepts/accessor-declaration.concept";
+import { CoreContextKeys } from "../context.keys";
 
 export class InterfaceDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.TSInterfaceDeclaration], ({ node }) => {
@@ -33,6 +34,7 @@ export class InterfaceDeclarationProcessor extends Processor {
                 DependencyResolutionProcessor.createDependencyIndex(localContexts);
             }
         }
+        localContexts.currentContexts.set(CoreContextKeys.PROCESS_CLASS_LIKE_MEMBERS, 2);
     }
 
     public override postChildrenProcessing(

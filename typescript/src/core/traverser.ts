@@ -1,6 +1,7 @@
-import { ConceptMap, mergeConceptMaps, unifyConceptMap } from "./concept";
+import { ConceptMap, mergeConceptMaps } from "./concept";
 import { ProcessingContext } from "./context";
 import { Processor, ProcessorMap } from "./processor";
+import { CoreContextKeys } from "./context.keys";
 
 export interface TraverserContext {
     parentPropName: string;
@@ -13,14 +14,12 @@ export interface TraverserContext {
  * Delegates the traversal of any child nodes.
  */
 export abstract class Traverser {
-    public static readonly LOCAL_TRAVERSER_CONTEXT = "~traverser";
-
     public traverse(traverserContext: TraverserContext, processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         // push new local context
         processingContext.localContexts.pushContexts();
 
         // add traverser context to local context
-        processingContext.localContexts.currentContexts.set(Traverser.LOCAL_TRAVERSER_CONTEXT, traverserContext);
+        processingContext.localContexts.currentContexts.set(CoreContextKeys.TRAVERSER_CONTEXT, traverserContext);
 
         // find matching processors for current context
         const processorCandidates = processors.get(processingContext.node.type);
@@ -51,13 +50,13 @@ export abstract class Traverser {
         processingContext.localContexts.popContexts();
 
         // apply metadata assignment rules
-        for(let i = processingContext.metadataAssignments.length - 1; i >= 0; i--) {
+        for (let i = processingContext.metadataAssignments.length - 1; i >= 0; i--) {
             const rule = processingContext.metadataAssignments[i];
             let applied = false;
-            for(const conceptMap of concepts) {
+            for (const conceptMap of concepts) {
                 conceptMap.forEach((innerMap) => {
                     innerMap.forEach((innerConcepts) => {
-                        innerConcepts.forEach(innerConcept => {
+                        innerConcepts.forEach((innerConcept) => {
                             applied = applied || rule.apply(innerConcept);
                         });
                     });
@@ -65,13 +64,13 @@ export abstract class Traverser {
             }
 
             // remove rule, if it was applied at least once
-            if(applied) {
+            if (applied) {
                 processingContext.metadataAssignments.splice(i, 1);
             }
         }
 
-        // unify created concepts and remaining childConcepts under current parentPropName
-        return unifyConceptMap(mergeConceptMaps(childConcepts, ...concepts), traverserContext.parentPropName);
+        // merge newly created concepts and remaining childConcepts
+        return mergeConceptMaps(childConcepts, ...concepts);
     }
 
     public abstract traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap;

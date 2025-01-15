@@ -1,6 +1,6 @@
 import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
-import { ConceptMap } from "../concept";
+import { ConceptMap, mergeConceptMaps } from "../concept";
 import { ProcessingContext } from "../context";
 import { ProcessorMap } from "../processor";
 import { Traverser } from "../traverser";
@@ -11,12 +11,13 @@ export class EnumDeclarationTraverser extends Traverser {
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
+        const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSEnumDeclaration) {
-            return runTraverserForNode(node.body, { parentPropName: EnumDeclarationTraverser.BODY_PROP }, processingContext, processors) ?? new Map();
+            runTraverserForNode(node.body, { parentPropName: EnumDeclarationTraverser.BODY_PROP }, processingContext, processors, conceptMaps);
         }
 
-        return new Map();
+        return mergeConceptMaps(...conceptMaps);
     }
 }
 
@@ -25,12 +26,13 @@ export class EnumBodyTraverser extends Traverser {
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
+        const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSEnumBody) {
-            return runTraverserForNodes(node.members, { parentPropName: EnumBodyTraverser.MEMBERS_PROP }, processingContext, processors) ?? new Map();
+            runTraverserForNodes(node.members, { parentPropName: EnumBodyTraverser.MEMBERS_PROP }, processingContext, processors, conceptMaps);
         }
 
-        return new Map();
+        return mergeConceptMaps(...conceptMaps);
     }
 }
 
@@ -39,15 +41,13 @@ export class EnumMemberTraverser extends Traverser {
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
+        const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSEnumMember) {
             if (node.initializer)
-                return (
-                    runTraverserForNode(node.initializer, { parentPropName: EnumMemberTraverser.INIT_PROP }, processingContext, processors) ??
-                    new Map()
-                );
+                runTraverserForNode(node.initializer, { parentPropName: EnumMemberTraverser.INIT_PROP }, processingContext, processors, conceptMaps);
         }
 
-        return new Map();
+        return mergeConceptMaps(...conceptMaps);
     }
 }

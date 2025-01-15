@@ -82,3 +82,25 @@ interface iRecursive {
     a: string;
     r?: iRecursive;
 }
+
+interface iRecursiveIndexAccess {
+    a: {
+        a1: string;
+        a2: {
+            a21: string;
+            a22: number;
+        };
+        ab?: iRecursiveIndexAccess["b"];
+    };
+    b: {
+        b1: string;
+        ba: iRecursiveIndexAccess["a"][];
+        bci: iRecursiveIndexAccess["c"]["ci"];
+    };
+    c: {
+        ci: {
+            ci1: boolean;
+            ci2: number;
+        };
+    };
+}

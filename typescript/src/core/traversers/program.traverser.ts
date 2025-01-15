@@ -1,6 +1,6 @@
 import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
-import { ConceptMap } from "../concept";
+import { ConceptMap, mergeConceptMaps } from "../concept";
 import { ProcessingContext } from "../context";
 import { ProcessorMap } from "../processor";
 import { Traverser } from "../traverser";
@@ -11,13 +11,12 @@ export class ProgramTraverser extends Traverser {
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
+        const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.Program) {
-            return (
-                runTraverserForNodes(node.body, { parentPropName: ProgramTraverser.PROGRAM_BODY_PROP }, processingContext, processors) ?? new Map()
-            );
+            runTraverserForNodes(node.body, { parentPropName: ProgramTraverser.PROGRAM_BODY_PROP }, processingContext, processors, conceptMaps);
         }
 
-        return new Map();
+        return mergeConceptMaps(...conceptMaps);
     }
 }

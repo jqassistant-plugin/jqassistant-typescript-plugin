@@ -126,6 +126,7 @@ import {
 import { ExportsPostProcessor } from "./post-processors/exports.post-processor";
 import {
     ArrayTypeTraverser,
+    FunctionTypeTraverser,
     IntersectionTypeTraverser,
     TupleTypeTraverser,
     TypeAnnotationTraverser,
@@ -193,6 +194,7 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
     [AST_NODE_TYPES.SwitchCase, new SwitchCaseTraverser()],
     [AST_NODE_TYPES.SwitchStatement, new SwitchStatementTraverser()],
     [AST_NODE_TYPES.TaggedTemplateExpression, new TaggedTemplateExpressionTraverser()],
+    [AST_NODE_TYPES.TemplateElement, new SimpleTraverser()],
     [AST_NODE_TYPES.TemplateLiteral, new TemplateLiteralTraverser()],
     [AST_NODE_TYPES.ThrowStatement, new ThrowStatementTraverser()],
     [AST_NODE_TYPES.TryStatement, new TryStatementTraverser()],
@@ -203,9 +205,11 @@ export const TRAVERSERS: Map<AST_NODE_TYPES, Traverser> = new Map([
     [AST_NODE_TYPES.TSAsExpression, new AsExpressionTraverser()],
     [AST_NODE_TYPES.TSClassImplements, new SimpleTraverser()],
     [AST_NODE_TYPES.TSDeclareFunction, new FunctionTraverser()],
+    [AST_NODE_TYPES.TSEmptyBodyFunctionExpression, new FunctionTraverser()],
     [AST_NODE_TYPES.TSEnumBody, new EnumBodyTraverser()],
     [AST_NODE_TYPES.TSEnumDeclaration, new EnumDeclarationTraverser()],
     [AST_NODE_TYPES.TSEnumMember, new EnumMemberTraverser()],
+    [AST_NODE_TYPES.TSFunctionType, new FunctionTypeTraverser()],
     [AST_NODE_TYPES.TSExportAssignment, new ExportAssignmentTraverser()],
     [AST_NODE_TYPES.TSInterfaceBody, new InterfaceBodyTraverser()],
     [AST_NODE_TYPES.TSInterfaceDeclaration, new InterfaceDeclarationTraverser()],

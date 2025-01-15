@@ -45,6 +45,7 @@ export class SpreadElementTraverser extends Traverser {
 export class ArrayPatternTraverser extends Traverser {
     public static readonly DECORATORS_PROP = "decorators";
     public static readonly ELEMENTS_PROP = "elements";
+    public static readonly TYPE_ANNOTATION_PROP = "type-annotation";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
@@ -60,6 +61,14 @@ export class ArrayPatternTraverser extends Traverser {
                     conceptMaps,
                 );
             runTraverserForNodes(node.elements, { parentPropName: ArrayPatternTraverser.ELEMENTS_PROP }, processingContext, processors, conceptMaps);
+            if (node.typeAnnotation)
+                runTraverserForNode(
+                    node.typeAnnotation,
+                    { parentPropName: ArrayPatternTraverser.TYPE_ANNOTATION_PROP },
+                    processingContext,
+                    processors,
+                    conceptMaps,
+                );
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -70,6 +79,7 @@ export class ArrowFunctionExpressionTraverser extends Traverser {
     public static readonly TYPE_PARAMETERS_PROP = "type-parameters";
     public static readonly PARAMETERS_PROP = "parameters";
     public static readonly BODY_PROP = "body";
+    public static readonly RETURN_TYPE_PROP = "return-type";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
@@ -88,9 +98,7 @@ export class ArrowFunctionExpressionTraverser extends Traverser {
                 );
             runTraverserForNodes(
                 node.params,
-                {
-                    parentPropName: ArrowFunctionExpressionTraverser.PARAMETERS_PROP,
-                },
+                { parentPropName: ArrowFunctionExpressionTraverser.PARAMETERS_PROP },
                 processingContext,
                 processors,
                 conceptMaps,
@@ -102,6 +110,14 @@ export class ArrowFunctionExpressionTraverser extends Traverser {
                 processors,
                 conceptMaps,
             );
+            if (node.returnType)
+                runTraverserForNode(
+                    node.returnType,
+                    { parentPropName: ArrowFunctionExpressionTraverser.RETURN_TYPE_PROP },
+                    processingContext,
+                    processors,
+                    conceptMaps,
+                );
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -270,6 +286,14 @@ export class IdentifierTraverser extends Traverser {
                     processors,
                     conceptMaps,
                 );
+            if (node.typeAnnotation)
+                runTraverserForNode(
+                    node.typeAnnotation,
+                    { parentPropName: IdentifierTraverser.TYPE_ANNOTATIONS_PROP },
+                    processingContext,
+                    processors,
+                    conceptMaps,
+                );
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -277,7 +301,7 @@ export class IdentifierTraverser extends Traverser {
 }
 
 export class ImportExpressionTraverser extends Traverser {
-    public static readonly ATTRIBUTES_PROP = "attributes";
+    public static readonly OPTIONS_PROP = "options";
     public static readonly SOURCE_PROP = "source";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
@@ -286,11 +310,11 @@ export class ImportExpressionTraverser extends Traverser {
 
         if (node.type === AST_NODE_TYPES.ImportExpression) {
             runTraverserForNode(node.source, { parentPropName: ImportExpressionTraverser.SOURCE_PROP }, processingContext, processors, conceptMaps);
-            if (node.attributes)
+            if (node.options)
                 runTraverserForNode(
-                    node.attributes,
+                    node.options,
                     {
-                        parentPropName: ImportExpressionTraverser.ATTRIBUTES_PROP,
+                        parentPropName: ImportExpressionTraverser.OPTIONS_PROP,
                     },
                     processingContext,
                     processors,
@@ -353,8 +377,8 @@ export class NewExpressionTraverser extends Traverser {
 
         if (node.type === AST_NODE_TYPES.NewExpression) {
             if (node.typeArguments)
-                runTraverserForNodes(
-                    node.typeArguments.params,
+                runTraverserForNode(
+                    node.typeArguments,
                     {
                         parentPropName: NewExpressionTraverser.TYPE_PARAMETERS_PROP,
                     },
@@ -400,6 +424,7 @@ export class ObjectExpressionTraverser extends Traverser {
 export class ObjectPatternTraverser extends Traverser {
     public static readonly DECORATORS_PROP = "decorators";
     public static readonly PROPERTIES_PROP = "properties";
+    public static readonly TYPE_ANNOTATION_PROP = "type-annotation";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
@@ -421,6 +446,14 @@ export class ObjectPatternTraverser extends Traverser {
                 processors,
                 conceptMaps,
             );
+            if (node.typeAnnotation)
+                runTraverserForNode(
+                    node.typeAnnotation,
+                    { parentPropName: ObjectPatternTraverser.TYPE_ANNOTATION_PROP },
+                    processingContext,
+                    processors,
+                    conceptMaps,
+                );
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -511,6 +544,7 @@ export class TemplateLiteralTraverser extends Traverser {
 
 export class AsExpressionTraverser extends Traverser {
     public static readonly EXPRESSION_PROP = "expression";
+    public static readonly TYPE_ANNOTATION_PROP = "type-annotation";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
@@ -520,6 +554,13 @@ export class AsExpressionTraverser extends Traverser {
             runTraverserForNode(
                 node.expression,
                 { parentPropName: AsExpressionTraverser.EXPRESSION_PROP },
+                processingContext,
+                processors,
+                conceptMaps,
+            );
+            runTraverserForNode(
+                node.typeAnnotation,
+                { parentPropName: AsExpressionTraverser.TYPE_ANNOTATION_PROP },
                 processingContext,
                 processors,
                 conceptMaps,
@@ -538,16 +579,13 @@ export class NonNullExpressionTraverser extends Traverser {
         const conceptMaps: ConceptMap[] = [];
 
         if (node.type === AST_NODE_TYPES.TSNonNullExpression) {
-            if (node.expression)
-                runTraverserForNode(
-                    node.expression,
-                    {
-                        parentPropName: NonNullExpressionTraverser.EXPRESSION_PROP,
-                    },
-                    processingContext,
-                    processors,
-                    conceptMaps,
-                );
+            runTraverserForNode(
+                node.expression,
+                { parentPropName: NonNullExpressionTraverser.EXPRESSION_PROP },
+                processingContext,
+                processors,
+                conceptMaps,
+            );
         }
 
         return mergeConceptMaps(...conceptMaps);
@@ -556,6 +594,7 @@ export class NonNullExpressionTraverser extends Traverser {
 
 export class TypeAssertionTraverser extends Traverser {
     public static readonly EXPRESSION_PROP = "expression";
+    public static readonly TYPE_ANNOTATION_PROP = "type-annotation";
 
     public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
         const { node } = processingContext;
@@ -565,6 +604,13 @@ export class TypeAssertionTraverser extends Traverser {
             runTraverserForNode(
                 node.expression,
                 { parentPropName: TypeAssertionTraverser.EXPRESSION_PROP },
+                processingContext,
+                processors,
+                conceptMaps,
+            );
+            runTraverserForNode(
+                node.typeAnnotation,
+                { parentPropName: TypeAssertionTraverser.TYPE_ANNOTATION_PROP },
                 processingContext,
                 processors,
                 conceptMaps,

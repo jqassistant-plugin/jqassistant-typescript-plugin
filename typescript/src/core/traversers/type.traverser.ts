@@ -144,6 +144,51 @@ export class ArrayTypeTraverser extends Traverser {
     }
 }
 
+export class FunctionTypeTraverser extends Traverser {
+    public static readonly RETURN_TYPE_PROP = "return-type";
+    public static readonly TYPE_PARAMETERS_PROP = "type-parameters";
+    public static readonly PARAMETERS_PROP = "parameters";
+
+    public traverseChildren(processingContext: ProcessingContext, processors: ProcessorMap): ConceptMap {
+        const { node } = processingContext;
+        const conceptMaps: ConceptMap[] = [];
+
+        if (node.type === AST_NODE_TYPES.TSFunctionType) {
+            if (node.returnType)
+                runTraverserForNode(
+                    node.returnType,
+                    {
+                        parentPropName: FunctionTypeTraverser.RETURN_TYPE_PROP,
+                    },
+                    processingContext,
+                    processors,
+                    conceptMaps,
+                );
+            if (node.typeParameters)
+                runTraverserForNode(
+                    node.typeParameters,
+                    {
+                        parentPropName: FunctionTypeTraverser.TYPE_PARAMETERS_PROP,
+                    },
+                    processingContext,
+                    processors,
+                    conceptMaps,
+                );
+            runTraverserForNodes(
+                node.params,
+                {
+                    parentPropName: FunctionTypeTraverser.PARAMETERS_PROP,
+                },
+                processingContext,
+                processors,
+                conceptMaps,
+            );
+        }
+
+        return mergeConceptMaps(...conceptMaps);
+    }
+}
+
 // TODO: implement traversal of other type constructs
 // TSFunctionType
 // TSConditionalType

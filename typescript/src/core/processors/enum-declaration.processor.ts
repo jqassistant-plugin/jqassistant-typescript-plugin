@@ -8,12 +8,10 @@ import { Processor } from "../processor";
 import { getAndDeleteAllValueChildConcepts, getAndDeleteChildConcepts } from "../utils/processor.utils";
 import { EnumDeclarationTraverser, EnumMemberTraverser } from "../traversers/enum.traverser";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
-import { VALUE_PROCESSING_FLAG } from "./value.processor";
 import { CodeCoordinateUtils } from "./code-coordinate.utils";
+import { CoreContextKeys } from "../context.keys";
 
 export class EnumDeclarationProcessor extends Processor {
-    public static readonly PARSE_ENUM_MEMBERS_CONTEXT = "parse-enum-members";
-
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.TSEnumDeclaration], ({ node }) => {
         return (
             !!node.parent &&
@@ -24,7 +22,7 @@ export class EnumDeclarationProcessor extends Processor {
     });
 
     public override preChildrenProcessing({ node, localContexts }: ProcessingContext): void {
-        localContexts.currentContexts.set(EnumDeclarationProcessor.PARSE_ENUM_MEMBERS_CONTEXT, true);
+        localContexts.currentContexts.set(CoreContextKeys.ENUM_MEMBERS_PROCESSING_FLAG, true);
         if (node.type === AST_NODE_TYPES.TSEnumDeclaration) {
             const fqnIdentifier = DependencyResolutionProcessor.isDefaultDeclaration(localContexts, node, node.id.name) ? "default" : node.id.name;
             if (fqnIdentifier) {
@@ -59,12 +57,13 @@ export class EnumDeclarationProcessor extends Processor {
 
 export class EnumMemberProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.TSEnumMember], ({ localContexts }) => {
-        const context = localContexts.getNextContext(EnumDeclarationProcessor.PARSE_ENUM_MEMBERS_CONTEXT);
+        const context = localContexts.getNextContext(CoreContextKeys.ENUM_MEMBERS_PROCESSING_FLAG);
         return !!context && context[1] === 2;
     });
 
     public override preChildrenProcessing({ node, localContexts }: ProcessingContext): void {
-        if (node.type === AST_NODE_TYPES.TSEnumMember && node.initializer) localContexts.currentContexts.set(VALUE_PROCESSING_FLAG, true);
+        if (node.type === AST_NODE_TYPES.TSEnumMember && node.initializer)
+            localContexts.currentContexts.set(CoreContextKeys.VALUE_PROCESSING_FLAG, true);
     }
 
     public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
