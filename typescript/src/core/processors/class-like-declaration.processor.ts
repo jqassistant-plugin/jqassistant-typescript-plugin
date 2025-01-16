@@ -15,7 +15,7 @@ import {
     LCEParameterPropertyDeclaration
 } from "../concepts/method-declaration.concept";
 import { LCEPropertyDeclaration } from "../concepts/property-declaration.concept";
-import { LCETypeFunction } from "../concepts/type.concept";
+import { LCETypeFunction, LCETypeNotIdentified } from "../concepts/type.concept";
 import { FQN, LocalContexts, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
@@ -39,6 +39,7 @@ import {
 } from "../concepts/accessor-declaration.concept";
 import { CoreContextKeys } from "../context.keys";
 import { FunctionTraverser } from "../traversers/function.traverser";
+import { LCEIndexAccessTypeAnnotation } from "../concepts/type-annotation.concept";
 
 /**
  * Extracts concepts for methods of globally declared (abstract) classes and interfaces
@@ -73,7 +74,7 @@ export class MethodProcessor extends Processor {
                     node,
                     ...unusedProcessingContext,
                 },
-                this.determineParentDeclarationNode(node, localContexts),
+                determineParentDeclarationNode(node, localContexts),
                 node,
                 methodName,
                 jsPrivate,
@@ -91,20 +92,6 @@ export class MethodProcessor extends Processor {
         }
     }
 
-    /**
-     * Determine node of ancestor that triggered the processing of members
-     */
-    private determineParentDeclarationNode(currentNode: ESNode, localContexts: LocalContexts): ESNode {
-        const flagContext = localContexts.getNextContext(CoreContextKeys.PROCESS_CLASS_LIKE_MEMBERS) as [number, number] | undefined;
-        let parentDeclNode: ESNode = currentNode;
-        for(let i = flagContext![1]; i > 0; --i) {
-            if(parentDeclNode.parent) {
-                parentDeclNode = parentDeclNode.parent;
-            }
-        }
-        return parentDeclNode;
-    }
-
     public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         if (
             (node.type === AST_NODE_TYPES.MethodDefinition ||
@@ -113,9 +100,9 @@ export class MethodProcessor extends Processor {
             !node.computed
         ) {
             // TODO: handle overloads
-            const functionType = localContexts.currentContexts.get(CoreContextKeys.METHOD_TYPE) as LCETypeFunction | undefined;
-            const parentDeclNode = this.determineParentDeclarationNode(node, localContexts)
-            if (functionType) {
+            const methodType = localContexts.currentContexts.get(CoreContextKeys.METHOD_TYPE) as LCETypeFunction | undefined;
+            const parentDeclNode = determineParentDeclarationNode(node, localContexts);
+            if (methodType) {
                 const [methodName, jsPrivate] = processMemberName(node.key);
                 const visibility = jsPrivate ? "js_private" : (node.accessibility ?? "public");
                 const inClass =
@@ -125,20 +112,20 @@ export class MethodProcessor extends Processor {
                 let methodConcept: ConceptMap = new Map();
                 if (node.kind === "method") {
                     // method
-                    if (functionType) {
+                    if (methodType) {
                         methodConcept = singleEntryConceptMap(
                             LCEMethodDeclaration.conceptId,
                             new LCEMethodDeclaration(
                                 methodName,
                                 fqn,
                                 getAndDeleteChildConcepts(MethodTraverser.PARAMETERS_PROP, LCEParameterDeclaration.conceptId, childConcepts),
-                                functionType.returnType,
-                                functionType.typeParameters,
+                                methodType.returnType,
+                                methodType.typeParameters,
                                 "decorators" in node
                                     ? getAndDeleteChildConcepts(MethodTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
                                     : [],
                                 visibility,
-                                functionType.async,
+                                methodType.async,
                                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                                 "override" in node ? node.override : undefined,
                                 inClass ? node.type === AST_NODE_TYPES.TSAbstractMethodDefinition : undefined,
@@ -165,7 +152,7 @@ export class MethodProcessor extends Processor {
                             fqn,
                             methodName,
                             new LCEGetterDeclaration(
-                                functionType.returnType,
+                                methodType.returnType,
                                 "decorators" in node
                                     ? getAndDeleteChildConcepts(MethodTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
                                     : [],
@@ -223,28 +210,28 @@ export class MethodParameterProcessor extends Processor {
 
     public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
         const flagContext = localContexts.getNextContext(CoreContextKeys.PROCESS_PARAMETERS) as [number, number];
-        const functionTypeContext = localContexts.getNextContext(CoreContextKeys.METHOD_TYPE) as [LCETypeFunction, number] | undefined;
+        const methodTypeContext = localContexts.getNextContext(CoreContextKeys.METHOD_TYPE) as [LCETypeFunction, number] | undefined;
 
         // only process parameters, if the required function type could be determined for the method that set the processing flag
-        if (functionTypeContext && functionTypeContext[1] === flagContext[1]) {
-            const functionType = functionTypeContext[0];
+        if (methodTypeContext && methodTypeContext[1] === flagContext[1]) {
+            const methodType = methodTypeContext[0];
             const paramIndex = getParentPropIndex(localContexts);
-            if (paramIndex !== undefined && functionType.parameters[paramIndex]) {
-                const funcTypeParam = functionType.parameters[paramIndex];
+            if (paramIndex !== undefined && methodType.parameters[paramIndex]) {
+                const methodTypeParam = methodType.parameters[paramIndex];
 
                 if (node.type === AST_NODE_TYPES.Identifier) {
                     const scopeFqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
                     DependencyResolutionProcessor.registerDeclaration(
                         localContexts,
-                        funcTypeParam.name,
-                        new FQN(scopeFqn.globalFqn + "." + funcTypeParam.name, scopeFqn.localFqn + "." + funcTypeParam.name),
+                        methodTypeParam.name,
+                        new FQN(scopeFqn.globalFqn + "." + methodTypeParam.name, scopeFqn.localFqn + "." + methodTypeParam.name),
                     );
                     return singleEntryConceptMap(
                         LCEParameterDeclaration.conceptId,
                         new LCEParameterDeclaration(
-                            funcTypeParam.index,
-                            funcTypeParam.name,
-                            funcTypeParam.type,
+                            methodTypeParam.index,
+                            methodTypeParam.name,
+                            methodTypeParam.type,
                             "optional" in node && !!node.optional,
                             getAndDeleteChildConcepts(IdentifierTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
                             CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
@@ -253,17 +240,17 @@ export class MethodParameterProcessor extends Processor {
                 } else if (node.type === AST_NODE_TYPES.TSParameterProperty) {
                     const scopeFqn = DependencyResolutionProcessor.constructScopeFQN(localContexts, true);
                     const paramPropFQN = new FQN(
-                        scopeFqn.globalFqn.replace(".constructor", "") + "." + funcTypeParam.name,
-                        scopeFqn.localFqn.replace(".constructor", "") + "." + funcTypeParam.name,
+                        scopeFqn.globalFqn.replace(".constructor", "") + "." + methodTypeParam.name,
+                        scopeFqn.localFqn.replace(".constructor", "") + "." + methodTypeParam.name,
                     );
                     const paramPropConcept = singleEntryConceptMap(
                         LCEParameterPropertyDeclaration.conceptId,
                         new LCEParameterPropertyDeclaration(
-                            funcTypeParam.index,
-                            funcTypeParam.name,
+                            methodTypeParam.index,
+                            methodTypeParam.name,
                             paramPropFQN,
                             "optional" in node.parameter && node.parameter.optional,
-                            funcTypeParam.type,
+                            methodTypeParam.type,
                             getChildConcepts(ParameterPropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
                             node.accessibility ?? "public",
                             node.readonly,
@@ -274,15 +261,15 @@ export class MethodParameterProcessor extends Processor {
                     const paramConcept = singleEntryConceptMap(
                         LCEParameterDeclaration.conceptId,
                         new LCEParameterDeclaration(
-                            funcTypeParam.index,
-                            funcTypeParam.name,
-                            funcTypeParam.type,
+                            methodTypeParam.index,
+                            methodTypeParam.name,
+                            methodTypeParam.type,
                             "optional" in node.parameter && node.parameter.optional,
                             getAndDeleteChildConcepts(ParameterPropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),
                             CodeCoordinateUtils.getCodeCoordinates(globalContext, node),
                         ),
                     );
-                    DependencyResolutionProcessor.registerDeclaration(localContexts, funcTypeParam.name, paramPropFQN, true);
+                    DependencyResolutionProcessor.registerDeclaration(localContexts, methodTypeParam.name, paramPropFQN, true);
                     return mergeConceptMaps(paramConcept, paramPropConcept);
                 }
             }
@@ -295,7 +282,10 @@ export class MethodParameterProcessor extends Processor {
 export class PropertyProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.PropertyDefinition, AST_NODE_TYPES.TSAbstractPropertyDefinition, AST_NODE_TYPES.TSPropertySignature],
-        () => true,
+        ({localContexts}) => {
+            const flagContext = localContexts.getNextContext(CoreContextKeys.PROCESS_CLASS_LIKE_MEMBERS) as [number, number] | undefined;
+            return !!flagContext && flagContext[1] == flagContext[0]; // e.g. Property(0) <- ClassBody(1) <- ClassDeclaration(2) (same for interface)
+        }
     );
 
     public override preChildrenProcessing({ node, localContexts }: ProcessingContext): void {
@@ -324,8 +314,15 @@ export class PropertyProcessor extends Processor {
             const [propertyName, jsPrivate] = processMemberName(node.key);
             const fqn = DependencyResolutionProcessor.constructScopeFQN(localContexts);
             DependencyResolutionProcessor.registerDeclaration(localContexts, propertyName, fqn, true);
-            const inClass =
-                node.parent.parent?.type === AST_NODE_TYPES.ClassDeclaration || node.parent.parent?.type === AST_NODE_TYPES.ClassExpression;
+            const parentDeclNode = determineParentDeclarationNode(node, localContexts);
+            const inClass = parentDeclNode.type === AST_NODE_TYPES.ClassDeclaration || parentDeclNode.type === AST_NODE_TYPES.ClassExpression;
+
+            // indexed access type check to prevent infinite recursion on native type parsing
+            const isIndexedAccessType = getAndDeleteChildConcepts<LCEIndexAccessTypeAnnotation>(PropertyTraverser.TYPE_ANNOTATION_PROP, LCEIndexAccessTypeAnnotation.conceptId, childConcepts).length > 0;
+            const type = isIndexedAccessType ?
+                new LCETypeNotIdentified("Type contains indexed access type (potentially recursive)") :
+                parseClassPropertyType({ globalContext, localContexts, node, ...unusedProcessingContext }, node.key);
+
             return mergeConceptMaps(
                 singleEntryConceptMap(
                     LCEPropertyDeclaration.conceptId,
@@ -333,7 +330,7 @@ export class PropertyProcessor extends Processor {
                         propertyName,
                         fqn,
                         node.optional,
-                        parseClassPropertyType({ globalContext, localContexts, node, ...unusedProcessingContext }, node.key),
+                        type,
                         "decorators" in node
                             ? getAndDeleteChildConcepts(PropertyTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts)
                             : [],
@@ -356,7 +353,10 @@ export class PropertyProcessor extends Processor {
 export class AutoAccessorDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.AccessorProperty, AST_NODE_TYPES.TSAbstractAccessorProperty],
-        () => true,
+        ({localContexts}) => {
+            const flagContext = localContexts.getNextContext(CoreContextKeys.PROCESS_CLASS_LIKE_MEMBERS) as [number, number] | undefined;
+            return !!flagContext && flagContext[1] == flagContext[0]; // e.g. AccessorProperty(0) <- ClassBody(1) <- ClassDeclaration(2) (same for interface)
+        }
     );
 
     public override preChildrenProcessing({ node, localContexts }: ProcessingContext): void {
@@ -422,4 +422,18 @@ function processMemberName(name: ClassPropertyNameNonComputed | PropertyNameNonC
     }
 
     return [result, jsPrivate];
+}
+
+/**
+ * Determine node of ancestor that triggered the processing of members
+ */
+function determineParentDeclarationNode(currentNode: ESNode, localContexts: LocalContexts): ESNode {
+    const flagContext = localContexts.getNextContext(CoreContextKeys.PROCESS_CLASS_LIKE_MEMBERS) as [number, number] | undefined;
+    let parentDeclNode: ESNode = currentNode;
+    for(let i = flagContext![1]; i > 0; --i) {
+        if(parentDeclNode.parent) {
+            parentDeclNode = parentDeclNode.parent;
+        }
+    }
+    return parentDeclNode;
 }
