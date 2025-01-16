@@ -85,7 +85,7 @@ export function expectDependency(projectRootPath: string, dependencies: Map<stri
 export function expectPrimitiveType(type: LCEType | undefined, name: string) {
     expect(type).toBeDefined();
     if(type) {
-        expect(type.type).toBe("primitive");
+        expect(type.type).toBe(LCETypePrimitive.typeId);
         expect((type as LCETypePrimitive).name).toBe(name);
     }
 }
@@ -98,12 +98,12 @@ export function expectOptionalPrimitiveType(type: LCEType | undefined, name: str
     expect(type).toBeDefined();
     if(type) {
         expect(type).toBeDefined();
-        expect(type.type).toBe("union");
+        expect(type.type).toBe(LCETypeUnion.typeId);
         const unionTypes = (type as LCETypeUnion).types;
 
         expect(unionTypes).toHaveLength(2);
-        expect(unionTypes[0].type).toBe("primitive");
-        expect(unionTypes[1].type).toBe("primitive");
+        expect(unionTypes[0].type).toBe(LCETypePrimitive.typeId);
+        expect(unionTypes[1].type).toBe(LCETypePrimitive.typeId);
         unionTypes.sort((a, b) => (a as LCETypePrimitive).name.localeCompare((b as LCETypePrimitive).name))
         expect((unionTypes[0] as LCETypePrimitive).name).toBe(types[0]);
         expect((unionTypes[1] as LCETypePrimitive).name).toBe(types[1]);
@@ -116,7 +116,7 @@ export function expectOptionalPrimitiveType(type: LCEType | undefined, name: str
 export function expectLiteralType(type: LCEType | undefined, value: any) {
     expect(type).toBeDefined();
     if(type) {
-        expect(type.type).toBe("literal");
+        expect(type.type).toBe(LCETypeLiteral.typeId);
         expect((type as LCETypeLiteral).value).toBe(value);
     }
 }
@@ -128,7 +128,7 @@ export function expectLiteralType(type: LCEType | undefined, value: any) {
 export function expectDeclaredType(type: LCEType | undefined, globalFqn: string, checkEmptyTypeArgs: boolean = true) {
     expect(type).toBeDefined();
     if(type) {
-        expect(type.type).toBe("declared");
+        expect(type.type).toBe(LCETypeDeclared.typeId);
         expect((type as LCETypeDeclared).fqn.globalFqn).toBe(globalFqn);
         if(checkEmptyTypeArgs) {
             expect((type as LCETypeDeclared).typeArguments).toHaveLength(0);
@@ -143,7 +143,7 @@ export function expectDeclaredType(type: LCEType | undefined, globalFqn: string,
 export function expectTypeParameterReference(type: LCEType | undefined, name: string) {
     expect(type).toBeDefined();
     if(type) {
-        expect(type.type).toBe("type-parameter");
+        expect(type.type).toBe(LCETypeParameterReference.typeId);
         expect((type as LCETypeParameterReference).name).toBe(name);
     }
 }
@@ -155,7 +155,7 @@ export function expectTypeParameterReference(type: LCEType | undefined, name: st
  */
 export function expectFunctionType(funType: LCEType | undefined, paramCount: number, primitiveReturnType?: string, checkEmptyTypeParams: boolean = true): LCETypeFunction {
     expect(funType).toBeDefined();
-    expect(funType!.type).toBe("function");
+    expect(funType!.type).toBe(LCETypeFunction.typeId);
     expect((funType as LCETypeFunction).parameters).toBeDefined();
     expect((funType as LCETypeFunction).parameters).toHaveLength(paramCount);
     if(primitiveReturnType) {
@@ -172,7 +172,7 @@ export function expectFunctionType(funType: LCEType | undefined, paramCount: num
  */
 export function expectObjectType(objectType: LCEType | undefined, memberCount: number) {
     expect(objectType).toBeDefined();
-    expect(objectType!.type).toBe("object");
+    expect(objectType!.type).toBe(LCETypeObject.typeId);
     expect((objectType! as LCETypeObject).members).toBeDefined();
     expect((objectType! as LCETypeObject).members).toHaveLength(memberCount);
     return objectType! as LCETypeObject;
@@ -199,7 +199,7 @@ export function expectObjectTypeMember(objectType: LCETypeObject, name: string, 
  */
 export function expectLiteralValue(value: LCEValue | undefined, literalValue: any, primitiveType: string){
     expect(value).toBeDefined();
-    expect(value!.valueType).toBe("literal");
+    expect(value!.valueType).toBe(LCEValueLiteral.valueTypeId);
     expect((value! as LCEValueLiteral).value).toBe(literalValue);
     expectPrimitiveType(value!.type, primitiveType);
     return value! as LCEValueLiteral;
@@ -210,7 +210,7 @@ export function expectLiteralValue(value: LCEValue | undefined, literalValue: an
  */
 export function expectDeclaredValue(value: LCEValue | undefined, globalFqn: string) {
     expect(value).toBeDefined();
-    expect(value!.valueType).toBe("declared");
+    expect(value!.valueType).toBe(LCEValueDeclared.valueTypeId);
     expect((value! as LCEValueDeclared).fqn.globalFqn).toBe(globalFqn);
     return value! as LCEValueDeclared;
 }
@@ -220,7 +220,7 @@ export function expectDeclaredValue(value: LCEValue | undefined, globalFqn: stri
  */
 export function expectObjectValue(value: LCEValue | undefined, memberCount: number) {
     expect(value).toBeDefined();
-    expect(value!.valueType).toBe("object");
+    expect(value!.valueType).toBe(LCEValueObject.valueTypeId);
     expect((value! as LCEValueObject).members).toBeDefined();
     expect([...(value! as LCEValueObject).members.entries()]).toHaveLength(memberCount);
     return value! as LCEValueObject;
@@ -271,7 +271,7 @@ export function expectTypeParameterDeclaration(typeParams: LCETypeParameterDecla
         expect(typeParam.name).toBe(name);
         if(checkEmptyConstraint) {
             expect(typeParam.constraint).toBeDefined();
-            expect(typeParam.constraint.type).toBe("object");
+            expect(typeParam.constraint.type).toBe(LCETypeObject.typeId);
             expect([...(typeParam.constraint as LCETypeObject).members.entries()]).toHaveLength(0);
         }
     }

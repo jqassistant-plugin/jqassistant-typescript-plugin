@@ -25,8 +25,8 @@ describe("decorators test (legacy)", () => {
 
     beforeAll(async () => {
         const projects = await processProjects(projectRootPath);
-        if(projects.length !== 1) {
-            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        if (projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.");
         }
         result = projects[0].concepts;
 
@@ -58,7 +58,7 @@ describe("decorators test (legacy)", () => {
         const decl = classDecls.get('"./src/main.ts".cMarker');
         expect(decl).toBeDefined();
         expect(decl!.decorators).toHaveLength(1);
-        expectDeclaredValue(decl!.decorators[0].value, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dClassMarker'));
+        expectDeclaredValue(decl!.decorators[0].value, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dClassMarker'));
     });
 
     test("class decorator with arguments", async () => {
@@ -67,14 +67,13 @@ describe("decorators test (legacy)", () => {
         expect(decl!.decorators).toHaveLength(1);
         const value = decl!.decorators[0].value;
         expect(value).toBeDefined();
-        expect(value.valueType).toBe("call");
+        expect(value.valueType).toBe(LCEValueCall.valueTypeId);
         expect((value as LCEValueCall).typeArgs).toHaveLength(0);
-        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dClassArgs'));
+        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dClassArgs'));
         const args = (value as LCEValueCall).args;
         expect(args).toHaveLength(2);
         expectLiteralValue(args[0], 5, "number");
         expectLiteralValue(args[1], "abc", "string");
-
     });
 
     test("class decorator with object argument", async () => {
@@ -83,9 +82,9 @@ describe("decorators test (legacy)", () => {
         expect(decl!.decorators).toHaveLength(1);
         const value = decl!.decorators[0].value;
         expect(value).toBeDefined();
-        expect(value.valueType).toBe("call");
+        expect(value.valueType).toBe(LCEValueCall.valueTypeId);
         expect((value as LCEValueCall).typeArgs).toHaveLength(0);
-        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dClassObjectArg'));
+        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dClassObjectArg'));
         const args = (value as LCEValueCall).args;
         expect(args).toHaveLength(1);
         const oValue = expectObjectValue(args[0], 2);
@@ -108,37 +107,43 @@ describe("decorators test (legacy)", () => {
         expect(decl!.decorators).toHaveLength(1);
         const value = decl!.decorators[0].value;
         expect(value).toBeDefined();
-        expect(value.valueType).toBe("call");
+        expect(value.valueType).toBe(LCEValueCall.valueTypeId);
         expect((value as LCEValueCall).typeArgs).toHaveLength(0);
-        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath,'"./src/secondary.ts".dClassArgsExternal'));
+        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".dClassArgsExternal'));
         const args = (value as LCEValueCall).args;
         expect(args).toHaveLength(2);
         expectLiteralValue(args[0], 3, "number");
         expectLiteralValue(args[1], "wow", "string");
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".cClassArgExt', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".dClassArgsExternal'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".cClassArgExt',
+            resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".dClassArgsExternal'),
+            1,
+        );
     });
 
     test("method marker decorator", async () => {
         const classDecl = classDecls.get('"./src/main.ts".cMethodDecorators');
         expect(classDecl).toBeDefined();
-        const method = classDecl!.methods.find(m => m.methodName === "method1");
+        const method = classDecl!.methods.find((m) => m.methodName === "method1");
         expect(method).toBeDefined();
         expect(method!.decorators).toHaveLength(1);
-        expectDeclaredValue(method!.decorators[0].value, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dMethodMarker'));
+        expectDeclaredValue(method!.decorators[0].value, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dMethodMarker'));
     });
 
     test("method decorator with arguments", async () => {
         const classDecl = classDecls.get('"./src/main.ts".cMethodDecorators');
         expect(classDecl).toBeDefined();
-        const method = classDecl!.methods.find(m => m.methodName === "method2");
+        const method = classDecl!.methods.find((m) => m.methodName === "method2");
         expect(method).toBeDefined();
         expect(method!.decorators).toHaveLength(1);
         const value = method!.decorators[0].value;
         expect(value).toBeDefined();
-        expect(value.valueType).toBe("call");
+        expect(value.valueType).toBe(LCEValueCall.valueTypeId);
         expect((value as LCEValueCall).typeArgs).toHaveLength(0);
-        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dMethodArgs'));
+        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dMethodArgs'));
         const args = (value as LCEValueCall).args;
         expect(args).toHaveLength(2);
         expectLiteralValue(args[0], 42, "number");
@@ -148,14 +153,14 @@ describe("decorators test (legacy)", () => {
     test("method decorator with object argument", async () => {
         const classDecl = classDecls.get('"./src/main.ts".cMethodDecorators');
         expect(classDecl).toBeDefined();
-        const method = classDecl!.methods.find(m => m.methodName === "method3");
+        const method = classDecl!.methods.find((m) => m.methodName === "method3");
         expect(method).toBeDefined();
         expect(method!.decorators).toHaveLength(1);
         const value = method!.decorators[0].value;
         expect(value).toBeDefined();
-        expect(value.valueType).toBe("call");
+        expect(value.valueType).toBe(LCEValueCall.valueTypeId);
         expect((value as LCEValueCall).typeArgs).toHaveLength(0);
-        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dMethodObjectArg'));
+        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dMethodObjectArg'));
         const args = (value as LCEValueCall).args;
         expect(args).toHaveLength(1);
         const oValue = expectObjectValue(args[0], 2);
@@ -169,23 +174,23 @@ describe("decorators test (legacy)", () => {
     test("property marker decorator", async () => {
         const classDecl = classDecls.get('"./src/main.ts".cPropertyDecorators');
         expect(classDecl).toBeDefined();
-        const property = classDecl!.properties.find(p => p.propertyName === "property1");
+        const property = classDecl!.properties.find((p) => p.propertyName === "property1");
         expect(property).toBeDefined();
         expect(property!.decorators).toHaveLength(1);
-        expectDeclaredValue(property!.decorators[0].value, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dPropertyMarker'));
+        expectDeclaredValue(property!.decorators[0].value, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dPropertyMarker'));
     });
 
     test("property decorator with arguments", async () => {
         const classDecl = classDecls.get('"./src/main.ts".cPropertyDecorators');
         expect(classDecl).toBeDefined();
-        const property = classDecl!.properties.find(p => p.propertyName === "property2");
+        const property = classDecl!.properties.find((p) => p.propertyName === "property2");
         expect(property).toBeDefined();
         expect(property!.decorators).toHaveLength(1);
         const value = property!.decorators[0].value;
         expect(value).toBeDefined();
-        expect(value.valueType).toBe("call");
+        expect(value.valueType).toBe(LCEValueCall.valueTypeId);
         expect((value as LCEValueCall).typeArgs).toHaveLength(0);
-        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dPropertyArgs'));
+        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dPropertyArgs'));
         const args = (value as LCEValueCall).args;
         expect(args).toHaveLength(2);
         expectLiteralValue(args[0], 5, "number");
@@ -195,14 +200,14 @@ describe("decorators test (legacy)", () => {
     test("property decorator with object argument", async () => {
         const classDecl = classDecls.get('"./src/main.ts".cPropertyDecorators');
         expect(classDecl).toBeDefined();
-        const property = classDecl!.properties.find(p => p.propertyName === "property3");
+        const property = classDecl!.properties.find((p) => p.propertyName === "property3");
         expect(property).toBeDefined();
         expect(property!.decorators).toHaveLength(1);
         const value = property!.decorators[0].value;
         expect(value).toBeDefined();
-        expect(value.valueType).toBe("call");
+        expect(value.valueType).toBe(LCEValueCall.valueTypeId);
         expect((value as LCEValueCall).typeArgs).toHaveLength(0);
-        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dPropertyObjectArg'));
+        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dPropertyObjectArg'));
         const args = (value as LCEValueCall).args;
         expect(args).toHaveLength(1);
         const oValue = expectObjectValue(args[0], 2);
@@ -221,7 +226,7 @@ describe("decorators test (legacy)", () => {
         const parameter = method.parameters[0];
         expect(parameter).toBeDefined();
         expect(parameter!.decorators).toHaveLength(1);
-        expectDeclaredValue(parameter!.decorators[0].value, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dParameterMarker'));
+        expectDeclaredValue(parameter!.decorators[0].value, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dParameterMarker'));
     });
 
     test("parameter decorator with arguments", async () => {
@@ -234,9 +239,9 @@ describe("decorators test (legacy)", () => {
         expect(parameter!.decorators).toHaveLength(1);
         const value = parameter!.decorators[0].value;
         expect(value).toBeDefined();
-        expect(value.valueType).toBe("call");
+        expect(value.valueType).toBe(LCEValueCall.valueTypeId);
         expect((value as LCEValueCall).typeArgs).toHaveLength(0);
-        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dParameterArgs'));
+        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dParameterArgs'));
         const args = (value as LCEValueCall).args;
         expect(args).toHaveLength(2);
         expectLiteralValue(args[0], 10, "number");
@@ -253,9 +258,9 @@ describe("decorators test (legacy)", () => {
         expect(parameter!.decorators).toHaveLength(1);
         const value = parameter!.decorators[0].value;
         expect(value).toBeDefined();
-        expect(value.valueType).toBe("call");
+        expect(value.valueType).toBe(LCEValueCall.valueTypeId);
         expect((value as LCEValueCall).typeArgs).toHaveLength(0);
-        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath,'"./src/main.ts".dParameterObjectArg'));
+        expectDeclaredValue((value as LCEValueCall).callee, resolveGlobalFqn(projectRootPath, '"./src/main.ts".dParameterObjectArg'));
         const args = (value as LCEValueCall).args;
         expect(args).toHaveLength(1);
         const oValue = expectObjectValue(args[0], 2);
@@ -265,5 +270,4 @@ describe("decorators test (legacy)", () => {
         expectLiteralValue(oValue.members.get("mem1"), 20, "number");
         expectLiteralValue(oValue.members.get("mem2"), "param3", "string");
     });
-
 });

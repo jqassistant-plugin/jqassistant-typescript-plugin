@@ -9,7 +9,7 @@ import { LCEValueComplex, LCEValueDeclared, LCEValueMember } from "../../../src/
 jest.setTimeout(30000);
 
 describe("enum declarations test", () => {
-    const projectRootPath = "./test/core/integration/sample-projects/enum-declarations"
+    const projectRootPath = "./test/core/integration/sample-projects/enum-declarations";
     let result: Map<string, object[]>;
     const enumDecls: Map<string, LCEEnumDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
@@ -17,8 +17,8 @@ describe("enum declarations test", () => {
 
     beforeAll(async () => {
         const projects = await processProjects(projectRootPath);
-        if(projects.length !== 1) {
-            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        if (projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.");
         }
         result = projects[0].concepts;
 
@@ -126,7 +126,7 @@ describe("enum declarations test", () => {
 
             expect(decl.members).toHaveLength(3);
             const a = expectEnumMember(decl, "A", '"./src/main.ts".eNumeric.A');
-            expect(a.initValue).toBeDefined()
+            expect(a.initValue).toBeDefined();
             expectLiteralValue(a.initValue, 5, "number");
             const b = expectEnumMember(decl, "B", '"./src/main.ts".eNumeric.B');
             expect(b.initValue).toBeUndefined();
@@ -147,11 +147,10 @@ describe("enum declarations test", () => {
 
             expect(decl.members).toHaveLength(2);
             const a = expectEnumMember(decl, "A", '"./src/main.ts".eString.A');
-            expect(a.initValue).toBeDefined()
+            expect(a.initValue).toBeDefined();
             expectLiteralValue(a.initValue, "a", "string");
             const b = expectEnumMember(decl, "B", '"./src/main.ts".eString.B');
             expectLiteralValue(b.initValue, "b", "string");
-
         }
     });
 
@@ -167,11 +166,10 @@ describe("enum declarations test", () => {
 
             expect(decl.members).toHaveLength(2);
             const a = expectEnumMember(decl, "A", '"./src/main.ts".eMixed.A');
-            expect(a.initValue).toBeDefined()
+            expect(a.initValue).toBeDefined();
             expectLiteralValue(a.initValue, 1, "number");
             const b = expectEnumMember(decl, "B", '"./src/main.ts".eMixed.B');
             expectLiteralValue(b.initValue, "b", "string");
-
         }
     });
 
@@ -187,21 +185,20 @@ describe("enum declarations test", () => {
 
             expect(decl.members).toHaveLength(3);
             const a = expectEnumMember(decl, "A", '"./src/main.ts".eConstants.A');
-            expect(a.initValue).toBeDefined()
+            expect(a.initValue).toBeDefined();
             expect(a.initValue!.valueType).toBeDefined();
-            expect(a.initValue!.valueType).toBe("complex");
+            expect(a.initValue!.valueType).toBe(LCEValueComplex.valueTypeId);
             expect((a.initValue! as LCEValueComplex).expression).toBe("1 + 1");
             const b = expectEnumMember(decl, "B", '"./src/main.ts".eConstants.B');
-            expect(b.initValue).toBeDefined()
+            expect(b.initValue).toBeDefined();
             expect(b.initValue!.valueType).toBeDefined();
-            expect(b.initValue!.valueType).toBe("complex");
+            expect(b.initValue!.valueType).toBe(LCEValueComplex.valueTypeId);
             expect((b.initValue! as LCEValueComplex).expression).toBe('"a" + "b"');
             const c = expectEnumMember(decl, "C", '"./src/main.ts".eConstants.C');
-            expect(c.initValue).toBeDefined()
+            expect(c.initValue).toBeDefined();
             expect(c.initValue!.valueType).toBeDefined();
-            expect(c.initValue!.valueType).toBe("complex");
+            expect(c.initValue!.valueType).toBe(LCEValueComplex.valueTypeId);
             expect((c.initValue! as LCEValueComplex).expression).toBe("A + 1");
-
         }
     });
 
@@ -217,13 +214,13 @@ describe("enum declarations test", () => {
 
             expect(decl.members).toHaveLength(1);
             const a = expectEnumMember(decl, "A", '"./src/main.ts".eComputed.A');
-            expect(a.initValue).toBeDefined()
+            expect(a.initValue).toBeDefined();
             expect(a.initValue!.valueType).toBeDefined();
             expect(a.initValue!.valueType).toBe("member");
             const memberValue = a.initValue! as LCEValueMember;
             expectLiteralValue(memberValue.parent, "abc", "string");
             expect(memberValue.member).toBeDefined();
-            expect(memberValue.member.valueType).toBe("declared");
+            expect(memberValue.member.valueType).toBe(LCEValueDeclared.valueTypeId);
             expect((memberValue.member as LCEValueDeclared).fqn.globalFqn).toBe("length");
             expectPrimitiveType(memberValue.type, "number");
         }
@@ -264,5 +261,4 @@ describe("enum declarations test", () => {
             expect(b.initValue).toBeUndefined();
         }
     });
-
 });

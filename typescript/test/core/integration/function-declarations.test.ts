@@ -239,12 +239,12 @@ describe("function declarations test", () => {
             expectFunctionParameter(decl.parameters, 2, "p3", true);
 
             expect(decl.parameters[2].type).toBeDefined();
-            expect(decl.parameters[2].type.type).toBe("union");
+            expect(decl.parameters[2].type.type).toBe(LCETypeUnion.typeId);
             const unionTypes = (decl.parameters[2].type as LCETypeUnion).types;
 
             expect(unionTypes).toHaveLength(2);
-            expect(unionTypes[0].type).toBe("primitive");
-            expect(unionTypes[1].type).toBe("primitive");
+            expect(unionTypes[0].type).toBe(LCETypePrimitive.typeId);
+            expect(unionTypes[1].type).toBe(LCETypePrimitive.typeId);
             unionTypes.sort((a, b) => (a as LCETypePrimitive).name.localeCompare((b as LCETypePrimitive).name));
             expect((unionTypes[0] as LCETypePrimitive).name).toBe("string");
             expect((unionTypes[1] as LCETypePrimitive).name).toBe("undefined");

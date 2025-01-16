@@ -22,12 +22,14 @@ export abstract class LCEValue extends LCEConcept {
  */
 export class LCEValueNull extends LCEValue {
     public static override conceptId = "null-value";
+    public static readonly valueTypeId = "null";
+
 
     /**
      * @param kind indicates whether value is `undefined` or `null`
      */
     constructor(public kind: "undefined" | "null") {
-        super("null", new LCETypePrimitive(kind));
+        super(LCEValueNull.valueTypeId, new LCETypePrimitive(kind));
     }
 }
 
@@ -36,13 +38,14 @@ export class LCEValueNull extends LCEValue {
  */
 export class LCEValueLiteral extends LCEValue {
     public static override conceptId = "literal-value";
+    public static readonly valueTypeId = "literal";
 
     /**
      * @param value the value of the literal
      */
     constructor(public value: string | number | bigint | boolean | RegExp) {
         super(
-            "literal",
+            LCEValueLiteral.valueTypeId,
             typeof value === "object" ? new LCETypeDeclared(new FQN("RegExp"), []) : new LCETypePrimitive(typeof value)
         );
     }
@@ -53,12 +56,13 @@ export class LCEValueLiteral extends LCEValue {
  */
 export class LCEValueDeclared extends LCEValue {
     public static override conceptId = "declared-value";
+    public static readonly valueTypeId = "declared";
 
     /**
      * @param fqn fully qualified name of the referenced variable/function/class (only global Fqn is used)
      */
     constructor(type: LCEType, public fqn: FQN) {
-        super("declared", type);
+        super(LCEValueDeclared.valueTypeId, type);
     }
 }
 
@@ -67,13 +71,14 @@ export class LCEValueDeclared extends LCEValue {
  */
 export class LCEValueMember extends LCEValue {
     public static override conceptId = "member-value";
+    public static readonly valueTypeId = "member";
 
     /**
      * @param parent parent value of which a member is accessed
      * @param member member value which is accessed
      */
     constructor(type: LCEType, public parent: LCEValue, public member: LCEValue) {
-        super("member", type);
+        super(LCEValueMember.valueTypeId, type);
     }
 }
 
@@ -82,12 +87,13 @@ export class LCEValueMember extends LCEValue {
  */
 export class LCEValueObject extends LCEValue {
     public static override conceptId = "object-value";
+    public static readonly valueTypeId = "object";
 
     /**
      * @param members map of the object member's names to their respective values
      */
     constructor(type: LCEType, public members: Map<string, LCEValue>) {
-        super("object", type);
+        super(LCEValueObject.valueTypeId, type);
     }
 }
 
@@ -97,13 +103,14 @@ export class LCEValueObject extends LCEValue {
  */
 export class LCEValueObjectProperty extends LCEValue {
     public static override conceptId = "object-value-property";
+    public static readonly valueTypeId = "object-property";
 
     /**
      * @param name name of the property
      * @param value value of the property
      */
     constructor(public name: string, public value: LCEValue) {
-        super("object-property", value.type);
+        super(LCEValueObjectProperty.valueTypeId, value.type);
     }
 }
 
@@ -112,12 +119,13 @@ export class LCEValueObjectProperty extends LCEValue {
  */
 export class LCEValueArray extends LCEValue {
     public static override conceptId = "array-value";
+    public static readonly valueTypeId = "array";
 
     /**
      * @param items item values of the array
      */
     constructor(type: LCEType, public items: LCEValue[]) {
-        super("array", type);
+        super(LCEValueArray.valueTypeId, type);
     }
 }
 
@@ -126,6 +134,7 @@ export class LCEValueArray extends LCEValue {
  */
 export class LCEValueCall extends LCEValue {
     public static override conceptId = "call-value";
+    public static readonly valueTypeId = "call";
 
     /**
      * @param type return type of the call
@@ -134,7 +143,7 @@ export class LCEValueCall extends LCEValue {
      * @param typeArgs type arguments specified for call
      */
     constructor(type: LCEType, public callee: LCEValue, public args: LCEValue[], public typeArgs: LCEType[]) {
-        super("call", type);
+        super(LCEValueCall.valueTypeId, type);
     }
 }
 
@@ -143,13 +152,14 @@ export class LCEValueCall extends LCEValue {
  */
 export class LCEValueFunction extends LCEValue {
     public static override conceptId = "function-value";
+    public static readonly valueTypeId = "function";
 
     /**
      * @param type return type of the function
      * @param arrowFunction indicates whether the function is an arrow function
      */
     constructor(type: LCEType, public arrowFunction: boolean) {
-        super("function", type);
+        super(LCEValueFunction.valueTypeId, type);
     }
 }
 
@@ -158,9 +168,10 @@ export class LCEValueFunction extends LCEValue {
  */
 export class LCEValueClass extends LCEValue {
     public static override conceptId = "class-value";
+    public static readonly valueTypeId = "class";
 
     constructor() {
-        super("class", new LCETypeNotIdentified("class expression"));
+        super(LCEValueClass.valueTypeId, new LCETypeNotIdentified("class expression"));
     }
 }
 
@@ -169,12 +180,13 @@ export class LCEValueClass extends LCEValue {
  */
 export class LCEValueComplex extends LCEValue {
     public static override conceptId = "complex-value";
+    public static readonly valueTypeId = "complex";
 
     /**
      * @param expression string representation of the value's expression
      */
     constructor(public expression: string) {
-        super("complex", new LCETypeNotIdentified("complex"));
+        super(LCEValueComplex.valueTypeId, new LCETypeNotIdentified("complex"));
     }
 }
 

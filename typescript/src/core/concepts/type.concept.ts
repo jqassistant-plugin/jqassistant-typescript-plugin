@@ -15,12 +15,13 @@ export abstract class LCEType extends LCEConcept {
  */
 export class LCETypePrimitive extends LCEType {
     public static override conceptId = "primitive-type";
+    public static readonly typeId = "primitive";
 
-    /**
+        /**
      * @param name identifier of the primitive type
      */
     constructor(public name: string) {
-        super("primitive");
+        super(LCETypePrimitive.typeId);
     }
 }
 
@@ -29,13 +30,14 @@ export class LCETypePrimitive extends LCEType {
  */
 export class LCETypeDeclared extends LCEType {
     public static override conceptId = "declared-type";
+    public static readonly typeId = "declared";
 
     /**
      * @param fqn fully qualified name of a class/interface/type alias (only uses global FQN)
      * @param typeArguments list of type arguments provided for generics
      */
     constructor(public fqn: FQN, public typeArguments: LCEType[]) {
-        super("declared");
+        super(LCETypeDeclared.typeId);
     }
 }
 
@@ -44,12 +46,13 @@ export class LCETypeDeclared extends LCEType {
  */
 export class LCETypeUnion extends LCEType {
     public static override conceptId = "union-type";
+    public static readonly typeId = "union";
 
     /**
      * @param types constituents of the union type
      */
     constructor(public types: LCEType[]) {
-        super("union");
+        super(LCETypeUnion.typeId);
     }
 }
 
@@ -58,12 +61,13 @@ export class LCETypeUnion extends LCEType {
  */
 export class LCETypeIntersection extends LCEType {
     public static override conceptId = "intersection-type";
+    public static readonly typeId = "intersection";
 
     /**
      * @param types constituents of the intersection type
      */
     constructor(public types: LCEType[]) {
-        super("intersection");
+        super(LCETypeIntersection.typeId);
     }
 }
 
@@ -72,12 +76,13 @@ export class LCETypeIntersection extends LCEType {
  */
 export class LCETypeObject extends LCEType {
     public static override conceptId = "object-type";
+    public static readonly typeId = "object";
 
     /**
      * @param members members of the object type
      */
     constructor(public members: LCETypeObjectMember[]) {
-        super("object");
+        super(LCETypeObject.typeId);
     }
 }
 
@@ -106,6 +111,7 @@ export class LCETypeObjectMember extends LCEConcept {
  */
 export class LCETypeFunction extends LCEType {
     public static override conceptId = "function-type";
+    public static readonly typeId = "function";
 
     /**
      * @param returnType return type of the function
@@ -116,7 +122,7 @@ export class LCETypeFunction extends LCEType {
                 public parameters: LCETypeFunctionParameter[],
                 public async: boolean,
                 public typeParameters: LCETypeParameterDeclaration[]) {
-        super("function");
+        super(LCETypeFunction.typeId);
     }
 }
 
@@ -142,12 +148,13 @@ export class LCETypeFunctionParameter extends LCEConcept {
  */
 export class LCETypeParameterReference extends LCEType {
     public static override conceptId = "type-parameter";
+    public static readonly typeId = "type-parameter";
 
     /**
      * @param name name of the type parameter
      */
     constructor(public name: string) {
-        super("type-parameter");
+        super(LCETypeParameterReference.typeId);
     }
 }
 
@@ -156,12 +163,13 @@ export class LCETypeParameterReference extends LCEType {
  */
 export class LCETypeLiteral extends LCEType {
     public static override conceptId = "literal-type";
+    public static readonly typeId = "literal";
 
     /**
      * @param value content of the type literal
      */
     constructor(public value: string | number | boolean) {
-        super("literal");
+        super(LCETypeLiteral.typeId);
     }
 }
 
@@ -170,12 +178,13 @@ export class LCETypeLiteral extends LCEType {
  */
 export class LCETypeTuple extends LCEType {
     public static override conceptId = "tuple-type";
+    public static readonly typeId = "tuple";
 
     /**
      * @param types types of the tuple
      */
     constructor(public types: LCEType[]) {
-        super("tuple");
+        super(LCETypeTuple.typeId);
     }
 }
 
@@ -184,11 +193,12 @@ export class LCETypeTuple extends LCEType {
  */
 export class LCETypeNotIdentified extends LCEType {
     public static override conceptId = "not-identified-type";
+    public static readonly typeId = "not-identified";
 
     /**
      * @param identifier string representation of type that could not successfully parsed
      */
     constructor(public identifier: string) {
-        super("not-identified");
+        super(LCETypeNotIdentified.typeId);
     }
 }

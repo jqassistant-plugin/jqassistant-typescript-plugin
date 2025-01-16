@@ -18,7 +18,15 @@ import {
 } from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCETypeAliasDeclaration } from "../../../src/core/concepts/type-alias-declaration.concept";
-import { LCETypeFunctionParameter, LCETypeIntersection, LCETypePrimitive, LCETypeTuple, LCETypeUnion } from "../../../src/core/concepts/type.concept";
+import {
+    LCETypeDeclared,
+    LCETypeFunctionParameter,
+    LCETypeIntersection,
+    LCETypeLiteral,
+    LCETypePrimitive,
+    LCETypeTuple,
+    LCETypeUnion,
+} from "../../../src/core/concepts/type.concept";
 
 jest.setTimeout(30000);
 
@@ -31,8 +39,8 @@ describe("type alias declarations test", () => {
 
     beforeAll(async () => {
         const projects = await processProjects(projectRootPath);
-        if(projects.length !== 1) {
-            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        if (projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.");
         }
         result = projects[0].concepts;
 
@@ -115,7 +123,13 @@ describe("type alias declarations test", () => {
             expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tDeclaredClass', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tDeclaredClass',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'),
+            1,
+        );
     });
 
     test("type alias of interface", async () => {
@@ -131,7 +145,13 @@ describe("type alias declarations test", () => {
             expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tDeclaredInterface', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tDeclaredInterface',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+            1,
+        );
     });
 
     test("type alias of type alias", async () => {
@@ -147,8 +167,13 @@ describe("type alias declarations test", () => {
             expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tDeclaredTypeAlias', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'), 1);
-
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tDeclaredTypeAlias',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'),
+            1,
+        );
     });
 
     test("type alias of enum", async () => {
@@ -164,7 +189,13 @@ describe("type alias declarations test", () => {
             expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tDeclaredEnum', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tDeclaredEnum',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum'),
+            1,
+        );
     });
 
     test("type alias of class with type arguments", async () => {
@@ -198,7 +229,13 @@ describe("type alias declarations test", () => {
             expectDeclaredType(decl.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tDeclaredExternal', resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tDeclaredExternal',
+            resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'),
+            1,
+        );
     });
 
     test("type alias of union type", async () => {
@@ -212,14 +249,20 @@ describe("type alias declarations test", () => {
             expect(decl.typeParameters).toHaveLength(0);
 
             expect(decl.type).toBeDefined();
-            expect(decl.type.type).toBe("union");
+            expect(decl.type.type).toBe(LCETypeUnion.typeId);
             const unionTypes = (decl.type as LCETypeUnion).types;
             expect(unionTypes).toHaveLength(2);
             expectPrimitiveType(unionTypes[0], "string");
             expectDeclaredType(unionTypes[1], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tUnion', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tUnion',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+            1,
+        );
     });
 
     test("type alias of intersection type", async () => {
@@ -233,7 +276,7 @@ describe("type alias declarations test", () => {
             expect(decl.typeParameters).toHaveLength(0);
 
             expect(decl.type).toBeDefined();
-            expect(decl.type.type).toBe("intersection");
+            expect(decl.type.type).toBe(LCETypeIntersection.typeId);
             const intersectionTypes = (decl.type as LCETypeIntersection).types;
             expect(intersectionTypes).toHaveLength(2);
             const objectType = expectObjectType(intersectionTypes[0], 1);
@@ -241,7 +284,13 @@ describe("type alias declarations test", () => {
             expectDeclaredType(intersectionTypes[1], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tIntersection', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tIntersection',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'),
+            1,
+        );
     });
 
     test("type alias of object type", async () => {
@@ -269,7 +318,13 @@ describe("type alias declarations test", () => {
             expectFunctionParameter(methodType.parameters, 0, "px", false, "string");
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tObject', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tObject',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'),
+            1,
+        );
     });
 
     test("type alias of exported object type", async () => {
@@ -287,7 +342,13 @@ describe("type alias declarations test", () => {
             expectDeclaredType(memX.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tObjectExported', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tObjectExported',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'),
+            1,
+        );
     });
 
     test("type alias of function type", async () => {
@@ -317,7 +378,7 @@ describe("type alias declarations test", () => {
 
             expect(decl.typeParameters).toHaveLength(0);
 
-            expectLiteralType(decl.type, "literal");
+            expectLiteralType(decl.type, LCETypeLiteral.typeId);
         }
     });
 
@@ -332,7 +393,7 @@ describe("type alias declarations test", () => {
             expect(decl.typeParameters).toHaveLength(0);
 
             expect(decl.type).toBeDefined();
-            expect(decl.type.type).toBe("tuple");
+            expect(decl.type.type).toBe(LCETypeTuple.typeId);
             const types = (decl.type as LCETypeTuple).types;
             expect(types).toBeDefined();
             expect(types).toHaveLength(2);
@@ -352,7 +413,7 @@ describe("type alias declarations test", () => {
             expect(decl.typeParameters).toHaveLength(0);
 
             expect(decl.type).toBeDefined();
-            expect(decl.type.type).toBe("tuple");
+            expect(decl.type.type).toBe(LCETypeTuple.typeId);
             const types = (decl.type as LCETypeTuple).types;
             expect(types).toBeDefined();
             expect(types).toHaveLength(2);
@@ -381,7 +442,13 @@ describe("type alias declarations test", () => {
             expectTypeParameterReference(memValue.type, "V");
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tGeneric', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tGeneric',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'),
+            1,
+        );
     });
 
     test("type alias of template literal type", async () => {
@@ -395,12 +462,12 @@ describe("type alias declarations test", () => {
             expect(decl.typeParameters).toHaveLength(0);
 
             expect(decl.type).toBeDefined();
-            expect(decl.type.type).toBe("union");
+            expect(decl.type.type).toBe(LCETypeUnion.typeId);
             expect((decl.type as LCETypeUnion).types).toBeDefined();
             expect((decl.type as LCETypeUnion).types).toHaveLength(4);
             (decl.type as LCETypeUnion).types.forEach((t) => {
-                expect(t.type).toBe("literal");
-            })
+                expect(t.type).toBe(LCETypeLiteral.typeId);
+            });
         }
     });
 
@@ -418,15 +485,21 @@ describe("type alias declarations test", () => {
             expectObjectTypeMember(oType, "a", false, false, "string");
             const memR = expectObjectTypeMember(oType, "r", true, false);
             expect(memR.type).toBeDefined();
-            expect(memR.type.type).toBe("union");
+            expect(memR.type.type).toBe(LCETypeUnion.typeId);
             expect((memR.type as LCETypeUnion).types).toBeDefined();
             expect((memR.type as LCETypeUnion).types).toHaveLength(2);
             const memRTypes = (memR.type as LCETypeUnion).types;
-            expect(memRTypes.find(t => t.type === "primitive" && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
-            const memRDeclType = memRTypes.find(t => t.type === "declared");
+            expect(memRTypes.find((t) => t.type === LCETypePrimitive.typeId && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
+            const memRDeclType = memRTypes.find((t) => t.type === LCETypeDeclared.typeId);
             expectDeclaredType(memRDeclType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".tRecursive'));
         }
 
-        expectDependency(projectRootPath, dependencies, '"./src/main.ts".tObject', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'), 1);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".tObject',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'),
+            1,
+        );
     });
 });

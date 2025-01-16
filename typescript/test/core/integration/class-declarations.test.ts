@@ -18,7 +18,7 @@ import {
 } from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCEClassDeclaration } from "../../../src/core/concepts/class-declaration.concept";
-import { LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
+import { LCETypeDeclared, LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
 
 jest.setTimeout(30000);
 
@@ -32,8 +32,8 @@ describe("class declarations test", () => {
 
     beforeAll(async () => {
         const projects = await processProjects(projectRootPath);
-        if(projects.length !== 1) {
-            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.")
+        if (projects.length !== 1) {
+            throw new Error("Processed " + projects.length + " projects. Should be 1 instead.");
         }
         result = projects[0].concepts;
 
@@ -136,7 +136,7 @@ describe("class declarations test", () => {
             expect(decl.implementsInterfaces).toHaveLength(0);
 
             expect(decl.constr).toBeDefined();
-            if(decl.constr) {
+            if (decl.constr) {
                 expect(decl.constr.fqn.localFqn).toBe('"./src/main.ts".cConstructor.constructor');
                 expect(decl.constr.parameters).toHaveLength(2);
                 expectFunctionParameter(decl.constr.parameters, 0, "x", false, "number");
@@ -188,7 +188,17 @@ describe("class declarations test", () => {
             expectFunctionParameter(methodA.parameters, 0, "p1", false, "number");
             expectFunctionParameter(methodA.parameters, 1, "p2", false, "string");
             expect(methodA.typeParameters).toHaveLength(0);
-            const methodAsync = expectMethod(decl.methods, '"./src/main.ts".cMethods.mAsync', "mAsync", "public", false, false, false, undefined, true);
+            const methodAsync = expectMethod(
+                decl.methods,
+                '"./src/main.ts".cMethods.mAsync',
+                "mAsync",
+                "public",
+                false,
+                false,
+                false,
+                undefined,
+                true,
+            );
             const declaredType = expectDeclaredType(methodAsync.returnType, "Promise", false);
             expect(declaredType.typeArguments).toHaveLength(1);
             expectPrimitiveType(declaredType.typeArguments[0], "number");
@@ -248,7 +258,7 @@ describe("class declarations test", () => {
             expect(accY.setter!.override).toBe(false);
             expect(accY.setter!.abstract).toBe(false);
             expect(accY.setter!.isStatic).toBe(false);
-            
+
             expect(decl.decorators).toHaveLength(0);
         }
     });
@@ -302,16 +312,38 @@ describe("class declarations test", () => {
             expect(decl.implementsInterfaces).toHaveLength(0);
 
             expect(decl.constr).toBeDefined();
-            if(decl.constr) {
+            if (decl.constr) {
                 expect(decl.constr.fqn.localFqn).toBe('"./src/main.ts".cParameterProperties.constructor');
                 expect(decl.constr.parameters).toHaveLength(3);
                 expectFunctionParameter(decl.constr.parameters, 0, "x", false, "number");
                 expectFunctionParameter(decl.constr.parameters, 1, "other", false, "string");
                 expectFunctionParameter(decl.constr.parameters, 2, "y", false, "number");
                 expect(decl.constr.parameterProperties).toHaveLength(2);
-                expectProperty(decl.constr.parameterProperties, '"./src/main.ts".cParameterProperties.x', "x", false, "public", false, false, false, false, "number");
+                expectProperty(
+                    decl.constr.parameterProperties,
+                    '"./src/main.ts".cParameterProperties.x',
+                    "x",
+                    false,
+                    "public",
+                    false,
+                    false,
+                    false,
+                    false,
+                    "number",
+                );
                 expect(decl.constr.parameterProperties[0]!.index).toBe(0);
-                expectProperty(decl.constr.parameterProperties, '"./src/main.ts".cParameterProperties.y', "y", false, "public", false, false, false, false, "number");
+                expectProperty(
+                    decl.constr.parameterProperties,
+                    '"./src/main.ts".cParameterProperties.y',
+                    "y",
+                    false,
+                    "public",
+                    false,
+                    false,
+                    false,
+                    false,
+                    "number",
+                );
                 expect(decl.constr.parameterProperties[1]!.index).toBe(2);
             }
 
@@ -369,7 +401,7 @@ describe("class declarations test", () => {
             expect(decl.implementsInterfaces).toHaveLength(0);
 
             expect(decl.constr).toBeDefined();
-            if(decl.constr) {
+            if (decl.constr) {
                 expect(decl.constr.fqn.localFqn).toBe('"./src/main.ts".cExported.constructor');
                 expect(decl.constr.parameters).toHaveLength(0);
                 expect(decl.constr.parameterProperties).toHaveLength(0);
@@ -422,15 +454,44 @@ describe("class declarations test", () => {
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(2);
             expectProperty(decl.properties, '"./src/main.ts".cAbstract.abstractA', "abstractA", false, "public", false, false, true, false, "number");
-            expectProperty(decl.properties, '"./src/main.ts".cAbstract.nonAbstractA', "nonAbstractA", false, "public", false, false, false, false, "number");
+            expectProperty(
+                decl.properties,
+                '"./src/main.ts".cAbstract.nonAbstractA',
+                "nonAbstractA",
+                false,
+                "public",
+                false,
+                false,
+                false,
+                false,
+                "number",
+            );
 
             expect(decl.methods).toHaveLength(2);
-            const abstractMethod = expectMethod(decl.methods, '"./src/main.ts".cAbstract.abstractSum', "abstractSum", "public", false, true, false, "number");
+            const abstractMethod = expectMethod(
+                decl.methods,
+                '"./src/main.ts".cAbstract.abstractSum',
+                "abstractSum",
+                "public",
+                false,
+                true,
+                false,
+                "number",
+            );
             expect(abstractMethod.parameters).toHaveLength(2);
             expectFunctionParameter(abstractMethod.parameters, 0, "x", false, "number");
             expectFunctionParameter(abstractMethod.parameters, 1, "y", false, "number");
             expect(abstractMethod.typeParameters).toHaveLength(0);
-            const nonAbstractMethod = expectMethod(decl.methods, '"./src/main.ts".cAbstract.nonAbstractSum', "nonAbstractSum", "public", false, false, false, "number");
+            const nonAbstractMethod = expectMethod(
+                decl.methods,
+                '"./src/main.ts".cAbstract.nonAbstractSum',
+                "nonAbstractSum",
+                "public",
+                false,
+                false,
+                false,
+                "number",
+            );
             expect(nonAbstractMethod.parameters).toHaveLength(2);
             expectFunctionParameter(nonAbstractMethod.parameters, 0, "x", false, "number");
             expectFunctionParameter(nonAbstractMethod.parameters, 1, "y", false, "number");
@@ -463,8 +524,14 @@ describe("class declarations test", () => {
 
             expect(decl.typeParameters).toHaveLength(0);
 
-            expectDeclaredType(decl.extendsClass, resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomClass'));
-            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cExtends', resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomClass'), 1);
+            expectDeclaredType(decl.extendsClass, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'));
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".cExtends',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'),
+                1,
+            );
             expect(decl.implementsInterfaces).toHaveLength(0);
 
             expect(decl.constr).toBeUndefined();
@@ -492,7 +559,13 @@ describe("class declarations test", () => {
             expect(decl.extendsClass).toBeUndefined();
             expect(decl.implementsInterfaces).toHaveLength(1);
             expectDeclaredType(decl.implementsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
-            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cImplements', resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".cImplements',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+                1,
+            );
 
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(2);
@@ -520,9 +593,21 @@ describe("class declarations test", () => {
             expect(decl.extendsClass).toBeUndefined();
             expect(decl.implementsInterfaces).toHaveLength(2);
             expectDeclaredType(decl.implementsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
-            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cImplementsMulti', resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomInterface'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".cImplementsMulti',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+                1,
+            );
             expectDeclaredType(decl.implementsInterfaces[1], resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface2'));
-            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cImplementsMulti', resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomInterface2'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".cImplementsMulti',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface2'),
+                1,
+            );
 
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(3);
@@ -555,14 +640,26 @@ describe("class declarations test", () => {
             expect(decl.properties).toHaveLength(1);
             const prop = expectProperty(decl.properties, '"./src/main.ts".cRef.x', "x", false, "public", false, false, false, false);
             expectDeclaredType(prop.type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
-            expectDependency(projectRootPath, dependencies, '"./src/main.ts".cRef.x', resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomInterface'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".cRef.x',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+                1,
+            );
 
             expect(decl.methods).toHaveLength(1);
             const method = expectMethod(decl.methods, '"./src/main.ts".cRef.method', "method", "public", false, false, false);
             expectDeclaredType(method.returnType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'));
             expect(method.parameters).toHaveLength(0);
             expect(method.typeParameters).toHaveLength(0);
-            expectDependency(projectRootPath, dependencies, '"./src/main.ts".cRef.method', resolveGlobalFqn(projectRootPath,'"./src/main.ts".CustomClass'), 2);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".cRef.method',
+                resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomClass'),
+                2,
+            );
 
             expect(decl.accessorProperties).toHaveLength(0);
 
@@ -582,7 +679,13 @@ describe("class declarations test", () => {
             expect(decl.typeParameters).toHaveLength(0);
 
             expectDeclaredType(decl.extendsClass, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'));
-            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cExtendsExt', resolveGlobalFqn(projectRootPath,'"./src/secondary.ts".ExternalCustomClass'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".cExtendsExt',
+                resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'),
+                1,
+            );
             expect(decl.implementsInterfaces).toHaveLength(0);
 
             expect(decl.constr).toBeUndefined();
@@ -610,7 +713,13 @@ describe("class declarations test", () => {
             expect(decl.extendsClass).toBeUndefined();
             expect(decl.implementsInterfaces).toHaveLength(1);
             expectDeclaredType(decl.implementsInterfaces[0], resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'));
-            expectDependency(projectRootPath, dependencies,'"./src/main.ts".cImplementsExt', resolveGlobalFqn(projectRootPath,'"./src/secondary.ts".ExternalCustomInterface'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".cImplementsExt',
+                resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'),
+                1,
+            );
 
             expect(decl.constr).toBeUndefined();
             expect(decl.properties).toHaveLength(2);
@@ -642,14 +751,26 @@ describe("class declarations test", () => {
             expect(decl.properties).toHaveLength(1);
             const prop = expectProperty(decl.properties, '"./src/main.ts".cRefExt.x', "x", false, "public", false, false, false, false);
             expectDeclaredType(prop.type, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'));
-            expectDependency(projectRootPath, dependencies, '"./src/main.ts".cRefExt.x', resolveGlobalFqn(projectRootPath,'"./src/secondary.ts".ExternalCustomInterface'), 1);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".cRefExt.x',
+                resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomInterface'),
+                1,
+            );
 
             expect(decl.methods).toHaveLength(1);
             const method = expectMethod(decl.methods, '"./src/main.ts".cRefExt.method', "method", "public", false, false, false);
             expectDeclaredType(method.returnType, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'));
             expect(method.parameters).toHaveLength(0);
             expect(method.typeParameters).toHaveLength(0);
-            expectDependency(projectRootPath, dependencies, '"./src/main.ts".cRefExt.method', resolveGlobalFqn(projectRootPath,'"./src/secondary.ts".ExternalCustomClass'), 2);
+            expectDependency(
+                projectRootPath,
+                dependencies,
+                '"./src/main.ts".cRefExt.method',
+                resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomClass'),
+                2,
+            );
 
             expect(decl.accessorProperties).toHaveLength(0);
 
@@ -691,7 +812,7 @@ describe("class declarations test", () => {
             expectTypeParameterReference(methodNested.parameters[1]!.type, "U");
 
             expect(methodNested.typeParameters).toHaveLength(1);
-            expectTypeParameterDeclaration(methodNested.typeParameters, 0,"U");
+            expectTypeParameterDeclaration(methodNested.typeParameters, 0, "U");
 
             expect(decl.accessorProperties).toHaveLength(0);
 
@@ -743,12 +864,12 @@ describe("class declarations test", () => {
             expectProperty(decl.properties, '"./src/main.ts".cRecursive.a', "a", false, "public", false, false, false, false, "string");
             const propR = expectProperty(decl.properties, '"./src/main.ts".cRecursive.r', "r", true, "public", false, false, false, false);
             expect(propR.type).toBeDefined();
-            expect(propR.type.type).toBe("union");
+            expect(propR.type.type).toBe(LCETypeUnion.typeId);
             expect((propR.type as LCETypeUnion).types).toBeDefined();
             expect((propR.type as LCETypeUnion).types).toHaveLength(2);
             const propRTypes = (propR.type as LCETypeUnion).types;
-            expect(propRTypes.find(t => t.type === "primitive" && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
-            const propRDeclType = propRTypes.find(t => t.type === "declared");
+            expect(propRTypes.find((t) => t.type === LCETypePrimitive.typeId && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
+            const propRDeclType = propRTypes.find((t) => t.type === LCETypeDeclared.typeId);
             expectDeclaredType(propRDeclType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".cRecursive'));
 
             expect(decl.methods).toHaveLength(0);

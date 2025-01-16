@@ -7,6 +7,8 @@ import {
     expectDependency,
     expectFunctionParameter,
     expectMethod,
+    expectObjectType,
+    expectObjectTypeMember,
     expectOptionalPrimitiveType,
     expectPrimitiveType,
     expectProperty,
@@ -17,7 +19,7 @@ import {
 } from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCEInterfaceDeclaration } from "../../../src/core/concepts/interface-declaration.concept";
-import { LCETypeNotIdentified, LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
+import { LCETypeDeclared, LCETypeNotIdentified, LCETypePrimitive, LCETypeUnion } from "../../../src/core/concepts/type.concept";
 
 jest.setTimeout(30000);
 
@@ -479,12 +481,12 @@ describe("interface declarations test", () => {
                 undefined,
             );
             expect(propR.type).toBeDefined();
-            expect(propR.type.type).toBe("union");
+            expect(propR.type.type).toBe(LCETypeUnion.typeId);
             expect((propR.type as LCETypeUnion).types).toBeDefined();
             expect((propR.type as LCETypeUnion).types).toHaveLength(2);
             const propRTypes = (propR.type as LCETypeUnion).types;
-            expect(propRTypes.find((t) => t.type === "primitive" && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
-            const propRDeclType = propRTypes.find((t) => t.type === "declared");
+            expect(propRTypes.find((t) => t.type === LCETypePrimitive.typeId && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
+            const propRDeclType = propRTypes.find((t) => t.type === LCETypeDeclared.typeId);
             expectDeclaredType(propRDeclType, resolveGlobalFqn(projectRootPath, '"./src/main.ts".iRecursive'));
 
             expect(decl.methods).toHaveLength(0);
@@ -518,7 +520,7 @@ describe("interface declarations test", () => {
                 undefined,
             );
             expect(propA.type).toBeDefined();
-            expect(propA.type.type).toBe("not-identified");
+            expect(propA.type.type).toBe(LCETypeNotIdentified.typeId);
             expect((propA.type as LCETypeNotIdentified).identifier).toBe("Type contains indexed access type (potentially recursive)");
 
             // The following would represent a correct check with full type tracing: (TODO: implement fine-grained indexed access type resolution)
@@ -530,12 +532,12 @@ describe("interface declarations test", () => {
             // expectObjectTypeMember(propAObjTypeA2MemberObjType, "a22", false, false, "number");
             // const propAObjTypeAbMember = expectObjectTypeMember(propAObjType, "ab", true, false);
             // expect(propAObjTypeAbMember.type).toBeDefined();
-            // expect(propAObjTypeAbMember.type.type).toBe("union");
+            // expect(propAObjTypeAbMember.type.type).toBe(LCETypeUnion.typeId);
             // expect((propAObjTypeAbMember.type as LCETypeUnion).types).toBeDefined();
             // const propAObjTypeAbMemberTypes = (propAObjTypeAbMember.type as LCETypeUnion).types;
             // expect(propAObjTypeAbMemberTypes).toHaveLength(2);
-            // expect(propAObjTypeAbMemberTypes.find((t) => t.type === "primitive" && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
-            // const propAObjTypeAbMemberTypesIndexedAccessType = propAObjTypeAbMemberTypes.find((t) => t.type === "not-identified");
+            // expect(propAObjTypeAbMemberTypes.find((t) => t.type === LCETypePrimitive.typeId && (t as LCETypePrimitive).name === "undefined")).toBeDefined();
+            // const propAObjTypeAbMemberTypesIndexedAccessType = propAObjTypeAbMemberTypes.find((t) => t.type === LCETypeNotIdentified.typeId);
             // expect(propAObjTypeAbMemberTypesIndexedAccessType).toBeDefined();
             // expect((propAObjTypeAbMemberTypesIndexedAccessType as LCETypeNotIdentified).identifier).toBe(
             //     "Indexed Access Type (potentially recursive)",
@@ -553,7 +555,7 @@ describe("interface declarations test", () => {
                 undefined,
             );
             expect(propB.type).toBeDefined();
-            expect(propB.type.type).toBe("not-identified");
+            expect(propB.type.type).toBe(LCETypeNotIdentified.typeId);
             expect((propB.type as LCETypeNotIdentified).identifier).toBe("Type contains indexed access type (potentially recursive)");
 
             // The following would represent a correct check with full type tracing:
@@ -562,7 +564,7 @@ describe("interface declarations test", () => {
             // const propBObjTypeBaMember = expectObjectTypeMember(propBObjType, "ba", false, false);
             // const propBObjTypeBaMemberDeclType = expectDeclaredType(propBObjTypeBaMember.type, "Array", false);
             // expect(propBObjTypeBaMemberDeclType.typeArguments).toHaveLength(1);
-            // expect(propBObjTypeBaMemberDeclType.typeArguments[0].type).toBe("not-identified");
+            // expect(propBObjTypeBaMemberDeclType.typeArguments[0].type).toBe(LCETypeNotIdentified.typeId);
             // expect((propBObjTypeBaMemberDeclType.typeArguments[0] as LCETypeNotIdentified).identifier).toBe(
             //     "Indexed Access Type (potentially recursive)",
             // );
@@ -578,8 +580,11 @@ describe("interface declarations test", () => {
                 undefined,
                 undefined,
             );
-            expect(propC.type).toBeDefined();
-            expect(propC.type.type).toBe("object");
+            const propCObjType = expectObjectType(propC.type, 1);
+            const propCObjTypeCiMember = expectObjectTypeMember(propCObjType, "ci");
+            const propCiObjType = expectObjectType(propCObjTypeCiMember.type, 2);
+            expectObjectTypeMember(propCiObjType, "ci1", false, false, "boolean");
+            expectObjectTypeMember(propCiObjType, "ci2", false, false, "number");
 
             expect(decl.methods).toHaveLength(0);
             expect(decl.accessorProperties).toHaveLength(0);
