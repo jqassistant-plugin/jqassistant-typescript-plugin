@@ -463,7 +463,7 @@ describe("variable declarations test", () => {
 
                 expect(decl.initValue.type).toBeDefined();
                 expect(decl.initValue.type.type).toBe(LCETypeNotIdentified.typeId);
-                expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe("class expression");
+                expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe(LCETypeNotIdentified.CLASS_EXPRESSION.identifier);
             }
         }
     });
@@ -555,7 +555,7 @@ describe("variable declarations test", () => {
 
                 expect(decl.initValue.type).toBeDefined();
                 expect(decl.initValue.type.type).toBe(LCETypeNotIdentified.typeId);
-                expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe("complex");
+                expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe(LCETypeNotIdentified.COMPLEX_VALUE.identifier);
             }
         }
     });
@@ -736,7 +736,7 @@ describe("variable declarations test", () => {
 
                 expect(decl.initValue.type).toBeDefined();
                 expect(decl.initValue.type.type).toBe(LCETypeNotIdentified.typeId);
-                expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe("complex");
+                expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe(LCETypeNotIdentified.COMPLEX_VALUE.identifier);
             }
         }
 
@@ -874,7 +874,7 @@ describe("variable declarations test", () => {
 
                 expect(decl.initValue.type).toBeDefined();
                 expect(decl.initValue.type.type).toBe(LCETypeNotIdentified.typeId);
-                expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe("complex");
+                expect((decl.initValue.type as LCETypeNotIdentified).identifier).toBe(LCETypeNotIdentified.COMPLEX_VALUE.identifier);
             }
         }
 

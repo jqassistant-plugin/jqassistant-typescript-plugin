@@ -129,7 +129,7 @@ export function parseMethodType(
                     )
                 );
             }
-            return new LCETypeFunction(new LCETypeNotIdentified("constructor"), parameters, false, []);
+            return new LCETypeFunction(LCETypeNotIdentified.CONSTRUCTOR, parameters, false, []);
         } else if (esMethodDecl.kind === "get") {
             // getter
             return new LCETypeFunction(parseType(processingContext, methodType, methodNode), [], false, []);
@@ -140,7 +140,7 @@ export function parseMethodType(
             const paramNode = globalContext.services.esTreeNodeToTSNodeMap.get(param);
             const paramType = tc.getTypeAtLocation(paramNode);
             return new LCETypeFunction(
-                new LCETypeNotIdentified("setter"),
+                LCETypeNotIdentified.SETTER,
                 [new LCETypeFunctionParameter(0, paramName, false, parseType(processingContext, paramType, methodNode))],
                 false,
                 []
@@ -337,7 +337,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
         ) {
             // TODO: handle recursive types like `_DeepPartialObject`
             if (type.aliasSymbol?.getName() === "_DeepPartialObject") {
-                return new LCETypeNotIdentified("DeepPartialObject is not supported");
+                return LCETypeNotIdentified.DEEP_PARTIAL_OBJECT;
             }
 
             // anonymous type

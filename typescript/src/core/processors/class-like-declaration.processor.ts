@@ -320,7 +320,7 @@ export class PropertyProcessor extends Processor {
             // indexed access type check to prevent infinite recursion on native type parsing
             const isIndexedAccessType = getAndDeleteChildConcepts<LCEIndexAccessTypeAnnotation>(PropertyTraverser.TYPE_ANNOTATION_PROP, LCEIndexAccessTypeAnnotation.conceptId, childConcepts).length > 0;
             const type = isIndexedAccessType ?
-                new LCETypeNotIdentified("Type contains indexed access type (potentially recursive)") :
+                LCETypeNotIdentified.INDEXED_ACCESS_TYPE :
                 parseClassPropertyType({ globalContext, localContexts, node, ...unusedProcessingContext }, node.key);
 
             return mergeConceptMaps(

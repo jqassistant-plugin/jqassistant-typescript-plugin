@@ -171,7 +171,7 @@ export class LCEValueClass extends LCEValue {
     public static readonly valueTypeId = "class";
 
     constructor() {
-        super(LCEValueClass.valueTypeId, new LCETypeNotIdentified("class expression"));
+        super(LCEValueClass.valueTypeId, LCETypeNotIdentified.CLASS_EXPRESSION);
     }
 }
 
@@ -186,7 +186,7 @@ export class LCEValueComplex extends LCEValue {
      * @param expression string representation of the value's expression
      */
     constructor(public expression: string) {
-        super(LCEValueComplex.valueTypeId, new LCETypeNotIdentified("complex"));
+        super(LCEValueComplex.valueTypeId, LCETypeNotIdentified.COMPLEX_VALUE);
     }
 }
 

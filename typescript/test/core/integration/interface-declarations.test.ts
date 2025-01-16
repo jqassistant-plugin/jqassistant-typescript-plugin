@@ -521,7 +521,7 @@ describe("interface declarations test", () => {
             );
             expect(propA.type).toBeDefined();
             expect(propA.type.type).toBe(LCETypeNotIdentified.typeId);
-            expect((propA.type as LCETypeNotIdentified).identifier).toBe("Type contains indexed access type (potentially recursive)");
+            expect((propA.type as LCETypeNotIdentified).identifier).toBe(LCETypeNotIdentified.INDEXED_ACCESS_TYPE.identifier);
 
             // The following would represent a correct check with full type tracing: (TODO: implement fine-grained indexed access type resolution)
             // const propAObjType = expectObjectType(propA.type, 3);
@@ -556,7 +556,7 @@ describe("interface declarations test", () => {
             );
             expect(propB.type).toBeDefined();
             expect(propB.type.type).toBe(LCETypeNotIdentified.typeId);
-            expect((propB.type as LCETypeNotIdentified).identifier).toBe("Type contains indexed access type (potentially recursive)");
+            expect((propB.type as LCETypeNotIdentified).identifier).toBe(LCETypeNotIdentified.INDEXED_ACCESS_TYPE.identifier);
 
             // The following would represent a correct check with full type tracing:
             // const propBObjType = expectObjectType(propB.type, 3);

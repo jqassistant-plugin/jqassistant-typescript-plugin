@@ -195,8 +195,15 @@ export class LCETypeNotIdentified extends LCEType {
     public static override conceptId = "not-identified-type";
     public static readonly typeId = "not-identified";
 
+    public static readonly COMPLEX_VALUE = new this("Complex Value");
+    public static readonly CLASS_EXPRESSION = new this("Class Expression");
+    public static readonly CONSTRUCTOR = new this("Constructor");
+    public static readonly SETTER = new this("Setter");
+    public static readonly INDEXED_ACCESS_TYPE = new this("Type containing a (potentially recursive) indexed access type");
+    public static readonly DEEP_PARTIAL_OBJECT = new this("Type containing DeepPartialObject (not supported)");
+
     /**
-     * @param identifier string representation of type that could not successfully parsed
+     * @param identifier string representation of type that could not successfully be parsed
      */
     constructor(public identifier: string) {
         super(LCETypeNotIdentified.typeId);
