@@ -47,9 +47,13 @@ This plugin is based on the [LCE Architecture](https://jqassistant-plugin.github
 - [[Codebase Layout]]
 - [[Extensions]]
 
-**LCE:**
+**Base LCE Architecture Implementation:**
 - [[Concepts]]
 - [[Traversers]]
 - [[Processors]]
 - [[Post-Processors]]
+- [[Local Contexts]]
 - [[Utilities]]
+
+**Extraction Strategies:**
+- *[[Extraction Strategy - Overview|Overview]]*

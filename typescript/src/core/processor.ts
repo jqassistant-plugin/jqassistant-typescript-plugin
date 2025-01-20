@@ -12,7 +12,7 @@ export type ProcessorMap = Map<AST_NODE_TYPES, Processor[]>;
  */
 export abstract class Processor {
     /**
-     * defines on what nodes and in which context the processor is executed
+     * defines on what nodes and in which context the processor will be executed
      */
     public abstract executionCondition: ExecutionCondition;
 

@@ -16,4 +16,4 @@ aliases:
 
 **`ConceptMap`:**
 - [Concept Maps](https://jqassistant-plugin.github.io/jqassistant-lce-docs/architecture/Concept-Map) are realized in their more complex form, integrating parent property names into their index structure
-- use `mergeConceptMaps`, `unifyConceptMap`, `singleEntryConceptMap`, `createConceptMap`, and `getAndCastConcepts` utility functions for concise usage of `ConceptMap` instances
+- use `mergeConceptMaps`, `unifyConceptMap`, `singleEntryConceptMap`, `createConceptMap`, and `getAndCastConcepts` utility functions for the concise management of `ConceptMap` instances
