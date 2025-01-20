@@ -9,13 +9,9 @@ import { LCEClassDeclaration } from "../../core/concepts/class-declaration.conce
 import { LCEVariableDeclaration } from "../../core/concepts/variable-declaration.concept";
 import { LCEFunctionDeclaration } from "../../core/concepts/function-declaration.concept";
 import { VariableDeclarationProcessor } from "../../core/processors/variable-declaration.processor";
+import { ReactContextKeys } from "../context.keys";
 
 export class JSXDependencyContextProcessor extends Processor {
-    /**
-     * represents a list of JSX tags that is used in some environment, e.g. inside the code of a function
-     */
-    public static readonly JSX_DEPENDENCY_CONTEXT = "jsx-dependency-context";
-
     public static readonly JSX_DEPENDENCY_METADATA: "jsx-dependencies";
 
     public executionCondition: ExecutionCondition = new ExecutionCondition(
@@ -34,13 +30,11 @@ export class JSXDependencyContextProcessor extends Processor {
     );
 
     public override preChildrenProcessing(processingContext: ProcessingContext) {
-        processingContext.localContexts.currentContexts.set(JSXDependencyContextProcessor.JSX_DEPENDENCY_CONTEXT, new Array<LCEJSXDependency>());
+        processingContext.localContexts.currentContexts.set(ReactContextKeys.JSX_DEPENDENCIES, new Array<LCEJSXDependency>());
     }
 
     public override postChildrenProcessing({ localContexts, metadataAssignments }: ProcessingContext): ConceptMap {
-        const jsxContext: LCEJSXDependency[] = (
-            localContexts.getNextContext(JSXDependencyContextProcessor.JSX_DEPENDENCY_CONTEXT) as [LCEJSXDependency[], number]
-        )[0];
+        const jsxContext: LCEJSXDependency[] = (localContexts.getNextContext(ReactContextKeys.JSX_DEPENDENCIES) as [LCEJSXDependency[], number])[0];
 
         const aggregatedDependencies = new Map<string, LCEJSXDependency>();
         for (const dep of jsxContext) {
@@ -72,15 +66,15 @@ export class JSXDependencyProcessor extends Processor {
             let name = "";
 
             // try to determine name of the tag, abort processing, if not possible
-            if(node.name.type === AST_NODE_TYPES.JSXIdentifier) {
+            if (node.name.type === AST_NODE_TYPES.JSXIdentifier) {
                 name = node.name.name;
             } else if (node.name.type === AST_NODE_TYPES.JSXMemberExpression) {
                 let depth = 0;
                 name = node.name.property.name;
                 let currentExpression = node.name.object;
-                while(currentExpression.type === AST_NODE_TYPES.JSXMemberExpression) {
-                    if(depth > 20) {
-                        console.log("ERROR: Could not resolve JSX member expression:")
+                while (currentExpression.type === AST_NODE_TYPES.JSXMemberExpression) {
+                    if (depth > 20) {
+                        console.log("ERROR: Could not resolve JSX member expression:");
                         console.log(name);
                         return new Map();
                     }
@@ -88,7 +82,7 @@ export class JSXDependencyProcessor extends Processor {
                     currentExpression = currentExpression.object;
                     depth++;
                 }
-                if(currentExpression.type === AST_NODE_TYPES.JSXIdentifier) {
+                if (currentExpression.type === AST_NODE_TYPES.JSXIdentifier) {
                     name = currentExpression.name + "." + name;
                 } else {
                     name = currentExpression.namespace.name + "." + name;
@@ -98,17 +92,16 @@ export class JSXDependencyProcessor extends Processor {
             }
 
             const dep = new LCEJSXDependency(new FQN(name), name, 1);
-            if(!STANDARD_HTML_ELEMENTS.includes(name)) {
+            if (!STANDARD_HTML_ELEMENTS.includes(name)) {
                 // Custom Element: try to resolve reference and register dependency
                 DependencyResolutionProcessor.scheduleFqnResolution(localContexts, name, dep);
                 DependencyResolutionProcessor.registerDependency(localContexts, name);
             }
 
-            const jsxDependencyContext = (localContexts.getNextContext(JSXDependencyContextProcessor.JSX_DEPENDENCY_CONTEXT) as [LCEJSXDependency[], number]);
-            if(jsxDependencyContext) {
+            const jsxDependencyContext = localContexts.getNextContext(ReactContextKeys.JSX_DEPENDENCIES) as [LCEJSXDependency[], number];
+            if (jsxDependencyContext) {
                 jsxDependencyContext[0].push(dep);
             }
-
         }
         return new Map();
     }
