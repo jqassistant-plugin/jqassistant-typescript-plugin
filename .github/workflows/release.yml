@@ -82,5 +82,5 @@
               npm version ${{ github.event.inputs.developmentVersion }} --no-git-tag-version
               git config --global user.name "${{ github.actor }}"
               git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-              git commit -m "Updated package.json to development version"
+              git commit -a -m "Updated package.json to development version"
               git push
