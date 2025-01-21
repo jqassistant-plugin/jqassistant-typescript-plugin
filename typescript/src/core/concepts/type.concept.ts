@@ -201,6 +201,7 @@ export class LCETypeNotIdentified extends LCEType {
     public static readonly SETTER = new this("Setter");
     public static readonly INDEXED_ACCESS_TYPE = new this("Type containing a (potentially recursive) indexed access type");
     public static readonly DEEP_PARTIAL_OBJECT = new this("Type containing DeepPartialObject (not supported)");
+    public static readonly RESOLUTION_LIMIT = new this("Type that is beyond the set type resolution depth");
 
     /**
      * @param identifier string representation of type that could not successfully be parsed

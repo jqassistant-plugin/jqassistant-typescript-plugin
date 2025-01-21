@@ -55,6 +55,12 @@ import { NodeUtils } from "../utils/node.utils";
 import path from "path";
 import { FileUtils } from "../utils/file.utils";
 
+let MAX_TYPE_RESOLUTION_DEPTH = 10;
+
+export function setMaxTypeResolutionDepth(maxDepth: number) {
+    MAX_TYPE_RESOLUTION_DEPTH = maxDepth;
+}
+
 /**
  * Returns the type for a given class property (with a non-computed name)
  * @param esProperty property name node provided in ESTree
@@ -301,7 +307,13 @@ export function parseESNodeType(processingContext: ProcessingContext, esNode: ES
     return result;
 }
 
-function parseType(processingContext: ProcessingContext, type: Type, node: Node, excludedFQN?: string, ignoreDependencies = false): LCEType {
+function parseType(processingContext: ProcessingContext, type: Type, node: Node, excludedFQN?: string, ignoreDependencies = false, typeResolutionDepth = 0): LCEType {
+
+    // cut off type resolution at a certain depth to prevent graph clutter and potential infinite recursion
+    if(typeResolutionDepth > MAX_TYPE_RESOLUTION_DEPTH) {
+        return LCETypeNotIdentified.RESOLUTION_LIMIT;
+    }
+
     const globalContext = processingContext.globalContext;
     const tc = globalContext.typeChecker;
     try {
@@ -341,7 +353,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
             }
 
             // anonymous type
-            return parseAnonymousType(processingContext, type, node, symbol, excludedFQN, ignoreDependencies);
+            return parseAnonymousType(processingContext, type, node, symbol, excludedFQN, ignoreDependencies, typeResolutionDepth);
         }
 
         if (type.isTypeParameter()) {
@@ -413,7 +425,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
 
             if (normalizedFqn.globalFqn === excludedFQN) {
                 // if declared type would reference excluded fqn (e.g. variable name), treat as anonymous type
-                return parseAnonymousType(processingContext, type, node, symbol, excludedFQN, ignoreDependencies);
+                return parseAnonymousType(processingContext, type, node, symbol, excludedFQN, ignoreDependencies, typeResolutionDepth);
             }
 
             const typeArguments: LCEType[] = [];
@@ -421,9 +433,9 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
                 const ta = tc.getTypeArguments(type as TypeReference)[i];
                 if ("typeArguments" in node && node.typeArguments) {
                     // if type argument child node is available, pass it on
-                    typeArguments.push(parseType(processingContext, ta, (node.typeArguments as Node[]).at(i) ?? node, excludedFQN, ignoreDependencies))
+                    typeArguments.push(parseType(processingContext, ta, (node.typeArguments as Node[]).at(i) ?? node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1))
                 } else {
-                    typeArguments.push(parseType(processingContext, ta, node, excludedFQN, ignoreDependencies));
+                    typeArguments.push(parseType(processingContext, ta, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1));
                 }
             }
 
@@ -451,7 +463,8 @@ function parseAnonymousType(
     node: Node,
     symbol?: Symbol,
     excludedFQN?: string,
-    ignoreDependencies = false
+    ignoreDependencies = false,
+    typeResolutionDepth = 0
 ): LCEType {
     const globalContext = processingContext.globalContext;
     const tc = globalContext.typeChecker;
@@ -459,15 +472,15 @@ function parseAnonymousType(
     // complex anonymous type
     if (type.isUnion()) {
         // union type
-        return new LCETypeUnion(type.types.map((t) => parseType(processingContext, t, node, excludedFQN, ignoreDependencies)));
+        return new LCETypeUnion(type.types.map((t) => parseType(processingContext, t, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1)));
     } else if (type.isIntersection()) {
         // intersection type
-        return new LCETypeIntersection(type.types.map((t) => parseType(processingContext, t, node, excludedFQN, ignoreDependencies)));
+        return new LCETypeIntersection(type.types.map((t) => parseType(processingContext, t, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1)));
     } else if (type.getCallSignatures().length > 0) {
         if (type.getCallSignatures().length > 1) return new LCETypeNotIdentified(tc.typeToString(type));
         // function type
         const signature = type.getCallSignatures()[0];
-        const returnType = parseType(processingContext, tc.getReturnTypeOfSignature(signature), node, excludedFQN, ignoreDependencies);
+        const returnType = parseType(processingContext, tc.getReturnTypeOfSignature(signature), node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1);
         const parameters: LCETypeFunctionParameter[] = [];
         const paramSyms = signature.getParameters();
         for (let i = 0; i < paramSyms.length; i++) {
@@ -480,7 +493,7 @@ function parseAnonymousType(
                     i,
                     parameterSym.name,
                     optional,
-                    parseType(processingContext, paramType, node, excludedFQN, ignoreDependencies)
+                    parseType(processingContext, paramType, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1)
                 )
             );
         }
@@ -499,7 +512,7 @@ function parseAnonymousType(
                 const propType = tc.getTypeOfSymbolAtLocation(prop, node);
                 members.push(new LCETypeObjectMember(
                     prop.name,
-                    parseType(processingContext, propType, node, undefined, ignoreDependencies),
+                    parseType(processingContext, propType, node, undefined, ignoreDependencies, typeResolutionDepth + 1),
                     optional,
                     readonly
                 ));
@@ -523,7 +536,7 @@ function parseAnonymousType(
         const typeArgs = tc.getTypeArguments(type as TypeReference);
         const types: LCEType[] = [];
         for (const typeArg of typeArgs) {
-            types.push(parseType(processingContext, typeArg, node, excludedFQN, ignoreDependencies));
+            types.push(parseType(processingContext, typeArg, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1));
         }
         return new LCETypeTuple(types);
     }

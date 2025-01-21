@@ -88,3 +88,8 @@ type tRecursive = {
     a: string;
     r?: tRecursive;
 }
+
+type tRecursiveComplex = {
+    (x: number, y: (a: number | tRecursiveComplex, b: tRecursiveComplex) => string ): string;
+    someProp: string;
+};
