@@ -2,6 +2,7 @@ import { ConceptMap, mergeConceptMaps } from "./concept";
 import { ProcessingContext } from "./context";
 import { Processor, ProcessorMap } from "./processor";
 import { CoreContextKeys } from "./context.keys";
+import {debugTraversalStack} from "./utils/log.utils";
 
 export interface TraverserContext {
     parentPropName: string;
@@ -27,6 +28,8 @@ export abstract class Traverser {
         if (processorCandidates) {
             validProcessors = processorCandidates.filter((proc) => proc.executionCondition.check(processingContext));
         }
+
+        debugTraversalStack(processingContext.localContexts);
 
         // pre-processing
         if (validProcessors) {

@@ -12,8 +12,8 @@ import { FileUtils } from "./utils/file.utils";
 import { POST_PROCESSORS } from "./features";
 import { ProjectUtils } from "./utils/project.utils";
 import { LCEProject, LCEProjectInfo } from "./project";
+import {debug, DEBUG_LOGGING} from "./utils/log.utils";
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export interface ExtractorOptions {
     prettyPrint?: boolean;
 }
@@ -36,8 +36,8 @@ export async function processProjectsAndOutputResult(scanRoot: string, options: 
         options.prettyPrint ? 2 : undefined,
     );
 
-    let dirPath = path.join(scanRoot, ".reports", "jqa");
-    let filePath = path.join(dirPath, "ts-output.json");
+    const dirPath = path.join(scanRoot, ".reports", "jqa");
+    const filePath = path.join(dirPath, "ts-output.json");
     fs.mkdir(dirPath, { recursive: true }, (errDir) => {
         if (errDir) {
             console.log("Could not create directory: " + dirPath);
@@ -86,12 +86,14 @@ export async function processProject(project: LCEProjectInfo): Promise<LCEProjec
     const startTime = process.hrtime();
     let fileReadingTime = 0;
     const progressBar = new SingleBar({}, Presets.shades_classic);
-    progressBar.start(fileList.length, 0);
+    if(!DEBUG_LOGGING)
+        progressBar.start(fileList.length, 0);
 
     // Traverse and process all individual project files
     const traverser = new AstTraverser();
     for (let i = 0; i < fileList.length; i++) {
-        progressBar.update(i + 1);
+        if(!DEBUG_LOGGING)
+            progressBar.update(i + 1);
         const file = fileList[i];
 
         const frStartTime = process.hrtime();
@@ -100,6 +102,8 @@ export async function processProject(project: LCEProjectInfo): Promise<LCEProjec
         fileReadingTime += frEndTime[0] + frEndTime[1] / 10 ** 9 - (frStartTime[0] + frStartTime[1] / 10 ** 9);
 
         try {
+            debug(`Processing file [${i+1}/${fileList.length}]: ${FileUtils.normalizePath(ModulePathUtils.normalize(projectRoot, file))}`);
+
             const { ast, services } = parseAndGenerateServices(code, {
                 loc: true,
                 range: true,
@@ -127,7 +131,8 @@ export async function processProject(project: LCEProjectInfo): Promise<LCEProjec
             console.log(e);
         }
     }
-    progressBar.stop();
+    if(!DEBUG_LOGGING)
+        progressBar.stop();
     const normalizedConcepts: Map<string, LCEConcept[]> = unifyConceptMap(concepts, "").get("") ?? new Map();
 
     const endTime = process.hrtime();
