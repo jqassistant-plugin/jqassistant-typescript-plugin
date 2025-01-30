@@ -8,7 +8,11 @@ import { ExecutionCondition } from "../execution-condition";
 import { Processor } from "../processor";
 import { getParentPropName } from "../utils/processor.utils";
 import { ClassTraverser } from "../traversers/class.traverser";
-import { ArrowFunctionExpressionTraverser, MemberExpressionTraverser, TaggedTemplateExpressionTraverser } from "../traversers/expression.traverser";
+import {
+    ArrowFunctionExpressionTraverser,
+    MemberExpressionTraverser,
+    TaggedTemplateExpressionTraverser
+} from "../traversers/expression.traverser";
 import { FunctionTraverser } from "../traversers/function.traverser";
 import { MethodTraverser } from "../traversers/method.traverser";
 import { PropertyTraverser } from "../traversers/property.traverser";
@@ -18,6 +22,9 @@ import { TypeAliasDeclarationTraverser } from "../traversers/type-alias-declarat
 import { CoreContextKeys } from "../context.keys";
 import { TraverserContext } from "../traverser";
 
+/**
+ * Registers unnamed `FQNScope` local contexts for all nodes that create a new anonymous scope.
+ */
 export class ScopeProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [AST_NODE_TYPES.BlockStatement, AST_NODE_TYPES.ForStatement, AST_NODE_TYPES.ForInStatement, AST_NODE_TYPES.ForOfStatement],
@@ -29,6 +36,9 @@ export class ScopeProcessor extends Processor {
     }
 }
 
+/**
+ * Registers named `FQNScope` local contexts for all declaration nodes.
+ */
 export class DeclarationScopeProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
         [

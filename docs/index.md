@@ -46,6 +46,7 @@ The tool currently only supports projects using ECMAScript modules.
 This plugin is based on the [LCE Architecture](https://jqassistant-plugin.github.io/jqassistant-lce-docs/).
 - [[Codebase Layout]]
 - [[Extensions]]
+- *TODO: Testing Strategy*
 
 **Base LCE Architecture Implementation:**
 - [[Concepts]]
@@ -56,4 +57,5 @@ This plugin is based on the [LCE Architecture](https://jqassistant-plugin.github
 - [[Utilities]]
 
 **Extraction Strategies:**
-- *[[Extraction Strategy - Overview|Overview]]*
+- *[[Extraction Strategies|Overview]]*
+- [[Extraction Strategy - Dependencies|Dependencies and FQNs]]

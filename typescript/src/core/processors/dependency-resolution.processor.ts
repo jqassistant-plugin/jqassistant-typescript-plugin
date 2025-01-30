@@ -23,6 +23,12 @@ export type DeclarationIndex = Map<string, Map<string, FQN>>;
  */
 export type FQNResolverContext = Array<[string[], string, LCENamedConcept]>;
 
+/**
+ * Stores the identifiers for the declaration that encompasses the currently traversed part of the AST.
+ * Multiple of these scopes can be set as Local Contexts on different levels to express nested scopes (e.g a method within a class).
+ *
+ * see `DependencyResolutionProcessor` for more detail.
+ */
 export interface FQNScope {
     globalIdentifier: string;
     localIdentifier: string;

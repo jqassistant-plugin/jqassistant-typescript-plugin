@@ -2,6 +2,7 @@
 aliases:
   - local FQN
   - global FQN
+  - FQN
 ---
 # Fully Qualified Names (FQNs)
 -> node properties that uniquely identify a concept within or across projects
