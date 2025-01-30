@@ -42,7 +42,7 @@ export class LCETypeDeclared extends LCEType {
 }
 
 /**
- * Represents an union type (e.g. `string | number`)
+ * Represents a union type (e.g. `string | number`)
  */
 export class LCETypeUnion extends LCEType {
     public static override conceptId = "union-type";

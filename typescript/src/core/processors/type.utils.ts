@@ -83,7 +83,7 @@ export function parseMethodType(
     esClassLikeDecl: ESNode,
     esMethodDecl: MethodDefinitionNonComputedName | TSAbstractMethodDefinitionNonComputedName | TSMethodSignatureNonComputedName,
     methodName: string,
-    jsPrivate: boolean
+    jsPrivate: boolean,
 ): LCETypeFunction | undefined {
     const globalContext = processingContext.globalContext;
     const tc = globalContext.typeChecker;
@@ -131,8 +131,8 @@ export function parseMethodType(
                         i,
                         (esParam as Identifier).name,
                         esParam.optional ?? false,
-                        parseType(processingContext, paramType, paramNode)
-                    )
+                        parseType(processingContext, paramType, paramNode),
+                    ),
                 );
             }
             return new LCETypeFunction(LCETypeNotIdentified.CONSTRUCTOR, parameters, false, []);
@@ -149,7 +149,7 @@ export function parseMethodType(
                 LCETypeNotIdentified.SETTER,
                 [new LCETypeFunctionParameter(0, paramName, false, parseType(processingContext, paramType, methodNode))],
                 false,
-                []
+                [],
             );
         }
     }
@@ -162,8 +162,8 @@ export function parseMethodType(
 
     // determine if method is async
     let async = false;
-    if("modifiers" in methodNode) {
-        async = !!(methodNode.modifiers as {kind: number}[])?.find(m => m.kind === ts.SyntaxKind.AsyncKeyword);
+    if ("modifiers" in methodNode) {
+        async = !!(methodNode.modifiers as { kind: number }[])?.find((m) => m.kind === ts.SyntaxKind.AsyncKeyword);
     }
 
     // parse type parameters
@@ -177,7 +177,7 @@ export function parseMethodType(
  */
 export function parseFunctionType(
     processingContext: ProcessingContext,
-    esFunctionDecl: FunctionDeclaration | TSDeclareFunction | FunctionExpression | ArrowFunctionExpression
+    esFunctionDecl: FunctionDeclaration | TSDeclareFunction | FunctionExpression | ArrowFunctionExpression,
 ): LCETypeFunction {
     const globalContext = processingContext.globalContext;
     const tc = globalContext.typeChecker;
@@ -194,7 +194,7 @@ export function parseFunctionType(
     // parse parameters
     const parameters = parseFunctionParameters(processingContext, functionSignature, functionNode);
 
-    const async = !!functionNode.modifiers?.find(m => m.kind === ts.SyntaxKind.AsyncKeyword);
+    const async = !!functionNode.modifiers?.find((m) => m.kind === ts.SyntaxKind.AsyncKeyword);
 
     return new LCETypeFunction(returnType, parameters, async, typeParameters);
 }
@@ -206,14 +206,14 @@ export function parseFunctionType(
  */
 export function parseClassLikeTypeParameters(
     processingContext: ProcessingContext,
-    esElement: ClassDeclaration | TSInterfaceDeclaration
+    esElement: ClassDeclaration | TSInterfaceDeclaration,
 ): LCETypeParameterDeclaration[] {
     const globalContext = processingContext.globalContext;
     const node = globalContext.services.esTreeNodeToTSNodeMap.get(esElement);
     const type = globalContext.typeChecker.getTypeAtLocation(node);
     const tc = globalContext.typeChecker;
     const result: LCETypeParameterDeclaration[] = [];
-    for (let i = 0; i < tc.getTypeArguments(type as TypeReference).length; i++){
+    for (let i = 0; i < tc.getTypeArguments(type as TypeReference).length; i++) {
         const typeParam = tc.getTypeArguments(type as TypeReference)[i];
         const name = typeParam.symbol.name;
         let constraintType: LCEType;
@@ -245,7 +245,7 @@ export function parseTypeAliasTypeParameters(processingContext: ProcessingContex
     const result: LCETypeParameterDeclaration[] = [];
 
     const esTypeParameters = esElement.typeParameters?.params ?? [];
-    for (let i = 0; i < esTypeParameters.length; i++){
+    for (let i = 0; i < esTypeParameters.length; i++) {
         const esTypeParam = esTypeParameters[i];
         const typeParam = tc.getTypeAtLocation(globalContext.services.esTreeNodeToTSNodeMap.get(esTypeParam));
         const name = typeParam.symbol.name;
@@ -276,7 +276,7 @@ export function parseTypeAliasTypeParameters(processingContext: ProcessingContex
 export function parseClassLikeBaseType(
     processingContext: ProcessingContext,
     esTypeIdentifier: MemberExpression | Identifier | TSClassImplements | TSInterfaceHeritage,
-    esTypeArguments?: TypeNode[]
+    esTypeArguments?: TypeNode[],
 ): LCETypeDeclared | undefined {
     const globalContext = processingContext.globalContext;
     const tc = globalContext.typeChecker;
@@ -307,10 +307,16 @@ export function parseESNodeType(processingContext: ProcessingContext, esNode: ES
     return result;
 }
 
-function parseType(processingContext: ProcessingContext, type: Type, node: Node, excludedFQN?: string, ignoreDependencies = false, typeResolutionDepth = 0): LCEType {
-
+function parseType(
+    processingContext: ProcessingContext,
+    type: Type,
+    node: Node,
+    excludedFQN?: string,
+    ignoreDependencies = false,
+    typeResolutionDepth = 0,
+): LCEType {
     // cut off type resolution at a certain depth to prevent graph clutter and potential infinite recursion
-    if(typeResolutionDepth > MAX_TYPE_RESOLUTION_DEPTH) {
+    if (typeResolutionDepth > MAX_TYPE_RESOLUTION_DEPTH) {
         return LCETypeNotIdentified.RESOLUTION_LIMIT;
     }
 
@@ -328,8 +334,8 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
                 symbol = undefined;
             }
         }
-        if(!globalFqn) {
-            if(symbol && (symbol.flags & ts.SymbolFlags.EnumMember) && "parent" in symbol) {
+        if (!globalFqn) {
+            if (symbol && symbol.flags & ts.SymbolFlags.EnumMember && "parent" in symbol) {
                 // Normalize enum member symbols to avoid enum member declared types
                 symbol = symbol.parent as Symbol;
             }
@@ -337,14 +343,12 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
         }
 
         if (
-            (
-                !globalFqn ||
+            (!globalFqn ||
                 globalFqn === "(Anonymous function)" ||
                 globalFqn.startsWith("__type") ||
                 globalFqn.startsWith("__object") ||
                 globalFqn === excludedFQN ||
-                (symbol && symbol.getEscapedName().toString().startsWith("__object"))
-            ) &&
+                (symbol && symbol.getEscapedName().toString().startsWith("__object"))) &&
             !isPrimitiveType(tc.typeToString(type))
         ) {
             // TODO: handle recursive types like `_DeepPartialObject`
@@ -373,8 +377,12 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
             // normalize TypeChecker FQN and determine if type is part of the project
             const sourceFile = symbol?.valueDeclaration?.getSourceFile() ?? symbol?.declarations?.find((d) => !!d.getSourceFile())?.getSourceFile();
             const isStandardLibrary = !!sourceFile && globalContext.services.program.isSourceFileDefaultLibrary(sourceFile);
-            const relativeSrcPath = !!sourceFile ? FileUtils.normalizePath(path.relative(globalContext.projectInfo.rootPath, sourceFile.fileName)) : undefined;
-            const isExternal = !!sourceFile && (globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile) || relativeSrcPath!.startsWith("node_modules"));
+            const relativeSrcPath = !!sourceFile
+                ? FileUtils.normalizePath(path.relative(globalContext.projectInfo.rootPath, sourceFile.fileName))
+                : undefined;
+            const isExternal =
+                !!sourceFile &&
+                (globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile) || relativeSrcPath!.startsWith("node_modules"));
 
             let normalizedFqn = new FQN("");
             let scheduleFqnResolution = false;
@@ -385,7 +393,10 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
                 if (globalFqn.startsWith('"')) {
                     // path that *probably* points to node modules
                     // -> resolve absolute path
-                    const packageName = NodeUtils.getPackageNameForPath(globalContext.projectInfo.rootPath, ModulePathUtils.extractFQNPath(globalFqn));
+                    const packageName = NodeUtils.getPackageNameForPath(
+                        globalContext.projectInfo.rootPath,
+                        ModulePathUtils.extractFQNPath(globalFqn),
+                    );
                     if (packageName) {
                         normalizedFqn.globalFqn = `"${packageName}".${ModulePathUtils.extractFQNIdentifier(globalFqn)}`;
                     } else {
@@ -397,7 +408,10 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
                     if (packageName) {
                         normalizedFqn.globalFqn = `"${packageName}".${globalFqn}`;
                     } else {
-                        normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(`"${sourceFile.fileName}".${globalFqn}`, globalContext.sourceFilePathAbsolute);
+                        normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(
+                            `"${sourceFile.fileName}".${globalFqn}`,
+                            globalContext.sourceFilePathAbsolute,
+                        );
                     }
                 }
             } else if (globalFqn.startsWith('"')) {
@@ -433,7 +447,16 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
                 const ta = tc.getTypeArguments(type as TypeReference)[i];
                 if ("typeArguments" in node && node.typeArguments) {
                     // if type argument child node is available, pass it on
-                    typeArguments.push(parseType(processingContext, ta, (node.typeArguments as Node[]).at(i) ?? node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1))
+                    typeArguments.push(
+                        parseType(
+                            processingContext,
+                            ta,
+                            (node.typeArguments as Node[]).at(i) ?? node,
+                            excludedFQN,
+                            ignoreDependencies,
+                            typeResolutionDepth + 1,
+                        ),
+                    );
                 } else {
                     typeArguments.push(parseType(processingContext, ta, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1));
                 }
@@ -450,7 +473,7 @@ function parseType(processingContext: ProcessingContext, type: Type, node: Node,
             }
             return result;
         }
-    } catch(e) {
+    } catch (e) {
         console.error("Error occurred during type resolution:");
         console.error(e);
         return new LCETypeNotIdentified(tc.typeToString(type));
@@ -464,7 +487,7 @@ function parseAnonymousType(
     symbol?: Symbol,
     excludedFQN?: string,
     ignoreDependencies = false,
-    typeResolutionDepth = 0
+    typeResolutionDepth = 0,
 ): LCEType {
     const globalContext = processingContext.globalContext;
     const tc = globalContext.typeChecker;
@@ -472,15 +495,26 @@ function parseAnonymousType(
     // complex anonymous type
     if (type.isUnion()) {
         // union type
-        return new LCETypeUnion(type.types.map((t) => parseType(processingContext, t, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1)));
+        return new LCETypeUnion(
+            type.types.map((t) => parseType(processingContext, t, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1)),
+        );
     } else if (type.isIntersection()) {
         // intersection type
-        return new LCETypeIntersection(type.types.map((t) => parseType(processingContext, t, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1)));
+        return new LCETypeIntersection(
+            type.types.map((t) => parseType(processingContext, t, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1)),
+        );
     } else if (type.getCallSignatures().length > 0) {
         if (type.getCallSignatures().length > 1) return new LCETypeNotIdentified(tc.typeToString(type));
         // function type
         const signature = type.getCallSignatures()[0];
-        const returnType = parseType(processingContext, tc.getReturnTypeOfSignature(signature), node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1);
+        const returnType = parseType(
+            processingContext,
+            tc.getReturnTypeOfSignature(signature),
+            node,
+            excludedFQN,
+            ignoreDependencies,
+            typeResolutionDepth + 1,
+        );
         const parameters: LCETypeFunctionParameter[] = [];
         const paramSyms = signature.getParameters();
         for (let i = 0; i < paramSyms.length; i++) {
@@ -493,8 +527,8 @@ function parseAnonymousType(
                     i,
                     parameterSym.name,
                     optional,
-                    parseType(processingContext, paramType, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1)
-                )
+                    parseType(processingContext, paramType, node, excludedFQN, ignoreDependencies, typeResolutionDepth + 1),
+                ),
             );
         }
         const typeParameters = parseFunctionTypeParameters(processingContext, signature, node);
@@ -504,18 +538,20 @@ function parseAnonymousType(
         // TODO: test for methods, callables, index signatures, etc.
         const members: LCETypeObjectMember[] = [];
         for (const prop of type.getProperties()) {
-            if(prop.valueDeclaration) {
-                const propSignature = prop.valueDeclaration as PropertySignature
+            if (prop.valueDeclaration) {
+                const propSignature = prop.valueDeclaration as PropertySignature;
                 const optional = !!propSignature.questionToken;
-                const readonly = !!propSignature.modifiers && propSignature.modifiers.some(mod => mod.kind === ts.SyntaxKind.ReadonlyKeyword);
+                const readonly = !!propSignature.modifiers && propSignature.modifiers.some((mod) => mod.kind === ts.SyntaxKind.ReadonlyKeyword);
 
                 const propType = tc.getTypeOfSymbolAtLocation(prop, node);
-                members.push(new LCETypeObjectMember(
-                    prop.name,
-                    parseType(processingContext, propType, node, undefined, ignoreDependencies, typeResolutionDepth + 1),
-                    optional,
-                    readonly
-                ));
+                members.push(
+                    new LCETypeObjectMember(
+                        prop.name,
+                        parseType(processingContext, propType, node, undefined, ignoreDependencies, typeResolutionDepth + 1),
+                        optional,
+                        readonly,
+                    ),
+                );
             }
         }
         return new LCETypeObject(members);
@@ -529,9 +565,11 @@ function parseAnonymousType(
     } else if (tc.typeToString(type) === "false") {
         // boolean false literal
         return new LCETypeLiteral(false);
-    } else if((type.flags & ts.TypeFlags.Object) &&
-        ((type as ObjectType).objectFlags & ts.ObjectFlags.Reference) &&
-        ((type as TypeReference).target.objectFlags & ts.ObjectFlags.Tuple)) {
+    } else if (
+        type.flags & ts.TypeFlags.Object &&
+        (type as ObjectType).objectFlags & ts.ObjectFlags.Reference &&
+        (type as TypeReference).target.objectFlags & ts.ObjectFlags.Tuple
+    ) {
         // tuple type
         const typeArgs = tc.getTypeArguments(type as TypeReference);
         const types: LCEType[] = [];
@@ -560,7 +598,7 @@ function parseFunctionTypeParameters(processingContext: ProcessingContext, signa
     const result: LCETypeParameterDeclaration[] = [];
     const typeParameters = signature.getTypeParameters();
     if (typeParameters) {
-        for (let i = 0; i < typeParameters.length; i++){
+        for (let i = 0; i < typeParameters.length; i++) {
             const typeParam = typeParameters[i];
             const name = typeParam.symbol.name;
             let constraintType: LCEType;

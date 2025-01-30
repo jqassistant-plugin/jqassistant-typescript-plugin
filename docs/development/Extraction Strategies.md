@@ -14,7 +14,7 @@
 
 **Currently Implemented Extraction Strategies:**
 - [[Extraction Strategy - Dependencies|Dependencies and FQNs]]
-- Types
+- [[Extraction Strategy - Types|Types]]
 - Values
 - Imports
 - Exports

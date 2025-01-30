@@ -59,3 +59,4 @@ This plugin is based on the [LCE Architecture](https://jqassistant-plugin.github
 **Extraction Strategies:**
 - *[[Extraction Strategies|Overview]]*
 - [[Extraction Strategy - Dependencies|Dependencies and FQNs]]
+- [[Extraction Strategy - Types|Types]]
