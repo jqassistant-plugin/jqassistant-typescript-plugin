@@ -46,7 +46,7 @@ The tool currently only supports projects using ECMAScript modules.
 This plugin is based on the [LCE Architecture](https://jqassistant-plugin.github.io/jqassistant-lce-docs/).
 - [[Codebase Layout]]
 - [[Extensions]]
-- *TODO: Testing Strategy*
+- [[Testing Strategy]]
 
 **Base LCE Architecture Implementation:**
 - [[Concepts]]

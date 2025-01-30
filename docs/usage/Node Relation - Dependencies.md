@@ -74,6 +74,7 @@ export class B {
 	- the property `prop` is used once by the method `run` in its assignment statement
 
 The following propagations/aggregations take place:
+
 2. Target propagation:
 	- the direct dependency to the method is propagated upwards to the class level where it is combined with the existing direct dependency to the class (leading to a combined cardinality of `2`)
 	- the dependency to the class (with the aggregated cardinality of `2`) is propagated up once more to the module level
