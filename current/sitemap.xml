@@ -1,193 +1,199 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Codebase-Layout</loc>
-    <lastmod>2025-01-21T13:24:01.795Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Concepts</loc>
-    <lastmod>2025-01-21T13:24:01.795Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Extensions</loc>
-    <lastmod>2025-01-21T13:24:01.795Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
   </url><url>
-    <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Extraction-Strategy---Overview</loc>
-    <lastmod>2025-01-21T13:24:01.795Z</lastmod>
+    <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Extraction-Strategies</loc>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
+  </url><url>
+    <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Extraction-Strategy---Dependencies</loc>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Local-Contexts</loc>
-    <lastmod>2025-01-21T13:24:01.795Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Post-Processors</loc>
-    <lastmod>2025-01-21T13:24:01.795Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Processors</loc>
-    <lastmod>2025-01-21T13:24:01.795Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
+  </url><url>
+    <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Testing-Strategy</loc>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Traversers</loc>
-    <lastmod>2025-01-21T13:24:01.795Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/development/Utilities</loc>
-    <lastmod>2025-01-21T13:24:01.795Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.381Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/</loc>
-    <lastmod>2025-01-21T13:24:01.793Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.379Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Basic-Usage</loc>
-    <lastmod>2025-01-21T13:24:01.798Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Installation</loc>
-    <lastmod>2025-01-21T13:24:01.798Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-AccessorProperty</loc>
-    <lastmod>2025-01-21T13:24:01.798Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-AutoAccessor</loc>
-    <lastmod>2025-01-21T13:24:01.798Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Class</loc>
-    <lastmod>2025-01-21T13:24:01.798Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Constructor</loc>
-    <lastmod>2025-01-21T13:24:01.798Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Decorator</loc>
-    <lastmod>2025-01-21T13:24:01.798Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Enum</loc>
-    <lastmod>2025-01-21T13:24:01.798Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-EnumMember</loc>
-    <lastmod>2025-01-21T13:24:01.798Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-ExternalDeclaration</loc>
-    <lastmod>2025-01-21T13:24:01.798Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-ExternalModule</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Function</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Getter</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Interface</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-JSXElementType</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Method</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Module</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Parameter</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.384Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Project</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Property</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-ReactComponent</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Setter</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Declared</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Function</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-FunctionParameter</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Intersection</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Literal</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-NotIdentified</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Object</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-ObjectMember</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Primitive</loc>
-    <lastmod>2025-01-21T13:24:01.799Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Tuple</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-TypeParameterReference</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Union</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-TypeAlias</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-TypeParameter</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.385Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Array</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Call</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Class</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Complex</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Declared</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Function</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Literal</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Member</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Null</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Object</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-ObjectMember</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Variable</loc>
-    <lastmod>2025-01-21T13:24:01.800Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Properties---Code-Coordinates</loc>
-    <lastmod>2025-01-21T13:24:01.801Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Properties---Fully-Qualified-Names</loc>
-    <lastmod>2025-01-21T13:24:01.801Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Relation---Dependencies</loc>
-    <lastmod>2025-01-21T13:24:01.801Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url><url>
     <loc>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/React-Extension</loc>
-    <lastmod>2025-01-21T13:24:01.801Z</lastmod>
+    <lastmod>2025-01-30T10:08:15.386Z</lastmod>
   </url></urlset>
