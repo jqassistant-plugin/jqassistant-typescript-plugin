@@ -17,7 +17,7 @@
     <url>https://jqassistant.org/</url>
 
     <description>
-        Plugin for jQAssistant providing scanners and rules for Typescript.
+        The jQAssistant plugin providing scanners and rules for TypeScript.
     </description>
 
     <organization>
