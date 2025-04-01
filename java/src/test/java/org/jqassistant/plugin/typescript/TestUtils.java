@@ -2,6 +2,8 @@ package org.jqassistant.plugin.typescript;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,7 +13,13 @@ public class TestUtils {
     private final String scanResourcePath;
 
     public TestUtils() {
-        scanResourcePath = TestUtils.class.getResource("/").getPath();
+        String path = "";
+        try {
+             path = new File(TestUtils.class.getResource(".").toURI()).toPath().toString().replaceAll("\\\\", "/");
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        scanResourcePath = path;
     }
 
     /**
@@ -21,11 +29,12 @@ public class TestUtils {
      */
     public File getReportJson(String fileName) {
         try {
-            Path inputPath = Paths.get(TestUtils.class.getResource("/" + fileName + ".json").getPath());
+            URL resourceUrl = TestUtils.class.getResource("/" + fileName + ".json");
+            Path inputPath = new File(resourceUrl.toURI()).toPath();
             String content = new String(Files.readAllBytes(inputPath));
             content = content.replaceAll("/java/src/test/resources/", scanResourcePath);
             Files.write(Paths.get(scanResourcePath + fileName + ".tmp.json"), content.getBytes());
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
         return new File(scanResourcePath + fileName + ".tmp.json");
