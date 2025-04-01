@@ -4,7 +4,7 @@
                     id="jqassistant.plugin.typescript"
                     name="jQAssistant Typescript Plugin"
                     version="${project.version}">
-    <description>Provides a scanner for Typescript.</description>
+    <description>${project.description}</description>
     <model>
         <class>org.jqassistant.plugin.typescript.api.model.core.AccessorPropertyDescriptor</class>
         <class>org.jqassistant.plugin.typescript.api.model.core.AutoAccessorDeclarationDescriptor</class>

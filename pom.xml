@@ -14,11 +14,8 @@
     <packaging>pom</packaging>
 
     <name>jQAssistant TypeScript Plugin Parent</name>
-    <url>https://jqassistant.org/</url>
-
-    <description>
-        Plugin for jQAssistant providing scanners and rules for Typescript.
-    </description>
+    <description>The jQAssistant plugin providing scanners and rules for TypeScript.</description>
+    <url>https://github.com/jqassistant-plugin/jqassistant-typescript-plugin</url>
 
     <organization>
         <name>jQAssistant Development Team</name>
