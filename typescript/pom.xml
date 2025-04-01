@@ -28,7 +28,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install</arguments>
+                            <arguments>ci</arguments>
                         </configuration>
                     </execution>
                     <execution>
@@ -42,7 +42,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <nodeVersion>v18.17.0</nodeVersion>
+                    <nodeVersion>v22.12.0</nodeVersion>
                     <installDirectory>${project.build.directory}</installDirectory>
                 </configuration>
             </plugin>
