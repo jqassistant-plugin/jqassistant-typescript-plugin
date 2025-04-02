@@ -62,6 +62,9 @@ export class ReactComponentPostProcessor extends PostProcessor {
     }
 }
 
+/**
+ * returns whether the provided fqn is a return type that indicates that a function is a React component
+ */
 function isComponentReturnType(globalFqn: string): boolean {
     return [
         '"react".React.ReactNode',
