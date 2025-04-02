@@ -18,7 +18,7 @@ export class ReactComponentPostProcessor extends PostProcessor {
             for (const func of allFunctions) {
                 if (
                     func.returnType instanceof LCETypeDeclared &&
-                    (func.returnType.fqn.globalFqn === '"react".React.JSX.Element' || func.returnType.fqn.globalFqn === '"react".JSX.Element')
+                    isComponentReturnType(func.returnType.fqn.globalFqn)
                 ) {
                     const component = new LCEReactComponent(func.fqn, func.functionName, []);
                     if (func.metadata.has(JSXDependencyContextProcessor.JSX_DEPENDENCY_METADATA)) {
@@ -34,8 +34,7 @@ export class ReactComponentPostProcessor extends PostProcessor {
                 if (
                     (variable.type instanceof LCETypeFunction &&
                         variable.type.returnType instanceof LCETypeDeclared &&
-                        (variable.type.returnType.fqn.globalFqn === '"react".React.JSX.Element' ||
-                            variable.type.returnType.fqn.globalFqn === '"react".JSX.Element')) ||
+                        isComponentReturnType(variable.type.returnType.fqn.globalFqn)) ||
                     (variable.type instanceof LCETypeDeclared && isReactFunctionComponentType(variable.type.fqn.globalFqn))
                 ) {
                     const component = new LCEReactComponent(variable.fqn, variable.variableName, []);
@@ -64,17 +63,25 @@ export class ReactComponentPostProcessor extends PostProcessor {
 }
 
 /**
+ * returns whether the provided fqn is a return type that indicates that a function is a React component
+ */
+function isComponentReturnType(globalFqn: string): boolean {
+    return [
+        '"react".React.ReactNode',
+        '"react".React.JSX.Element',
+        '"react".JSX.Element'
+    ].includes(globalFqn);
+}
+
+/**
  * returns whether the provided fqn belongs to an interface/type describing a React function component
  */
 function isReactFunctionComponentType(globalFqn: string): boolean {
-    switch (globalFqn) {
-        case '"react".React.FC':
-        case '"react".React.ExoticComponent':
-        case '"react".React.NamedExoticComponent':
-        case '"react".React.ForwardRefExoticComponent':
-        case '"react".React.MemoExoticComponent':
-            return true;
-        default:
-            return false;
-    }
+    return [
+        '"react".React.FC',
+        '"react".React.ExoticComponent',
+        '"react".React.NamedExoticComponent',
+        '"react".React.ForwardRefExoticComponent',
+        '"react".React.MemoExoticComponent'
+    ].includes(globalFqn);
 }
