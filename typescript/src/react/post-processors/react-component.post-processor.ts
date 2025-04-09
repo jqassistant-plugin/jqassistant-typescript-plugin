@@ -3,7 +3,7 @@ import { LCEReactComponent } from "../concepts/react-component.concept";
 import { LCEFunctionDeclaration } from "../../core/concepts/function-declaration.concept";
 import { LCEVariableDeclaration } from "../../core/concepts/variable-declaration.concept";
 import { LCEClassDeclaration } from "../../core/concepts/class-declaration.concept";
-import { LCETypeDeclared, LCETypeFunction } from "../../core/concepts/type.concept";
+import { LCEType, LCETypeDeclared, LCETypeFunction, LCETypeUnion } from "../../core/concepts/type.concept";
 import { JSXDependencyContextProcessor } from "../processors/jsx-dependency.processor";
 import { LCEProject } from "../../core/project";
 
@@ -16,10 +16,7 @@ export class ReactComponentPostProcessor extends PostProcessor {
             // Function Components (standard functions)
             const allFunctions: LCEFunctionDeclaration[] = (concepts.get(LCEFunctionDeclaration.conceptId) ?? []) as LCEFunctionDeclaration[];
             for (const func of allFunctions) {
-                if (
-                    func.returnType instanceof LCETypeDeclared &&
-                    isComponentReturnType(func.returnType.fqn.globalFqn)
-                ) {
+                if (func.returnType instanceof LCETypeDeclared && isComponentReturnType(func.returnType)) {
                     const component = new LCEReactComponent(func.fqn, func.functionName, []);
                     if (func.metadata.has(JSXDependencyContextProcessor.JSX_DEPENDENCY_METADATA)) {
                         component.renderedElements.push(...func.metadata.get(JSXDependencyContextProcessor.JSX_DEPENDENCY_METADATA));
@@ -34,7 +31,7 @@ export class ReactComponentPostProcessor extends PostProcessor {
                 if (
                     (variable.type instanceof LCETypeFunction &&
                         variable.type.returnType instanceof LCETypeDeclared &&
-                        isComponentReturnType(variable.type.returnType.fqn.globalFqn)) ||
+                        isComponentReturnType(variable.type.returnType)) ||
                     (variable.type instanceof LCETypeDeclared && isReactFunctionComponentType(variable.type.fqn.globalFqn))
                 ) {
                     const component = new LCEReactComponent(variable.fqn, variable.variableName, []);
@@ -65,12 +62,16 @@ export class ReactComponentPostProcessor extends PostProcessor {
 /**
  * returns whether the provided fqn is a return type that indicates that a function is a React component
  */
-function isComponentReturnType(globalFqn: string): boolean {
-    return [
-        '"react".React.ReactNode',
-        '"react".React.JSX.Element',
-        '"react".JSX.Element'
-    ].includes(globalFqn);
+function isComponentReturnType(type: LCEType): boolean {
+    const validTypeFqns = ['"react".React.ReactNode', '"react".React.JSX.Element', '"react".JSX.Element'];
+
+    if (type instanceof LCETypeDeclared) {
+        return validTypeFqns.includes(type.fqn.globalFqn);
+    } else if (type instanceof LCETypeUnion) {
+        return !!type.types.find((t) => t instanceof LCETypeDeclared && validTypeFqns.includes(t.fqn.globalFqn));
+    } else {
+        return false;
+    }
 }
 
 /**
@@ -82,6 +83,6 @@ function isReactFunctionComponentType(globalFqn: string): boolean {
         '"react".React.ExoticComponent',
         '"react".React.NamedExoticComponent',
         '"react".React.ForwardRefExoticComponent',
-        '"react".React.MemoExoticComponent'
+        '"react".React.MemoExoticComponent',
     ].includes(globalFqn);
 }
