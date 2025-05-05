@@ -6,65 +6,65 @@
       <description>Last 10 notes on jQA Typescript Plugin</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>Node - TS Value Null</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Null</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Null</guid>
-    <description>:TS:Value:Null Node → represents a null or undefined value Properties NameDescriptionkindeither null or undefined.</description>
-    <pubDate>Thu, 30 Jan 2025 12:49:39 GMT</pubDate>
-  </item><item>
-    <title>Node - TS Value Object</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Object</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Object</guid>
-    <description>:TS:Value:Object Node → represents an object value Relations NameTarget Label(s)CardinalityDescriptionHAS_MEMBER:TS:Value:ObjectMember0..*members of the object (with ...</description>
-    <pubDate>Thu, 30 Jan 2025 12:49:39 GMT</pubDate>
-  </item><item>
     <title>Node - TS Value ObjectMember</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-ObjectMember</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-ObjectMember</guid>
     <description>:TS:Value:ObjectMember Node → represents a member of a :TS:Value:Object Properties NameDescriptionnamename of the object member Relations NameTarget Label(s)CardinalityDescriptionREFERENCES:TS:Value1value ...</description>
-    <pubDate>Thu, 30 Jan 2025 12:49:39 GMT</pubDate>
+    <pubDate>Mon, 05 May 2025 13:51:46 GMT</pubDate>
   </item><item>
     <title>Node - TS Value</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value</guid>
     <description>:TS:Value Node → represents a value (e.g. the initialization value of a variable) Only occurs as one of the following sub-variants: :TS:Value:Declared :TS:Value:Member :TS:Value:Object with :TS:Value:ObjectMember :TS:Value:Array :TS:Value:Call :TS:Value:Function :TS:Value:Class :TS:Value:Null :TS:Value:Literal :TS:Value:Complex Relations NameTarget Label(s)CardinalityDescriptionOF_TYPE:TS:Type1type of the value.</description>
-    <pubDate>Thu, 30 Jan 2025 12:49:39 GMT</pubDate>
+    <pubDate>Mon, 05 May 2025 13:51:46 GMT</pubDate>
   </item><item>
     <title>Node - TS Variable</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Variable</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Variable</guid>
     <description>:TS:Variable Node → represents a top-level TypeScript variable/constant declaration Properties NameDescriptionglobalFqnglobal FQN of the variablelocalFqnlocal FQN of the ...</description>
-    <pubDate>Thu, 30 Jan 2025 12:49:39 GMT</pubDate>
+    <pubDate>Mon, 05 May 2025 13:51:46 GMT</pubDate>
   </item><item>
     <title>Node Properties - Code Coordinates</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Properties---Code-Coordinates</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Properties---Code-Coordinates</guid>
     <description>Code Coordinates → set of node properties that describe the location of a code construct within a source code file Properties: NameDescriptionfileNameabsolute path to the source ...</description>
-    <pubDate>Thu, 30 Jan 2025 12:49:39 GMT</pubDate>
+    <pubDate>Mon, 05 May 2025 13:51:46 GMT</pubDate>
   </item><item>
     <title>Node Properties - Fully Qualified Names</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Properties---Fully-Qualified-Names</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Properties---Fully-Qualified-Names</guid>
     <description>Fully Qualified Names (FQNs) → node properties that uniquely identify a concept within or across projects Properties: NameDescriptionglobalFqnGlobal fully qualified name that ...</description>
-    <pubDate>Thu, 30 Jan 2025 12:49:39 GMT</pubDate>
+    <pubDate>Mon, 05 May 2025 13:51:46 GMT</pubDate>
   </item><item>
     <title>Node Relation - Dependencies</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Relation---Dependencies</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Relation---Dependencies</guid>
     <description>Dependencies (DEPENDS_ON) → dependencies between the various language concepts are realized by the DEPENDS_ON relation direct dependencies are registered on a statement/expression ...</description>
-    <pubDate>Thu, 30 Jan 2025 12:49:39 GMT</pubDate>
+    <pubDate>Mon, 05 May 2025 13:51:46 GMT</pubDate>
   </item><item>
     <title>React Extension</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/React-Extension</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/React-Extension</guid>
     <description>React Extension → provides concepts specific to projects using React Overview: :TS:ReactComponent :TS:JSXElementType .</description>
-    <pubDate>Thu, 30 Jan 2025 12:49:39 GMT</pubDate>
+    <pubDate>Mon, 05 May 2025 13:51:46 GMT</pubDate>
   </item><item>
-    <title>Node - TS Type Literal</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Literal</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Literal</guid>
-    <description>:TS:Type:Literal Node → represents a literal type Properties NameDescriptionvaluevalue of the literal (may be a string, number, or boolean).</description>
-    <pubDate>Thu, 30 Jan 2025 12:49:39 GMT</pubDate>
+    <title>Node - TS Type Object</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Object</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Object</guid>
+    <description>:TS:Type:Object Node → represents an object type Relations NameTarget Label(s)CardinalityDescriptionHAS_MEMBER:TS:Type:ObjectMember0..*members of the object type (with ...</description>
+    <pubDate>Mon, 05 May 2025 13:51:46 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Type ObjectMember</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-ObjectMember</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-ObjectMember</guid>
+    <description>:TS:Type:ObjectMember Node → represents a member of an :TS:Type:Object Properties NameDescriptionnamename of the memberoptional (boolean)indicates, if the member has been ...</description>
+    <pubDate>Mon, 05 May 2025 13:51:46 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Type Primitive</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Primitive</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Primitive</guid>
+    <description>:TS:Type:Primitive Node → represents a primitive type (e.g. undefined, number, string, etc.) Properties NameDescriptionnamename of the primitive type.</description>
+    <pubDate>Mon, 05 May 2025 13:51:46 GMT</pubDate>
   </item>
     </channel>
   </rss>
