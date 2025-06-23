@@ -255,6 +255,34 @@ describe("function declarations test", () => {
         }
     });
 
+    test("function with single destructured parameter of referenced interface type", async () => {
+        const decl = funDecls.get('"./src/main.ts".fDestructuredParam');
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(mainModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".fDestructuredParam'));
+            expect(decl.functionName).toBe("fDestructuredParam");
+
+            expectPrimitiveType(decl.returnType, "void");
+
+            expect(decl.parameters).toHaveLength(1);
+            expectFunctionParameter(decl.parameters, 0, "", false);
+            expectDeclaredType(decl.parameters[0].type, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'));
+
+            expect(decl.async).toBe(false);
+
+            expect(decl.typeParameters).toHaveLength(0);
+        }
+
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/main.ts".fDestructuredParam',
+            resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomInterface'),
+            1,
+        );
+    });
+
     test("function with single parameter of referenced class type", async () => {
         const decl = funDecls.get('"./src/main.ts".fParamRef');
         expect(decl).toBeDefined();

@@ -101,7 +101,7 @@ export class FunctionDeclarationProcessor extends Processor {
  */
 export class FunctionParameterProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition(
-        [AST_NODE_TYPES.Identifier], // TODO: add other parameter patterns
+        [AST_NODE_TYPES.Identifier, AST_NODE_TYPES.ObjectPattern], // TODO: add other parameter patterns
         ({localContexts}) =>
             !!localContexts.parentContexts && localContexts.parentContexts.has(CoreContextKeys.FUNCTION_TYPE)
     );
@@ -119,12 +119,13 @@ export class FunctionParameterProcessor extends Processor {
                     const funcTypeParam = functionType.parameters[paramIndex];
 
                     // TODO: handle function overloads: funcTypeParam must always be defined!
-                    if (funcTypeParam && node.type === AST_NODE_TYPES.Identifier) {
+                    if (funcTypeParam) {
+                        const paramName = node.type === AST_NODE_TYPES.Identifier ? funcTypeParam.name : "";
                         return singleEntryConceptMap(
                             LCEParameterDeclaration.conceptId,
                             new LCEParameterDeclaration(
                                 funcTypeParam.index,
-                                funcTypeParam.name,
+                                paramName,
                                 funcTypeParam.type,
                                 "optional" in node && !!node.optional,
                                 getAndDeleteChildConcepts(IdentifierTraverser.DECORATORS_PROP, LCEDecorator.conceptId, childConcepts),

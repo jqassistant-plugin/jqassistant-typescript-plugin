@@ -53,6 +53,7 @@ function fBodyRef() {
 
 function fParam(p1: number) {}
 function fMultiParam(p1: number, p2: string, p3?: string) {}
+function fDestructuredParam({x, y}: CustomInterface): void {}
 // function fParamDefault(p1: string = "") {} // TODO: enable this once default parameters are supported
 // function fSpread(...p1: number[]) {} // TODO: enable this once spread parameters are supported
 function fParamRef(p1: CustomClass) {}
