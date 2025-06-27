@@ -9,6 +9,10 @@
 
     <artifactId>jqassistant-typescript-plugin</artifactId>
 
+    <name>jQAssistant TypeScript Plugin</name>
+    <description>The jQAssistant plugin providing scanners and rules for TypeScript.</description>
+    <url>https://github.com/jqassistant-plugin/jqassistant-typescript-plugin</url>
+
     <build>
         <plugins>
             <plugin>
