@@ -10,7 +10,7 @@
 
     <groupId>org.jqassistant.plugin.typescript</groupId>
     <artifactId>parent</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.4.1</version>
     <packaging>pom</packaging>
 
     <name>jQAssistant TypeScript Plugin Parent</name>
@@ -46,7 +46,7 @@
         <developerConnection>scm:git:https://github.com/jqassistant-plugin/jqassistant-typescript-plugin.git
         </developerConnection>
         <url>https://github.com/jqassistant-plugin/jqassistant-typescript-plugin</url>
-        <tag>HEAD</tag>
+        <tag>1.4.1</tag>
     </scm>
 
     <modules>
