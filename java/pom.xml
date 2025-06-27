@@ -9,29 +9,7 @@
 
     <artifactId>jqassistant-typescript-plugin</artifactId>
 
-    <properties>
-        <jqa-plugin-common.version>${com.buschmais.jqassistant.version}</jqa-plugin-common.version>
-        <jqa-json-plugin.version>${com.buschmais.jqassistant.version}</jqa-json-plugin.version>
-        <lombok.version>1.18.34</lombok.version>
-    </properties>
-
     <build>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <includes>
-                    <include>META-INF/jqassistant-plugin.xml</include>
-                </includes>
-                <filtering>true</filtering>
-            </resource>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <excludes>
-                    <exclude>META-INF/jqassistant-plugin.xml</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -47,26 +25,37 @@
         <dependency>
             <groupId>com.buschmais.jqassistant.core</groupId>
             <artifactId>store</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.buschmais.jqassistant.core</groupId>
             <artifactId>scanner</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.buschmais.jqassistant.core</groupId>
+            <artifactId>report</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.buschmais.jqassistant.plugin</groupId>
             <artifactId>common</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.buschmais.xo</groupId>
             <artifactId>xo.api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.buschmais.jqassistant.plugin</groupId>
             <artifactId>json</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -91,6 +80,7 @@
         <dependency>
             <groupId>com.buschmais.jqassistant.core</groupId>
             <artifactId>test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
