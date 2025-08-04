@@ -26,7 +26,7 @@
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",
     "@types/jest": "^30.0.0",
-    "@types/minimatch": "^5.1.2",
+    "@types/minimatch": "^6.0.0",
     "eslint-config-prettier": "^10.1.5",
     "jest": "^30.0.2",
     "npm-check-updates": "^18.0.1",
