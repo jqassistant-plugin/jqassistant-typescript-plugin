@@ -112,7 +112,7 @@ export class DependencyResolutionProcessor extends Processor {
         for (const dep of dependencies) {
             if (!dep.fqn.globalFqn) continue;
 
-            if ((!dep.fqn.globalFqn.startsWith('"') && dep.targetType !== "module") || dep.fqn.globalFqn.startsWith(dep.globalSourceFQN)) continue; // skip invalid FQNs and dependencies on own scope
+            if ((!dep.fqn.globalFqn.startsWith('"') && dep.targetType !== "module") || dep.fqn.globalFqn === dep.globalSourceFQN) continue; // skip invalid FQNs and dependencies with same source and target
 
             if (!depIndex.has(dep.globalSourceFQN)) {
                 depIndex.set(dep.globalSourceFQN, new Map([[dep.fqn.globalFqn, dep]]));
