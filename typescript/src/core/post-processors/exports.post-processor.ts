@@ -40,7 +40,13 @@ export class ExportsPostProcessor extends PostProcessor {
 
         const stats = fs.statSync(modulePathAbsolute);
         if (stats.isDirectory()) {
-            modulePathAbsolute += "/index.ts";
+            if (fs.existsSync(modulePathAbsolute + "/index.ts")) {
+                modulePathAbsolute += "/index.ts";
+            } else if (fs.existsSync(modulePathAbsolute + "/index.tsx")) {
+                modulePathAbsolute += "/index.tsx";
+            } else if (fs.existsSync(modulePathAbsolute + "/index.mts")) {
+                modulePathAbsolute += "/index.mts";
+            }
         }
         const rawExports = this.filterExportsForModule(exports, modulePathAbsolute);
 
