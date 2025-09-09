@@ -10,6 +10,7 @@ import { LCEVariableDeclaration } from "../../core/concepts/variable-declaration
 import { LCEFunctionDeclaration } from "../../core/concepts/function-declaration.concept";
 import { VariableDeclarationProcessor } from "../../core/processors/variable-declaration.processor";
 import { ReactContextKeys } from "../context.keys";
+import {debug} from "../../core/utils/log.utils";
 
 export class JSXDependencyContextProcessor extends Processor {
     public static readonly JSX_DEPENDENCY_METADATA: "jsx-dependencies";
@@ -74,8 +75,7 @@ export class JSXDependencyProcessor extends Processor {
                 let currentExpression = node.name.object;
                 while (currentExpression.type === AST_NODE_TYPES.JSXMemberExpression) {
                     if (depth > 20) {
-                        console.log("ERROR: Could not resolve JSX member expression:");
-                        console.log(name);
+                        debug(`ERROR: Could not resolve JSX member expression: ${name}`);
                         return new Map();
                     }
                     name = currentExpression.property.name + "." + name;

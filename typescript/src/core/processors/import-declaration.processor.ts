@@ -8,6 +8,7 @@ import { Processor } from "../processor";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
 import { NodeUtils } from "../utils/node.utils";
 import path from "path";
+import {debug} from "../utils/log.utils";
 
 export class ImportDeclarationProcessor extends Processor {
     public executionCondition: ExecutionCondition = new ExecutionCondition([AST_NODE_TYPES.ImportDeclaration], () => true);
@@ -26,16 +27,20 @@ export class ImportDeclarationProcessor extends Processor {
             for (const specifier of node.specifiers) {
                 let target = new FQN("");
                 let isModule = false;
-                if (specifier.type === AST_NODE_TYPES.ImportSpecifier) {
-                    const importSourceFqn = this.importSourceToFqn(importSource, globalContext);
-                    const importedName = specifier.imported.type === AST_NODE_TYPES.Identifier ? specifier.imported.name : specifier.imported.raw;
-                    target = new FQN(importSourceFqn.globalFqn + "." + importedName, importSourceFqn.localFqn + "." + importedName);
-                } else if (specifier.type === AST_NODE_TYPES.ImportDefaultSpecifier) {
-                    const importSourceFqn = this.importSourceToFqn(importSource, globalContext);
-                    target = new FQN(importSourceFqn.globalFqn + ".default", importSourceFqn.localFqn + ".default");
-                } else if (specifier.type === AST_NODE_TYPES.ImportNamespaceSpecifier) {
-                    target = new FQN(path.resolve(globalContext.projectInfo.rootPath, importSource), importSource);
-                    isModule = true;
+                try {
+                    if (specifier.type === AST_NODE_TYPES.ImportSpecifier) {
+                        const importSourceFqn = this.importSourceToFqn(importSource, globalContext);
+                        const importedName = specifier.imported.type === AST_NODE_TYPES.Identifier ? specifier.imported.name : specifier.imported.raw;
+                        target = new FQN(importSourceFqn.globalFqn + "." + importedName, importSourceFqn.localFqn + "." + importedName);
+                    } else if (specifier.type === AST_NODE_TYPES.ImportDefaultSpecifier) {
+                        const importSourceFqn = this.importSourceToFqn(importSource, globalContext);
+                        target = new FQN(importSourceFqn.globalFqn + ".default", importSourceFqn.localFqn + ".default");
+                    } else if (specifier.type === AST_NODE_TYPES.ImportNamespaceSpecifier) {
+                        target = new FQN(path.resolve(globalContext.projectInfo.rootPath, importSource), importSource);
+                        isModule = true;
+                    }
+                } catch (e) {
+                    debug(`Error while resolving import: ${e}`)
                 }
 
                 if (!isModule && ModulePathUtils.getPathType(ModulePathUtils.extractFQNPath(target.globalFqn)) === "node") {
@@ -63,7 +68,7 @@ export class ImportDeclarationProcessor extends Processor {
                             );
                         }
                     } catch (e) {
-                        console.log("\n" + `Error: Could not resolve import path for: ${ModulePathUtils.extractFQNPath(target.globalFqn)}`);
+                        debug(`Error: Could not resolve import path for: ${ModulePathUtils.extractFQNPath(target.globalFqn)}`);
                     }
                 }
 

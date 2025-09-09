@@ -8,6 +8,7 @@ import { LCEDependency } from "../concepts/dependency.concept";
 import { NodeUtils } from "../utils/node.utils";
 import * as fs from "fs";
 import { LCEProject, LCEProjectInfo } from "../project";
+import {debug} from "../utils/log.utils";
 
 export class ExportsPostProcessor extends PostProcessor {
     postProcess(projects: LCEProject[]): void {
@@ -97,10 +98,9 @@ export class ExportsPostProcessor extends PostProcessor {
                                 this.addDependency(concepts, modulePathAbsolute, originalExport.globalDeclFqn);
                             }
                         } else {
-                            console.error(
-                                `Error: could not find exported declaration "${exp.identifier}" in "${exp.importSource}": Ignoring export...`,
+                            debug(
+                                `Error: could not find exported declaration "${exp.identifier}" in "${exp.importSource}": Ignoring export...\n\toccurred at ${exp.sourceFilePathAbsolute}}`,
                             );
-                            console.error(`\toccurred at ${exp.sourceFilePathAbsolute}}`);
                         }
                     }
                 } else {
@@ -113,8 +113,7 @@ export class ExportsPostProcessor extends PostProcessor {
                         try {
                             resolvedModulePath = NodeUtils.resolveImportPath(exp.importSource, projectInfo, exp.sourceFilePathAbsolute);
                         } catch (e) {
-                            console.error(`Error: Could not resolve module: ${exp.importSource}`);
-                            console.error(`\toccurred at ${exp.sourceFilePathAbsolute}}`);
+                            debug(`Error: Could not resolve module: ${exp.importSource}\n\toccurred at ${exp.sourceFilePathAbsolute}}`);
                         }
 
                         if (resolvedModulePath) {
@@ -173,16 +172,15 @@ export class ExportsPostProcessor extends PostProcessor {
                                 );
                                 this.addDependency(concepts, modulePathAbsolute, eDecl.fqn.globalFqn);
                             } else {
-                                console.error(
+                                debug(
                                     `Error: external declaration with identifier "${exp.identifier}" in module "${exp.importSource}" could not be found: Ignoring export...`,
                                 );
                             }
                         }
                     } else {
-                        console.error(
-                            `Error: external module "${exp.importSource}" for re-export of "${exp.identifier}" could not be found. Ignoring export...`,
+                        debug(
+                            `Error: external module "${exp.importSource}" for re-export of "${exp.identifier}" could not be found. Ignoring export...\n\toccurred at ${exp.sourceFilePathAbsolute}`,
                         );
-                        console.error(`\toccurred at ${exp.sourceFilePathAbsolute}}`);
                     }
                 }
             } else {

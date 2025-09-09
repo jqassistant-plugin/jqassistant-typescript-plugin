@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 
+import pkg from '../package.json';
 import { program } from "commander";
 import { processProjectsAndOutputResult } from "./core/extractor";
 import packageInfo from "../package.json";
@@ -30,6 +31,8 @@ setMaxTypeResolutionDepth(parseInt(options.typeResolutionDepth));
 setDebugLogging(!!options.debug);
 
 const projectRootPath: string = program.processedArgs[0];
+
+console.log(`Running jQAssistant TypeScript Language Concept Extractor ${pkg.version}`)
 
 // initialize extensions
 if(extensions.includes("react")) {

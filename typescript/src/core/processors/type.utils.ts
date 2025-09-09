@@ -54,6 +54,7 @@ import { DependencyResolutionProcessor } from "./dependency-resolution.processor
 import { NodeUtils } from "../utils/node.utils";
 import path from "path";
 import { FileUtils } from "../utils/file.utils";
+import {debug} from "../utils/log.utils";
 
 let MAX_TYPE_RESOLUTION_DEPTH = 10;
 
@@ -474,8 +475,7 @@ function parseType(
             return result;
         }
     } catch (e) {
-        console.error("Error occurred during type resolution:");
-        console.error(e);
+        debug(`Error occurred during type resolution:\n${e}`);
         return new LCETypeNotIdentified(tc.typeToString(type));
     }
 }
