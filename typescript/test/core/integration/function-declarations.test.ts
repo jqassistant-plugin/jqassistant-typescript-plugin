@@ -25,6 +25,7 @@ describe("function declarations test", () => {
     const funDecls: Map<string, LCEFunctionDeclaration> = new Map();
     let dependencies: Map<string, Map<string, LCEDependency>>;
     let mainModule: LCEModule;
+    let indexModule: LCEModule;
 
     beforeAll(async () => {
         const projects = await processProjects(projectRootPath);
@@ -53,6 +54,12 @@ describe("function declarations test", () => {
             throw new Error("Could not find main module in result data");
         }
         mainModule = mainModuleConcept as LCEModule;
+
+        const indexModuleConcept = result.get(LCEModule.conceptId)?.find((mod) => (mod as LCEModule).fqn.localFqn === "./src/MyComponent/index.ts");
+        if (!indexModuleConcept) {
+            throw new Error("Could not find main module in result data");
+        }
+        indexModule = indexModuleConcept as LCEModule;
 
         dependencies = getDependenciesFromResult(result);
     });
@@ -537,6 +544,34 @@ describe("function declarations test", () => {
             dependencies,
             '"./src/main.ts".fGenericDependency',
             resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomType'),
+            1,
+        );
+    });
+
+    test("function within index.ts with single parameter of referenced class type", async () => {
+        const decl = funDecls.get('"./src/MyComponent".MyComponent');
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.coordinates.fileName).toBe(indexModule.path);
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/MyComponent".MyComponent'));
+            expect(decl.functionName).toBe("MyComponent");
+
+            expectPrimitiveType(decl.returnType, "number");
+
+            expect(decl.parameters).toHaveLength(1);
+            expectFunctionParameter(decl.parameters, 0, "props", false);
+            expectDeclaredType(decl.parameters[0]!.type, resolveGlobalFqn(projectRootPath, '"./src/MyComponent".MyComponentPropType'));
+
+            expect(decl.async).toBe(false);
+
+            expect(decl.typeParameters).toHaveLength(0);
+        }
+
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            '"./src/MyComponent".MyComponent',
+            resolveGlobalFqn(projectRootPath, '"./src/MyComponent".MyComponentPropType'),
             1,
         );
     });
