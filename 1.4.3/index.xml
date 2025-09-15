@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>jQA Typescript Plugin</title>
+      <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin</link>
+      <description>Last 10 notes on jQA Typescript Plugin</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>Node - TS Value Call</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Call</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Call</guid>
+    <description>:TS:Value:Call Node → represents the return value of a function call of some value Relations NameTarget Label(s)CardinalityDescriptionCALLS:TS:Value1value on which the call ...</description>
+    <pubDate>Mon, 15 Sep 2025 08:25:08 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Class</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Class</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Class</guid>
+    <description>:TS:Value:Class Node → represents a class value Example: let x = class { // .. }.</description>
+    <pubDate>Mon, 15 Sep 2025 08:25:08 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Complex</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Complex</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Complex</guid>
+    <description>:TS:Value:Complex Node → represents values that cannot be represented via the other :TS:Value sub-variants Properties NameDescriptionexpressionstring representation of ...</description>
+    <pubDate>Mon, 15 Sep 2025 08:25:08 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Declared</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Declared</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Declared</guid>
+    <description>:TS:Value:Declared Node → represents a value that is declared somewhere else (i.e. a variable) Properties NameDescriptionreferencedGlobalFqnglobal FQN of the value declaration that is referenced by the value node (this mainly serves as a convenience property to simplify queries) Relations NameTarget Label(s)CardinalityDescriptionREFERENCES:TS:Variable:TS:Function:TS:Class:TS:Enum:TS:EnumMember:TS:ExternalDeclaration1declaration that defines the referenced value.</description>
+    <pubDate>Mon, 15 Sep 2025 08:25:08 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Function</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Function</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Function</guid>
+    <description>:TS:Value:Function Node → represents a function value Examples: let x = () =&gt; { // .. }; let y = function() { // .. }; Properties NameDescriptionarrowFunction (boolean)indicates, if the function uses the arrow syntax.</description>
+    <pubDate>Mon, 15 Sep 2025 08:25:08 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Literal</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Literal</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Literal</guid>
+    <description>:TS:Value:Literal Node → represents a literal value Properties NameDescriptionvaluevalue of the literal (either a string, number or boolean).</description>
+    <pubDate>Mon, 15 Sep 2025 08:25:08 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Member</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Member</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Member</guid>
+    <description>:TS:Value:Member Node → represents a member relationship (i.e. the access of an object member via something like obj.member) Relations NameTarget Label(s)CardinalityDescriptionPARENT:TS:Value1value of the parent of which a member is accessedMEMBER:TS:Value1value of the member.</description>
+    <pubDate>Mon, 15 Sep 2025 08:25:08 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Null</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Null</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Null</guid>
+    <description>:TS:Value:Null Node → represents a null or undefined value Properties NameDescriptionkindeither null or undefined.</description>
+    <pubDate>Mon, 15 Sep 2025 08:25:08 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value Object</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Object</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Object</guid>
+    <description>:TS:Value:Object Node → represents an object value Relations NameTarget Label(s)CardinalityDescriptionHAS_MEMBER:TS:Value:ObjectMember0..*members of the object (with ...</description>
+    <pubDate>Mon, 15 Sep 2025 08:25:08 GMT</pubDate>
+  </item><item>
+    <title>Node - TS Value ObjectMember</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-ObjectMember</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-ObjectMember</guid>
+    <description>:TS:Value:ObjectMember Node → represents a member of a :TS:Value:Object Properties NameDescriptionnamename of the object member Relations NameTarget Label(s)CardinalityDescriptionREFERENCES:TS:Value1value ...</description>
+    <pubDate>Mon, 15 Sep 2025 08:25:08 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>
