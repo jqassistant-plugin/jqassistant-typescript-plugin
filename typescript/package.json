@@ -19,7 +19,7 @@
     "commander": "14.0.2",
     "eslint": "9.38.0",
     "json5": "2.2.3",
-    "minimatch": "10.0.3",
+    "minimatch": "10.1.1",
     "readdirp": "4.1.2",
     "typescript": "5.9.3"
   },
