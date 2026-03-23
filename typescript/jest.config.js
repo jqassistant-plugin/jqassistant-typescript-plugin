@@ -3,5 +3,6 @@ module.exports = {
     preset: "ts-jest",
     testEnvironment: "node",
     moduleDirectories: ["node_modules", "src", "test"],
-    modulePathIgnorePatterns: ["dist", "target"]
+    modulePathIgnorePatterns: ["dist", "target"],
+    maxWorkers: 1,
 };
