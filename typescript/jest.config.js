@@ -3,6 +3,7 @@ module.exports = {
     preset: "ts-jest",
     testEnvironment: "node",
     moduleDirectories: ["node_modules", "src", "test"],
-    modulePathIgnorePatterns: ["dist", "target"],
+    modulePathIgnorePatterns: ["/sample-projects/"],
     maxWorkers: 1,
+    roots: ["<rootDir>/test"],
 };
