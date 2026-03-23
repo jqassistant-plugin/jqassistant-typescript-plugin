@@ -67,7 +67,7 @@ export class EnumMemberProcessor extends Processor {
     }
 
     public override postChildrenProcessing({ node, localContexts, globalContext }: ProcessingContext, childConcepts: ConceptMap): ConceptMap {
-        if (node.type === AST_NODE_TYPES.TSEnumMember && !node.computed) {
+        if (node.type === AST_NODE_TYPES.TSEnumMember) {
             const init = getAndDeleteAllValueChildConcepts(EnumMemberTraverser.INIT_PROP, childConcepts);
 
             const memberName = node.id.type === AST_NODE_TYPES.Identifier ? node.id.name : node.id.raw;
@@ -81,7 +81,6 @@ export class EnumMemberProcessor extends Processor {
             );
             return singleEntryConceptMap(LCEEnumMember.conceptId, member);
         }
-        // TODO: add enum member with computed names
         return new Map();
     }
 }
