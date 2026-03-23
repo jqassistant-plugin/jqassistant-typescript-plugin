@@ -3,11 +3,12 @@
     "compilerOptions": {
         "target": "ESNext",
         "experimentalDecorators": true,
-         "module": "Node16",
-         "moduleResolution": "node16",
-         "paths": {
-             "@typescript-eslint/types/dist/generated/ast-spec": ["./node_modules/@typescript-eslint/types/dist/generated/ast-spec"]
-         },
+        "module": "Node16",
+        "moduleResolution": "node16",
+        "isolatedModules": true,
+        "paths": {
+            "@typescript-eslint/types/dist/generated/ast-spec": ["./node_modules/@typescript-eslint/types/dist/generated/ast-spec"]
+        },
         "resolveJsonModule": true,
         "allowJs": true,
         "outDir": "dist",
