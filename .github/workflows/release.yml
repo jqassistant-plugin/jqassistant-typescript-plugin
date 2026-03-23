@@ -48,7 +48,7 @@
           ossrh_signing_password: ${{ secrets.OSSRH_SIGNING_PASSWORD }}
           sonar_token: ${{ secrets.SONAR_TOKEN }}
       npm-release:
-        if: ${{ !github.event.inputs.skipNpmRelease }}
+        if: ${{ !cancelled() && !failure() && !github.event.inputs.skipNpmRelease }}
         needs: [ maven-release ]
         runs-on: ubuntu-latest
         permissions:
