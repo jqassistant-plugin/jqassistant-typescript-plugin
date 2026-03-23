@@ -1,0 +1,882 @@
+<html>
+    <head>
+        <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>jQAssistant Report</title>
+    </head>
+    <body>
+        <script type="text/javascript" xmlns:tns="http://schema.jqassistant.org/report/v2.9">
+            function getResultElement(id) {
+                return document.getElementById('resultOf' + id);
+            }
+
+            function showResult(ruleId) {
+                if (!ruleId) return;
+                    var details = document.getElementById(ruleId);
+                if (!details) return;
+                details.open = true;
+                details.scrollIntoView({
+                    block: "start"
+                    });
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                document.querySelectorAll(".timeStamp").forEach(stamp => {
+                    const date = new Date(stamp.textContent);
+                    const options = {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                        timeZoneName: "short"
+                    }
+                    const parts = new Intl.DateTimeFormat("en-US", options).formatToParts(date);
+                    function getValue(type) {
+                        for (var i = 0; i < parts.length; i++) {
+                            if (parts[i].type === type){
+                                return parts[i].value;
+                            }
+                        }
+                        return "";
+                    }
+                    stamp.textContent =
+                        `${getValue("day")}.`
+                        +`${getValue("month")}.`
+                        +`${getValue("year")} `
+                        +`${getValue("hour")}:`
+                        +`${getValue("minute")} `
+                        +`(${getValue("timeZoneName")})`;
+                });
+            });
+        </script>
+        <style type="text/css">
+            body {
+                font-family:'Open Sans', sans-serif;
+                line-height:1.5;
+                color:#3d3a37;
+                background-color:#FFFCF0
+                overflow: auto;
+                width:80%
+            }
+
+            a, a:link, a:visited, a:hover, a:focus, a:active {
+                color:#000;
+            }
+
+            h1 {
+                margin: 0;
+            }
+
+            h5 {
+            margin: 0;
+            }
+
+            h6 {
+                color:#747270;
+                font-weight:normal;
+                margin: 0;
+                }
+
+            h3 {
+                margin-bottom: 0;
+            }
+
+            ul {
+                margin-top: 0;
+                margin-left: 25px;
+                padding-left: 0;
+            }
+
+            .abstractRule {
+                font-style: italic;
+            }
+
+            table {
+                border-collapse:collapse;
+                background-color:#e0ddd1;
+                }
+
+            table th {
+            background-color:#aba9a1;
+                color:#fff;
+                }
+
+            table tr td, th {
+                border-style:solid;
+                border-width:1.5px;
+                border-color:#aba9a1;
+                padding:5px;
+                white-space: nowrap;
+            }
+
+            table tr th {
+                text-align:left;
+            }
+
+            #footer {
+                color:#747270;
+            }
+
+            .report-table {
+                display:inline-block;
+                width: max-content
+                border-collapse:collapse;
+                background-color:#e0ddd1;
+                border-radius: 10px;
+                white-space: normal;
+                overflow-wrap: anywhere;
+                overflow: hidden;
+                margin-right:10px;
+
+            }
+
+            .header-row {
+                background: #7a7974;
+                font-weight: 600;
+                border-bottom: 1px solid #ccc;
+                background-color:#aba9a1;
+                color:#fff;
+            }
+
+            .columns-grid {
+                display: grid;
+                grid-template-columns:  55px 65px 80px 90px minmax(350px,1Fr);
+                padding: 6px;
+            }
+
+            .groups-grid {
+                display: grid;
+                grid-template-columns:  40px 350px minmax(300px,1Fr);
+                padding: 6px;
+            }
+
+            .details-content {
+                margin: 10px;
+            }
+
+            .row-separator {
+                border-bottom: 1px solid #ddd;
+            }
+
+            .rule-name {
+                cursor:pointer;
+                text-decoration:underline;
+            }
+
+            .result {
+                margin-bottom: 12px;
+                color:#3d3a37;
+            }
+
+            .success {
+                background-color:#43a047; 
+                color:#fff;
+            }
+
+            .failure {
+                background-color:#ce413c; 
+                color:#fff;
+            }
+
+            .warning {
+                background-color:#e3ad24; 
+                color:#fff;
+            }
+
+            .skipped {
+                background-color:#bfbdb4; 
+            }
+        </style>
+        <h1>
+            jQAssistant Report - jQAssistant TypeScript Plugin Parent</h1>
+        <h5>
+                        Timestamp:
+            <span class="timeStamp">2026-03-23T09:41:45.354Z</span>
+        </h5>
+        <div>
+            <h3>Constraints</h3>
+            <h6>
+                <ul>
+                    <li>Move the mouse over a constraint to view a description.</li>
+                    <li>Click on a constraint to open a details view.</li>
+                </ul>
+            </h6>
+            <section class="report-table">
+                <div class="header-row columns-grid">
+                    <div>#</div>
+                    <div>Status</div>
+                    <div>Severity</div>
+                    <div>Count</div>
+                    <div>Constraint</div>
+                </div>
+                <details id="jqassistant-plugin-maven:GroupId" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>1</div>
+                        <div>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>major</div>
+                        <div>0</div>
+                        <div>
+                            <span title="The groupId for jQAssistant plugin Maven projects must follow the pattern 'org.jqassistant.plugin.<project>'." class="rule-name">jqassistant-plugin-maven:GroupId</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-maven:GroupId" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">The groupId for jQAssistant plugin Maven projects must follow the pattern 'org.jqassistant.plugin.&lt;project&gt;'.</pre>
+                        <p> (no result)</p>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-maven:MavenModulesMustUseParentGroupId" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>2</div>
+                        <div>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>major</div>
+                        <div>0</div>
+                        <div>
+                            <span title="All Maven projects must define the same groupId as the parent of the plugin project." class="rule-name">jqassistant-plugin-maven:MavenModulesMustUseParentGroupId</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-maven:MavenModulesMustUseParentGroupId" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">All Maven projects must define the same groupId as the parent of the plugin project.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('jqassistant-plugin-maven:ParentProject')">jqassistant-plugin-maven:ParentProject</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-maven:ParentProjectMustDefineDeveloper" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>3</div>
+                        <div>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>major</div>
+                        <div>0</div>
+                        <div>
+                            <span title="At least one developer must be specified in the &quot;developers&quot; section of the parent pom.xml of a plugin project." class="rule-name">jqassistant-plugin-maven:ParentProjectMustDefineDeveloper</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-maven:ParentProjectMustDefineDeveloper" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">At least one developer must be specified in the "developers" section of the parent pom.xml of a plugin project.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('jqassistant-plugin-maven:ParentProject')">jqassistant-plugin-maven:ParentProject</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-maven:ParentProjectMustDefineScmSection" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>4</div>
+                        <div>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>major</div>
+                        <div>0</div>
+                        <div>
+                            <span title="A SCM section having both connection and developerConnection set to &quot;scm:git:https://github.com/jqassistant-plugin/_repository-name_&quot; must be specified in the parent pom.xml of a plugin project." class="rule-name">jqassistant-plugin-maven:ParentProjectMustDefineScmSection</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-maven:ParentProjectMustDefineScmSection" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">A SCM section having both connection and developerConnection set to "scm:git:https://github.com/jqassistant-plugin/_repository-name_" must be specified in the parent pom.xml of a plugin project.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('jqassistant-plugin-maven:ParentProject')">jqassistant-plugin-maven:ParentProject</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-maven:ParentProjectMustDefineUrl" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>5</div>
+                        <div>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>major</div>
+                        <div>0</div>
+                        <div>
+                            <span title="The project URL must be defined in the parent pom.xml of a plugin project." class="rule-name">jqassistant-plugin-maven:ParentProjectMustDefineUrl</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-maven:ParentProjectMustDefineUrl" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">The project URL must be defined in the parent pom.xml of a plugin project.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('jqassistant-plugin-maven:ParentProject')">jqassistant-plugin-maven:ParentProject</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-package:PackagesMustHaveGroupIdPrefix" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>6</div>
+                        <div>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>major</div>
+                        <div>0</div>
+                        <div>
+                            <span title="All package names used in a Maven project must start with the groupId." class="rule-name">jqassistant-plugin-package:PackagesMustHaveGroupIdPrefix</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-package:PackagesMustHaveGroupIdPrefix" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">All package names used in a Maven project must start with the groupId.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('java:GeneratedType')">java:GeneratedType</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-plugin:Neo4jProceduresMustBeRegistered" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>7</div>
+                        <div>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>major</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Types declaring Neo4j procedures must be registered." class="rule-name">jqassistant-plugin-plugin:Neo4jProceduresMustBeRegistered</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-plugin:Neo4jProceduresMustBeRegistered" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Types declaring Neo4j procedures must be registered.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('neo4j:Procedure')">neo4j:Procedure</span></td><td><span class="success">success</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('jqassistant-plugin-plugin:PluginRegistersProcedure')">jqassistant-plugin-plugin:PluginRegistersProcedure</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-plugin:Neo4jUserFunctionsMustBeRegistered" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>8</div>
+                        <div>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>major</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Types declaring Neo4j user functions must be registered." class="rule-name">jqassistant-plugin-plugin:Neo4jUserFunctionsMustBeRegistered</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-plugin:Neo4jUserFunctionsMustBeRegistered" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Types declaring Neo4j user functions must be registered.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('neo4j:UserFunction')">neo4j:UserFunction</span></td><td><span class="success">success</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('jqassistant-plugin-plugin:PluginRegistersUserFunction')">jqassistant-plugin-plugin:PluginRegistersUserFunction</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-test:IntegrationTestClassSuffix" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>9</div>
+                        <div>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>major</div>
+                        <div>0</div>
+                        <div>
+                            <span title="All integration test classes must have the name suffix &quot;IT&quot; for being executed using the Maven Failsafe Plugin." class="rule-name">jqassistant-plugin-test:IntegrationTestClassSuffix</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-test:IntegrationTestClassSuffix" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">All integration test classes must have the name suffix "IT" for being executed using the Maven Failsafe Plugin.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('jqassistant-plugin-test:IT')">jqassistant-plugin-test:IT</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-plugin:PluginDescriptorShouldProvideVersion" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>10</div>
+                        <div>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>minor</div>
+                        <div>0</div>
+                        <div>
+                            <span title="The jQAssistant XML Plugin descriptor (&quot;/META-INF/jqassistant-plugin.xml&quot;) should provide a &quot;version&quot; attribute for its root element." class="rule-name">jqassistant-plugin-plugin:PluginDescriptorShouldProvideVersion</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-plugin:PluginDescriptorShouldProvideVersion" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">The jQAssistant XML Plugin descriptor ("/META-INF/jqassistant-plugin.xml") should provide a "version" attribute for its root element.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('jqassistant-plugin-plugin:PluginDescriptor')">jqassistant-plugin-plugin:PluginDescriptor</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+            </section>
+        </div>
+        <div>
+            <h3>Concepts</h3>
+            <h6>
+                <ul>
+                    <li>Move the mouse over a concept to view a description.</li>
+                    <li>Click on a concept to open a details view.</li>
+                    <li>Abstract concepts are shown in italics.</li>
+                </ul>
+            </h6>
+            <section class="report-table">
+                <div class="header-row columns-grid">
+                    <div>#</div>
+                    <div>Status</div>
+                    <div>Severity</div>
+                    <div>Count</div>
+                    <div>Concept</div>
+                </div>
+                <details id="java:GeneratedLombokType" class="row-separator">
+                    <summary class="warning columns-grid">
+                        <div>1</div>
+                        <div>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Warning (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#128901;</span>
+                        </div>
+                        <div>minor</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Labels types generated by Lombok as 'Generated' (requires 'lombok.addLombokGeneratedAnnotation=true' in 'lombok.config')." class="rule-name">java:GeneratedLombokType</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjava:GeneratedLombokType" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Labels types generated by Lombok as 'Generated' (requires 'lombok.addLombokGeneratedAnnotation=true' in 'lombok.config').</pre>
+                        <div class="result">
+                            <table>
+                                <tr>
+                                    <th>GeneratedTypes</th>
+                                </tr>
+                                <tr>
+                                    <td>0</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-plugin:PluginRegistersProcedure" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>1</div>
+                        <div>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Creates a `REGISTERS` relation between all procedure class elements of the jQAssistant plugin
+            descriptor to the matching Java type." class="rule-name">jqassistant-plugin-plugin:PluginRegistersProcedure</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-plugin:PluginRegistersProcedure" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Creates a `REGISTERS` relation between all procedure class elements of the jQAssistant plugin
+            descriptor to the matching Java type.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('jqassistant-plugin-plugin:PluginDescriptor')">jqassistant-plugin-plugin:PluginDescriptor</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-plugin:PluginRegistersUserFunction" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>2</div>
+                        <div>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Creates a `REGISTERS` relation between all function class elements of the jQAssistant plugin
+            descriptor to the matching Java type." class="rule-name">jqassistant-plugin-plugin:PluginRegistersUserFunction</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-plugin:PluginRegistersUserFunction" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Creates a `REGISTERS` relation between all function class elements of the jQAssistant plugin
+            descriptor to the matching Java type.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('jqassistant-plugin-plugin:PluginDescriptor')">jqassistant-plugin-plugin:PluginDescriptor</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-test:IT" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>3</div>
+                        <div>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Adds a label &quot;IntegrationTest&quot; to all non-abstract classes deriving from AbstractPluginIT or AbstractJavaPluginIT." class="rule-name">jqassistant-plugin-test:IT</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-test:IT" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Adds a label "IntegrationTest" to all non-abstract classes deriving from AbstractPluginIT or AbstractJavaPluginIT.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('junit5:TestClass')">junit5:TestClass</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="junit5:ParameterizedTestMethod" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>4</div>
+                        <div>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Finds all test methods (i.e. annotated with &quot;@org.junit.jupiter.api.ParameterizedTest&quot;) and
+labels them with &quot;Test&quot;, &quot;Parameterized&quot;, and &quot;Junit5&quot;." class="rule-name">junit5:ParameterizedTestMethod</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjunit5:ParameterizedTestMethod" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Finds all test methods (i.e. annotated with "@org.junit.jupiter.api.ParameterizedTest") and
+labels them with "Test", "Parameterized", and "Junit5".</pre>
+                        <p> (no result)</p>
+                    </div>
+                </details>
+                <details id="junit5:RepeatedTestMethod" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>5</div>
+                        <div>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Finds all test methods (i.e. annotated with &quot;@org.junit.jupiter.api.RepeatedTest&quot;) and
+labels them with &quot;Test&quot;, &quot;Repeated&quot;, and &quot;Junit5&quot;." class="rule-name">junit5:RepeatedTestMethod</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjunit5:RepeatedTestMethod" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Finds all test methods (i.e. annotated with "@org.junit.jupiter.api.RepeatedTest") and
+labels them with "Test", "Repeated", and "Junit5".</pre>
+                        <p> (no result)</p>
+                    </div>
+                </details>
+                <details id="junit5:TestTemplateMethod" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>6</div>
+                        <div>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Labels all methods annotated by &quot;@org.junit.jupiter.api.TestTemplate&quot;
+with &quot;Junit5&quot;, &quot;Test&quot; and &quot;Template&quot;." class="rule-name">junit5:TestTemplateMethod</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjunit5:TestTemplateMethod" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Labels all methods annotated by "@org.junit.jupiter.api.TestTemplate"
+with "Junit5", "Test" and "Template".</pre>
+                        <p> (no result)</p>
+                    </div>
+                </details>
+                <details id="neo4j:Procedure" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>7</div>
+                        <div>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Labels all types annotated with &quot;@org.neo4j.procedure.Procedure&quot; with `Neo4j` and `Procedure`." class="rule-name">neo4j:Procedure</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfneo4j:Procedure" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Labels all types annotated with "@org.neo4j.procedure.Procedure" with `Neo4j` and `Procedure`.</pre>
+                        <p> (no result)</p>
+                    </div>
+                </details>
+                <details id="neo4j:UserFunction" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>8</div>
+                        <div>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Labels all types annotated with &quot;@org.neo4j.procedure.UserFunction&quot; with `Neo4j` and
+            `UserFunction`." class="rule-name">neo4j:UserFunction</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfneo4j:UserFunction" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Labels all types annotated with "@org.neo4j.procedure.UserFunction" with `Neo4j` and
+            `UserFunction`.</pre>
+                        <p> (no result)</p>
+                    </div>
+                </details>
+                <details id="java:GeneratedType" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>9</div>
+                        <div>
+                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>minor</div>
+                        <div>0</div>
+                        <div>
+                            <span title="Reports the count of types labeled with `Generated`, grouped by containing artifact." class="rule-name">java:GeneratedType</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjava:GeneratedType" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Reports the count of types labeled with `Generated`, grouped by containing artifact.</pre>
+                        <p> (no result)</p>
+                        <table>
+                            <tr>
+                                <th>Providing Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('java:GeneratedLombokType')">java:GeneratedLombokType</span></td><td><span class="failure">failure</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-maven:ParentProject" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>10</div>
+                        <div>
+                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>1</div>
+                        <div>
+                            <span title="Labels all Maven projects which declare &quot;org.jqassistant.plugin:parent&quot; as parent module with &quot;Parent&quot;." class="rule-name">jqassistant-plugin-maven:ParentProject</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-maven:ParentProject" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Labels all Maven projects which declare "org.jqassistant.plugin:parent" as parent module with "Parent".</pre>
+                        <div class="result">
+                            <table>
+                                <tr>
+                                    <th>parent</th>
+                                </tr>
+                                <tr>
+                                    <td>jQAssistant TypeScript Plugin Parent</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+                <details id="jqassistant-plugin-plugin:PluginDescriptor" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>11</div>
+                        <div>
+                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>1</div>
+                        <div>
+                            <span title="Labels jQAssistant plugin descriptor files with `jQAssistant` and `PluginDescriptor`." class="rule-name">jqassistant-plugin-plugin:PluginDescriptor</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjqassistant-plugin-plugin:PluginDescriptor" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Labels jQAssistant plugin descriptor files with `jQAssistant` and `PluginDescriptor`.</pre>
+                        <div class="result">
+                            <table>
+                                <tr>
+                                    <th>Artifact</th><th>PluginDescriptor</th>
+                                </tr>
+                                <tr>
+                                    <td>org.jqassistant.plugin.typescript:jqassistant-typescript-plugin:jar:1.5.0-SNAPSHOT</td><td>/META-INF/jqassistant-plugin.xml</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+                <details id="junit5:TestClass" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>12</div>
+                        <div>
+                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>4</div>
+                        <div>
+                            <span title="Labels all classes containing test methods with &quot;Test&quot; and &quot;Junit5&quot;." class="rule-name">junit5:TestClass</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjunit5:TestClass" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Labels all classes containing test methods with "Test" and "Junit5".</pre>
+                        <div class="result">
+                            <table>
+                                <tr>
+                                    <th>TestClass</th><th>TestMethods</th>
+                                </tr>
+                                <tr>
+                                    <td>org.jqassistant.plugin.typescript.impl.filesystem.LocalFileResolverIT</td><td>void resolve()</td>
+                                </tr>
+                                <tr>
+                                    <td>org.jqassistant.plugin.typescript.react.TypescriptScannerReactIT</td><td>void testScanner()</td>
+                                </tr>
+                                <tr>
+                                    <td>org.jqassistant.plugin.typescript.core.basics.TypescriptScannerCoreBasicsIT</td><td>void testScanner()</td>
+                                </tr>
+                                <tr>
+                                    <td>org.jqassistant.plugin.typescript.core.multiproject.TypescriptScannerCoreMultiProjectIT</td><td>void testScanner()</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <table>
+                            <tr>
+                                <th>Required Concept</th><th>Status</th>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('junit5:ParameterizedTestMethod')">junit5:ParameterizedTestMethod</span></td><td><span class="success">success</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('junit5:TestMethod')">junit5:TestMethod</span></td><td><span class="success">success</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('junit5:TestTemplateMethod')">junit5:TestTemplateMethod</span></td><td><span class="success">success</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="rule-name" onclick="javascript:showResult('junit5:RepeatedTestMethod')">junit5:RepeatedTestMethod</span></td><td><span class="success">success</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </details>
+                <details id="junit5:TestMethod" class="row-separator">
+                    <summary class="success columns-grid">
+                        <div>13</div>
+                        <div>
+                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                        </div>
+                        <div>info</div>
+                        <div>4</div>
+                        <div>
+                            <span title="Finds all test methods (i.e. annotated with &quot;@org.junit.jupiter.api.Test&quot;) and
+labels them with &quot;Test&quot; and &quot;Junit5&quot;." class="rule-name">junit5:TestMethod</span>
+                        </div>
+                    </summary>
+                    <div id="resultOfjunit5:TestMethod" class="details-content" name="resultRow">
+                        <pre style="font-family:'Open Sans', sans-serif;">Finds all test methods (i.e. annotated with "@org.junit.jupiter.api.Test") and
+labels them with "Test" and "Junit5".</pre>
+                        <div class="result">
+                            <table>
+                                <tr>
+                                    <th>Test</th>
+                                </tr>
+                                <tr>
+                                    <td>void resolve()</td>
+                                </tr>
+                                <tr>
+                                    <td>void testScanner()</td>
+                                </tr>
+                                <tr>
+                                    <td>void testScanner()</td>
+                                </tr>
+                                <tr>
+                                    <td>void testScanner()</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+            </section>
+        </div>
+        <div>
+            <h3>Groups</h3>
+            <section class="report-table">
+                <div class="header-row groups-grid">
+                    <div>#</div>
+                    <div>Group</div>
+                    <div>Description</div>
+                </div>
+                <summary class="groups-grid">
+                    <div>1</div>
+                    <div>jqassistant-plugin:Default</div>
+                    <div></div>
+                </summary>
+                <summary class="groups-grid">
+                    <div>2</div>
+                    <div>jqassistant-plugin-maven:Default</div>
+                    <div></div>
+                </summary>
+                <summary class="groups-grid">
+                    <div>3</div>
+                    <div>jqassistant-plugin-test:Default</div>
+                    <div></div>
+                </summary>
+                <summary class="groups-grid">
+                    <div>4</div>
+                    <div>jqassistant-plugin-plugin:Default</div>
+                    <div></div>
+                </summary>
+                <summary class="groups-grid">
+                    <div>5</div>
+                    <div>jqassistant-plugin-package:Default</div>
+                    <div></div>
+                </summary>
+            </section>
+        </div>
+    </body>
+</html>

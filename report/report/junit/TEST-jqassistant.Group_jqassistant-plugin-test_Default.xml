@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<testsuite name="jqassistant.Group_jqassistant-plugin-test_Default" tests="7" failures="0" errors="0" time="0.0">
+    <testcase name="Concept_junit5_TestClass" time="0.0" classname="jqassistant.Group_jqassistant-plugin-test_Default"/>
+    <testcase name="Constraint_jqassistant-plugin-test_IntegrationTestClassSuffix" time="0.0" classname="jqassistant.Group_jqassistant-plugin-test_Default"/>
+    <testcase name="Concept_jqassistant-plugin-test_IT" time="0.0" classname="jqassistant.Group_jqassistant-plugin-test_Default"/>
+    <testcase name="Concept_junit5_TestMethod" time="0.0" classname="jqassistant.Group_jqassistant-plugin-test_Default"/>
+    <testcase name="Concept_junit5_RepeatedTestMethod" time="0.0" classname="jqassistant.Group_jqassistant-plugin-test_Default"/>
+    <testcase name="Concept_junit5_ParameterizedTestMethod" time="0.0" classname="jqassistant.Group_jqassistant-plugin-test_Default"/>
+    <testcase name="Concept_junit5_TestTemplateMethod" time="0.0" classname="jqassistant.Group_jqassistant-plugin-test_Default"/>
+</testsuite>
