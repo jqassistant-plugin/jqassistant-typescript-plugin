@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <testsuite name="jqassistant.Group_jqassistant-plugin-plugin_Default" tests="8" failures="0" errors="0" time="0.0">
-    <testcase name="Constraint_jqassistant-plugin-plugin_PluginDescriptorShouldProvideVersion" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
-    <testcase name="Concept_jqassistant-plugin-plugin_PluginDescriptor" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
-    <testcase name="Constraint_jqassistant-plugin-plugin_Neo4jProceduresMustBeRegistered" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
-    <testcase name="Concept_neo4j_Procedure" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
-    <testcase name="Concept_neo4j_UserFunction" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
     <testcase name="Constraint_jqassistant-plugin-plugin_Neo4jUserFunctionsMustBeRegistered" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
-    <testcase name="Concept_jqassistant-plugin-plugin_PluginRegistersUserFunction" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
+    <testcase name="Constraint_jqassistant-plugin-plugin_PluginDescriptorShouldProvideVersion" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
+    <testcase name="Concept_neo4j_Procedure" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
+    <testcase name="Concept_jqassistant-plugin-plugin_PluginDescriptor" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
+    <testcase name="Concept_neo4j_UserFunction" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
     <testcase name="Concept_jqassistant-plugin-plugin_PluginRegistersProcedure" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
+    <testcase name="Concept_jqassistant-plugin-plugin_PluginRegistersUserFunction" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
+    <testcase name="Constraint_jqassistant-plugin-plugin_Neo4jProceduresMustBeRegistered" time="0.0" classname="jqassistant.Group_jqassistant-plugin-plugin_Default"/>
 </testsuite>
