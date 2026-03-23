@@ -22,9 +22,20 @@
             required: true
             default: false
             type: boolean
+          skipMavenRelease:
+            description: "Skip Maven release job"
+            required: true
+            default: false
+            type: boolean
+          skipNpmRelease:
+            description: "Skip npm release job"
+            required: true
+            default: false
+            type: boolean
         
     jobs:
       maven-release:
+        if: ${{ !inputs.skipMavenRelease }}
         uses: jqassistant-tooling/jqassistant-github-actions/.github/workflows/release.yml@main
         with:
           releaseVersion: ${{ github.event.inputs.releaseVersion }}
@@ -37,6 +48,7 @@
           ossrh_signing_password: ${{ secrets.OSSRH_SIGNING_PASSWORD }}
           sonar_token: ${{ secrets.SONAR_TOKEN }}
       npm-release:
+        if: ${{ !inputs.skipNpmRelease }}
         needs: [ maven-release ]
         runs-on: ubuntu-latest
         permissions:
