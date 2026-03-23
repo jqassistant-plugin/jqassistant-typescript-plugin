@@ -28,13 +28,14 @@
           matrix:
             os: [ ubuntu-latest, windows-latest, macos-latest ]
         steps:
-          - uses: actions/checkout@v3
+          - uses: actions/checkout@v6
           - name: Setup Node.js (LTS)
-            uses: actions/setup-node@v3
+            uses: actions/setup-node@v6
             with:
               node-version: 'lts/*'
+              registry-url: 'https://registry.npmjs.org'
           - name: Install dependencies
-            run: npm install
+            run: npm ci
             working-directory: ./typescript
           - name: Run tests
             run: npm run test

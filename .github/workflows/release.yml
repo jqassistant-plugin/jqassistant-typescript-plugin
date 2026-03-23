@@ -57,12 +57,13 @@
           id-token: write
         steps:
           - name: Checkout repository
-            uses: actions/checkout@v4
+            uses: actions/checkout@v6
 
           - name: Setup Node.js (LTS)
-            uses: actions/setup-node@v3
+            uses: actions/setup-node@v6
             with:
               node-version: 'lts/*'
+              registry-url: 'https://registry.npmjs.org'
 
           - name: Update package.json to release version
             working-directory: ./typescript
@@ -70,17 +71,15 @@
 
           - name: Install dependencies
             working-directory: ./typescript
-            run: npm install
+            run: npm ci
 
           - name: Build package
             working-directory: ./typescript
             run: npm run build
 
           - name: Publish package
-            uses: JS-DevTools/npm-publish@v3
-            with:
-              token: ${{ secrets.NPM_TOKEN }}
-              package: ./typescript
+            working-directory: ./typescript
+            run: npm publish
 
           - name: Publish Versioned Quartz GitHub Pages
             uses: RelativeProgramming/versioned-quartz-gh-pages-deploy@v1.0.0
