@@ -13,7 +13,7 @@
     "dependencies": {
         "@types/node": "25.5.0",
         "@typescript-eslint/eslint-plugin": "8.58.0",
-        "@typescript-eslint/parser": "8.58.0",
+        "@typescript-eslint/parser": "8.58.1",
         "@typescript-eslint/typescript-estree": "8.58.0",
         "cli-progress": "3.12.0",
         "commander": "14.0.3",
