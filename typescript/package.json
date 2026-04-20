@@ -21,7 +21,7 @@
         "json5": "2.2.3",
         "minimatch": "10.2.5",
         "readdirp": "5.0.0",
-        "typescript": "5.9.3"
+        "typescript": "6.0.3"
     },
     "devDependencies": {
         "@types/cli-progress": "3.11.6",
