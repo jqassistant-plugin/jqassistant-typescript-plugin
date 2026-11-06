@@ -4,7 +4,7 @@
         <title>jQAssistant Report</title>
     </head>
     <body>
-        <script type="text/javascript" xmlns:tns="http://schema.jqassistant.org/report/v2.9">
+        <script type="text/javascript" xmlns:tns="http://schema.jqassistant.org/report/v2.10">
             function getResultElement(id) {
                 return document.getElementById('resultOf' + id);
             }
@@ -55,7 +55,7 @@
                 font-family:'Open Sans', sans-serif;
                 line-height:1.5;
                 color:#3d3a37;
-                background-color:#FFFCF0
+                background-color:#FFFCF0;
                 overflow: auto;
                 width:80%
             }
@@ -68,18 +68,22 @@
                 margin: 0;
             }
 
+            h3 {
+                margin-bottom: 0;
+            }
+
+            h4 {
+                margin-bottom: 2px;
+            }
+
             h5 {
-            margin: 0;
+                margin: 0;
             }
 
             h6 {
                 color:#747270;
                 font-weight:normal;
                 margin: 0;
-                }
-
-            h3 {
-                margin-bottom: 0;
             }
 
             ul {
@@ -164,6 +168,13 @@
                 text-decoration:underline;
             }
 
+            .hidden-header {
+                cursor:pointer;
+                text-decoration:underline;
+                margin-right: 0;
+                display: inline;
+            }
+
             .result {
                 margin-bottom: 12px;
                 color:#3d3a37;
@@ -192,7 +203,7 @@
             jQAssistant Report - jQAssistant TypeScript Plugin Parent</h1>
         <h5>
                         Timestamp:
-            <span class="timeStamp">2026-10-31T16:07:07.507Z</span>
+            <span class="timeStamp">2026-11-06T08:28:46.938Z</span>
         </h5>
         <div>
             <h3>Constraints</h3>
@@ -214,10 +225,12 @@
                     <summary class="success columns-grid">
                         <div>1</div>
                         <div>
-                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>major</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="The groupId for jQAssistant plugin Maven projects must follow the pattern 'org.jqassistant.plugin.<project>'." class="rule-name">jqassistant-plugin-maven:GroupId</span>
                         </div>
@@ -231,10 +244,12 @@
                     <summary class="success columns-grid">
                         <div>2</div>
                         <div>
-                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>major</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="All Maven projects must define the same groupId as the parent of the plugin project." class="rule-name">jqassistant-plugin-maven:MavenModulesMustUseParentGroupId</span>
                         </div>
@@ -256,10 +271,12 @@
                     <summary class="success columns-grid">
                         <div>3</div>
                         <div>
-                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>major</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="At least one developer must be specified in the &quot;developers&quot; section of the parent pom.xml of a plugin project." class="rule-name">jqassistant-plugin-maven:ParentProjectMustDefineDeveloper</span>
                         </div>
@@ -281,10 +298,12 @@
                     <summary class="success columns-grid">
                         <div>4</div>
                         <div>
-                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>major</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="A SCM section having both connection and developerConnection set to &quot;scm:git:https://github.com/jqassistant-plugin/_repository-name_&quot; must be specified in the parent pom.xml of a plugin project." class="rule-name">jqassistant-plugin-maven:ParentProjectMustDefineScmSection</span>
                         </div>
@@ -306,10 +325,12 @@
                     <summary class="success columns-grid">
                         <div>5</div>
                         <div>
-                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>major</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="The project URL must be defined in the parent pom.xml of a plugin project." class="rule-name">jqassistant-plugin-maven:ParentProjectMustDefineUrl</span>
                         </div>
@@ -331,10 +352,12 @@
                     <summary class="success columns-grid">
                         <div>6</div>
                         <div>
-                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>major</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="All package names used in a Maven project must start with the groupId." class="rule-name">jqassistant-plugin-package:PackagesMustHaveGroupIdPrefix</span>
                         </div>
@@ -356,10 +379,12 @@
                     <summary class="success columns-grid">
                         <div>7</div>
                         <div>
-                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>major</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Types declaring Neo4j procedures must be registered." class="rule-name">jqassistant-plugin-plugin:Neo4jProceduresMustBeRegistered</span>
                         </div>
@@ -384,10 +409,12 @@
                     <summary class="success columns-grid">
                         <div>8</div>
                         <div>
-                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>major</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Types declaring Neo4j user functions must be registered." class="rule-name">jqassistant-plugin-plugin:Neo4jUserFunctionsMustBeRegistered</span>
                         </div>
@@ -412,10 +439,12 @@
                     <summary class="success columns-grid">
                         <div>9</div>
                         <div>
-                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>major</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="All integration test classes must have the name suffix &quot;IT&quot; for being executed using the Maven Failsafe Plugin." class="rule-name">jqassistant-plugin-test:IntegrationTestClassSuffix</span>
                         </div>
@@ -437,10 +466,12 @@
                     <summary class="success columns-grid">
                         <div>10</div>
                         <div>
-                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Violations Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>minor</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="The jQAssistant XML Plugin descriptor (&quot;/META-INF/jqassistant-plugin.xml&quot;) should provide a &quot;version&quot; attribute for its root element." class="rule-name">jqassistant-plugin-plugin:PluginDescriptorShouldProvideVersion</span>
                         </div>
@@ -478,13 +509,15 @@
                     <div>Concept</div>
                 </div>
                 <details id="java:GeneratedLombokType" class="row-separator">
-                    <summary class="warning columns-grid">
+                    <summary class="success columns-grid">
                         <div>1</div>
                         <div>
-                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Warning (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#128901;</span>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
-                        <div>minor</div>
-                        <div>0</div>
+                        <div>info</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Labels types generated by Lombok as 'Generated' (requires 'lombok.addLombokGeneratedAnnotation=true' in 'lombok.config')." class="rule-name">java:GeneratedLombokType</span>
                         </div>
@@ -497,20 +530,23 @@
                                     <th>GeneratedTypes</th>
                                 </tr>
                                 <tr>
-                                    <td>0</td>
+                                    <td style="background-color:#f0ecdf;">0</td>
                                 </tr>
                             </table>
+                            <p></p>
                         </div>
                     </div>
                 </details>
                 <details id="jqassistant-plugin-plugin:PluginRegistersProcedure" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>1</div>
+                        <div>2</div>
                         <div>
-                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Creates a `REGISTERS` relation between all procedure class elements of the jQAssistant plugin
             descriptor to the matching Java type." class="rule-name">jqassistant-plugin-plugin:PluginRegistersProcedure</span>
@@ -532,12 +568,14 @@
                 </details>
                 <details id="jqassistant-plugin-plugin:PluginRegistersUserFunction" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>2</div>
+                        <div>3</div>
                         <div>
-                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Creates a `REGISTERS` relation between all function class elements of the jQAssistant plugin
             descriptor to the matching Java type." class="rule-name">jqassistant-plugin-plugin:PluginRegistersUserFunction</span>
@@ -559,12 +597,14 @@
                 </details>
                 <details id="jqassistant-plugin-test:IT" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>3</div>
+                        <div>4</div>
                         <div>
-                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Adds a label &quot;IntegrationTest&quot; to all non-abstract classes deriving from AbstractPluginIT or AbstractJavaPluginIT." class="rule-name">jqassistant-plugin-test:IT</span>
                         </div>
@@ -584,12 +624,14 @@
                 </details>
                 <details id="junit5:ParameterizedTestMethod" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>4</div>
+                        <div>5</div>
                         <div>
-                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Finds all test methods (i.e. annotated with &quot;@org.junit.jupiter.api.ParameterizedTest&quot;) and
 labels them with &quot;Test&quot;, &quot;Parameterized&quot;, and &quot;Junit5&quot;." class="rule-name">junit5:ParameterizedTestMethod</span>
@@ -603,12 +645,14 @@ labels them with "Test", "Parameterized", and "Junit5".</pre>
                 </details>
                 <details id="junit5:RepeatedTestMethod" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>5</div>
+                        <div>6</div>
                         <div>
-                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Finds all test methods (i.e. annotated with &quot;@org.junit.jupiter.api.RepeatedTest&quot;) and
 labels them with &quot;Test&quot;, &quot;Repeated&quot;, and &quot;Junit5&quot;." class="rule-name">junit5:RepeatedTestMethod</span>
@@ -622,12 +666,14 @@ labels them with "Test", "Repeated", and "Junit5".</pre>
                 </details>
                 <details id="junit5:TestTemplateMethod" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>6</div>
+                        <div>7</div>
                         <div>
-                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Labels all methods annotated by &quot;@org.junit.jupiter.api.TestTemplate&quot;
 with &quot;Junit5&quot;, &quot;Test&quot; and &quot;Template&quot;." class="rule-name">junit5:TestTemplateMethod</span>
@@ -641,12 +687,14 @@ with "Junit5", "Test" and "Template".</pre>
                 </details>
                 <details id="neo4j:Procedure" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>7</div>
+                        <div>8</div>
                         <div>
-                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Labels all types annotated with &quot;@org.neo4j.procedure.Procedure&quot; with `Neo4j` and `Procedure`." class="rule-name">neo4j:Procedure</span>
                         </div>
@@ -658,12 +706,14 @@ with "Junit5", "Test" and "Template".</pre>
                 </details>
                 <details id="neo4j:UserFunction" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>8</div>
+                        <div>9</div>
                         <div>
-                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="No Matches Found">&#127783;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>0</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Labels all types annotated with &quot;@org.neo4j.procedure.UserFunction&quot; with `Neo4j` and
             `UserFunction`." class="rule-name">neo4j:UserFunction</span>
@@ -677,12 +727,14 @@ with "Junit5", "Test" and "Template".</pre>
                 </details>
                 <details id="java:GeneratedType" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>9</div>
+                        <div>10</div>
                         <div>
-                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
-                        <div>minor</div>
-                        <div>0</div>
+                        <div>info</div>
+                        <div>
+                            <span title="Row Count">0&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Reports the count of types labeled with `Generated`, grouped by containing artifact." class="rule-name">java:GeneratedType</span>
                         </div>
@@ -695,19 +747,21 @@ with "Junit5", "Test" and "Template".</pre>
                                 <th>Providing Concept</th><th>Status</th>
                             </tr>
                             <tr>
-                                <td><span class="rule-name" onclick="javascript:showResult('java:GeneratedLombokType')">java:GeneratedLombokType</span></td><td><span class="failure">failure</span></td>
+                                <td><span class="rule-name" onclick="javascript:showResult('java:GeneratedLombokType')">java:GeneratedLombokType</span></td><td><span class="success">success</span></td>
                             </tr>
                         </table>
                     </div>
                 </details>
                 <details id="jqassistant-plugin-maven:ParentProject" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>10</div>
+                        <div>11</div>
                         <div>
-                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>1</div>
+                        <div>
+                            <span title="Row Count">1&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Labels all Maven projects which declare &quot;org.jqassistant.plugin:parent&quot; as parent module with &quot;Parent&quot;." class="rule-name">jqassistant-plugin-maven:ParentProject</span>
                         </div>
@@ -720,20 +774,23 @@ with "Junit5", "Test" and "Template".</pre>
                                     <th>parent</th>
                                 </tr>
                                 <tr>
-                                    <td>jQAssistant TypeScript Plugin Parent</td>
+                                    <td style="background-color:#f0ecdf;">jQAssistant TypeScript Plugin Parent</td>
                                 </tr>
                             </table>
+                            <p></p>
                         </div>
                     </div>
                 </details>
                 <details id="jqassistant-plugin-plugin:PluginDescriptor" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>11</div>
+                        <div>12</div>
                         <div>
-                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>1</div>
+                        <div>
+                            <span title="Row Count">1&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Labels jQAssistant plugin descriptor files with `jQAssistant` and `PluginDescriptor`." class="rule-name">jqassistant-plugin-plugin:PluginDescriptor</span>
                         </div>
@@ -746,20 +803,23 @@ with "Junit5", "Test" and "Template".</pre>
                                     <th>Artifact</th><th>PluginDescriptor</th>
                                 </tr>
                                 <tr>
-                                    <td>org.jqassistant.plugin.typescript:jqassistant-typescript-plugin:jar:1.5.0-SNAPSHOT</td><td>/META-INF/jqassistant-plugin.xml</td>
+                                    <td style="background-color:#f0ecdf;">org.jqassistant.plugin.typescript:jqassistant-typescript-plugin:jar:1.5.0-SNAPSHOT</td><td style="background-color:#f0ecdf;">java/target/classes/META-INF/jqassistant-plugin.xml</td>
                                 </tr>
                             </table>
+                            <p></p>
                         </div>
                     </div>
                 </details>
                 <details id="junit5:TestClass" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>12</div>
+                        <div>13</div>
                         <div>
-                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>4</div>
+                        <div>
+                            <span title="Row Count">4&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Labels all classes containing test methods with &quot;Test&quot; and &quot;Junit5&quot;." class="rule-name">junit5:TestClass</span>
                         </div>
@@ -772,18 +832,19 @@ with "Junit5", "Test" and "Template".</pre>
                                     <th>TestClass</th><th>TestMethods</th>
                                 </tr>
                                 <tr>
-                                    <td>org.jqassistant.plugin.typescript.impl.filesystem.LocalFileResolverIT</td><td>void resolve()</td>
+                                    <td style="background-color:#f0ecdf;">org.jqassistant.plugin.typescript.react.TypescriptScannerReactIT</td><td style="background-color:#f0ecdf;">void testScanner()</td>
                                 </tr>
                                 <tr>
-                                    <td>org.jqassistant.plugin.typescript.core.basics.TypescriptScannerCoreBasicsIT</td><td>void testScanner()</td>
+                                    <td style="background-color:#f0ecdf;">org.jqassistant.plugin.typescript.impl.filesystem.LocalFileResolverIT</td><td style="background-color:#f0ecdf;">void resolve()</td>
                                 </tr>
                                 <tr>
-                                    <td>org.jqassistant.plugin.typescript.core.multiproject.TypescriptScannerCoreMultiProjectIT</td><td>void testScanner()</td>
+                                    <td style="background-color:#f0ecdf;">org.jqassistant.plugin.typescript.core.basics.TypescriptScannerCoreBasicsIT</td><td style="background-color:#f0ecdf;">void testScanner()</td>
                                 </tr>
                                 <tr>
-                                    <td>org.jqassistant.plugin.typescript.react.TypescriptScannerReactIT</td><td>void testScanner()</td>
+                                    <td style="background-color:#f0ecdf;">org.jqassistant.plugin.typescript.core.multiproject.TypescriptScannerCoreMultiProjectIT</td><td style="background-color:#f0ecdf;">void testScanner()</td>
                                 </tr>
                             </table>
+                            <p></p>
                         </div>
                         <table>
                             <tr>
@@ -806,12 +867,14 @@ with "Junit5", "Test" and "Template".</pre>
                 </details>
                 <details id="junit5:TestMethod" class="row-separator">
                     <summary class="success columns-grid">
-                        <div>13</div>
+                        <div>14</div>
                         <div>
-                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;</span>
+                            <span title="Matches Found">&#9728;&nbsp;</span><span title="Success (Result evaluation according to warn-on-severity/fail-on-severity thresholds)">&#10004;&nbsp;</span>
                         </div>
                         <div>info</div>
-                        <div>4</div>
+                        <div>
+                            <span title="Row Count">4&nbsp;</span>
+                        </div>
                         <div>
                             <span title="Finds all test methods (i.e. annotated with &quot;@org.junit.jupiter.api.Test&quot;) and
 labels them with &quot;Test&quot; and &quot;Junit5&quot;." class="rule-name">junit5:TestMethod</span>
@@ -826,18 +889,19 @@ labels them with "Test" and "Junit5".</pre>
                                     <th>Test</th>
                                 </tr>
                                 <tr>
-                                    <td>void testScanner()</td>
+                                    <td style="background-color:#f0ecdf;">void testScanner()</td>
                                 </tr>
                                 <tr>
-                                    <td>void resolve()</td>
+                                    <td style="background-color:#f0ecdf;">void testScanner()</td>
                                 </tr>
                                 <tr>
-                                    <td>void testScanner()</td>
+                                    <td style="background-color:#f0ecdf;">void resolve()</td>
                                 </tr>
                                 <tr>
-                                    <td>void testScanner()</td>
+                                    <td style="background-color:#f0ecdf;">void testScanner()</td>
                                 </tr>
                             </table>
+                            <p></p>
                         </div>
                     </div>
                 </details>
