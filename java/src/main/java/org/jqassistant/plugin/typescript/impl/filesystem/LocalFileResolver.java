@@ -14,6 +14,7 @@ import com.buschmais.xo.api.Query;
 import org.jqassistant.plugin.typescript.api.model.core.LocalFileDescriptor;
 
 import static com.buschmais.jqassistant.core.shared.io.FileNameNormalizer.normalize;
+import static com.buschmais.jqassistant.plugin.common.impl.scanner.PathNormalizer.normalizePath;
 
 public class LocalFileResolver implements FileResolver {
 
@@ -21,6 +22,11 @@ public class LocalFileResolver implements FileResolver {
 
     public LocalFileResolver(Path root) {
         this.root = root.toAbsolutePath();
+    }
+
+    @Override
+    public String getPath() {
+        return "";
     }
 
     @Override
@@ -58,12 +64,15 @@ public class LocalFileResolver implements FileResolver {
 
     private <D extends FileDescriptor> D getFileDescriptor(Path path, Class<D> type, ScannerContext context) {
         Store store = context.getStore();
+
         LocalFileDescriptor localFileDescriptor = store.<String, LocalFileDescriptor>getCache(LocalFileResolver.class.getName())
             .get(normalize(path.toString()), absoluteFileName -> {
-                Query.Result<Query.Result.CompositeRowObject> result = store.executeQuery(
-                    "MERGE (file:File:Local{absoluteFileName: $absoluteFileName}) RETURN file", Map.of("absoluteFileName", absoluteFileName));
-                return result.getSingleResult()
-                    .get("file", LocalFileDescriptor.class);
+                try (Query.Result<Query.Result.CompositeRowObject> result = store.executeQuery(
+                    "MERGE (file:File:Local:Path{absoluteFileName: $absoluteFileName, path: $path}) RETURN file",
+                    Map.of("absoluteFileName", absoluteFileName, "path", normalizePath(path.toFile(), context)))) {
+                    return result.getSingleResult()
+                        .get("file", LocalFileDescriptor.class);
+                }
             });
         if (path.startsWith(root)) {
             localFileDescriptor.setFileName("./" + normalize(root.relativize(path)
