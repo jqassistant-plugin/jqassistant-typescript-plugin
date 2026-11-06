@@ -1,13 +1,12 @@
 package org.jqassistant.plugin.typescript.api.model.core;
 
 import com.buschmais.jqassistant.plugin.common.api.model.FileDescriptor;
-import com.buschmais.xo.neo4j.api.annotation.Label;
+import com.buschmais.jqassistant.plugin.common.api.model.LocalDescriptor;
 
 /**
  * Represents a file from the local file system with an absolute path.
  */
-@Label("Local")
-public interface LocalFileDescriptor extends FileDescriptor {
+public interface LocalFileDescriptor extends FileDescriptor, LocalDescriptor {
 
     String getAbsoluteFileName();
 
