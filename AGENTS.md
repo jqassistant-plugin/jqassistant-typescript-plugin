@@ -91,10 +91,12 @@ The two halves are built independently: the LCE tool with npm only, the plugin w
 | Run all tests | `npm test` |
 | Run one test file | `npx jest test/core/integration/enum-declarations.test.ts` |
 | Compile and type-check (output in `dist/`) | `npm run build` |
+| Type-check sources and test code (no output) | `npm run typecheck` |
 | Run the compiled CLI | `node dist/src/main.js <path> [-e react] [-p] [-d]` (`--help` lists all options) |
 
 - Tests must be started from `typescript/`: sample project paths are relative to it.
-- Jest transpiles each file on its own (`isolatedModules`) and therefore does **not** type-check. Type errors only show up in `npm run build`, so run both. CI runs `npm test` only.
+- Jest transpiles each file on its own (`isolatedModules`) and therefore does **not** type-check. Type errors only show up in `npm run typecheck` / `npm run build`, so run them as well as the tests; CI runs all of them.
+- `test/tsconfig.json` extends the main `tsconfig.json` and only sets `include`. Change compiler options in the main config.
 - A few sample projects need npm packages; the tests install them on first use (`initNodeSampleProject`), which needs network access and makes the first run slower.
 - Dependencies are pinned to exact versions (`.npmrc`: `save-exact=true`); `npm run upgrade` bumps all of them.
 
@@ -271,7 +273,7 @@ Follow [Extensions](docs/development/Extensions.md): a new directory under `type
 
 ## CI, releases, versions
 
-- `.github/workflows/ci.ts.yml`: `npm ci` and `npm test` on Linux, Windows and macOS.
+- `.github/workflows/ci.ts.yml`: on Linux, Windows and macOS: `npm ci`, `npm run typecheck`, `npm run build`, a smoke test of the compiled CLI (`--version` and an extraction run on a sample project), then `npm test`.
 - `.github/workflows/ci.java.yml`: shared jQAssistant workflow, builds with the `IT` profile.
 - `.github/workflows/release.yml` (manual): Maven release, then `npm run build` and `npm publish` from `typescript/`, then a versioned docs deployment. The version lives in the root `pom.xml` / `java/pom.xml` and in `typescript/package.json`; the workflow sets both.
 - `.github/workflows/publish-docs.yml`: publishes `docs/` on pushes to `main`.

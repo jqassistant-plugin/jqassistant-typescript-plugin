@@ -39,6 +39,7 @@
     },
     "scripts": {
         "build": "tsc",
+        "typecheck": "tsc --noEmit && tsc --noEmit -p test/tsconfig.json",
         "test": "jest",
         "upgrade": "ncu -u && npm i"
     },
