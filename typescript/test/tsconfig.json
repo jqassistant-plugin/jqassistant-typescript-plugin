@@ -1,16 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "experimentalDecorators": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitOverride": true,
-    "skipLibCheck": true,
-    "isolatedModules": true
-  }
+  "extends": "../tsconfig.json",
+  "include": ["./**/*.test.ts", "./utils/**/*.ts"]
 }

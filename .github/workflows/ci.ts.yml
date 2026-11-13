@@ -37,6 +37,21 @@
           - name: Install dependencies
             run: npm ci
             working-directory: ./typescript
+          # Jest does not type-check (isolatedModules), so type errors only show up here
+          - name: Type-check sources and tests
+            run: npm run typecheck
+            working-directory: ./typescript
+          - name: Build
+            run: npm run build
+            working-directory: ./typescript
+          # The published package is dist/, not the sources the tests run
+          - name: Smoke test compiled CLI
+            shell: bash
+            run: |
+              node dist/src/main.js --version
+              node dist/src/main.js test/core/integration/sample-projects/class-declarations -e react
+              test -s test/core/integration/sample-projects/class-declarations/.reports/jqa/ts-output.json
+            working-directory: ./typescript
           - name: Run tests
             run: npm run test
             working-directory: ./typescript
