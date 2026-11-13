@@ -27,3 +27,6 @@ docs/.obsidian/workspace.json
 
 # DrawIO
 *.drawio.bkp
+
+# Local working notes
+/notes/
