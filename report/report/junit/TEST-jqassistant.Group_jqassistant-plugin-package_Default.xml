@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <testsuite name="jqassistant.Group_jqassistant-plugin-package_Default" tests="3" failures="0" errors="0" time="0.0">
-    <testcase name="Concept_java_GeneratedType" time="0.0" classname="jqassistant.Group_jqassistant-plugin-package_Default"/>
-    <testcase name="Concept_java_GeneratedLombokType" time="0.0" classname="jqassistant.Group_jqassistant-plugin-package_Default"/>
     <testcase name="Constraint_jqassistant-plugin-package_PackagesMustHaveGroupIdPrefix" time="0.0" classname="jqassistant.Group_jqassistant-plugin-package_Default"/>
+    <testcase name="Concept_java_GeneratedLombokType" time="0.0" classname="jqassistant.Group_jqassistant-plugin-package_Default"/>
+    <testcase name="Concept_java_GeneratedType" time="0.0" classname="jqassistant.Group_jqassistant-plugin-package_Default"/>
 </testsuite>
