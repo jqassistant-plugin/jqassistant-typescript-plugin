@@ -80,7 +80,7 @@ java/                    jQAssistant plugin (Maven module, the only module of th
 
 ## Build, test, run
 
-Prerequisites: Node.js (current LTS, as used by CI) with npm, a JDK (11 or newer) and Maven.
+Prerequisites: Node.js (current LTS, as used by CI; at least 22.12, see `engines` in `typescript/package.json`) with npm, a JDK (11 or newer) and Maven.
 The two halves are built independently: the LCE tool with npm only, the plugin with Maven only (`typescript/pom.xml` is not referenced by the root POM and takes no part in the build).
 
 ### LCE tool (run inside `typescript/`)
