@@ -381,7 +381,7 @@ public class ValueAssertions {
         assertThat(value.getType())
             .as("class value has correct type")
             .isInstanceOf(TypeNotIdentifiedDescriptor.class)
-            .hasFieldOrPropertyWithValue("identifier", "class expression");
+            .hasFieldOrPropertyWithValue("identifier", "Class Expression");
 
         return this;
     }
@@ -405,7 +405,7 @@ public class ValueAssertions {
         assertThat(value.getType())
             .as("complex value has correct type")
             .isInstanceOf(TypeNotIdentifiedDescriptor.class)
-            .hasFieldOrPropertyWithValue("identifier", "complex");
+            .hasFieldOrPropertyWithValue("identifier", "Complex Value");
 
         return this;
     }

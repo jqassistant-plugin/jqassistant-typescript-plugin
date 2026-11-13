@@ -17,6 +17,10 @@
 	- provides static utility methods for the construction of [[Node Properties - Fully Qualified Names|FQNs]] and the interaction with the [[Local Contexts]] from above
 - `IdentifierDependencyProcessor`: processor that registers dependencies for all referenced identifiers within the code that are not part of one of the other processed declaration constructs
 	- `MemberExpressionDependencyProcessor` handles dependency registration specifically for member expressions (e.g. `myObj.b`)
+- `ImportDeclarationProcessor`: processor that registers all imported names as declarations of the module, using the [[Node Properties - Fully Qualified Names|FQN]] of the original declaration
+	- the TypeChecker resolves an imported name through all re-exports and aliases, so references to it target the original declaration, never a re-exporting module
+	- `resolveSymbolFqn` (`type.utils.ts`) converts the resolved symbol into an [[Node Properties - Fully Qualified Names|FQN]]; type references use the same function, so value and type references produce identical [[Node Properties - Fully Qualified Names|FQNs]]
+	- if the TypeChecker cannot resolve an import, the [[Node Properties - Fully Qualified Names|FQN]] is derived from the import source and the imported name
 -  `ScopeProcessor`/`DeclarationScopeProcessor`: processors that register (un)named [[Node Properties - Fully Qualified Names|FQN]] scopes at all relevant points of the AST traversal to aid [[Node Properties - Fully Qualified Names|FQN]] construction
 - `DependencyResolver` (Java): creates [[Node Relation - Dependencies|DEPENDS_ON]] relations for the extracted direct dependencies and fills in all transitive dependencies via Cypher queries
 	- in a final step all [[Node Relation - Dependencies|DEPENDS_ON]] relations are aggregated

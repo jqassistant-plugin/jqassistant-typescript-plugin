@@ -53,16 +53,19 @@ export class DeclarationScopeProcessor extends Processor {
     );
 
     public override preChildrenProcessing({ localContexts, node }: ProcessingContext): void {
+        let fqnIdentifier: string | undefined;
         if (
-            (node.type === AST_NODE_TYPES.ClassDeclaration ||
-                node.type === AST_NODE_TYPES.FunctionDeclaration ||
-                node.type === AST_NODE_TYPES.TSDeclareFunction ||
-                node.type === AST_NODE_TYPES.TSInterfaceDeclaration ||
-                node.type === AST_NODE_TYPES.TSTypeAliasDeclaration ||
-                node.type === AST_NODE_TYPES.TSEnumDeclaration) &&
-            node.id
+            node.type === AST_NODE_TYPES.ClassDeclaration ||
+            node.type === AST_NODE_TYPES.FunctionDeclaration ||
+            node.type === AST_NODE_TYPES.TSDeclareFunction ||
+            node.type === AST_NODE_TYPES.TSInterfaceDeclaration ||
+            node.type === AST_NODE_TYPES.TSTypeAliasDeclaration ||
+            node.type === AST_NODE_TYPES.TSEnumDeclaration
         ) {
-            DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(node.id.name));
+            fqnIdentifier = DependencyResolutionProcessor.isDefaultDeclaration(localContexts, node, node.id?.name) ? "default" : node.id?.name;
+        }
+        if (fqnIdentifier) {
+            DependencyResolutionProcessor.addScopeContext(localContexts, FQN.id(fqnIdentifier));
         } else {
             DependencyResolutionProcessor.addScopeContext(localContexts);
         }
