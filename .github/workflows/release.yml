@@ -14,7 +14,7 @@
             required: true
             default: "X.Y.Z"
           developmentVersion:
-            description: "Version to use for new local working copy."
+            description: "Version to use for new local working copy (-SNAPSHOT and -dev.0 are appended)."
             required: true
             default: "X.Y+1.Z"
           dryRun:
@@ -34,10 +34,63 @@
             type: boolean
         
     jobs:
+      verify-typescript:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v6
+
+          - name: Setup Node.js (LTS)
+            uses: actions/setup-node@v6
+            with:
+              node-version: 'lts/*'
+
+          - name: Install dependencies
+            working-directory: ./typescript
+            run: npm ci
+
+          - name: Type-check sources and tests
+            working-directory: ./typescript
+            run: npm run typecheck
+
+          - name: Build package
+            working-directory: ./typescript
+            run: npm run build
+
+          - name: Smoke test compiled CLI
+            working-directory: ./typescript
+            run: |
+              node dist/src/main.js --version
+              node dist/src/main.js test/core/integration/sample-projects/class-declarations -e react
+              test -s test/core/integration/sample-projects/class-declarations/.reports/jqa/ts-output.json
+
+          - name: Run tests
+            working-directory: ./typescript
+            run: npm test
+      verify-java:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v6
+
+          - name: Setup Graphviz
+            uses: ts-graphviz/setup-graphviz@v2
+
+          - name: Setup Java
+            uses: actions/setup-java@v6
+            with:
+              distribution: temurin
+              java-version: ${{ inputs.java_version }}
+              cache: 'maven'
+
+          - name: Build and run integration tests
+            run: mvn --batch-mode --no-transfer-progress -P IT verify
       maven-release:
+        needs: [ verify-typescript, verify-java ]
         if: ${{ !inputs.skipMavenRelease }}
         uses: jqassistant-tooling/jqassistant-github-actions/.github/workflows/release.yml@main
         with:
+          java_version: ${{ inputs.java_version }}
           releaseVersion: ${{ inputs.releaseVersion }}
           developmentVersion: "${{ inputs.developmentVersion }}-SNAPSHOT"
           dryRun: ${{ inputs.dryRun }}
@@ -49,15 +102,20 @@
           sonar_token: ${{ secrets.SONAR_TOKEN }}
       npm-release:
         if: |
-          always() &&
+          !cancelled() &&
+          needs.verify-typescript.result == 'success' &&
+          needs.verify-java.result == 'success' &&
           (needs.maven-release.result == 'success' || needs.maven-release.result == 'skipped') &&
           inputs.skipNpmRelease == false
-        needs: [ maven-release ]
+        needs: [ verify-typescript, verify-java, maven-release ]
         runs-on: ubuntu-latest
         permissions:
           contents: write
-          pages: write
           id-token: write
+        env:
+          RELEASE_VERSION: ${{ inputs.releaseVersion }}
+          DEVELOPMENT_VERSION: ${{ inputs.developmentVersion }}-dev.0
+          NPM_DIST_TAG: ${{ contains(inputs.releaseVersion, '-') && 'next' || 'latest' }}
         steps:
           - name: Checkout repository
             uses: actions/checkout@v6
@@ -70,7 +128,7 @@
 
           - name: Update package.json to release version
             working-directory: ./typescript
-            run: npm version ${{ inputs.releaseVersion }} --allow-same-version --no-git-tag-version
+            run: npm version "$RELEASE_VERSION" --allow-same-version --no-git-tag-version
 
           - name: Install dependencies
             working-directory: ./typescript
@@ -81,23 +139,51 @@
             run: npm run build
 
           - name: Publish package
+            if: ${{ !inputs.dryRun }}
             working-directory: ./typescript
-            run: npm publish
+            run: npm publish --tag "$NPM_DIST_TAG"
+
+          - name: Publish package (dry run)
+            if: ${{ inputs.dryRun }}
+            working-directory: ./typescript
+            run: npm publish --tag "$NPM_DIST_TAG" --dry-run
+
+          - name: Update package.json to development version
+            working-directory: ./typescript
+            run: |
+              git reset --hard
+              git clean -fdx
+              git pull
+              npm version "$DEVELOPMENT_VERSION" --no-git-tag-version
+
+          - name: Commit and push development version
+            if: ${{ !inputs.dryRun }}
+            working-directory: ./typescript
+            run: |
+              git config --global user.name "$GITHUB_ACTOR"
+              git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
+              git commit -a -m "Updated package.json to development version"
+              git push
+      docs-release:
+        if: |
+          !cancelled() &&
+          needs.verify-typescript.result == 'success' &&
+          needs.verify-java.result == 'success' &&
+          (needs.maven-release.result == 'success' || needs.maven-release.result == 'skipped') &&
+          (needs.npm-release.result == 'success' || needs.npm-release.result == 'skipped') &&
+          inputs.dryRun == false
+        needs: [ verify-typescript, verify-java, maven-release, npm-release ]
+        runs-on: ubuntu-latest
+        permissions:
+          contents: write
+          pages: write
+          id-token: write
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v6
 
           - name: Publish Versioned Quartz GitHub Pages
             uses: RelativeProgramming/versioned-quartz-gh-pages-deploy@v1.0.0
             with:
               quartz-repo: 'jqassistant-tooling/jqassistant-quartz-docs'
               deployment-version: ${{ inputs.releaseVersion }}
-
-          - name: Update package.json to development version
-            working-directory: ./typescript
-            run: |
-              git config --global user.name "${{ github.actor }}"
-              git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-              git reset --hard
-              git clean -fdx
-              git pull
-              npm version ${{ inputs.developmentVersion }} --no-git-tag-version
-              git commit -a -m "Updated package.json to development version"
-              git push
