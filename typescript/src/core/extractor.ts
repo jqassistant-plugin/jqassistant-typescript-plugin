@@ -13,6 +13,7 @@ import { POST_PROCESSORS } from "./features";
 import { ProjectUtils } from "./utils/project.utils";
 import { LCEProject, LCEProjectInfo } from "./project";
 import {debug, DEBUG_LOGGING} from "./utils/log.utils";
+import { debugUnresolvedDependencies } from "./utils/dependency.utils";
 
 export interface ExtractorOptions {
     prettyPrint?: boolean;
@@ -70,6 +71,7 @@ export async function processProjects(scanRoot: string): Promise<LCEProject[]> {
     for (const postProcessor of POST_PROCESSORS) {
         postProcessor.postProcess(processedProjects);
     }
+    debugUnresolvedDependencies(processedProjects);
 
     return processedProjects;
 }

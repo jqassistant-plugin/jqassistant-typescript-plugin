@@ -1,5 +1,6 @@
 package org.jqassistant.plugin.typescript.core.basics.assertions;
 
+import org.jqassistant.plugin.typescript.api.model.core.FunctionDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ModuleDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.TypeScriptDescriptor;
@@ -58,6 +59,35 @@ public class DependencyAssertions {
             .extracting("exportedDeclaration", type(TypeScriptDescriptor.class))
             .isInstanceOf(VariableDeclarationDescriptor.class)
             .isEqualTo(decl);
+
+        return this;
+    }
+
+    public DependencyAssertions assertDependencyThroughReExport() {
+        Optional<FunctionDeclarationDescriptor> callingFunctionOptional = module2.getFunctionDeclarations().stream()
+            .filter((func) -> func.getName().equals("callThroughBarrel"))
+            .findFirst();
+
+        assertThat(callingFunctionOptional)
+            .as("function calling a re-exported function is present")
+            .isPresent();
+
+        Optional<FunctionDeclarationDescriptor> calledFunctionOptional = project.getModules().stream()
+            .filter((mod) -> mod.getLocalFqn().equals("./src/testDep3.ts"))
+            .flatMap((mod) -> mod.getFunctionDeclarations().stream())
+            .filter((func) -> func.getName().equals("reExportedFunction"))
+            .findFirst();
+
+        assertThat(calledFunctionOptional)
+            .as("re-exported function is present")
+            .isPresent();
+
+        assertThat(callingFunctionOptional.get().getDependencies())
+            .as("function called through a re-exporting module is a dependency")
+            .anySatisfy(dep -> {
+                assertThat(dep.getDependency()).isEqualTo(calledFunctionOptional.get());
+                assertThat(dep.getCardinality()).isEqualTo(1);
+            });
 
         return this;
     }
