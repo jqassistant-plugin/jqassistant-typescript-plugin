@@ -275,7 +275,8 @@ Follow [Extensions](docs/development/Extensions.md): a new directory under `type
 
 - `.github/workflows/ci.ts.yml`: on Linux, Windows and macOS: `npm ci`, `npm run typecheck`, `npm run build`, a smoke test of the compiled CLI (`--version` and an extraction run on a sample project), then `npm test`.
 - `.github/workflows/ci.java.yml`: shared jQAssistant workflow, builds with the `IT` profile.
-- `.github/workflows/release.yml` (manual): Maven release, then `npm run build` and `npm publish` from `typescript/`, then a versioned docs deployment. The version lives in the root `pom.xml` / `java/pom.xml` and in `typescript/package.json`; the workflow sets both.
+- `.github/workflows/release.yml` (manual): first verifies both halves on Linux (the steps of `ci.ts.yml`, and `mvn -P IT verify`), then the Maven release, then `npm publish` from `typescript/` (prerelease versions such as `X.Y.Z-M1` with the dist-tag `next`), then a versioned docs deployment. A failed verification stops it before anything is released. With `dryRun` nothing is published, deployed or pushed; the docs are deployed even if `skipMavenRelease` and `skipNpmRelease` are both set.
+- The version lives in the root `pom.xml` / `java/pom.xml` and in `typescript/package.json`; the release workflow sets both. Between releases they carry `X.Y.Z-SNAPSHOT` (Maven) and `X.Y.Z-dev.0` (npm).
 - `.github/workflows/publish-docs.yml`: publishes `docs/` on pushes to `main`.
 - Release notes are drafted from pull requests. Branch prefixes set the label: `feature/`, `bug/` (also `bugfix/`, `hotfix/`), `chore/`.
 - Dependabot opens weekly update pull requests for Maven and npm.
