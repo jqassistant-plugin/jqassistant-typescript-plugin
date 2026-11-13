@@ -4,6 +4,8 @@
 - Download the ZIP-distribution of the jQAssistant command line utility ([Neo4j 4](https://central.sonatype.com/artifact/com.buschmais.jqassistant.cli/jqassistant-commandline-neo4jv4/versions) or [Neo4j 5](https://central.sonatype.com/artifact/com.buschmais.jqassistant.cli/jqassistant-commandline-neo4jv5/versions)) and unpack it
 
 ## 2. npm LCE Tool Installation
+- requires Node.js `22.12.0` or newer
+
 **Global Installation:**
 - run `npm install --global  @jqassistant/ts-lce`  
   

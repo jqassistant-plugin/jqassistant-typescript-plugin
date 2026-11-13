@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "ESNext",
     "experimentalDecorators": true,
-    "module": "Node16",
-    "moduleResolution": "node16",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "allowJs": true,
     "esModuleInterop": true,
