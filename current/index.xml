@@ -6,65 +6,65 @@
       <description>Last 10 notes on jQA Typescript Plugin</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>Node - TS Value Call</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Call</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Call</guid>
-    <description>:TS:Value:Call Node → represents the return value of a function call of some value Relations NameTarget Label(s)CardinalityDescriptionCALLS:TS:Value1value on which the call ...</description>
-    <pubDate>Sat, 31 Oct 2026 16:05:09 GMT</pubDate>
+    <title>Node - TS Property</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Property</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Property</guid>
+    <description>:TS:Property Node → represents a declared property of a :TS:Class or :TS:Interface Properties NameDescriptionglobalFqnglobal FQN of the propertylocalFqnlocal FQN of the propertynamename ...</description>
+    <pubDate>Fri, 13 Nov 2026 11:08:59 GMT</pubDate>
   </item><item>
-    <title>Node - TS Value Class</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Class</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Class</guid>
-    <description>:TS:Value:Class Node → represents a class value Example: let x = class { // .. }.</description>
-    <pubDate>Sat, 31 Oct 2026 16:05:09 GMT</pubDate>
+    <title>Node - TS ReactComponent</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-ReactComponent</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-ReactComponent</guid>
+    <description>:TS:ReactComponent Node → represents a React component definition acts as an extension to either a :TS:Class, :TS:Function, or :TS:Variable node Properties NameDescriptioncomponentNamename ...</description>
+    <pubDate>Fri, 13 Nov 2026 11:08:59 GMT</pubDate>
   </item><item>
-    <title>Node - TS Value Complex</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Complex</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Complex</guid>
-    <description>:TS:Value:Complex Node → represents values that cannot be represented via the other :TS:Value sub-variants Properties NameDescriptionexpressionstring representation of ...</description>
-    <pubDate>Sat, 31 Oct 2026 16:05:09 GMT</pubDate>
+    <title>Node - TS Setter</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Setter</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Setter</guid>
+    <description>:TS:Setter Node → represents a declared setter of a :TS:Class or :TS:Interface Properties NameDescriptionvisibilityvisibility of the setter, i.e. public(default), protected, private, or js_private(for setters declared using the # prefix)static (boolean)only for :TS:Class setters: indicates, if the setter has an static modifierabstract (boolean)only for :TS:Class setters: indicates, if the setter has an abstract modifieroverride (boolean)only for :TS:Class setters: indicates, if the setter has an override modifiercode coordinatescode coordinates of the setter declaration (without fileName) Relations NameTarget Label(s)CardinalityDescriptionHAS:TS:Parameter0..*parameter(s) of the setterDECORATED_BY:TS:Decorator0..*only for :TS:Class setters: all decorators of the setter.</description>
+    <pubDate>Fri, 13 Nov 2026 11:08:59 GMT</pubDate>
   </item><item>
-    <title>Node - TS Value Declared</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Declared</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Declared</guid>
-    <description>:TS:Value:Declared Node → represents a value that is declared somewhere else (i.e. a variable) Properties NameDescriptionreferencedGlobalFqnglobal FQN of the value declaration that is referenced by the value node (this mainly serves as a convenience property to simplify queries) Relations NameTarget Label(s)CardinalityDescriptionREFERENCES:TS:Variable:TS:Function:TS:Class:TS:Enum:TS:EnumMember:TS:ExternalDeclaration1declaration that defines the referenced value.</description>
-    <pubDate>Sat, 31 Oct 2026 16:05:09 GMT</pubDate>
+    <title>Node - TS Type Declared</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Declared</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Declared</guid>
+    <description>:TS:Type:Declared Node → represents the type of a type declaration (i.e. a :TS:Class) Properties NameDescriptionreferencedGlobalFqnglobal FQN of the type declaration that is referenced by the type node (this mainly serves as a convenience property to simplify queries) Relations NameTarget Label(s)CardinalityDescriptionREFERENCES:TS:Class:TS:Interface:TS:TypeAlias:TS:Enum:TS:ExternalDeclaration1declaration that defines the referenced typeHAS_TYPE_ARGUMENT:TS:Type0..*type arguments that are specified for generic typesProperties: - index: position of the type argument in the type parameter list (zero-based).</description>
+    <pubDate>Fri, 13 Nov 2026 11:08:59 GMT</pubDate>
   </item><item>
-    <title>Node - TS Value Function</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Function</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Function</guid>
-    <description>:TS:Value:Function Node → represents a function value Examples: let x = () =&gt; { // .. }; let y = function() { // .. }; Properties NameDescriptionarrowFunction (boolean)indicates, if the function uses the arrow syntax.</description>
-    <pubDate>Sat, 31 Oct 2026 16:05:09 GMT</pubDate>
+    <title>Node - TS Type Function</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Function</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Function</guid>
+    <description>:TS:Type:Function Node → represents a function type Properties NameDescriptionasync (boolean)indicates, if the function type has an async modifier Relations NameTarget Label(s)CardinalityDescriptionDECLARES:TS:TypeParameter0..*type ...</description>
+    <pubDate>Fri, 13 Nov 2026 11:08:59 GMT</pubDate>
   </item><item>
-    <title>Node - TS Value Literal</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Literal</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Literal</guid>
-    <description>:TS:Value:Literal Node → represents a literal value Properties NameDescriptionvaluevalue of the literal (either a string, number or boolean).</description>
-    <pubDate>Sat, 31 Oct 2026 16:05:09 GMT</pubDate>
+    <title>Node - TS Type FunctionParameter</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-FunctionParameter</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-FunctionParameter</guid>
+    <description>:TS:Type:FunctionParameter Node → represents a parameter of a :TS:Type:Function not to be confused with :TS:Parameter which is exclusive for :TS:Function Properties NameDescriptionindexposition ...</description>
+    <pubDate>Fri, 13 Nov 2026 11:08:59 GMT</pubDate>
   </item><item>
-    <title>Node - TS Value Member</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Member</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Member</guid>
-    <description>:TS:Value:Member Node → represents a member relationship (i.e. the access of an object member via something like obj.member) Relations NameTarget Label(s)CardinalityDescriptionPARENT:TS:Value1value of the parent of which a member is accessedMEMBER:TS:Value1value of the member.</description>
-    <pubDate>Sat, 31 Oct 2026 16:05:09 GMT</pubDate>
+    <title>Node - TS Type Intersection</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Intersection</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Intersection</guid>
+    <description>:TS:Type:Intersection Node → represents a intersection type Relations NameTarget Label(s)CardinalityDescriptionCONTAINS:TS:Type2..*constituent types of the intersection ...</description>
+    <pubDate>Fri, 13 Nov 2026 11:08:59 GMT</pubDate>
   </item><item>
-    <title>Node - TS Value Null</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Null</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Null</guid>
-    <description>:TS:Value:Null Node → represents a null or undefined value Properties NameDescriptionkindeither null or undefined.</description>
-    <pubDate>Sat, 31 Oct 2026 16:05:09 GMT</pubDate>
+    <title>Node - TS Type Literal</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Literal</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Literal</guid>
+    <description>:TS:Type:Literal Node → represents a literal type Properties NameDescriptionvaluevalue of the literal (may be a string, number, or boolean).</description>
+    <pubDate>Fri, 13 Nov 2026 11:08:59 GMT</pubDate>
   </item><item>
-    <title>Node - TS Value Object</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Object</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-Object</guid>
-    <description>:TS:Value:Object Node → represents an object value Relations NameTarget Label(s)CardinalityDescriptionHAS_MEMBER:TS:Value:ObjectMember0..*members of the object (with ...</description>
-    <pubDate>Sat, 31 Oct 2026 16:05:09 GMT</pubDate>
+    <title>Node - TS Type NotIdentified</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-NotIdentified</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-NotIdentified</guid>
+    <description>:TS:Type:NotIdentified Node → represents a type that either cannot be represented by the other :TS:Type node types or that could not be parsed at all Properties NameDescriptionidentifierstring ...</description>
+    <pubDate>Fri, 13 Nov 2026 11:08:59 GMT</pubDate>
   </item><item>
-    <title>Node - TS Value ObjectMember</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-ObjectMember</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Value-ObjectMember</guid>
-    <description>:TS:Value:ObjectMember Node → represents a member of a :TS:Value:Object Properties NameDescriptionnamename of the object member Relations NameTarget Label(s)CardinalityDescriptionREFERENCES:TS:Value1value ...</description>
-    <pubDate>Sat, 31 Oct 2026 16:05:09 GMT</pubDate>
+    <title>Node - TS Type Object</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Object</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Object</guid>
+    <description>:TS:Type:Object Node → represents an object type Relations NameTarget Label(s)CardinalityDescriptionHAS_MEMBER:TS:Type:ObjectMember0..*members of the object type (with ...</description>
+    <pubDate>Fri, 13 Nov 2026 11:08:59 GMT</pubDate>
   </item>
     </channel>
   </rss>
