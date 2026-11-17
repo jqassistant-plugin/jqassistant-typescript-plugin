@@ -163,6 +163,43 @@ describe("import/export test", () => {
         expectExport(projectRootPath, exports!, '"./src/subdir".AliasClass', "AliasClass", "AliasAliasClass");
     });
 
+    test("re-exports from an index file by file and directory path (reexportIndex.ts)", async () => {
+        const exports = exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/reexportIndex.ts"));
+        expect(exports).toBeDefined();
+        expect(exports!).toHaveLength(15);
+        for (const namespace of ["explicitIndexNamespace", "directoryNamespace"]) {
+            const namespaceExports = exports!.filter((exp) => exp.alias?.startsWith(namespace + "."));
+            expect(namespaceExports).toHaveLength(7);
+            const aliasClassExport = namespaceExports.find((exp) => exp.alias === namespace + ".AliasAliasClass");
+            expect(aliasClassExport?.globalDeclFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/subdir".AliasClass'));
+        }
+        const indexClassExports = exports!.filter((exp) => exp.globalDeclFqn === resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexClass'));
+        expect(indexClassExports.map((exp) => exp.alias).sort()).toEqual([
+            "ExplicitIndexClass",
+            "directoryNamespace.IndexClass",
+            "explicitIndexNamespace.IndexClass",
+        ]);
+
+        // both spellings refer to the module of the index file
+        expectDependency(projectRootPath, dependencies, "./src/reexportIndex.ts", resolveGlobalFqn(projectRootPath, "./src/subdir/index.ts"), 2);
+        expectDependency(projectRootPath, dependencies, "./src/reexportIndex.ts", resolveGlobalFqn(projectRootPath, '"./src/subdir".IndexClass'), 1);
+        expect(dependencies.get(resolveGlobalFqn(projectRootPath, "./src/reexportIndex.ts"))?.size).toBe(2);
+    });
+
+    test("re-exports from a mapped path (reexportPathMapping.ts)", async () => {
+        const exports = exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/reexportPathMapping.ts"));
+        expect(exports).toBeDefined();
+        expect(exports!).toHaveLength(1);
+        expectExport(projectRootPath, exports!, '"./src/internal/internal.ts".Internal', "Internal");
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            "./src/reexportPathMapping.ts",
+            resolveGlobalFqn(projectRootPath, '"./src/internal/internal.ts".Internal'),
+            1,
+        );
+    });
+
     test("imports (imports1.ts)", async () => {
         expectDeclaredType(varDecls.get('"./src/imports1.ts".v1')?.type, resolveGlobalFqn(projectRootPath, '"./src/source3.ts".CustomInterface3'));
         expectDependency(

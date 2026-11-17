@@ -8,9 +8,11 @@ import { LCEFunctionDeclaration } from "../concepts/function-declaration.concept
 import { LCEInterfaceDeclaration } from "../concepts/interface-declaration.concept";
 import { LCETypeAliasDeclaration } from "../concepts/type-alias-declaration.concept";
 import { LCEVariableDeclaration } from "../concepts/variable-declaration.concept";
-import { ProcessingContext } from "../context";
+import { GlobalContext, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { ModulePathUtils } from "../utils/modulepath.utils";
+import { NodeUtils } from "../utils/node.utils";
+import { debug } from "../utils/log.utils";
 import { Processor } from "../processor";
 import { ExportDefaultDeclarationTraverser, ExportNamedDeclarationTraverser } from "../traversers/export-declaration.traverser";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
@@ -26,11 +28,7 @@ export class ExportDeclarationProcessor extends Processor {
         if (node.type === AST_NODE_TYPES.ExportNamedDeclaration) {
             let source: string | undefined;
             if (node.source) {
-                source = ModulePathUtils.normalizeImportPath(
-                    globalContext.projectInfo.rootPath,
-                    node.source.value,
-                    globalContext.sourceFilePathAbsolute,
-                );
+                source = this.resolveImportSource(node.source.value, globalContext);
             }
 
             if (node.declaration) {
@@ -99,11 +97,7 @@ export class ExportDeclarationProcessor extends Processor {
             );
         } else if (node.type === AST_NODE_TYPES.ExportAllDeclaration && node.source) {
             // re-export of all declarations of a module (e.g. "export * from "./myModule")
-            const source = ModulePathUtils.normalizeImportPath(
-                globalContext.projectInfo.rootPath,
-                node.source.value,
-                globalContext.sourceFilePathAbsolute,
-            );
+            const source = this.resolveImportSource(node.source.value, globalContext);
             concepts.push(
                 singleEntryConceptMap(
                     LCEExportDeclaration.conceptId,
@@ -121,6 +115,23 @@ export class ExportDeclarationProcessor extends Processor {
         }
 
         return mergeConceptMaps(...concepts);
+    }
+
+    /**
+     * Resolves the module specifier of a re-export the way TypeScript resolves imports, using the compiler options of the project
+     * (e.g. `"./a.js"` refers to `a.ts` and `"./lib/index"` to `lib/index.ts`).
+     * @returns absolute path of the re-exported module, or the unchanged module specifier for modules of Node.js packages
+     */
+    private resolveImportSource(importPath: string, globalContext: GlobalContext): string {
+        try {
+            const resolvedPath = NodeUtils.resolveImportPath(importPath, globalContext.projectInfo, globalContext.sourceFilePathAbsolute);
+            if (!resolvedPath.split("/").includes("node_modules")) {
+                return resolvedPath;
+            }
+        } catch (e) {
+            debug(`Could not resolve re-exported module "${importPath}"\n\toccurred at ${globalContext.sourceFilePathAbsolute}`);
+        }
+        return ModulePathUtils.normalizeImportPath(globalContext.projectInfo.rootPath, importPath, globalContext.sourceFilePathAbsolute);
     }
 
     /**

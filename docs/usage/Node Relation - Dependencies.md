@@ -11,6 +11,8 @@ aliases:
 	- this applies to type references as well as to value references (e.g. function calls, `new` expressions, reading a constant)
 	- it covers `export * from`, named and aliased re-exports (`export { A as B } from`), default re-exports (`export { default } from`) and namespace re-exports (`export * as ns from`), also when declarations of Node.js packages are re-exported
 	- a module that re-exports declarations depends on the re-exported declarations (named re-exports) or modules (`export *`)
+	- the module of a re-export is resolved like an import, by TypeScript's module resolution with the compiler options of the project: e.g. `.js` specifiers of `.ts` files (as required by `moduleResolution` `node16`/`nodenext`), explicit `index` files and `paths` mappings
+	- re-exports that cannot be resolved are missing in the graph; the LCE tool prints their number (details with `--debug`)
 - dependencies whose source or target is not represented in the graph are skipped; the plugin logs their number (details on debug level), and the LCE tool lists them when run with `--debug`
 - all registered direct dependencies of a concept are propagated/aggregated to all declaration levels above (see [[#Propagation/Aggregation Strategy]])
 

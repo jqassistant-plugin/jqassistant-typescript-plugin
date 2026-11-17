@@ -72,8 +72,10 @@ export class NodeUtils {
             return FileUtils.normalizePath(tsResolvedModule);
         } else {
             let jsResolvedModule: string | undefined;
+            const resolutionBasePath =
+                ModulePathUtils.getPathType(importPath) === "relative" ? path.dirname(sourceFilePathAbsolute) : projectInfo.rootPath;
             try {
-                jsResolvedModule = require.resolve(importPath, { paths: [projectInfo.rootPath] });
+                jsResolvedModule = require.resolve(importPath, { paths: [resolutionBasePath] });
             } catch (e) {}
             if (jsResolvedModule) {
                 return FileUtils.normalizePath(jsResolvedModule);
