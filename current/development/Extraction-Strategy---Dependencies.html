@@ -31,6 +31,13 @@
 <li><code>MemberExpressionDependencyProcessor</code> handles dependency registration specifically for member expressions (e.g. <code>myObj.b</code>)</li>
 </ul>
 </li>
+<li><code>ImportDeclarationProcessor</code>: processor that registers all imported names as declarations of the module, using the <a href="../usage/Node-Properties---Fully-Qualified-Names" class="internal alias" data-slug="usage/Node-Properties---Fully-Qualified-Names">FQN</a> of the original declaration
+<ul>
+<li>the TypeChecker resolves an imported name through all re-exports and aliases, so references to it target the original declaration, never a re-exporting module</li>
+<li><code>resolveSymbolFqn</code> (<code>type.utils.ts</code>) converts the resolved symbol into an <a href="../usage/Node-Properties---Fully-Qualified-Names" class="internal alias" data-slug="usage/Node-Properties---Fully-Qualified-Names">FQN</a>; type references use the same function, so value and type references produce identical <a href="../usage/Node-Properties---Fully-Qualified-Names" class="internal alias" data-slug="usage/Node-Properties---Fully-Qualified-Names">FQNs</a></li>
+<li>if the TypeChecker cannot resolve an import, the <a href="../usage/Node-Properties---Fully-Qualified-Names" class="internal alias" data-slug="usage/Node-Properties---Fully-Qualified-Names">FQN</a> is derived from the import source and the imported name</li>
+</ul>
+</li>
 <li><code>ScopeProcessor</code>/<code>DeclarationScopeProcessor</code>: processors that register (un)named <a href="../usage/Node-Properties---Fully-Qualified-Names" class="internal alias" data-slug="usage/Node-Properties---Fully-Qualified-Names">FQN</a> scopes at all relevant points of the AST traversal to aid <a href="../usage/Node-Properties---Fully-Qualified-Names" class="internal alias" data-slug="usage/Node-Properties---Fully-Qualified-Names">FQN</a> construction</li>
 <li><code>DependencyResolver</code> (Java): creates <a href="../usage/Node-Relation---Dependencies" class="internal alias" data-slug="usage/Node-Relation---Dependencies">DEPENDS_ON</a> relations for the extracted direct dependencies and fills in all transitive dependencies via Cypher queries
 <ul>

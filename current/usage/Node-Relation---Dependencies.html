@@ -7,7 +7,14 @@
 <li>import statements are ignored during this process which means declarations of unused imports will not be represented in the graph</li>
 </ul>
 </li>
-<li>re-exports are resolved transitively as far as possible, that means dependencies are always targeting the original declaration, never some intermediary re-exporting module</li>
+<li>re-exports are resolved transitively as far as possible, that means dependencies are always targeting the original declaration, never some intermediary re-exporting module
+<ul>
+<li>this applies to type references as well as to value references (e.g. function calls, <code>new</code> expressions, reading a constant)</li>
+<li>it covers <code>export * from</code>, named and aliased re-exports (<code>export { A as B } from</code>), default re-exports (<code>export { default } from</code>) and namespace re-exports (<code>export * as ns from</code>), also when declarations of Node.js packages are re-exported</li>
+<li>a module that re-exports declarations depends on the re-exported declarations (named re-exports) or modules (<code>export *</code>)</li>
+</ul>
+</li>
+<li>dependencies whose source or target is not represented in the graph are skipped; the plugin logs their number (details on debug level), and the LCE tool lists them when run with <code>--debug</code></li>
 <li>all registered direct dependencies of a concept are propagated/aggregated to all declaration levels above (see <a href="#propagationaggregation-strategy" class="internal alias">Propagation/Aggregation Strategy</a>)</li>
 </ul>
 <p><strong>Properties:</strong></p>
