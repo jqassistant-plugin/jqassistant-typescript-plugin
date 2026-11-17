@@ -7,6 +7,8 @@
       "/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts",
       "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep1.ts",
       "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts",
+      "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts",
+      "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts",
       "/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts",
       "/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts",
       "/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts"
@@ -89,13 +91,13 @@
               "value": 1
             },
             "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep1.ts\".EXPORT_CONSTANT",
-            "localFqn": ".EXPORT_CONSTANT"
+            "localFqn": "\"./src/testDep1.ts\".EXPORT_CONSTANT"
           },
           "coordinates": {
             "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts",
-            "startLine": 5,
+            "startLine": 6,
             "startColumn": 6,
-            "endLine": 5,
+            "endLine": 6,
             "endColumn": 39
           }
         },
@@ -579,7 +581,7 @@
             "valueType": "class",
             "type": {
               "type": "not-identified",
-              "identifier": "class expression"
+              "identifier": "Class Expression"
             }
           },
           "coordinates": {
@@ -603,7 +605,7 @@
             "valueType": "complex",
             "type": {
               "type": "not-identified",
-              "identifier": "complex"
+              "identifier": "Complex Value"
             },
             "expression": "valueLiteral + 5"
           },
@@ -686,6 +688,44 @@
             "startColumn": 0,
             "endLine": 6,
             "endColumn": 69
+          }
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".callThroughBarrel",
+          "localFqn": "\"./src/testDep2.ts\".callThroughBarrel",
+          "functionName": "callThroughBarrel",
+          "parameters": [],
+          "returnType": {
+            "type": "primitive",
+            "name": "number"
+          },
+          "async": false,
+          "typeParameters": [],
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts",
+            "startLine": 8,
+            "startColumn": 7,
+            "endLine": 10,
+            "endColumn": 1
+          }
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts\".reExportedFunction",
+          "localFqn": "\"./src/testDep3.ts\".reExportedFunction",
+          "functionName": "reExportedFunction",
+          "parameters": [],
+          "returnType": {
+            "type": "primitive",
+            "name": "number"
+          },
+          "async": false,
+          "typeParameters": [],
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts",
+            "startLine": 1,
+            "startColumn": 7,
+            "endLine": 3,
+            "endColumn": 1
           }
         },
         {
@@ -1031,7 +1071,7 @@
                   "typeArguments": []
                 },
                 "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".Decorator",
-                "localFqn": ".Decorator"
+                "localFqn": "\"./src/utils.ts\".Decorator"
               },
               "coordinates": {
                 "startLine": 8,
@@ -1381,8 +1421,32 @@
           "cardinality": 1
         },
         {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.z",
+          "localFqn": "\"./src/testDeclarations.ts\".Class.z",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.constructor",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.constructor.x",
+          "localFqn": "\"./src/testDeclarations.ts\".Class.constructor.x",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.constructor",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.constructor.y",
+          "localFqn": "\"./src/testDeclarations.ts\".Class.constructor.y",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class.constructor",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
           "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".Decorator",
-          "localFqn": ".Decorator",
+          "localFqn": "\"./src/utils.ts\".Decorator",
           "targetType": "declaration",
           "globalSourceFQN": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDeclarations.ts\".Class",
           "sourceType": "declaration",
@@ -1414,9 +1478,17 @@
         },
         {
           "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep1.ts\".EXPORT_CONSTANT",
-          "localFqn": ".EXPORT_CONSTANT",
+          "localFqn": "\"./src/testDep1.ts\".EXPORT_CONSTANT",
           "targetType": "declaration",
           "globalSourceFQN": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".IMPORT_CONSTANT",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts\".reExportedFunction",
+          "localFqn": "\"./src/testDep3.ts\".reExportedFunction",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".callThroughBarrel",
           "sourceType": "declaration",
           "cardinality": 1
         },
@@ -1491,6 +1563,14 @@
           "globalSourceFQN": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testValues.ts\".valueComplex",
           "sourceType": "declaration",
           "cardinality": 1
+        },
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts",
+          "localFqn": "",
+          "targetType": "module",
+          "globalSourceFQN": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts",
+          "sourceType": "module",
+          "cardinality": 1
         }
       ],
       "module": [
@@ -1508,6 +1588,16 @@
           "globalFqn": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts",
           "localFqn": "./src/testDep2.ts",
           "path": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts"
+        },
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts",
+          "localFqn": "./src/testDep3.ts",
+          "path": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts"
+        },
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts",
+          "localFqn": "./src/testDepBarrel.ts",
+          "path": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts"
         },
         {
           "globalFqn": "/java/src/test/resources/java-it-core-basics-sample-project/src/testTypes.ts",
@@ -1532,6 +1622,27 @@
           "isDefault": false,
           "kind": "value",
           "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep1.ts"
+        },
+        {
+          "identifier": "callThroughBarrel",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".callThroughBarrel",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts"
+        },
+        {
+          "identifier": "reExportedFunction",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts\".reExportedFunction",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts"
+        },
+        {
+          "identifier": "reExportedFunction",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts\".reExportedFunction",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts"
         },
         {
           "identifier": "BaseInterface",

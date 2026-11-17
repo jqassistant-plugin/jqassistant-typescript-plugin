@@ -29,3 +29,8 @@ aliases:
 > [!note]
 >  For declarations that are part of a `index.ts`(`x`) module, the module path ends with the containing directory, omitting the file name.  
 > E.g. a `localFqn` for the class `MyClass` in the file `./some/path/index.ts` would look like `"./some/path".MyClass`.
+
+> [!note]
+> A default-exported declaration uses the identifier `default` instead of its name, the name stays available in the `name` property.
+> This applies to all ways of default-exporting a declaration (`export default class MyClass {}`, `export default MyClass;` and `export { MyClass as default };`) and to all kinds of declarations.
+> E.g. the `localFqn` of `MyClass` in the file `./src/my-module.ts` would look like `"./src/my-module.ts".default`, also if `MyClass` is exported by name in addition.

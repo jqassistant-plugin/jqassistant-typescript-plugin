@@ -10,6 +10,10 @@ import {
 import { LCEVariableDeclaration } from "../../../src/core/concepts/variable-declaration.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
+import { LCEClassDeclaration } from "../../../src/core/concepts/class-declaration.concept";
+import { LCEFunctionDeclaration } from "../../../src/core/concepts/function-declaration.concept";
+import { LCEInterfaceDeclaration } from "../../../src/core/concepts/interface-declaration.concept";
+import { LCENamedConcept } from "../../../src/core/concept";
 import { IndexEnum, IndexVar } from "./sample-projects/import-export/src/subdir";
 
 jest.setTimeout(30000);
@@ -78,7 +82,7 @@ describe("import/export test", () => {
         expectExport(projectRootPath, exports!, '"./src/source2.ts".CustomInterface2', "CustomInterface2");
         expectExport(projectRootPath, exports!, '"./src/source2.ts".CustomType2', "CustomType2", "CustomType2Alias");
         expectExport(projectRootPath, exports!, '"./src/source2.ts".CustomEnum2', "CustomEnum2");
-        expectExport(projectRootPath, exports!, '"./src/source2.ts".DefaultClass2', "DefaultClass2", undefined, true);
+        expectExport(projectRootPath, exports!, '"./src/source2.ts".default', "DefaultClass2", undefined, true);
     });
 
     test("exports (source3.ts)", async () => {
@@ -89,7 +93,7 @@ describe("import/export test", () => {
         expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomInterface3', "CustomInterface3");
         expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomType3', "CustomType3");
         expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomEnum3', "CustomEnum3");
-        expectExport(projectRootPath, exports!, '"./src/source3.ts".DefaultClass3', "DefaultClass3", undefined, true);
+        expectExport(projectRootPath, exports!, '"./src/source3.ts".default', "DefaultClass3", undefined, true);
     });
 
     test("re-exports (reexport.ts)", async () => {
@@ -113,20 +117,14 @@ describe("import/export test", () => {
         );
         expectExport(projectRootPath, exports!, '"./src/source2.ts".CustomType2', "CustomType2Alias", "CustomType2AliasAlias");
         expectDependency(projectRootPath, dependencies, "./src/reexport.ts", resolveGlobalFqn(projectRootPath, '"./src/source2.ts".CustomType2'), 1);
-        expectExport(projectRootPath, exports!, '"./src/source2.ts".DefaultClass2', "default", "DefaultAlias2");
-        expectDependency(
-            projectRootPath,
-            dependencies,
-            "./src/reexport.ts",
-            resolveGlobalFqn(projectRootPath, '"./src/source2.ts".DefaultClass2'),
-            1,
-        );
+        expectExport(projectRootPath, exports!, '"./src/source2.ts".default', "default", "DefaultAlias2");
+        expectDependency(projectRootPath, dependencies, "./src/reexport.ts", resolveGlobalFqn(projectRootPath, '"./src/source2.ts".default'), 1);
 
         expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomClass3', "CustomClass3Alias", "someNamespace.CustomClass3Alias");
         expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomInterface3', "CustomInterface3", "someNamespace.CustomInterface3");
         expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomType3', "CustomType3", "someNamespace.CustomType3");
         expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomEnum3', "CustomEnum3", "someNamespace.CustomEnum3");
-        expectExport(projectRootPath, exports!, '"./src/source3.ts".DefaultClass3', "default", "someNamespace.default", true);
+        expectExport(projectRootPath, exports!, '"./src/source3.ts".default', "default", "someNamespace.default", true);
         expectDependency(projectRootPath, dependencies, "./src/reexport.ts", resolveGlobalFqn(projectRootPath, "./src/source3.ts"), 1);
 
         expectExport(projectRootPath, exports!, '"../external-dummy-project/src/source1.ts".DummyCustomInterface', "DummyCustomInterface");
@@ -139,7 +137,7 @@ describe("import/export test", () => {
         );
         expectExport(projectRootPath, exports!, '"../external-dummy-project/src/source3.ts".DummyCustomClass3', "DummyCustomClass3");
         expectExport(projectRootPath, exports!, '"../external-dummy-project/src/source3.ts".DummyCustomInterface3', "DummyCustomInterface3");
-        expectExport(projectRootPath, exports!, '"../external-dummy-project/src/source3.ts".DummyDefaultClass3', "DummyDefaultClass3");
+        expectExport(projectRootPath, exports!, '"../external-dummy-project/src/source3.ts".default', "default");
         expectDependency(
             projectRootPath,
             dependencies,
@@ -254,39 +252,21 @@ describe("import/export test", () => {
             1,
         );
 
-        expectDeclaredType(varDecls.get('"./src/imports1.ts".d1')?.type, resolveGlobalFqn(projectRootPath, '"./src/source2.ts".DefaultClass2'));
-        expectDependency(
-            projectRootPath,
-            dependencies,
-            '"./src/imports1.ts".d1',
-            resolveGlobalFqn(projectRootPath, '"./src/source2.ts".DefaultClass2'),
-            1,
-        );
-        expectDeclaredType(varDecls.get('"./src/imports1.ts".d2')?.type, resolveGlobalFqn(projectRootPath, '"./src/source3.ts".DefaultClass3'));
-        expectDependency(
-            projectRootPath,
-            dependencies,
-            '"./src/imports1.ts".d2',
-            resolveGlobalFqn(projectRootPath, '"./src/source3.ts".DefaultClass3'),
-            1,
-        );
-        expectDeclaredType(varDecls.get('"./src/imports1.ts".d3')?.type, resolveGlobalFqn(projectRootPath, '"./src/source3.ts".DefaultClass3'));
-        expectDependency(
-            projectRootPath,
-            dependencies,
-            '"./src/imports1.ts".d3',
-            resolveGlobalFqn(projectRootPath, '"./src/source3.ts".DefaultClass3'),
-            1,
-        );
+        expectDeclaredType(varDecls.get('"./src/imports1.ts".d1')?.type, resolveGlobalFqn(projectRootPath, '"./src/source2.ts".default'));
+        expectDependency(projectRootPath, dependencies, '"./src/imports1.ts".d1', resolveGlobalFqn(projectRootPath, '"./src/source2.ts".default'), 1);
+        expectDeclaredType(varDecls.get('"./src/imports1.ts".d2')?.type, resolveGlobalFqn(projectRootPath, '"./src/source3.ts".default'));
+        expectDependency(projectRootPath, dependencies, '"./src/imports1.ts".d2', resolveGlobalFqn(projectRootPath, '"./src/source3.ts".default'), 1);
+        expectDeclaredType(varDecls.get('"./src/imports1.ts".d3')?.type, resolveGlobalFqn(projectRootPath, '"./src/source3.ts".default'));
+        expectDependency(projectRootPath, dependencies, '"./src/imports1.ts".d3', resolveGlobalFqn(projectRootPath, '"./src/source3.ts".default'), 1);
         expectDeclaredType(
             varDecls.get('"./src/imports1.ts".d4')?.type,
-            resolveGlobalFqn(projectRootPath, '"../external-dummy-project/src/source3.ts".DummyDefaultClass3'),
+            resolveGlobalFqn(projectRootPath, '"../external-dummy-project/src/source3.ts".default'),
         );
         expectDependency(
             projectRootPath,
             dependencies,
             '"./src/imports1.ts".d4',
-            resolveGlobalFqn(projectRootPath, '"../external-dummy-project/src/source3.ts".DummyDefaultClass3'),
+            resolveGlobalFqn(projectRootPath, '"../external-dummy-project/src/source3.ts".default'),
             1,
         );
 
@@ -298,10 +278,11 @@ describe("import/export test", () => {
         const exports = exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/reexport-node.ts"));
         expect(exports).toBeDefined();
         expectExport(projectRootPath, exports!, '"cowsay".IOptions', "IOptions");
+        expectExport(projectRootPath, exports!, '"cowsay".say', "say");
         expectDependency(projectRootPath, dependencies, "./src/reexport-node.ts", "cowsay", 1);
         expectExport(projectRootPath, exports!, '"progress".ProgressBar.ProgressBarOptions', "ProgressBar.ProgressBarOptions", "PBO");
         expectDependency(projectRootPath, dependencies, "./src/reexport-node.ts", '"progress".ProgressBar.ProgressBarOptions', 1);
-        expect(exports!).toHaveLength(2);
+        expect(exports!).toHaveLength(3);
     });
 
     test("imports (imports2.ts)", async () => {
@@ -383,5 +364,154 @@ describe("import/export test", () => {
 
         // ensure that no module wide dependencies are present
         expect(dependencies.get("./src/importPath.ts")).toBeUndefined();
+    });
+
+    test("value usages through re-exports (valueUsages.ts)", async () => {
+        const expectedDependencies: [string, string, number][] = [
+            ['"./src/valueUsages.ts".callFunction', '"./src/values/values.ts".valueFunction', 1],
+            ['"./src/valueUsages.ts".callAliasedFunction', '"./src/values/values.ts".valueFunction', 1],
+            ['"./src/valueUsages.ts".callNamespaceFunction', '"./src/values/values.ts".valueFunction', 1],
+            ['"./src/valueUsages.ts".callDefaultFunction', '"./src/values/defaultFunction.ts".default', 1],
+            ['"./src/valueUsages.ts".readConstant', '"./src/values/values.ts".valueConstant', 1],
+            // instances: one dependency through the type of the variable, one through the constructor call
+            ['"./src/valueUsages.ts".valueInstance', '"./src/values/values.ts".ValueClass', 2],
+            ['"./src/valueUsages.ts".aliasedInstance', '"./src/values/values.ts".AliasedValueClass', 2],
+            ['"./src/valueUsages.ts".defaultInstance', '"./src/values/values.ts".default', 2],
+            ['"./src/valueUsages.ts".defaultIdentifierInstance', '"./src/values/defaultIdentifier.ts".default', 2],
+            ['"./src/valueUsages.ts".defaultSpecifierInstance', '"./src/values/defaultSpecifier.ts".default', 2],
+            ['"./src/valueUsages.ts".defaultInterfaceValue', '"./src/values/defaultInterface.ts".default', 1],
+        ];
+        for (const [source, target, cardinality] of expectedDependencies) {
+            expectDependency(projectRootPath, dependencies, source, resolveGlobalFqn(projectRootPath, target), cardinality);
+            // no further dependencies, e.g. on a re-exporting module
+            expect(dependencies.get(resolveGlobalFqn(projectRootPath, source))?.size).toBe(1);
+        }
+
+        // re-export from a Node.js package
+        expectDependency(projectRootPath, dependencies, '"./src/valueUsages.ts".callNodeFunction', '"cowsay".say', 1);
+        expect(dependencies.get(resolveGlobalFqn(projectRootPath, '"./src/valueUsages.ts".callNodeFunction'))?.size).toBe(1);
+
+        expectDeclaredType(
+            varDecls.get('"./src/valueUsages.ts".defaultInterfaceValue')?.type,
+            resolveGlobalFqn(projectRootPath, '"./src/values/defaultInterface.ts".default'),
+        );
+
+        // ensure that no module wide dependencies are present
+        expect(dependencies.get(resolveGlobalFqn(projectRootPath, "./src/valueUsages.ts"))).toBeUndefined();
+    });
+
+    test("default-exported declarations (values/*.ts)", async () => {
+        const findDeclaration = <T extends LCENamedConcept>(conceptId: string, localFqn: string): T | undefined =>
+            result.get(conceptId)?.find((c) => (c as T).fqn.globalFqn === resolveGlobalFqn(projectRootPath, localFqn)) as T | undefined;
+
+        expect(findDeclaration<LCEClassDeclaration>(LCEClassDeclaration.conceptId, '"./src/values/values.ts".default')?.className).toBe(
+            "DefaultValueClass",
+        );
+        expect(findDeclaration<LCEClassDeclaration>(LCEClassDeclaration.conceptId, '"./src/values/defaultIdentifier.ts".default')?.className).toBe(
+            "DefaultIdentifierClass",
+        );
+        expect(findDeclaration<LCEClassDeclaration>(LCEClassDeclaration.conceptId, '"./src/values/defaultSpecifier.ts".default')?.className).toBe(
+            "DefaultSpecifierClass",
+        );
+        expect(
+            findDeclaration<LCEFunctionDeclaration>(LCEFunctionDeclaration.conceptId, '"./src/values/defaultFunction.ts".default')?.functionName,
+        ).toBe("defaultValueFunction");
+        expect(
+            findDeclaration<LCEInterfaceDeclaration>(LCEInterfaceDeclaration.conceptId, '"./src/values/defaultInterface.ts".default')?.interfaceName,
+        ).toBe("DefaultInterface");
+
+        expectExport(
+            projectRootPath,
+            exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/values/values.ts"))!,
+            '"./src/values/values.ts".default',
+            "DefaultValueClass",
+            undefined,
+            true,
+        );
+        expectExport(
+            projectRootPath,
+            exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/values/defaultIdentifier.ts"))!,
+            '"./src/values/defaultIdentifier.ts".default',
+            "default",
+            undefined,
+            true,
+        );
+        expectExport(
+            projectRootPath,
+            exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/values/defaultFunction.ts"))!,
+            '"./src/values/defaultFunction.ts".default',
+            "defaultValueFunction",
+            undefined,
+            true,
+        );
+        expectExport(
+            projectRootPath,
+            exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/values/defaultInterface.ts"))!,
+            '"./src/values/defaultInterface.ts".default',
+            "DefaultInterface",
+            undefined,
+            true,
+        );
+
+        // exported by name and as default: both exports point to the same declaration
+        const specifierExports = exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/values/defaultSpecifier.ts"));
+        expect(specifierExports).toHaveLength(2);
+        for (const exp of specifierExports!) {
+            expect(exp.identifier).toBe("DefaultSpecifierClass");
+            expect(exp.globalDeclFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/values/defaultSpecifier.ts".default'));
+        }
+        expect(specifierExports!.map((exp) => exp.isDefault).sort()).toEqual([false, true]);
+    });
+
+    test("re-exports of values (values/index.ts, valuesBarrel.ts)", async () => {
+        const barrelExports = exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/values/index.ts"));
+        expect(barrelExports).toBeDefined();
+        const expectBarrelExport = (exportedName: string, localDeclFqn: string) => {
+            const exp = barrelExports!.find((e) => (e.alias ?? e.identifier) === exportedName);
+            expect(exp).toBeDefined();
+            expect(exp!.globalDeclFqn).toBe(resolveGlobalFqn(projectRootPath, localDeclFqn));
+        };
+        expectBarrelExport("valueFunction", '"./src/values/values.ts".valueFunction');
+        expectBarrelExport("RenamedValueClass", '"./src/values/values.ts".AliasedValueClass');
+        expectBarrelExport("DefaultValueClass", '"./src/values/values.ts".default');
+        expectBarrelExport("defaultValueFunction", '"./src/values/defaultFunction.ts".default');
+        expectBarrelExport("DefaultSpecifierClass", '"./src/values/defaultSpecifier.ts".default');
+        expectBarrelExport("DefaultInterface", '"./src/values/defaultInterface.ts".default');
+        expectBarrelExport("valuesNamespace.valueFunction", '"./src/values/values.ts".valueFunction');
+
+        const defaultExport = barrelExports!.find(
+            (e) => e.isDefault && e.globalDeclFqn === resolveGlobalFqn(projectRootPath, '"./src/values/defaultIdentifier.ts".default'),
+        );
+        expect(defaultExport).toBeDefined();
+
+        // "export *" and "export * as" of the same module
+        expectDependency(projectRootPath, dependencies, "./src/values/index.ts", resolveGlobalFqn(projectRootPath, "./src/values/values.ts"), 2);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            "./src/values/index.ts",
+            resolveGlobalFqn(projectRootPath, '"./src/values/defaultFunction.ts".default'),
+            1,
+        );
+
+        // re-export of a re-export
+        const aliasExports = exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/valuesBarrel.ts"));
+        expect(aliasExports).toHaveLength(2);
+        expectExport(projectRootPath, aliasExports!, '"./src/values/values.ts".valueFunction', "valueFunction", "aliasedValueFunction");
+        expectExport(projectRootPath, aliasExports!, '"./src/values/values.ts".AliasedValueClass', "RenamedValueClass", "DoubleRenamedValueClass");
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            "./src/valuesBarrel.ts",
+            resolveGlobalFqn(projectRootPath, '"./src/values/values.ts".valueFunction'),
+            1,
+        );
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            "./src/valuesBarrel.ts",
+            resolveGlobalFqn(projectRootPath, '"./src/values/values.ts".AliasedValueClass'),
+            1,
+        );
     });
 });

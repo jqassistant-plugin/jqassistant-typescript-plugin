@@ -62,6 +62,15 @@ export class DependencyResolutionProcessor extends Processor {
                 if(statement.type === AST_NODE_TYPES.ExportDefaultDeclaration && statement.declaration.type === AST_NODE_TYPES.Identifier) {
                     localContexts.currentContexts.set(CoreContextKeys.DEFAULT_EXPORT_IDENTIFIER, statement.declaration.name);
                     break;
+                } else if(statement.type === AST_NODE_TYPES.ExportNamedDeclaration && !statement.source) {
+                    // e.g. "export { MyClass as default }"
+                    const defaultSpecifier = statement.specifiers.find((s) =>
+                        (s.exported.type === AST_NODE_TYPES.Identifier ? s.exported.name : s.exported.value) === "default"
+                    );
+                    if(defaultSpecifier && defaultSpecifier.local.type === AST_NODE_TYPES.Identifier) {
+                        localContexts.currentContexts.set(CoreContextKeys.DEFAULT_EXPORT_IDENTIFIER, defaultSpecifier.local.name);
+                        break;
+                    }
                 }
             }
         }
@@ -321,8 +330,20 @@ export class DependencyResolutionProcessor extends Processor {
      * @returns whether a declaration is default-exported.
      */
     public static isDefaultDeclaration(localContexts: LocalContexts, declarationNode: Node, identifier?: string): boolean {
-        const defaultIdentifierContext  = localContexts.getNextContext(CoreContextKeys.DEFAULT_EXPORT_IDENTIFIER) as [string, number] | undefined;
-        return declarationNode.parent?.type === AST_NODE_TYPES.ExportDefaultDeclaration ||
-            (!!identifier && !!defaultIdentifierContext && defaultIdentifierContext[0] === identifier);
+        const parent = declarationNode.parent;
+        const isModuleLevel =
+            parent?.type === AST_NODE_TYPES.Program ||
+            (parent?.type === AST_NODE_TYPES.ExportNamedDeclaration && parent.parent?.type === AST_NODE_TYPES.Program);
+        return parent?.type === AST_NODE_TYPES.ExportDefaultDeclaration ||
+            (isModuleLevel && !!identifier && DependencyResolutionProcessor.getDefaultExportIdentifier(localContexts) === identifier);
+    }
+
+    /**
+     * @returns the name of the module-level declaration that is default-exported by an identifier
+     * (e.g. "export default MyClass" or "export { MyClass as default }"), if there is one
+     */
+    public static getDefaultExportIdentifier(localContexts: LocalContexts): string | undefined {
+        const defaultIdentifierContext = localContexts.getNextContext(CoreContextKeys.DEFAULT_EXPORT_IDENTIFIER) as [string, number] | undefined;
+        return defaultIdentifierContext?.[0];
     }
 }

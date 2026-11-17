@@ -8,6 +8,10 @@ aliases:
 - direct dependencies are registered on a statement/expression level and propagated upwards to the next language construct that is represented as a concept in the graph 
 	- import statements are ignored during this process which means declarations of unused imports will not be represented in the graph
 - re-exports are resolved transitively as far as possible, that means dependencies are always targeting the original declaration, never some intermediary re-exporting module
+	- this applies to type references as well as to value references (e.g. function calls, `new` expressions, reading a constant)
+	- it covers `export * from`, named and aliased re-exports (`export { A as B } from`), default re-exports (`export { default } from`) and namespace re-exports (`export * as ns from`), also when declarations of Node.js packages are re-exported
+	- a module that re-exports declarations depends on the re-exported declarations (named re-exports) or modules (`export *`)
+- dependencies whose source or target is not represented in the graph are skipped; the plugin logs their number (details on debug level), and the LCE tool lists them when run with `--debug`
 - all registered direct dependencies of a concept are propagated/aggregated to all declaration levels above (see [[#Propagation/Aggregation Strategy]])
 
 **Properties:**

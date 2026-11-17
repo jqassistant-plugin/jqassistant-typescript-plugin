@@ -1,5 +1,4 @@
 import { PostProcessor } from "../post-processor";
-import { LCEConcept } from "../concept";
 import { LCEExportDeclaration } from "../concepts/export-declaration.concept";
 import { LCEModule } from "../concepts/typescript-module.concept";
 import { ModulePathUtils } from "../utils/modulepath.utils";
@@ -18,24 +17,29 @@ export class ExportsPostProcessor extends PostProcessor {
             const externalModules = (concepts.get(LCEExternalModule.conceptId) ?? []) as LCEExternalModule[];
             const allExports = (concepts.get(LCEExportDeclaration.conceptId) ?? []) as LCEExportDeclaration[];
             const newExports: LCEExportDeclaration[] = [];
+            const newDependencies: Map<string, LCEDependency> = new Map();
 
             for (const module of modules) {
                 newExports.push(
-                    ...this.getAllModuleExports(concepts, allExports, module.fqn.globalFqn, externalModules, project.projectInfo, projects),
+                    ...this.getAllModuleExports(newDependencies, allExports, module.fqn.globalFqn, externalModules, project.projectInfo, projects),
                 );
             }
 
             concepts.set(LCEExportDeclaration.conceptId, newExports);
+            if (newDependencies.size > 0) {
+                concepts.set(LCEDependency.conceptId, [...(concepts.get(LCEDependency.conceptId) ?? []), ...newDependencies.values()]);
+            }
         }
     }
 
     private getAllModuleExports(
-        concepts: Map<string, LCEConcept[]>,
+        dependencies: Map<string, LCEDependency>,
         exports: LCEExportDeclaration[],
         modulePathAbsolute: string,
         externalModules: LCEExternalModule[],
         projectInfo: LCEProjectInfo,
         projects: LCEProject[],
+        addDependencies = true,
     ): LCEExportDeclaration[] {
         const result: LCEExportDeclaration[] = [];
 
@@ -56,7 +60,16 @@ export class ExportsPostProcessor extends PostProcessor {
                 // re-export
                 if (!ModulePathUtils.isExternal(exp.importSource, projectInfo, projects)) {
                     // internal re-export: try to resolve export tree
-                    const moduleExports = this.getAllModuleExports(concepts, exports, exp.importSource, externalModules, projectInfo, projects);
+                    // (the dependencies of the re-exported module are added when its own exports are resolved)
+                    const moduleExports = this.getAllModuleExports(
+                        dependencies,
+                        exports,
+                        exp.importSource,
+                        externalModules,
+                        projectInfo,
+                        projects,
+                        false,
+                    );
                     if (exp.kind === "namespace") {
                         // namespace re-export: convert all namespace exports into individual export declarations
                         if (exp.globalDeclFqn) {
@@ -77,7 +90,7 @@ export class ExportsPostProcessor extends PostProcessor {
                                     ),
                                 );
                             }
-                            this.addDependency(concepts, modulePathAbsolute, exp.importSource, "module");
+                            if (addDependencies) this.addDependency(dependencies, modulePathAbsolute, exp.importSource, "module");
                         }
                     } else {
                         // named re-export
@@ -95,7 +108,7 @@ export class ExportsPostProcessor extends PostProcessor {
                                 ),
                             );
                             if (originalExport.globalDeclFqn) {
-                                this.addDependency(concepts, modulePathAbsolute, originalExport.globalDeclFqn);
+                                if (addDependencies) this.addDependency(dependencies, modulePathAbsolute, originalExport.globalDeclFqn);
                             }
                         } else {
                             debug(
@@ -150,7 +163,7 @@ export class ExportsPostProcessor extends PostProcessor {
                                     ),
                                 );
                             }
-                            this.addDependency(concepts, modulePathAbsolute, importSource, "module");
+                            if (addDependencies) this.addDependency(dependencies, modulePathAbsolute, importSource, "module");
                         } else {
                             // named re-export of single external dependency
                             let eDecl = externalDeclarations.find((ed) => ed.name === exp.identifier);
@@ -170,7 +183,7 @@ export class ExportsPostProcessor extends PostProcessor {
                                         modulePathAbsolute,
                                     ),
                                 );
-                                this.addDependency(concepts, modulePathAbsolute, eDecl.fqn.globalFqn);
+                                if (addDependencies) this.addDependency(dependencies, modulePathAbsolute, eDecl.fqn.globalFqn);
                             } else {
                                 debug(
                                     `Error: external declaration with identifier "${exp.identifier}" in module "${exp.importSource}" could not be found: Ignoring export...`,
@@ -210,9 +223,18 @@ export class ExportsPostProcessor extends PostProcessor {
         }
     }
 
-    private addDependency(concepts: Map<string, LCEConcept[]>, source: string, target: string, targetType: "declaration" | "module" = "declaration") {
-        const dependencies = (concepts.get(LCEDependency.conceptId) ?? []) as LCEDependency[];
-        dependencies.push(new LCEDependency(target, targetType, source, "module", 1));
-        concepts.set(LCEDependency.conceptId, dependencies);
+    private addDependency(
+        dependencies: Map<string, LCEDependency>,
+        source: string,
+        target: string,
+        targetType: "declaration" | "module" = "declaration",
+    ) {
+        const key = JSON.stringify([source, target, targetType]);
+        const existingDependency = dependencies.get(key);
+        if (existingDependency) {
+            existingDependency.cardinality++;
+        } else {
+            dependencies.set(key, new LCEDependency(target, targetType, source, "module", 1));
+        }
     }
 }

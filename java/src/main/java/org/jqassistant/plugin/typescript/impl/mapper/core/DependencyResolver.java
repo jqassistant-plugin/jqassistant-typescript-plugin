@@ -2,25 +2,34 @@ package org.jqassistant.plugin.typescript.impl.mapper.core;
 
 import com.buschmais.jqassistant.core.scanner.api.Scanner;
 import com.buschmais.jqassistant.core.scanner.api.ScannerContext;
+import lombok.extern.slf4j.Slf4j;
 import org.jqassistant.plugin.typescript.api.model.core.DependsOnDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.TypeScriptDescriptor;
 import org.jqassistant.plugin.typescript.impl.model.core.Dependency;
 
 import java.util.List;
 
+@Slf4j
 public class DependencyResolver {
 
     public static void resolve(Scanner scanner, List<Dependency> dependencies) {
         ScannerContext context = scanner.getContext();
         FqnResolver fqnResolver = context.peek(FqnResolver.class);
 
+        int unresolvedDependencies = 0;
         for(Dependency dep : dependencies) {
             TypeScriptDescriptor source = fqnResolver.getByGlobalFqn(dep.getGlobalSourceFQN());
             TypeScriptDescriptor target = fqnResolver.getByGlobalFqn(dep.getGlobalFqn());
             if(source != null && target != null) {
                 DependsOnDescriptor relationDescriptor = context.getStore().create(source, DependsOnDescriptor.class, target);
                 relationDescriptor.setCardinality(dep.getCardinality());
+            } else {
+                unresolvedDependencies++;
+                log.debug("Skipping dependency {} -> {}: {} not found", dep.getGlobalSourceFQN(), dep.getGlobalFqn(), source == null ? "source" : "target");
             }
+        }
+        if(unresolvedDependencies > 0) {
+            log.info("Skipped {} of {} dependencies whose source or target could not be found (details on debug level)", unresolvedDependencies, dependencies.size());
         }
 
         // create missing transitive relationships

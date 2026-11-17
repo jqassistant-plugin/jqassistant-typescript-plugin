@@ -48,7 +48,7 @@ import {
     LCETypeTuple,
     LCETypeUnion
 } from "../concepts/type.concept";
-import { FQN, ProcessingContext } from "../context";
+import { FQN, GlobalContext, ProcessingContext } from "../context";
 import { ModulePathUtils } from "../utils/modulepath.utils";
 import { DependencyResolutionProcessor } from "./dependency-resolution.processor";
 import { NodeUtils } from "../utils/node.utils";
@@ -372,71 +372,10 @@ function parseType(
             // primitive type
             return new LCETypePrimitive(tc.typeToString(type));
         } else {
-            globalFqn = globalFqn!;
             // declared type
-
-            // normalize TypeChecker FQN and determine if type is part of the project
-            const sourceFile = symbol?.valueDeclaration?.getSourceFile() ?? symbol?.declarations?.find((d) => !!d.getSourceFile())?.getSourceFile();
-            const isStandardLibrary = !!sourceFile && globalContext.services.program.isSourceFileDefaultLibrary(sourceFile);
-            const relativeSrcPath = !!sourceFile
-                ? FileUtils.normalizePath(path.relative(globalContext.projectInfo.rootPath, sourceFile.fileName))
-                : undefined;
-            const isExternal =
-                !!sourceFile &&
-                (globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile) || relativeSrcPath!.startsWith("node_modules"));
-
-            let normalizedFqn = new FQN("");
-            let scheduleFqnResolution = false;
-            if (isStandardLibrary) {
-                // Standard Library fqn (e.g. 'Array') -> keep name
-                normalizedFqn.globalFqn = globalFqn;
-            } else if (isExternal) {
-                if (globalFqn.startsWith('"')) {
-                    // path that *probably* points to node modules
-                    // -> resolve absolute path
-                    const packageName = NodeUtils.getPackageNameForPath(
-                        globalContext.projectInfo.rootPath,
-                        ModulePathUtils.extractFQNPath(globalFqn),
-                    );
-                    if (packageName) {
-                        normalizedFqn.globalFqn = `"${packageName}".${ModulePathUtils.extractFQNIdentifier(globalFqn)}`;
-                    } else {
-                        normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(globalFqn, globalContext.sourceFilePathAbsolute);
-                    }
-                } else {
-                    // Node fqn -> set node path in quotes
-                    const packageName = NodeUtils.getPackageNameForPath(globalContext.projectInfo.rootPath, sourceFile.fileName);
-                    if (packageName) {
-                        normalizedFqn.globalFqn = `"${packageName}".${globalFqn}`;
-                    } else {
-                        normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(
-                            `"${sourceFile.fileName}".${globalFqn}`,
-                            globalContext.sourceFilePathAbsolute,
-                        );
-                    }
-                }
-            } else if (globalFqn.startsWith('"')) {
-                // FQN with specified module path (e.g. '"/home/../src/MyModule".MyClass') -> normalize module path
-                normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(globalFqn, globalContext.sourceFilePathAbsolute);
-            } else {
-                // plain name (e.g. "SomeClass")
-                normalizedFqn.globalFqn = globalFqn;
-
-                // try to get source node for symbol and extract path
-                if (symbol && symbol.declarations && symbol.declarations.length === 1) {
-                    const fileName = sourceFile?.fileName;
-                    if (fileName) {
-                        globalFqn = `"${fileName}".${globalFqn}`;
-                        normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(globalFqn, globalContext.sourceFilePathAbsolute);
-                    } else {
-                        // could not resolve via parent node -> try to resolve later
-                        scheduleFqnResolution = true;
-                    }
-                } else {
-                    // could not resolve via parent node -> try to resolve later
-                    scheduleFqnResolution = true;
-                }
-            }
+            const symbolFqn = resolveSymbolFqn(globalContext, symbol!);
+            const normalizedFqn = symbolFqn.fqn;
+            const scheduleFqnResolution = symbolFqn.scheduleFqnResolution;
 
             if (normalizedFqn.globalFqn === excludedFQN) {
                 // if declared type would reference excluded fqn (e.g. variable name), treat as anonymous type
@@ -465,7 +404,7 @@ function parseType(
 
             // TODO: handle locally defined (non-)anonymous types (e.g. with class expressions)
 
-            if (!ignoreDependencies && !isStandardLibrary)
+            if (!ignoreDependencies && !symbolFqn.isStandardLibrary)
                 DependencyResolutionProcessor.registerDependency(processingContext.localContexts, normalizedFqn.globalFqn, scheduleFqnResolution);
 
             const result = new LCETypeDeclared(normalizedFqn, typeArguments);
@@ -478,6 +417,164 @@ function parseType(
         debug(`Error occurred during type resolution:\n${e}`);
         return new LCETypeNotIdentified(tc.typeToString(type));
     }
+}
+
+/**
+ * Resolves an imported name to the FQN of the declaration it refers to.
+ * The TypeChecker follows all re-exports and aliases, so the result is the original declaration, never a re-exporting module.
+ * @param esLocalName local name of an import specifier (e.g. `B` in `import { A as B } from "./a"`)
+ * @returns FQN of the original declaration, path of the module for namespace imports, or `undefined` if the import cannot be resolved
+ */
+export function resolveImportedFqn(globalContext: GlobalContext, esLocalName: Identifier): FQN | undefined {
+    const tc = globalContext.typeChecker;
+    const localSymbol = tc.getSymbolAtLocation(globalContext.services.esTreeNodeToTSNodeMap.get(esLocalName));
+    if (!localSymbol || !(localSymbol.flags & ts.SymbolFlags.Alias)) {
+        return undefined;
+    }
+    const symbol = tc.getAliasedSymbol(localSymbol);
+    const declaration = symbol.declarations?.[0];
+    if (!declaration) {
+        // unresolvable import
+        return undefined;
+    } else if (ts.isSourceFile(declaration)) {
+        // module (e.g. namespace import or `export * as ns from "..."`)
+        const modulePath = FileUtils.normalizePath(declaration.fileName);
+        return new FQN(modulePath, ModulePathUtils.normalize(globalContext.projectInfo.rootPath, modulePath));
+    } else if (ts.isModuleDeclaration(declaration) && ts.isStringLiteral(declaration.name)) {
+        // ambient module (e.g. `declare module "fs" {...}`)
+        return FQN.id(declaration.name.text);
+    }
+
+    const symbolFqn = resolveSymbolFqn(globalContext, symbol);
+    if (symbolFqn.scheduleFqnResolution || symbolFqn.isStandardLibrary) {
+        return undefined;
+    }
+    const globalFqn = symbolFqn.fqn.globalFqn;
+    const modulePath = ModulePathUtils.extractFQNPath(globalFqn);
+    if (ModulePathUtils.getPathType(modulePath) === "absolute") {
+        const localModulePath = ModulePathUtils.normalize(globalContext.projectInfo.rootPath, modulePath);
+        return new FQN(globalFqn, `"${localModulePath}".${ModulePathUtils.extractFQNIdentifier(globalFqn)}`);
+    } else {
+        return FQN.id(globalFqn);
+    }
+}
+
+/**
+ * FQN of the declaration that a TypeChecker symbol represents, see {@link resolveSymbolFqn}
+ */
+interface SymbolFqn {
+    fqn: FQN;
+    /** whether the declaration is part of the TypeScript standard library */
+    isStandardLibrary: boolean;
+    /** whether the FQN could not be determined and has to be resolved with the declaration index at the end of the file */
+    scheduleFqnResolution: boolean;
+}
+
+/**
+ * Determines the global FQN under which the LCE knows the declaration represented by a TypeChecker symbol.
+ * Type references and imported declarations both use this function, so that they produce identical FQNs:
+ * - declarations of the standard library keep their plain name (e.g. `Array`)
+ * - declarations of Node.js packages use the package name as module path (e.g. `"react".React.Component`)
+ * - declarations of project files use the absolute module path (directory path for `index.*` modules)
+ * - default-exported declarations use the identifier `default`
+ */
+function resolveSymbolFqn(globalContext: GlobalContext, symbol: Symbol): SymbolFqn {
+    const tc = globalContext.typeChecker;
+    const defaultExportingModule = getDefaultExportingModule(tc, symbol);
+    let globalFqn = defaultExportingModule ? tc.getFullyQualifiedName(defaultExportingModule) + ".default" : tc.getFullyQualifiedName(symbol);
+
+    // normalize TypeChecker FQN and determine if the declaration is part of the project
+    const sourceFile = symbol.valueDeclaration?.getSourceFile() ?? symbol.declarations?.find((d) => !!d.getSourceFile())?.getSourceFile();
+    const isStandardLibrary = !!sourceFile && globalContext.services.program.isSourceFileDefaultLibrary(sourceFile);
+    const relativeSrcPath = !!sourceFile
+        ? FileUtils.normalizePath(path.relative(globalContext.projectInfo.rootPath, sourceFile.fileName))
+        : undefined;
+    const isExternal =
+        !!sourceFile && (globalContext.services.program.isSourceFileFromExternalLibrary(sourceFile) || relativeSrcPath!.startsWith("node_modules"));
+
+    const normalizedFqn = new FQN("");
+    let scheduleFqnResolution = false;
+    if (isStandardLibrary) {
+        // Standard Library fqn (e.g. 'Array') -> keep name
+        normalizedFqn.globalFqn = globalFqn;
+    } else if (isExternal) {
+        if (globalFqn.startsWith('"')) {
+            // path that *probably* points to node modules
+            // -> resolve absolute path
+            const packageName = NodeUtils.getPackageNameForPath(globalContext.projectInfo.rootPath, ModulePathUtils.extractFQNPath(globalFqn));
+            if (packageName) {
+                normalizedFqn.globalFqn = `"${packageName}".${ModulePathUtils.extractFQNIdentifier(globalFqn)}`;
+            } else {
+                normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(globalFqn, globalContext.sourceFilePathAbsolute);
+            }
+        } else {
+            // Node fqn -> set node path in quotes
+            const packageName = NodeUtils.getPackageNameForPath(globalContext.projectInfo.rootPath, sourceFile.fileName);
+            if (packageName) {
+                normalizedFqn.globalFqn = `"${packageName}".${globalFqn}`;
+            } else {
+                normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(
+                    `"${sourceFile.fileName}".${globalFqn}`,
+                    globalContext.sourceFilePathAbsolute,
+                );
+            }
+        }
+    } else if (globalFqn.startsWith('"')) {
+        // FQN with specified module path (e.g. '"/home/../src/MyModule".MyClass') -> normalize module path
+        normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(globalFqn, globalContext.sourceFilePathAbsolute);
+    } else {
+        // plain name (e.g. "SomeClass")
+        normalizedFqn.globalFqn = globalFqn;
+
+        // try to get source node for symbol and extract path
+        if (symbol.declarations && symbol.declarations.length === 1) {
+            const fileName = sourceFile?.fileName;
+            if (fileName) {
+                globalFqn = `"${fileName}".${globalFqn}`;
+                normalizedFqn.globalFqn = ModulePathUtils.normalizeTypeCheckerFQN(globalFqn, globalContext.sourceFilePathAbsolute);
+            } else {
+                // could not resolve via parent node -> try to resolve later
+                scheduleFqnResolution = true;
+            }
+        } else {
+            // could not resolve via parent node -> try to resolve later
+            scheduleFqnResolution = true;
+        }
+    }
+
+    return { fqn: normalizedFqn, isStandardLibrary, scheduleFqnResolution };
+}
+
+/**
+ * @returns the symbol of the module that default-exports the declaration represented by the given symbol
+ * (`export default class X {}`, `export default X`, `export { X as default }`), or `undefined` if the declaration is not default-exported
+ */
+function getDefaultExportingModule(tc: ts.TypeChecker, symbol: Symbol): Symbol | undefined {
+    const declaration = symbol.declarations?.[0];
+    if (!declaration) {
+        return undefined;
+    }
+
+    // only module-level declarations of module files and ambient modules (`declare module "name" {...}`) can be default-exported
+    const statement =
+        ts.isVariableDeclaration(declaration) && ts.isVariableDeclarationList(declaration.parent) ? declaration.parent.parent : declaration;
+    const container: Node | undefined = statement.parent;
+    let moduleSymbol: Symbol | undefined;
+    if (container && ts.isSourceFile(container)) {
+        moduleSymbol = tc.getSymbolAtLocation(container);
+    } else if (container && ts.isModuleBlock(container) && ts.isStringLiteral(container.parent.name)) {
+        moduleSymbol = tc.getSymbolAtLocation(container.parent.name);
+    }
+    if (!moduleSymbol) {
+        return undefined;
+    }
+
+    const defaultExport = moduleSymbol.exports?.get(ts.InternalSymbolName.Default);
+    if (!defaultExport) {
+        return undefined;
+    }
+    const defaultExportTarget = defaultExport.flags & ts.SymbolFlags.Alias ? tc.getAliasedSymbol(defaultExport) : defaultExport;
+    return defaultExportTarget === symbol ? moduleSymbol : undefined;
 }
 
 function parseAnonymousType(

@@ -59,7 +59,7 @@
             "valueType": "complex",
             "type": {
               "type": "not-identified",
-              "identifier": "complex"
+              "identifier": "Complex Value"
             },
             "expression": "new Project1Class(1, 1)"
           },
@@ -112,11 +112,27 @@
       "dependency": [
         {
           "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class",
-          "localFqn": ".Project1Class",
+          "localFqn": "\"./src/module2.ts\".Project1Class",
           "targetType": "declaration",
           "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module1.ts\".PROJECT1_EXPORT2",
           "sourceType": "declaration",
           "cardinality": 2
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class.constructor.x",
+          "localFqn": "\"./src/module2.ts\".Project1Class.constructor.x",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class.constructor",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class.constructor.y",
+          "localFqn": "\"./src/module2.ts\".Project1Class.constructor.y",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project1/src/module2.ts\".Project1Class.constructor",
+          "sourceType": "declaration",
+          "cardinality": 1
         }
       ],
       "module": [
@@ -512,7 +528,7 @@
             "valueType": "complex",
             "type": {
               "type": "not-identified",
-              "identifier": "complex"
+              "identifier": "Complex Value"
             },
             "expression": "2 + PROJECT_COMMON_EXPORT"
           },
@@ -539,7 +555,7 @@
             "valueType": "complex",
             "type": {
               "type": "not-identified",
-              "identifier": "complex"
+              "identifier": "Complex Value"
             },
             "expression": "new Project2Class(2, 2)"
           },
@@ -600,11 +616,27 @@
         },
         {
           "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class",
-          "localFqn": ".Project2Class",
+          "localFqn": "\"./src/module2.ts\".Project2Class",
           "targetType": "declaration",
           "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module1.ts\".PROJECT2_EXPORT2",
           "sourceType": "declaration",
           "cardinality": 2
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class.constructor.x",
+          "localFqn": "\"./src/module2.ts\".Project2Class.constructor.x",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class.constructor",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class.constructor.y",
+          "localFqn": "\"./src/module2.ts\".Project2Class.constructor.y",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-multi-sample-projects/project2/src/module2.ts\".Project2Class.constructor",
+          "sourceType": "declaration",
+          "cardinality": 1
         }
       ],
       "module": [
@@ -999,7 +1031,7 @@
             "valueType": "complex",
             "type": {
               "type": "not-identified",
-              "identifier": "complex"
+              "identifier": "Complex Value"
             },
             "expression": "PROJECT31_EXPORT + PROJECT32_EXPORT + PROJECT33_EXPORT + PROJECT_COMMON_EXPORT"
           },

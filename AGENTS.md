@@ -154,7 +154,7 @@ The versions of the LCE tool and the plugin have to match.
 These are the ideas the code is built around. Keep to them when extending it.
 
 - **One traversal per file.** All concepts are extracted during the single AST traversal. Do not start additional sub-tree traversals.
-- **ESLint AST first, Compiler API second.** Use the ESLint AST for structure. Use the TypeScript `TypeChecker` for type information only, through the functions in `processors/type.utils.ts`. Map between both ASTs with `globalContext.services`.
+- **ESLint AST first, Compiler API second.** Use the ESLint AST for structure. Use the TypeScript `TypeChecker` only for type information and for resolving imported names to their original declarations, through the functions in `processors/type.utils.ts`. Map between both ASTs with `globalContext.services`.
 - **Traversers only navigate.** A traverser decides which children are visited and under which property name. It contains no extraction logic. Property names are `public static readonly ..._PROP` constants on the traverser class and are used by processors to pick up child concepts.
 - **Do not skip AST levels.** Delegate to direct child nodes only. Reaching through a node (for example `node.body.body`) leaves `parent` wrong on the visited nodes. The few existing shortcuts are marked with TODOs; do not add more.
 - **Node types without a traverser are ignored, including their whole subtree.** `runTraverserForNode` returns silently if `TRAVERSERS` has no entry. When adding support for a syntax construct, first check that every traverser on the path visits the required children. Use `SimpleTraverser` for leaf nodes.
@@ -175,6 +175,7 @@ Details: [Extraction Strategy - Dependencies](docs/development/Extraction%20Stra
   - in `preChildrenProcessing`: `addScopeContext(...)` and `createDependencyIndex(...)`,
   - in `postChildrenProcessing`: `constructScopeFQN(...)`, `registerDeclaration(...)`, optionally `scheduleFqnResolution(...)`, and return the new concept **merged with** `getRegisteredDependencies(localContexts)`. Without that merge the dependencies of the declaration are lost.
 - Referenced identifiers are registered as dependencies while traversing (`IdentifierDependencyProcessor`, `MemberExpressionDependencyProcessor`, and the type parsing in `type.utils.ts`). FQNs that cannot be resolved immediately are resolved at the end of the file.
+- `ImportDeclarationProcessor` registers every imported name under the FQN of its original declaration, resolved through all re-exports by the TypeChecker (`resolveImportedFqn`). Type references and imports share the symbol-to-FQN logic in `type.utils.ts`, so both produce identical FQNs, including `default` for default-exported declarations.
 - The LCE emits direct dependencies only. The jQA plugin creates `DEPENDS_ON` relations from them and adds the propagated and aggregated ones with Cypher (`DependencyResolver`).
 
 ### jQA plugin

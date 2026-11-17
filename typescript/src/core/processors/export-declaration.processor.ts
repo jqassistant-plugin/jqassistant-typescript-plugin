@@ -35,16 +35,15 @@ export class ExportDeclarationProcessor extends Processor {
 
             if (node.declaration) {
                 // direct export of a declaration definition (e.g. "export class MyClass { ... }")
-                const identifier = this.extractExportedIdentifier(childConcepts.get(ExportNamedDeclarationTraverser.DECLARATION_PROP));
-                if (identifier) {
-                    const globalDeclFqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + identifier;
+                const declaration = this.extractExportedDeclaration(childConcepts.get(ExportNamedDeclarationTraverser.DECLARATION_PROP));
+                if (declaration) {
                     concepts.push(
                         singleEntryConceptMap(
                             LCEExportDeclaration.conceptId,
                             new LCEExportDeclaration(
-                                identifier,
+                                declaration.identifier,
                                 undefined,
-                                globalDeclFqn,
+                                declaration.globalFqn,
                                 undefined,
                                 false,
                                 node.exportKind,
@@ -60,7 +59,10 @@ export class ExportDeclarationProcessor extends Processor {
                 for (const specifier of node.specifiers) {
                     const localName = specifier.local.type === AST_NODE_TYPES.Identifier ? specifier.local.name : specifier.local.raw;
                     const exportedName = specifier.exported.type === AST_NODE_TYPES.Identifier ? specifier.exported.name : specifier.exported.raw;
-                    const globalDeclFqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + localName;
+                    // a default-exported declaration is named "default" (e.g. "export { MyClass }; export default MyClass;")
+                    const declName =
+                        !source && localName === DependencyResolutionProcessor.getDefaultExportIdentifier(localContexts) ? "default" : localName;
+                    const globalDeclFqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + declName;
                     concepts.push(
                         singleEntryConceptMap(
                             LCEExportDeclaration.conceptId,
@@ -80,24 +82,21 @@ export class ExportDeclarationProcessor extends Processor {
         } else if (node.type === AST_NODE_TYPES.ExportDefaultDeclaration) {
             // default export (e.g. "export default myFunc")
             // NOTE: anonymous declaration may also be directly exported as default (in that case "default" is used as identifier name)
-            const identifier = this.extractExportedIdentifier(childConcepts.get(ExportDefaultDeclarationTraverser.DECLARATION_PROP)) ?? "default";
-            if (identifier) {
-                const globalDeclFqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + identifier;
-                concepts.push(
-                    singleEntryConceptMap(
-                        LCEExportDeclaration.conceptId,
-                        new LCEExportDeclaration(
-                            identifier,
-                            undefined,
-                            globalDeclFqn,
-                            undefined,
-                            true,
-                            node.exportKind,
-                            globalContext.sourceFilePathAbsolute,
-                        ),
+            const declaration = this.extractExportedDeclaration(childConcepts.get(ExportDefaultDeclarationTraverser.DECLARATION_PROP));
+            concepts.push(
+                singleEntryConceptMap(
+                    LCEExportDeclaration.conceptId,
+                    new LCEExportDeclaration(
+                        declaration?.identifier ?? "default",
+                        undefined,
+                        declaration?.globalFqn ?? DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + "default",
+                        undefined,
+                        true,
+                        node.exportKind,
+                        globalContext.sourceFilePathAbsolute,
                     ),
-                );
-            }
+                ),
+            );
         } else if (node.type === AST_NODE_TYPES.ExportAllDeclaration && node.source) {
             // re-export of all declarations of a module (e.g. "export * from "./myModule")
             const source = ModulePathUtils.normalizeImportPath(
@@ -124,23 +123,31 @@ export class ExportDeclarationProcessor extends Processor {
         return mergeConceptMaps(...concepts);
     }
 
-    private extractExportedIdentifier(exportedConcept?: Map<string, LCEConcept[]>): string | undefined {
-        let identifier: string | undefined;
+    /**
+     * @returns name and global FQN of the exported declaration (the FQN of a default-exported declaration ends with "default")
+     */
+    private extractExportedDeclaration(exportedConcept?: Map<string, LCEConcept[]>): { identifier: string; globalFqn: string } | undefined {
         if (exportedConcept) {
             if (exportedConcept.has(LCEClassDeclaration.conceptId)) {
-                identifier = getAndCastConcepts<LCEClassDeclaration>(LCEClassDeclaration.conceptId, exportedConcept)[0].className;
+                const decl = getAndCastConcepts<LCEClassDeclaration>(LCEClassDeclaration.conceptId, exportedConcept)[0];
+                return { identifier: decl.className, globalFqn: decl.fqn.globalFqn };
             } else if (exportedConcept.has(LCEInterfaceDeclaration.conceptId)) {
-                identifier = getAndCastConcepts<LCEInterfaceDeclaration>(LCEInterfaceDeclaration.conceptId, exportedConcept)[0].interfaceName;
+                const decl = getAndCastConcepts<LCEInterfaceDeclaration>(LCEInterfaceDeclaration.conceptId, exportedConcept)[0];
+                return { identifier: decl.interfaceName, globalFqn: decl.fqn.globalFqn };
             } else if (exportedConcept.has(LCEFunctionDeclaration.conceptId)) {
-                identifier = getAndCastConcepts<LCEFunctionDeclaration>(LCEFunctionDeclaration.conceptId, exportedConcept)[0].functionName;
+                const decl = getAndCastConcepts<LCEFunctionDeclaration>(LCEFunctionDeclaration.conceptId, exportedConcept)[0];
+                return { identifier: decl.functionName, globalFqn: decl.fqn.globalFqn };
             } else if (exportedConcept.has(LCETypeAliasDeclaration.conceptId)) {
-                identifier = getAndCastConcepts<LCETypeAliasDeclaration>(LCETypeAliasDeclaration.conceptId, exportedConcept)[0].typeAliasName;
+                const decl = getAndCastConcepts<LCETypeAliasDeclaration>(LCETypeAliasDeclaration.conceptId, exportedConcept)[0];
+                return { identifier: decl.typeAliasName, globalFqn: decl.fqn.globalFqn };
             } else if (exportedConcept.has(LCEEnumDeclaration.conceptId)) {
-                identifier = getAndCastConcepts<LCEEnumDeclaration>(LCEEnumDeclaration.conceptId, exportedConcept)[0].enumName;
+                const decl = getAndCastConcepts<LCEEnumDeclaration>(LCEEnumDeclaration.conceptId, exportedConcept)[0];
+                return { identifier: decl.enumName, globalFqn: decl.fqn.globalFqn };
             } else if (exportedConcept.has(LCEVariableDeclaration.conceptId)) {
-                identifier = getAndCastConcepts<LCEVariableDeclaration>(LCEVariableDeclaration.conceptId, exportedConcept)[0].variableName;
+                const decl = getAndCastConcepts<LCEVariableDeclaration>(LCEVariableDeclaration.conceptId, exportedConcept)[0];
+                return { identifier: decl.variableName, globalFqn: decl.fqn.globalFqn };
             }
         }
-        return identifier;
+        return undefined;
     }
 }
