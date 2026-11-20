@@ -5,6 +5,18 @@
     - use `--help` option to show available options for the command (when using local installation, options have to be specified in the `package.json`)
 4. run the jQAssistant command line utility using `directory/to/jqa-cli/bin/jqassistant.sh scan` (imports `.reports/jqa/ts-output.json` into the graph database)
 
+**Command Line Options:**
+- `jqa-ts-lce [path] [options]`: `path` is the directory that is scanned for TypeScript projects (default: the current directory)
+- `-e, --extension [extensions...]`: space separated list of extensions to activate, currently only `react` (see [[React Extension]])
+	- put the path in front of this option (e.g. `jqa-ts-lce . -e react`), otherwise the path is taken as an extension
+- `-p, --pretty`: pretty-print the JSON report
+- `--type-resolution-depth <depth>`: maximum nesting depth up to which types are resolved (default: `10`)
+	- the types of declarations (e.g. of variables, properties, parameters and return values) have depth 0, each nesting level (object members, type arguments, members of unions and intersections, parameters and return types of function types, ...) adds 1: in `let x: { a: { b: string } }` the type `string` of `b` has depth 2
+	- deeper nested types are represented by a [[Node - TS Type NotIdentified|:TS:Type:NotIdentified]] node with the identifier `Type that is beyond the set type resolution depth`
+	- the limit keeps the graph small for deeply nested types and stops the resolution of recursive anonymous types
+- `-d, --debug`: print debug information
+- `-V, --version` and `-h, --help`: print the version or the help text
+
 **Possible Use Cases:**
 - analyze the graph and report violations via `directory/to/jqa-cli/bin/jqassistant.sh analyze` and `directory/to/jqa-cli/bin/jqassistant.sh report`
 - start exploring the graph by starting the embedded server `directory/to/jqa-cli/bin/jqassistant.sh server` and opening your browser at [http://localhost:7474](http://localhost:7474)
