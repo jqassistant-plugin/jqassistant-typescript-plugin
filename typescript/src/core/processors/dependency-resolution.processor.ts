@@ -317,12 +317,13 @@ export class DependencyResolutionProcessor extends Processor {
     }
 
     /**
+     * @param filter selects the dependencies to return; their target FQNs may not be resolved yet (see `registerDependency()`)
      * @returns all registered dependencies of the current dependency index as a `ConceptMap`
      */
-    public static getRegisteredDependencies(localContexts: LocalContexts): ConceptMap {
+    public static getRegisteredDependencies(localContexts: LocalContexts, filter: (dependency: LCEDependency) => boolean = () => true): ConceptMap {
         return createConceptMap(
             LCEDependency.conceptId,
-            (localContexts.getNextContext(CoreContextKeys.DEPENDENCY_INDEX) as [LCEDependency[], number])[0]
+            (localContexts.getNextContext(CoreContextKeys.DEPENDENCY_INDEX) as [LCEDependency[], number])[0].filter(filter)
         );
     }
 

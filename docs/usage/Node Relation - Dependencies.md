@@ -51,6 +51,7 @@ aliases:
 - [[Node - TS Interface|:TS:Interface]]
 - [[Node - TS TypeAlias|:TS:TypeAlias]]
 - [[Node - TS Enum|:TS:Enum]]
+- [[Node - TS EnumMember|:TS:EnumMember]]
 - [[Node - TS Variable|:TS:Variable]]
 - [[Node - TS Function|:TS:Function]]
 

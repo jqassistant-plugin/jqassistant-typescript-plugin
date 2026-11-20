@@ -19,7 +19,7 @@ aliases:
 
 ## Relations
 
-| Name         | Target Label(s)                                                              | Cardinality | Description                                                |
-| ------------ | ---------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------- |
-| `DECLARES`   | [[Node - TS EnumMember\|:TS:EnumMember]]                                     | 0..*        | all elements of the enum                                   |
-| `DEPENDS_ON` | see [[Node Relation - Dependencies#Target Nodes\|DEPENDS_ON - Target Nodes]] | 0..*        | [[Node Relation - Dependencies\|dependencies]] of the enum |
+| Name         | Target Label(s)                                                              | Cardinality | Description                                                                                                               |
+| ------------ | ---------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `DECLARES`   | [[Node - TS EnumMember\|:TS:EnumMember]]                                     | 0..*        | all elements of the enum                                                                                                  |
+| `DEPENDS_ON` | see [[Node Relation - Dependencies#Target Nodes\|DEPENDS_ON - Target Nodes]] | 0..*        | [[Node Relation - Dependencies\|dependencies]] of the enum (references in member initializers, except to its own members) |
