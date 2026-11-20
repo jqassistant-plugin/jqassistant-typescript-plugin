@@ -1,6 +1,6 @@
 import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
-import { ConceptMap, singleEntryConceptMap } from "../concept";
+import { ConceptMap, mergeConceptMaps, singleEntryConceptMap } from "../concept";
 import { LCEEnumDeclaration, LCEEnumMember } from "../concepts/enum-declaration.concept";
 import { FQN, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
@@ -49,7 +49,13 @@ export class EnumDeclarationProcessor extends Processor {
                 CodeCoordinateUtils.getCodeCoordinates(globalContext, node, true),
             );
 
-            return singleEntryConceptMap(LCEEnumDeclaration.conceptId, enumeration);
+            // a reference to an own member is either still an unresolved member name (e.g. `B = A + 1`) or the member's FQN (`B = E.A + 1`)
+            const ownMembers = new Set(members.flatMap((member) => [member.enumMemberName, member.fqn.globalFqn]));
+
+            return mergeConceptMaps(
+                singleEntryConceptMap(LCEEnumDeclaration.conceptId, enumeration),
+                DependencyResolutionProcessor.getRegisteredDependencies(localContexts, (dependency) => !ownMembers.has(dependency.fqn.globalFqn)),
+            );
         }
         return new Map();
     }

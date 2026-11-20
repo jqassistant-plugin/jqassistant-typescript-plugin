@@ -1,5 +1,7 @@
 package org.jqassistant.plugin.typescript.core.basics.assertions;
 
+import org.jqassistant.plugin.typescript.api.model.core.DependsOnDescriptor;
+import org.jqassistant.plugin.typescript.api.model.core.EnumDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.FunctionDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ModuleDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
@@ -88,6 +90,57 @@ public class DependencyAssertions {
                 assertThat(dep.getDependency()).isEqualTo(calledFunctionOptional.get());
                 assertThat(dep.getCardinality()).isEqualTo(1);
             });
+
+        return this;
+    }
+
+    public DependencyAssertions assertEnumDependencies() {
+        Optional<EnumDeclarationDescriptor> enumOptional = module2.getEnumDeclarations().stream()
+            .filter((enumDecl) -> enumDecl.getName().equals("DependentEnum"))
+            .findFirst();
+
+        assertThat(enumOptional)
+            .as("enum with member initializers referencing other declarations is present")
+            .isPresent();
+
+        EnumDeclarationDescriptor enumDecl = enumOptional.get();
+
+        Optional<VariableDeclarationDescriptor> constantOptional = module1.getVariableDeclarations().stream()
+            .filter((variable) -> variable.getName().equals("EXPORT_CONSTANT"))
+            .findFirst();
+
+        assertThat(constantOptional)
+            .as("constant referenced by the enum is present")
+            .isPresent();
+
+        Optional<FunctionDeclarationDescriptor> functionOptional = project.getModules().stream()
+            .filter((mod) -> mod.getLocalFqn().equals("./src/testDep3.ts"))
+            .flatMap((mod) -> mod.getFunctionDeclarations().stream())
+            .filter((func) -> func.getName().equals("reExportedFunction"))
+            .findFirst();
+
+        assertThat(functionOptional)
+            .as("function called by the enum is present")
+            .isPresent();
+
+        assertThat(enumDecl.getDependencies())
+            .as("constant referenced in a member initializer is a dependency of the enum")
+            .anySatisfy(dep -> {
+                assertThat(dep.getDependency()).isEqualTo(constantOptional.get());
+                assertThat(dep.getCardinality()).isEqualTo(1);
+            });
+
+        assertThat(enumDecl.getDependencies())
+            .as("function called in a member initializer is a dependency of the enum")
+            .anySatisfy(dep -> {
+                assertThat(dep.getDependency()).isEqualTo(functionOptional.get());
+                assertThat(dep.getCardinality()).isEqualTo(1);
+            });
+
+        assertThat(enumDecl.getDependencies())
+            .as("own members referenced in a member initializer are no dependencies of the enum")
+            .extracting(DependsOnDescriptor::getDependency)
+            .doesNotContainAnyElementsOf(enumDecl.getMembers());
 
         return this;
     }

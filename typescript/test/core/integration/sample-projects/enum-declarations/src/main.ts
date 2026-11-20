@@ -1,6 +1,8 @@
 /* eslint-disable */
 
 // Sample Declarations to be used later
+import { ExternalCustomEnum, externalBase, externalCompute } from "./secondary";
+
 class CustomClass {
     public x: number;
     public y: number;
@@ -80,4 +82,22 @@ const enum eConst {
 declare enum eAmbient {
     A,
     B
+}
+
+// Enum declarations with dependencies
+enum eDependencies {
+    A = externalBase,
+    B = externalCompute(),
+    C = CustomEnum.A,
+    D = ExternalCustomEnum.B | CustomEnum.B
+}
+
+const B = 0;
+
+// references to own members are no dependencies (`B` is the member, not the constant above)
+enum eOwnMembers {
+    A = 1,
+    B = A + 1,
+    C = eOwnMembers.A * 2,
+    D = B * 2
 }

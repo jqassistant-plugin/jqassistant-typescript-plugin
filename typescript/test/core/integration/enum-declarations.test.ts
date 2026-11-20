@@ -1,7 +1,14 @@
 import { processProjects } from "../../../src/core/extractor";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
-import { expectEnumMember, expectLiteralValue, expectPrimitiveType, getDependenciesFromResult, resolveGlobalFqn } from "../../utils/test-utils";
+import {
+    expectDependency,
+    expectEnumMember,
+    expectLiteralValue,
+    expectPrimitiveType,
+    getDependenciesFromResult,
+    resolveGlobalFqn,
+} from "../../utils/test-utils";
 import { LCEExportDeclaration } from "../../../src/core/concepts/export-declaration.concept";
 import { LCEEnumDeclaration } from "../../../src/core/concepts/enum-declaration.concept";
 import { LCEValueComplex, LCEValueDeclared, LCEValueMember } from "../../../src/core/concepts/value.concept";
@@ -260,5 +267,35 @@ describe("enum declarations test", () => {
             const b = expectEnumMember(decl, "B", '"./src/main.ts".eAmbient.B');
             expect(b.initValue).toBeUndefined();
         }
+    });
+
+    test("enum with dependencies", async () => {
+        const decl = enumDecls.get('"./src/main.ts".eDependencies');
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.fqn.globalFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eDependencies'));
+            expect(decl.members).toHaveLength(4);
+        }
+
+        const source = '"./src/main.ts".eDependencies';
+        expect(dependencies.get(resolveGlobalFqn(projectRootPath, source))?.size).toBe(7);
+        expectDependency(projectRootPath, dependencies, source, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".externalBase'), 1);
+        expectDependency(projectRootPath, dependencies, source, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".externalCompute'), 1);
+        expectDependency(projectRootPath, dependencies, source, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum'), 2);
+        expectDependency(projectRootPath, dependencies, source, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum.A'), 1);
+        expectDependency(projectRootPath, dependencies, source, resolveGlobalFqn(projectRootPath, '"./src/main.ts".CustomEnum.B'), 1);
+        expectDependency(projectRootPath, dependencies, source, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomEnum'), 1);
+        expectDependency(projectRootPath, dependencies, source, resolveGlobalFqn(projectRootPath, '"./src/secondary.ts".ExternalCustomEnum.B'), 1);
+    });
+
+    test("enum referencing its own members", async () => {
+        const decl = enumDecls.get('"./src/main.ts".eOwnMembers');
+        expect(decl).toBeDefined();
+        if (decl) {
+            expect(decl.members).toHaveLength(4);
+        }
+
+        expect(dependencies.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eOwnMembers'))).toBeUndefined();
+        expect(dependencies.get(resolveGlobalFqn(projectRootPath, '"./src/main.ts".eConstants'))).toBeUndefined();
     });
 });

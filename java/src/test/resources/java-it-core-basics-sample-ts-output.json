@@ -1409,6 +1409,92 @@
             "endLine": 40,
             "endColumn": 1
           }
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".DependentEnum",
+          "localFqn": "\"./src/testDep2.ts\".DependentEnum",
+          "enumName": "DependentEnum",
+          "members": [
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".DependentEnum.A",
+              "localFqn": "\"./src/testDep2.ts\".DependentEnum.A",
+              "enumMemberName": "A",
+              "coordinates": {
+                "startLine": 13,
+                "startColumn": 4,
+                "endLine": 13,
+                "endColumn": 23
+              },
+              "initValue": {
+                "valueType": "declared",
+                "type": {
+                  "type": "literal",
+                  "value": 1
+                },
+                "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep1.ts\".EXPORT_CONSTANT",
+                "localFqn": "\"./src/testDep1.ts\".EXPORT_CONSTANT"
+              }
+            },
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".DependentEnum.B",
+              "localFqn": "\"./src/testDep2.ts\".DependentEnum.B",
+              "enumMemberName": "B",
+              "coordinates": {
+                "startLine": 14,
+                "startColumn": 4,
+                "endLine": 14,
+                "endColumn": 28
+              },
+              "initValue": {
+                "valueType": "call",
+                "type": {
+                  "type": "primitive",
+                  "name": "number"
+                },
+                "callee": {
+                  "valueType": "declared",
+                  "type": {
+                    "type": "declared",
+                    "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts\".reExportedFunction",
+                    "localFqn": "",
+                    "typeArguments": []
+                  },
+                  "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts\".reExportedFunction",
+                  "localFqn": "\"./src/testDep3.ts\".reExportedFunction"
+                },
+                "args": [],
+                "typeArgs": []
+              }
+            },
+            {
+              "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".DependentEnum.C",
+              "localFqn": "\"./src/testDep2.ts\".DependentEnum.C",
+              "enumMemberName": "C",
+              "coordinates": {
+                "startLine": 15,
+                "startColumn": 4,
+                "endLine": 15,
+                "endColumn": 27
+              },
+              "initValue": {
+                "valueType": "complex",
+                "type": {
+                  "type": "not-identified",
+                  "identifier": "Complex Value"
+                },
+                "expression": "DependentEnum.A + B"
+              }
+            }
+          ],
+          "constant": false,
+          "declared": false,
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts",
+            "startLine": 12,
+            "startColumn": 7,
+            "endLine": 16,
+            "endColumn": 1
+          }
         }
       ],
       "dependency": [
@@ -1489,6 +1575,22 @@
           "localFqn": "\"./src/testDep3.ts\".reExportedFunction",
           "targetType": "declaration",
           "globalSourceFQN": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".callThroughBarrel",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep1.ts\".EXPORT_CONSTANT",
+          "localFqn": "\"./src/testDep1.ts\".EXPORT_CONSTANT",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".DependentEnum",
+          "sourceType": "declaration",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts\".reExportedFunction",
+          "localFqn": "\"./src/testDep3.ts\".reExportedFunction",
+          "targetType": "declaration",
+          "globalSourceFQN": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".DependentEnum",
           "sourceType": "declaration",
           "cardinality": 1
         },
@@ -1626,6 +1728,13 @@
         {
           "identifier": "callThroughBarrel",
           "globalDeclFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".callThroughBarrel",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts"
+        },
+        {
+          "identifier": "DependentEnum",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts\".DependentEnum",
           "isDefault": false,
           "kind": "value",
           "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep2.ts"

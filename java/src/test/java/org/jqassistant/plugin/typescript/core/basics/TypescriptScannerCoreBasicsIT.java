@@ -90,7 +90,8 @@ public class TypescriptScannerCoreBasicsIT extends AbstractPluginIT {
         new DependencyAssertions(project)
             .assertModulePresence()
             .assertSimpleDependency()
-            .assertDependencyThroughReExport();
+            .assertDependencyThroughReExport()
+            .assertEnumDependencies();
 
         store.commitTransaction();
     }
