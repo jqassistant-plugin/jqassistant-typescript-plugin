@@ -3,12 +3,12 @@
   <context>
     <build>
       <name>jQAssistant TypeScript Plugin Parent</name>
-      <timestamp>2026-11-20T14:50:15.39Z</timestamp>
+      <timestamp>2026-11-20T15:17:44.706Z</timestamp>
       <properties></properties>
     </build>
   </context>
-  <group id="jqassistant-plugin:Default" date="2026-11-20T14:50:56">
-    <group id="jqassistant-plugin-maven:Default" date="2026-11-20T14:50:56">
+  <group id="jqassistant-plugin:Default" date="2026-11-20T15:18:16">
+    <group id="jqassistant-plugin-maven:Default" date="2026-11-20T15:18:16">
       <constraint id="jqassistant-plugin-maven:GroupId">
         <description>The groupId for jQAssistant plugin Maven projects must follow the pattern 'org.jqassistant.plugin.&lt;project&gt;'.</description>
         <verificationResult>
@@ -18,7 +18,7 @@
         </verificationResult>
         <status level="2">success</status>
         <severity level="2">major</severity>
-        <duration>103</duration>
+        <duration>82</duration>
       </constraint>
       <concept id="jqassistant-plugin-maven:ParentProject" abstract="false">
         <description>Labels all Maven projects which declare "org.jqassistant.plugin:parent" as parent module with "Parent".</description>
@@ -44,7 +44,7 @@
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>111</duration>
+        <duration>123</duration>
       </concept>
       <constraint id="jqassistant-plugin-maven:MavenModulesMustUseParentGroupId">
         <description>All Maven projects must define the same groupId as the parent of the plugin project.</description>
@@ -55,7 +55,7 @@
         </verificationResult>
         <status level="2">success</status>
         <severity level="2">major</severity>
-        <duration>56</duration>
+        <duration>58</duration>
         <required-concept id="jqassistant-plugin-maven:ParentProject">
           <status level="2">success</status>
         </required-concept>
@@ -69,7 +69,7 @@
         </verificationResult>
         <status level="2">success</status>
         <severity level="2">major</severity>
-        <duration>63</duration>
+        <duration>65</duration>
         <required-concept id="jqassistant-plugin-maven:ParentProject">
           <status level="2">success</status>
         </required-concept>
@@ -83,7 +83,7 @@
         </verificationResult>
         <status level="2">success</status>
         <severity level="2">major</severity>
-        <duration>76</duration>
+        <duration>72</duration>
         <required-concept id="jqassistant-plugin-maven:ParentProject">
           <status level="2">success</status>
         </required-concept>
@@ -97,14 +97,14 @@
         </verificationResult>
         <status level="2">success</status>
         <severity level="2">major</severity>
-        <duration>134</duration>
+        <duration>137</duration>
         <required-concept id="jqassistant-plugin-maven:ParentProject">
           <status level="2">success</status>
         </required-concept>
       </constraint>
-      <duration>716</duration>
+      <duration>713</duration>
     </group>
-    <group id="jqassistant-plugin-test:Default" date="2026-11-20T14:50:56">
+    <group id="jqassistant-plugin-test:Default" date="2026-11-20T15:18:17">
       <concept id="junit3:TestClass" abstract="false">
         <description>Labels all non-abstract classes extending from junit.framework.TestCase "Test" and "Junit3".</description>
         <verificationResult>
@@ -114,7 +114,7 @@
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>86</duration>
+        <duration>82</duration>
       </concept>
       <concept id="junit3:TestMethod" abstract="false">
         <description>Labels all test methods declared by a test class with "Test" and "Junit3".</description>
@@ -125,7 +125,7 @@
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>53</duration>
+        <duration>41</duration>
         <required-concept id="junit3:TestClass">
           <status level="2">success</status>
         </required-concept>
@@ -140,7 +140,7 @@
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>48</duration>
+        <duration>51</duration>
       </concept>
       <concept id="junit5:TestMethod" abstract="false">
         <description>Finds all test methods (i.e. annotated with "@org.junit.jupiter.api.Test") and
@@ -160,13 +160,13 @@ labels them with "Test" and "Junit5".</description>
               </column>
               <status level="2">success</status>
             </row>
-            <row key="6b4cee8f401e38534c7b8448e7a6d1a6e4c910dfb96732091aad7eb3e657e43b">
+            <row key="dfa7077b28033b11956ec3ac0e053214aed95a1ec85fe7728928c083ceb7f2c1">
               <column name="Test">
                 <element language="Java">Method</element>
-                <source path="java/src/test/java/org/jqassistant/plugin/typescript/impl/filesystem/LocalFileResolverIT.java" fileName="/org/jqassistant/plugin/typescript/impl/filesystem/LocalFileResolverIT.java" startLine="20" endLine="59">
+                <source path="java/src/test/java/org/jqassistant/plugin/typescript/core/multiproject/TypescriptScannerCoreMultiProjectIT.java" fileName="/org/jqassistant/plugin/typescript/core/multiproject/TypescriptScannerCoreMultiProjectIT.java" startLine="27" endLine="322">
                   <parent path="java/target/test-classes" fileName="/java/target/test-classes" group="org.jqassistant.plugin.typescript" name="jqassistant-typescript-plugin" type="test-jar" version="1.5.0-SNAPSHOT" classifier="tests"></parent>
                 </source>
-                <value>void resolve()</value>
+                <value>void testScanner()</value>
               </column>
               <status level="2">success</status>
             </row>
@@ -180,13 +180,13 @@ labels them with "Test" and "Junit5".</description>
               </column>
               <status level="2">success</status>
             </row>
-            <row key="dfa7077b28033b11956ec3ac0e053214aed95a1ec85fe7728928c083ceb7f2c1">
+            <row key="6b4cee8f401e38534c7b8448e7a6d1a6e4c910dfb96732091aad7eb3e657e43b">
               <column name="Test">
                 <element language="Java">Method</element>
-                <source path="java/src/test/java/org/jqassistant/plugin/typescript/core/multiproject/TypescriptScannerCoreMultiProjectIT.java" fileName="/org/jqassistant/plugin/typescript/core/multiproject/TypescriptScannerCoreMultiProjectIT.java" startLine="27" endLine="322">
+                <source path="java/src/test/java/org/jqassistant/plugin/typescript/impl/filesystem/LocalFileResolverIT.java" fileName="/org/jqassistant/plugin/typescript/impl/filesystem/LocalFileResolverIT.java" startLine="20" endLine="59">
                   <parent path="java/target/test-classes" fileName="/java/target/test-classes" group="org.jqassistant.plugin.typescript" name="jqassistant-typescript-plugin" type="test-jar" version="1.5.0-SNAPSHOT" classifier="tests"></parent>
                 </source>
-                <value>void testScanner()</value>
+                <value>void resolve()</value>
               </column>
               <status level="2">success</status>
             </row>
@@ -199,7 +199,7 @@ labels them with "Test" and "Junit5".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>64</duration>
+        <duration>50</duration>
       </concept>
       <concept id="junit5:RepeatedTestMethod" abstract="false">
         <description>Finds all test methods (i.e. annotated with "@org.junit.jupiter.api.RepeatedTest") and
@@ -211,7 +211,7 @@ labels them with "Test", "Repeated", and "Junit5".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>46</duration>
+        <duration>37</duration>
       </concept>
       <concept id="junit5:ParameterizedTestMethod" abstract="false">
         <description>Finds all test methods (i.e. annotated with "@org.junit.jupiter.api.ParameterizedTest") and
@@ -223,7 +223,7 @@ labels them with "Test", "Parameterized", and "Junit5".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>43</duration>
+        <duration>36</duration>
       </concept>
       <concept id="junit5:TestTemplateMethod" abstract="false">
         <description>Labels all methods annotated by "@org.junit.jupiter.api.TestTemplate"
@@ -235,7 +235,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>60</duration>
+        <duration>53</duration>
       </concept>
       <concept id="java:TestMethod" abstract="false">
         <description>Java methods labeled with `Test` are considered to represent test methods (e.g. for unit or integration tests).</description>
@@ -327,7 +327,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>122</duration>
+        <duration>104</duration>
         <providing-concept id="junit3:TestMethod">
           <status level="2">success</status>
         </providing-concept>
@@ -358,7 +358,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>56</duration>
+        <duration>47</duration>
       </concept>
       <concept id="junit5:TestClass" abstract="false">
         <description>Labels all classes containing test methods with "Test" and "Junit5".</description>
@@ -368,32 +368,6 @@ with "Junit5", "Test" and "Template".</description>
             <column>TestMethods</column>
           </columns>
           <rows count="4">
-            <row key="4cc8b095b9a17523a66a948404cc071c12a81b75dc65c88bdb75e570be7decc1">
-              <column name="TestClass">
-                <element language="Java">Type</element>
-                <source path="java/src/test/java/org/jqassistant/plugin/typescript/impl/filesystem/LocalFileResolverIT.java" fileName="/org/jqassistant/plugin/typescript/impl/filesystem/LocalFileResolverIT.java">
-                  <parent path="java/target/test-classes" fileName="/java/target/test-classes" group="org.jqassistant.plugin.typescript" name="jqassistant-typescript-plugin" type="test-jar" version="1.5.0-SNAPSHOT" classifier="tests"></parent>
-                </source>
-                <value>org.jqassistant.plugin.typescript.impl.filesystem.LocalFileResolverIT</value>
-              </column>
-              <column name="TestMethods">
-                <value>void resolve()</value>
-              </column>
-              <status level="2">success</status>
-            </row>
-            <row key="e27a6a9cf72446f59cbc3a29cc8be083c1f94a0aa22cd8de89c1d56801a66da4">
-              <column name="TestClass">
-                <element language="Java">Type</element>
-                <source path="java/src/test/java/org/jqassistant/plugin/typescript/react/TypescriptScannerReactIT.java" fileName="/org/jqassistant/plugin/typescript/react/TypescriptScannerReactIT.java">
-                  <parent path="java/target/test-classes" fileName="/java/target/test-classes" group="org.jqassistant.plugin.typescript" name="jqassistant-typescript-plugin" type="test-jar" version="1.5.0-SNAPSHOT" classifier="tests"></parent>
-                </source>
-                <value>org.jqassistant.plugin.typescript.react.TypescriptScannerReactIT</value>
-              </column>
-              <column name="TestMethods">
-                <value>void testScanner()</value>
-              </column>
-              <status level="2">success</status>
-            </row>
             <row key="6133af47e97bc26f8d7602f1899c8321de60a07b9bb767d476056319492e11ad">
               <column name="TestClass">
                 <element language="Java">Type</element>
@@ -420,6 +394,32 @@ with "Junit5", "Test" and "Template".</description>
               </column>
               <status level="2">success</status>
             </row>
+            <row key="4cc8b095b9a17523a66a948404cc071c12a81b75dc65c88bdb75e570be7decc1">
+              <column name="TestClass">
+                <element language="Java">Type</element>
+                <source path="java/src/test/java/org/jqassistant/plugin/typescript/impl/filesystem/LocalFileResolverIT.java" fileName="/org/jqassistant/plugin/typescript/impl/filesystem/LocalFileResolverIT.java">
+                  <parent path="java/target/test-classes" fileName="/java/target/test-classes" group="org.jqassistant.plugin.typescript" name="jqassistant-typescript-plugin" type="test-jar" version="1.5.0-SNAPSHOT" classifier="tests"></parent>
+                </source>
+                <value>org.jqassistant.plugin.typescript.impl.filesystem.LocalFileResolverIT</value>
+              </column>
+              <column name="TestMethods">
+                <value>void resolve()</value>
+              </column>
+              <status level="2">success</status>
+            </row>
+            <row key="e27a6a9cf72446f59cbc3a29cc8be083c1f94a0aa22cd8de89c1d56801a66da4">
+              <column name="TestClass">
+                <element language="Java">Type</element>
+                <source path="java/src/test/java/org/jqassistant/plugin/typescript/react/TypescriptScannerReactIT.java" fileName="/org/jqassistant/plugin/typescript/react/TypescriptScannerReactIT.java">
+                  <parent path="java/target/test-classes" fileName="/java/target/test-classes" group="org.jqassistant.plugin.typescript" name="jqassistant-typescript-plugin" type="test-jar" version="1.5.0-SNAPSHOT" classifier="tests"></parent>
+                </source>
+                <value>org.jqassistant.plugin.typescript.react.TypescriptScannerReactIT</value>
+              </column>
+              <column name="TestMethods">
+                <value>void testScanner()</value>
+              </column>
+              <status level="2">success</status>
+            </row>
           </rows>
         </result>
         <verificationResult>
@@ -429,7 +429,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>205</duration>
+        <duration>121</duration>
         <required-concept id="junit5:ParameterizedTestMethod">
           <status level="2">success</status>
         </required-concept>
@@ -458,7 +458,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>66</duration>
+        <duration>57</duration>
         <required-concept id="junit5:TestClass">
           <status level="2">success</status>
         </required-concept>
@@ -472,14 +472,14 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="2">major</severity>
-        <duration>32</duration>
+        <duration>18</duration>
         <required-concept id="jqassistant-plugin-test:IT">
           <status level="2">success</status>
         </required-concept>
       </constraint>
-      <duration>1617</duration>
+      <duration>776</duration>
     </group>
-    <group id="jqassistant-plugin-plugin:Default" date="2026-11-20T14:50:58">
+    <group id="jqassistant-plugin-plugin:Default" date="2026-11-20T15:18:18">
       <concept id="neo4j:Procedure" abstract="false">
         <description>Labels all types annotated with "@org.neo4j.procedure.Procedure" with `Neo4j` and `Procedure`.</description>
         <verificationResult>
@@ -489,7 +489,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>38</duration>
+        <duration>31</duration>
       </concept>
       <concept id="jqassistant-plugin-plugin:PluginDescriptor" abstract="false">
         <description>Labels jQAssistant plugin descriptor files with `jQAssistant` and `PluginDescriptor`.</description>
@@ -523,7 +523,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>40</duration>
+        <duration>46</duration>
       </concept>
       <concept id="jqassistant-plugin-plugin:PluginRegistersProcedure" abstract="false">
         <description>Creates a `REGISTERS` relation between all procedure class elements of the jQAssistant plugin
@@ -535,7 +535,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>110</duration>
+        <duration>129</duration>
         <required-concept id="jqassistant-plugin-plugin:PluginDescriptor">
           <status level="2">success</status>
         </required-concept>
@@ -549,7 +549,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="2">major</severity>
-        <duration>33</duration>
+        <duration>39</duration>
         <required-concept id="neo4j:Procedure">
           <status level="2">success</status>
         </required-concept>
@@ -567,7 +567,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>39</duration>
+        <duration>38</duration>
       </concept>
       <concept id="jqassistant-plugin-plugin:PluginRegistersUserFunction" abstract="false">
         <description>Creates a `REGISTERS` relation between all function class elements of the jQAssistant plugin
@@ -579,7 +579,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>110</duration>
+        <duration>113</duration>
         <required-concept id="jqassistant-plugin-plugin:PluginDescriptor">
           <status level="2">success</status>
         </required-concept>
@@ -593,7 +593,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="2">major</severity>
-        <duration>35</duration>
+        <duration>33</duration>
         <required-concept id="neo4j:UserFunction">
           <status level="2">success</status>
         </required-concept>
@@ -610,14 +610,14 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="3">minor</severity>
-        <duration>102</duration>
+        <duration>85</duration>
         <required-concept id="jqassistant-plugin-plugin:PluginDescriptor">
           <status level="2">success</status>
         </required-concept>
       </constraint>
-      <duration>597</duration>
+      <duration>553</duration>
     </group>
-    <group id="jqassistant-plugin-package:Default" date="2026-11-20T14:50:59">
+    <group id="jqassistant-plugin-package:Default" date="2026-11-20T15:18:19">
       <concept id="java:GeneratedLombokType" abstract="false">
         <description>Labels types generated by Lombok as 'Generated' (requires 'lombok.addLombokGeneratedAnnotation=true' in 'lombok.config').</description>
         <result>
@@ -640,7 +640,7 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="4">info</severity>
-        <duration>51</duration>
+        <duration>40</duration>
       </concept>
       <concept id="java:GeneratedType" abstract="false">
         <description>Reports the count of types labeled with `Generated`, grouped by containing artifact.</description>
@@ -665,13 +665,13 @@ with "Junit5", "Test" and "Template".</description>
         </verificationResult>
         <status level="2">success</status>
         <severity level="2">major</severity>
-        <duration>102</duration>
+        <duration>68</duration>
         <required-concept id="java:GeneratedType">
           <status level="2">success</status>
         </required-concept>
       </constraint>
-      <duration>176</duration>
+      <duration>122</duration>
     </group>
-    <duration>179</duration>
+    <duration>124</duration>
   </group>
 </jqassistant-report>
