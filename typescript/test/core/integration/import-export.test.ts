@@ -137,7 +137,10 @@ describe("import/export test", () => {
         );
         expectExport(projectRootPath, exports!, '"../external-dummy-project/src/source3.ts".DummyCustomClass3', "DummyCustomClass3");
         expectExport(projectRootPath, exports!, '"../external-dummy-project/src/source3.ts".DummyCustomInterface3', "DummyCustomInterface3");
-        expectExport(projectRootPath, exports!, '"../external-dummy-project/src/source3.ts".default', "default");
+        // "export * from" does not re-export the default export
+        expect(
+            exports!.find((exp) => exp.globalDeclFqn === resolveGlobalFqn(projectRootPath, '"../external-dummy-project/src/source3.ts".default')),
+        ).toBeUndefined();
         expectDependency(
             projectRootPath,
             dependencies,
@@ -147,7 +150,7 @@ describe("import/export test", () => {
         );
 
         expectExport(projectRootPath, exports!, '"./src/reexport.ts".SomeOtherClass', "SomeOtherClass");
-        expect(exports!).toHaveLength(18);
+        expect(exports!).toHaveLength(17);
     });
 
     test("exports (subdir/index.ts)", async () => {
@@ -198,6 +201,79 @@ describe("import/export test", () => {
             resolveGlobalFqn(projectRootPath, '"./src/internal/internal.ts".Internal'),
             1,
         );
+    });
+
+    test("exports of imported declarations (reexportViaImport.ts, reexportViaImport2.ts)", async () => {
+        const exports = exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/reexportViaImport.ts"));
+        expect(exports).toBeDefined();
+        expect(exports!).toHaveLength(6);
+        expectExport(projectRootPath, exports!, '"./src/source2.ts".CustomClass2', "CustomClass2");
+        expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomInterface3', "ImportedInterface3", "ReexportedInterface3");
+        expectExport(projectRootPath, exports!, '"./src/values/values.ts".valueFunction', "valueFunction");
+        expectExport(projectRootPath, exports!, '"cowsay".say', "say");
+        expectExport(projectRootPath, exports!, '"./src/reexportViaImport.ts".LocalClass', "LocalClass");
+        expectExport(projectRootPath, exports!, '"./src/source2.ts".default', "default", undefined, true);
+
+        // the module depends on the exported imported declarations, but not on its own declarations
+        const expectedDependencies = [
+            '"./src/source2.ts".CustomClass2',
+            '"./src/source3.ts".CustomInterface3',
+            '"./src/values/values.ts".valueFunction',
+            '"./src/source2.ts".default',
+        ];
+        for (const target of expectedDependencies) {
+            expectDependency(projectRootPath, dependencies, "./src/reexportViaImport.ts", resolveGlobalFqn(projectRootPath, target), 1);
+        }
+        expectDependency(projectRootPath, dependencies, "./src/reexportViaImport.ts", '"cowsay".say', 1);
+        expect(dependencies.get(resolveGlobalFqn(projectRootPath, "./src/reexportViaImport.ts"))?.size).toBe(5);
+
+        // default export by specifier, and re-export of an exported imported declaration
+        const exports2 = exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/reexportViaImport2.ts"));
+        expect(exports2).toBeDefined();
+        expect(exports2!).toHaveLength(2);
+        expectExport(projectRootPath, exports2!, '"./src/source3.ts".default', "DefaultClass3", undefined, true);
+        expectExport(projectRootPath, exports2!, '"./src/source3.ts".CustomInterface3', "ReexportedInterface3");
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            "./src/reexportViaImport2.ts",
+            resolveGlobalFqn(projectRootPath, '"./src/source3.ts".default'),
+            1,
+        );
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            "./src/reexportViaImport2.ts",
+            resolveGlobalFqn(projectRootPath, '"./src/source3.ts".CustomInterface3'),
+            1,
+        );
+        expect(dependencies.get(resolveGlobalFqn(projectRootPath, "./src/reexportViaImport2.ts"))?.size).toBe(2);
+    });
+
+    test("exports of imported modules (reexportViaNamespaceImport.ts)", async () => {
+        // handled like "export * as source3Namespace from "./source3""
+        const exports = exportDecls.get(resolveGlobalFqn(projectRootPath, "./src/reexportViaNamespaceImport.ts"));
+        expect(exports).toBeDefined();
+        expect(exports!).toHaveLength(7);
+        expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomClass3', "CustomClass3Alias", "source3Namespace.CustomClass3Alias");
+        expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomInterface3', "CustomInterface3", "source3Namespace.CustomInterface3");
+        expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomType3', "CustomType3", "source3Namespace.CustomType3");
+        expectExport(projectRootPath, exports!, '"./src/source3.ts".CustomEnum3', "CustomEnum3", "source3Namespace.CustomEnum3");
+        expectExport(projectRootPath, exports!, '"./src/source3.ts".default', "default", "source3Namespace.default", true);
+        expectDependency(
+            projectRootPath,
+            dependencies,
+            "./src/reexportViaNamespaceImport.ts",
+            resolveGlobalFqn(projectRootPath, "./src/source3.ts"),
+            1,
+        );
+
+        // module of a Node.js package: exports its declarations used in the project
+        expectExport(projectRootPath, exports!, '"cowsay".say', "say", "cowsay.say");
+        expectExport(projectRootPath, exports!, '"cowsay".IOptions', "IOptions", "cowsay.IOptions");
+        expectDependency(projectRootPath, dependencies, "./src/reexportViaNamespaceImport.ts", "cowsay", 1);
+
+        expect(dependencies.get(resolveGlobalFqn(projectRootPath, "./src/reexportViaNamespaceImport.ts"))?.size).toBe(2);
     });
 
     test("imports (imports1.ts)", async () => {
@@ -516,10 +592,18 @@ describe("import/export test", () => {
         expectBarrelExport("DefaultInterface", '"./src/values/defaultInterface.ts".default');
         expectBarrelExport("valuesNamespace.valueFunction", '"./src/values/values.ts".valueFunction');
 
-        const defaultExport = barrelExports!.find(
-            (e) => e.isDefault && e.globalDeclFqn === resolveGlobalFqn(projectRootPath, '"./src/values/defaultIdentifier.ts".default'),
+        // the only default export: "export * from" does not re-export the default export, "export * as" does as a member
+        const defaultExports = barrelExports!.filter((e) => e.isDefault && !e.alias);
+        expect(defaultExports).toHaveLength(1);
+        expect(defaultExports[0].globalDeclFqn).toBe(resolveGlobalFqn(projectRootPath, '"./src/values/defaultIdentifier.ts".default'));
+        expectExport(
+            projectRootPath,
+            barrelExports!.filter((e) => e.alias === "valuesNamespace.default"),
+            '"./src/values/values.ts".default',
+            "default",
+            "valuesNamespace.default",
+            true,
         );
-        expect(defaultExport).toBeDefined();
 
         // "export *" and "export * as" of the same module
         expectDependency(projectRootPath, dependencies, "./src/values/index.ts", resolveGlobalFqn(projectRootPath, "./src/values/values.ts"), 2);

@@ -10,7 +10,9 @@ aliases:
 - re-exports are resolved transitively as far as possible, that means dependencies are always targeting the original declaration, never some intermediary re-exporting module
 	- this applies to type references as well as to value references (e.g. function calls, `new` expressions, reading a constant)
 	- it covers `export * from`, named and aliased re-exports (`export { A as B } from`), default re-exports (`export { default } from`) and namespace re-exports (`export * as ns from`), also when declarations of Node.js packages are re-exported
-	- a module that re-exports declarations depends on the re-exported declarations (named re-exports) or modules (`export *`)
+	- as in ECMAScript, `export * from` does not re-export the default export, while `export * as ns from` includes it as `ns.default`
+	- exports of imported names are re-exports as well: `import { A } from "./a"; export { A };` and `import A from "./a"; export default A;` export the original declaration, `import * as ns from "./a"; export { ns };` is handled like `export * as ns from "./a"`
+	- a module that re-exports declarations depends on the re-exported declarations (named re-exports, exported imported declarations) or modules (`export *`, exported namespace imports)
 	- the module of a re-export is resolved like an import, by TypeScript's module resolution with the compiler options of the project: e.g. `.js` specifiers of `.ts` files (as required by `moduleResolution` `node16`/`nodenext`), explicit `index` files and `paths` mappings
 	- re-exports that cannot be resolved are missing in the graph; the LCE tool prints their number (details with `--debug`)
 - dependencies whose source or target is not represented in the graph are skipped; the plugin logs their number (details on debug level), and the LCE tool lists them when run with `--debug`

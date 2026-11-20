@@ -21,6 +21,9 @@
 	- the TypeChecker resolves an imported name through all re-exports and aliases, so references to it target the original declaration, never a re-exporting module
 	- `resolveSymbolFqn` (`type.utils.ts`) converts the resolved symbol into an [[Node Properties - Fully Qualified Names|FQN]]; type references use the same function, so value and type references produce identical [[Node Properties - Fully Qualified Names|FQNs]]
 	- if the TypeChecker cannot resolve an import, the [[Node Properties - Fully Qualified Names|FQN]] is derived from the import source and the imported name
+- `ExportDeclarationProcessor`: processor that creates the export declarations of a module; re-exports with import source are resolved later by the `ExportsPostProcessor`
+	- the name of an export without import source (`export { A }`, `export default A`) is resolved at the end of the file like a reference, so an exported imported name targets the original declaration, and the module depends on it like on a declaration re-exported with import source
+	- an exported namespace import (`import * as ns from "./a"; export { ns };`) becomes a namespace re-export like `export * as ns from "./a"`
 -  `ScopeProcessor`/`DeclarationScopeProcessor`: processors that register (un)named [[Node Properties - Fully Qualified Names|FQN]] scopes at all relevant points of the AST traversal to aid [[Node Properties - Fully Qualified Names|FQN]] construction
 - `DependencyResolver` (Java): creates [[Node Relation - Dependencies|DEPENDS_ON]] relations for the extracted direct dependencies and fills in all transitive dependencies via Cypher queries
 	- in a final step all [[Node Relation - Dependencies|DEPENDS_ON]] relations are aggregated

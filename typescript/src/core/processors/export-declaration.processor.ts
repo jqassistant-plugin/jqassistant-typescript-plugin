@@ -2,13 +2,14 @@ import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 import { ConceptMap, getAndCastConcepts, LCEConcept, mergeConceptMaps, singleEntryConceptMap } from "../concept";
 import { LCEClassDeclaration } from "../concepts/class-declaration.concept";
+import { LCEDependency } from "../concepts/dependency.concept";
 import { LCEEnumDeclaration } from "../concepts/enum-declaration.concept";
 import { LCEExportDeclaration } from "../concepts/export-declaration.concept";
 import { LCEFunctionDeclaration } from "../concepts/function-declaration.concept";
 import { LCEInterfaceDeclaration } from "../concepts/interface-declaration.concept";
 import { LCETypeAliasDeclaration } from "../concepts/type-alias-declaration.concept";
 import { LCEVariableDeclaration } from "../concepts/variable-declaration.concept";
-import { GlobalContext, ProcessingContext } from "../context";
+import { GlobalContext, LocalContexts, ProcessingContext } from "../context";
 import { ExecutionCondition } from "../execution-condition";
 import { ModulePathUtils } from "../utils/modulepath.utils";
 import { NodeUtils } from "../utils/node.utils";
@@ -61,40 +62,42 @@ export class ExportDeclarationProcessor extends Processor {
                     const declName =
                         !source && localName === DependencyResolutionProcessor.getDefaultExportIdentifier(localContexts) ? "default" : localName;
                     const globalDeclFqn = DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + declName;
-                    concepts.push(
-                        singleEntryConceptMap(
-                            LCEExportDeclaration.conceptId,
-                            new LCEExportDeclaration(
-                                localName,
-                                exportedName === "default" || exportedName === localName ? undefined : exportedName,
-                                globalDeclFqn,
-                                source,
-                                exportedName === "default",
-                                node.exportKind,
-                                globalContext.sourceFilePathAbsolute,
-                            ),
-                        ),
+                    const exportDeclaration = new LCEExportDeclaration(
+                        localName,
+                        exportedName === "default" || exportedName === localName ? undefined : exportedName,
+                        globalDeclFqn,
+                        source,
+                        exportedName === "default",
+                        node.exportKind,
+                        globalContext.sourceFilePathAbsolute,
                     );
+                    concepts.push(singleEntryConceptMap(LCEExportDeclaration.conceptId, exportDeclaration));
+                    if (!source) {
+                        // the exported name may be imported (e.g. "import { MyClass } from "./myModule"; export { MyClass };")
+                        const dependency = this.resolveExportedName(localContexts, globalContext, localName, exportedName, exportDeclaration);
+                        concepts.push(singleEntryConceptMap(LCEDependency.conceptId, dependency));
+                    }
                 }
             }
         } else if (node.type === AST_NODE_TYPES.ExportDefaultDeclaration) {
             // default export (e.g. "export default myFunc")
             // NOTE: anonymous declaration may also be directly exported as default (in that case "default" is used as identifier name)
             const declaration = this.extractExportedDeclaration(childConcepts.get(ExportDefaultDeclarationTraverser.DECLARATION_PROP));
-            concepts.push(
-                singleEntryConceptMap(
-                    LCEExportDeclaration.conceptId,
-                    new LCEExportDeclaration(
-                        declaration?.identifier ?? "default",
-                        undefined,
-                        declaration?.globalFqn ?? DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + "default",
-                        undefined,
-                        true,
-                        node.exportKind,
-                        globalContext.sourceFilePathAbsolute,
-                    ),
-                ),
+            const exportDeclaration = new LCEExportDeclaration(
+                declaration?.identifier ?? "default",
+                undefined,
+                declaration?.globalFqn ?? DependencyResolutionProcessor.constructFQNPrefix(localContexts).globalFqn + "default",
+                undefined,
+                true,
+                node.exportKind,
+                globalContext.sourceFilePathAbsolute,
             );
+            concepts.push(singleEntryConceptMap(LCEExportDeclaration.conceptId, exportDeclaration));
+            if (node.declaration.type === AST_NODE_TYPES.Identifier) {
+                // the exported name may be imported (e.g. "import MyClass from "./myModule"; export default MyClass;")
+                const dependency = this.resolveExportedName(localContexts, globalContext, node.declaration.name, "default", exportDeclaration);
+                concepts.push(singleEntryConceptMap(LCEDependency.conceptId, dependency));
+            }
         } else if (node.type === AST_NODE_TYPES.ExportAllDeclaration && node.source) {
             // re-export of all declarations of a module (e.g. "export * from "./myModule")
             const source = this.resolveImportSource(node.source.value, globalContext);
@@ -132,6 +135,46 @@ export class ExportDeclarationProcessor extends Processor {
             debug(`Could not resolve re-exported module "${importPath}"\n\toccurred at ${globalContext.sourceFilePathAbsolute}`);
         }
         return ModulePathUtils.normalizeImportPath(globalContext.projectInfo.rootPath, importPath, globalContext.sourceFilePathAbsolute);
+    }
+
+    /**
+     * Resolves the local name of an export without import source at the end of the file with the declaration index.
+     * This makes the export of an imported name point to the original declaration.
+     * The export of an imported module becomes a namespace re-export (e.g. "import * as ns from "./myModule"; export { ns };"
+     * is handled like "export * as ns from "./myModule"").
+     * @returns dependency of the module on the exported declaration, like for a re-export with import source (see `ExportsPostProcessor`).
+     *          It is only valid if a declaration is imported: otherwise its FQN stays unresolved, so that the dependency is skipped
+     *          (like an unresolved one of `registerDependency()`).
+     */
+    private resolveExportedName(
+        localContexts: LocalContexts,
+        globalContext: GlobalContext,
+        localName: string,
+        exportedName: string,
+        exportDeclaration: LCEExportDeclaration,
+    ): LCEDependency {
+        const moduleFqn = DependencyResolutionProcessor.constructScopeFQN(localContexts).globalFqn;
+        const dependency = new LCEDependency(localName, "declaration", globalContext.sourceFilePathAbsolute, "module", 1);
+        DependencyResolutionProcessor.scheduleFqnResolutionCallback(localContexts, localName, (fqn) => {
+            if (!fqn.globalFqn) {
+                // unresolvable import
+                return;
+            } else if (!fqn.globalFqn.startsWith('"')) {
+                // imported module: the path of the module or the name of an ambient module (e.g. "fs")
+                exportDeclaration.identifier = "*";
+                exportDeclaration.alias = exportedName;
+                exportDeclaration.globalDeclFqn = moduleFqn;
+                exportDeclaration.importSource = fqn.globalFqn;
+                exportDeclaration.isDefault = false;
+                exportDeclaration.kind = "namespace";
+            } else if (!ModulePathUtils.isFQNModule(fqn.globalFqn)) {
+                exportDeclaration.globalDeclFqn = fqn.globalFqn;
+                if (!fqn.globalFqn.startsWith(moduleFqn + ".")) {
+                    dependency.fqn = fqn;
+                }
+            }
+        });
+        return dependency;
     }
 
     /**

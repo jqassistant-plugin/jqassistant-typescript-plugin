@@ -4,6 +4,7 @@ import org.jqassistant.plugin.typescript.api.model.core.DependsOnDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.EnumDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.FunctionDeclarationDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ModuleDescriptor;
+import org.jqassistant.plugin.typescript.api.model.core.ModuleExportsDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.ProjectDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.TypeScriptDescriptor;
 import org.jqassistant.plugin.typescript.api.model.core.VariableDeclarationDescriptor;
@@ -11,6 +12,7 @@ import org.jqassistant.plugin.typescript.api.model.core.VariableDeclarationDescr
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 public class DependencyAssertions {
@@ -90,6 +92,59 @@ public class DependencyAssertions {
                 assertThat(dep.getDependency()).isEqualTo(calledFunctionOptional.get());
                 assertThat(dep.getCardinality()).isEqualTo(1);
             });
+
+        return this;
+    }
+
+    public DependencyAssertions assertBarrelExports() {
+        Optional<ModuleDescriptor> barrelOptional = project.getModules().stream()
+            .filter((mod) -> mod.getLocalFqn().equals("./src/testDepBarrel.ts"))
+            .findFirst();
+
+        assertThat(barrelOptional)
+            .as("re-exporting module is present")
+            .isPresent();
+
+        ModuleDescriptor barrel = barrelOptional.get();
+
+        Optional<FunctionDeclarationDescriptor> reExportedFunctionOptional = project.getModules().stream()
+            .filter((mod) -> mod.getLocalFqn().equals("./src/testDep3.ts"))
+            .flatMap((mod) -> mod.getFunctionDeclarations().stream())
+            .filter((func) -> func.getName().equals("reExportedFunction"))
+            .findFirst();
+
+        assertThat(reExportedFunctionOptional)
+            .as("re-exported function is present")
+            .isPresent();
+
+        Optional<VariableDeclarationDescriptor> constantOptional = module1.getVariableDeclarations().stream()
+            .filter((variable) -> variable.getName().equals("EXPORT_CONSTANT"))
+            .findFirst();
+
+        assertThat(constantOptional)
+            .as("imported and exported constant is present")
+            .isPresent();
+
+        assertThat(barrel.getExportedDeclarations())
+            .as("re-exporting module exports the declarations of \"export *\" without the default export, " +
+                "an imported declaration and the declarations of an imported module")
+            .extracting(ModuleExportsDescriptor::getExportedName, ModuleExportsDescriptor::getExportedDeclaration)
+            .containsExactlyInAnyOrder(
+                tuple("reExportedFunction", reExportedFunctionOptional.get()),
+                tuple("EXPORT_CONSTANT", constantOptional.get()),
+                tuple("dep1Namespace.EXPORT_CONSTANT", constantOptional.get())
+            );
+
+        assertThat(barrel.getDependencies())
+            .as("exported imported declaration is a dependency of the re-exporting module")
+            .anySatisfy(dep -> {
+                assertThat(dep.getDependency()).isEqualTo(constantOptional.get());
+                assertThat(dep.getCardinality()).isEqualTo(1);
+            });
+
+        assertThat(barrel.getDependencies())
+            .as("exported imported module is a dependency of the re-exporting module")
+            .anySatisfy(dep -> assertThat(dep.getDependency()).isEqualTo(module1));
 
         return this;
     }
