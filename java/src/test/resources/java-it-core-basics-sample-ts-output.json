@@ -729,6 +729,25 @@
           }
         },
         {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts\".default",
+          "localFqn": "\"./src/testDep3.ts\".default",
+          "functionName": "notReExportedFunction",
+          "parameters": [],
+          "returnType": {
+            "type": "primitive",
+            "name": "number"
+          },
+          "async": false,
+          "typeParameters": [],
+          "coordinates": {
+            "fileName": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts",
+            "startLine": 5,
+            "startColumn": 15,
+            "endLine": 7,
+            "endColumn": 1
+          }
+        },
+        {
           "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".Decorator",
           "localFqn": "\"./src/utils.ts\".Decorator",
           "functionName": "Decorator",
@@ -1595,6 +1614,14 @@
           "cardinality": 1
         },
         {
+          "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep1.ts\".EXPORT_CONSTANT",
+          "localFqn": "\"./src/testDep1.ts\".EXPORT_CONSTANT",
+          "targetType": "declaration",
+          "globalSourceFQN": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts",
+          "sourceType": "module",
+          "cardinality": 1
+        },
+        {
           "globalFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/utils.ts\".BaseInterface",
           "localFqn": "",
           "targetType": "declaration",
@@ -1668,6 +1695,14 @@
         },
         {
           "globalFqn": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts",
+          "localFqn": "",
+          "targetType": "module",
+          "globalSourceFQN": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts",
+          "sourceType": "module",
+          "cardinality": 1
+        },
+        {
+          "globalFqn": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep1.ts",
           "localFqn": "",
           "targetType": "module",
           "globalSourceFQN": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts",
@@ -1747,8 +1782,30 @@
           "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts"
         },
         {
+          "identifier": "notReExportedFunction",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts\".default",
+          "isDefault": true,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts"
+        },
+        {
           "identifier": "reExportedFunction",
           "globalDeclFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep3.ts\".reExportedFunction",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts"
+        },
+        {
+          "identifier": "EXPORT_CONSTANT",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep1.ts\".EXPORT_CONSTANT",
+          "isDefault": false,
+          "kind": "value",
+          "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts"
+        },
+        {
+          "identifier": "EXPORT_CONSTANT",
+          "alias": "dep1Namespace.EXPORT_CONSTANT",
+          "globalDeclFqn": "\"/java/src/test/resources/java-it-core-basics-sample-project/src/testDep1.ts\".EXPORT_CONSTANT",
           "isDefault": false,
           "kind": "value",
           "sourceFilePathAbsolute": "/java/src/test/resources/java-it-core-basics-sample-project/src/testDepBarrel.ts"

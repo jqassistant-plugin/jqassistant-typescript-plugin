@@ -88,6 +88,10 @@ export class ExportsPostProcessor extends PostProcessor {
                         // namespace re-export: convert all namespace exports into individual export declarations
                         if (exp.globalDeclFqn) {
                             for (const moduleExport of moduleExports) {
+                                if (moduleExport.isDefault && !exp.alias) {
+                                    // "export * from" does not re-export the default export, unlike "export * as ns from"
+                                    continue;
+                                }
                                 let identifier = moduleExport.alias ?? moduleExport.identifier;
                                 if (moduleExport.isDefault) {
                                     identifier = "default";
@@ -172,6 +176,10 @@ export class ExportsPostProcessor extends PostProcessor {
                         if (exp.kind === "namespace") {
                             // namespace re-export: export all known external declarations of external module
                             for (const eDecl of externalDeclarations) {
+                                if (eDecl.name === "default" && !exp.alias) {
+                                    // "export * from" does not re-export the default export, unlike "export * as ns from"
+                                    continue;
+                                }
                                 result.push(
                                     new LCEExportDeclaration(
                                         eDecl.name,
@@ -184,7 +192,7 @@ export class ExportsPostProcessor extends PostProcessor {
                                     ),
                                 );
                             }
-                            if (addDependencies) this.addDependency(dependencies, modulePathAbsolute, importSource, "module");
+                            if (addDependencies) this.addDependency(dependencies, modulePathAbsolute, externalImportModule.fqn.globalFqn, "module");
                         } else {
                             // named re-export of single external dependency
                             let eDecl = externalDeclarations.find((ed) => ed.name === exp.identifier);

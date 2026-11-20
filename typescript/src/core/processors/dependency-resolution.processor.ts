@@ -19,9 +19,9 @@ export type DeclarationIndex = Map<string, Map<string, FQN>>;
 /**
  * List of references that need to be resolved.
  *
- * [global FQN namespace stack, local identifier of reference, reference object]
+ * [global FQN namespace stack, local identifier of reference, callback that receives the resolved FQN]
  */
-export type FQNResolverContext = Array<[string[], string, LCENamedConcept]>;
+export type FQNResolverContext = Array<[string[], string, (fqn: FQN) => void]>;
 
 /**
  * Stores the identifiers for the declaration that encompasses the currently traversed part of the AST.
@@ -81,7 +81,7 @@ export class DependencyResolutionProcessor extends Processor {
         const [resolutionList] = localContexts.getNextContext(CoreContextKeys.FQN_RESOLVER) as [FQNResolverContext, number];
 
         // resolve FQNs
-        for (const [namespaces, identifier, concept] of resolutionList) {
+        for (const [namespaces, identifier, onResolved] of resolutionList) {
             if (identifier.includes(".")) {
                 // complex identifier: multiple tries
                 const identifiers = identifier.split(".");
@@ -90,7 +90,7 @@ export class DependencyResolutionProcessor extends Processor {
                 // test full identifier names from bottom to top (e.g. "a.b.c" => "a.b.c", "a.b", "a")
                 for (let i = identifiers.length; i > 0; i--) {
                     const testIdentifier = identifiers.slice(0, i).join(".");
-                    if (this.resolveFQN(declIndex, namespaces, testIdentifier, concept)) {
+                    if (this.resolveFQN(declIndex, namespaces, testIdentifier, onResolved)) {
                         resultFound = true;
                         break;
                     }
@@ -100,14 +100,14 @@ export class DependencyResolutionProcessor extends Processor {
                 // test partial identifier names from bottom to top (e.g. "a.b.c" => "c", "b.c", "a.b.c")
                 for (let i = identifiers.length - 1; i > 0; i--) {
                     const testIdentifier = identifiers.slice(i).join(".");
-                    if (this.resolveFQN(declIndex, namespaces, testIdentifier, concept)) {
+                    if (this.resolveFQN(declIndex, namespaces, testIdentifier, onResolved)) {
                         resultFound = true;
                         break;
                     }
                 }
             } else {
                 // simple identifier: resolve it
-                this.resolveFQN(declIndex, namespaces, identifier, concept);
+                this.resolveFQN(declIndex, namespaces, identifier, onResolved);
             }
         }
 
@@ -145,19 +145,19 @@ export class DependencyResolutionProcessor extends Processor {
     }
 
     /**
-     * Tries to resolve the FQN of a concept by a given list of (global) namespace identifiers and the local name of the declaration.
+     * Tries to resolve a FQN by a given list of (global) namespace identifiers and the local name of the declaration.
      *
      * @param declIndex the {@link DeclarationIndex} containing all registered declarations
      * @param namespaces list of global namespace identifiers that were present during the resolution scheduling
      * @param identifier local name of the declaration
-     * @param concept concept to which the FQN should be resolved and assigned to
+     * @param onResolved callback that receives the resolved FQN
      * @returns whether the resolution was successful
      */
-    private resolveFQN(declIndex: DeclarationIndex, namespaces: string[], identifier: string, concept: LCENamedConcept): boolean {
+    private resolveFQN(declIndex: DeclarationIndex, namespaces: string[], identifier: string, onResolved: (fqn: FQN) => void): boolean {
         for (let i = namespaces.length; i > 0; i--) {
             const testNamespace = namespaces.slice(0, i).join(".");
             if (declIndex.has(testNamespace) && declIndex.get(testNamespace)?.has(identifier)) {
-                concept.fqn = declIndex.get(testNamespace)?.get(identifier) as FQN;
+                onResolved(declIndex.get(testNamespace)?.get(identifier) as FQN);
                 return true;
             }
         }
@@ -253,6 +253,15 @@ export class DependencyResolutionProcessor extends Processor {
      * @param concept named concept with the fqn property that will be resolved
      */
     public static scheduleFqnResolution(localContexts: LocalContexts, localName: string, concept: LCENamedConcept): void {
+        this.scheduleFqnResolutionCallback(localContexts, localName, (fqn) => (concept.fqn = fqn));
+    }
+
+    /**
+     * Schedules the resolution of a FQN, like `scheduleFqnResolution()`, for a FQN that is not the `fqn` property of a named concept.
+     * @param localName local name that will be used to resolve the FQN (e.g. variable name)
+     * @param onResolved receives the FQN after the AST has been traversed completely; not called if the FQN cannot be resolved
+     */
+    public static scheduleFqnResolutionCallback(localContexts: LocalContexts, localName: string, onResolved: (fqn: FQN) => void): void {
         const namespaces: string[] = [];
         for (const context of localContexts.contexts) {
             const name: string | undefined = (context.get(CoreContextKeys.FQN_SCOPE) as FQNScope)?.globalIdentifier;
@@ -261,7 +270,7 @@ export class DependencyResolutionProcessor extends Processor {
             }
         }
         const [resolutionList] = localContexts.getNextContext(CoreContextKeys.FQN_RESOLVER) as [FQNResolverContext, number];
-        resolutionList.push([namespaces, localName, concept]);
+        resolutionList.push([namespaces, localName, onResolved]);
     }
 
     /**
