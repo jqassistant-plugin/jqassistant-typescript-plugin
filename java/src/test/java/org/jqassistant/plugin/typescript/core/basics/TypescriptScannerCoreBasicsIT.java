@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,6 +64,11 @@ public class TypescriptScannerCoreBasicsIT extends AbstractPluginIT {
             .assertClassDeclaration()
             .assertInterfaceDeclaration()
             .assertEnumDeclaration();
+
+        // relation type of the function parameters
+        assertThat(query("MATCH (:TS:Function)-[r]->(:TS:Parameter) RETURN type(r) AS type, count(*) AS count").getRows())
+            .as("functions are connected to their parameters through HAS relations only")
+            .containsExactly(Map.of("type", "HAS", "count", 3L));
 
         new TypeAssertions(project, utils)
             .assertModulePresence()
