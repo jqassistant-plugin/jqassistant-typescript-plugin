@@ -20,7 +20,7 @@ public interface FunctionDeclarationDescriptor extends TypeScriptDescriptor, Loc
     TypeDescriptor getReturnType();
     void setReturnType(TypeDescriptor returnType);
 
-    @Relation("HAS_PARAMETER")
+    @Relation("HAS")
     List<ParameterDeclarationDescriptor> getParameters();
 
     @Relation("DECLARES")
