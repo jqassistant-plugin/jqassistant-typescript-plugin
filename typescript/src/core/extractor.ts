@@ -15,12 +15,19 @@ import { LCEProject, LCEProjectInfo } from "./project";
 import {debug, DEBUG_LOGGING} from "./utils/log.utils";
 import { debugUnresolvedDependencies } from "./utils/dependency.utils";
 
+export const DEFAULT_MAX_TYPE_RESOLUTION_DEPTH = 10;
+
 export interface ExtractorOptions {
     prettyPrint?: boolean;
+    /**
+     * maximum nesting depth up to which types are resolved (the outermost type has depth 0),
+     * deeper nested types are replaced by a placeholder (default: {@link DEFAULT_MAX_TYPE_RESOLUTION_DEPTH})
+     */
+    maxTypeResolutionDepth?: number;
 }
 
 export async function processProjectsAndOutputResult(scanRoot: string, options: ExtractorOptions) {
-    const processedProjects = await processProjects(scanRoot);
+    const processedProjects = await processProjects(scanRoot, options);
 
     // output JSON file
     const json = JSON.stringify(
@@ -54,7 +61,7 @@ export async function processProjectsAndOutputResult(scanRoot: string, options: 
     });
 }
 
-export async function processProjects(scanRoot: string): Promise<LCEProject[]> {
+export async function processProjects(scanRoot: string, options: ExtractorOptions = {}): Promise<LCEProject[]> {
     // determine projects to scan
     const projects = await ProjectUtils.determineProjects(scanRoot);
 
@@ -63,7 +70,7 @@ export async function processProjects(scanRoot: string): Promise<LCEProject[]> {
     for (let i = 0; i < projects.length; i++) {
         const project = projects[i];
         console.log("Processing project " + (i + 1) + " of " + projects.length);
-        processedProjects.push(await processProject(project));
+        processedProjects.push(await processProject(project, options));
     }
 
     // post-processing projects
@@ -76,7 +83,7 @@ export async function processProjects(scanRoot: string): Promise<LCEProject[]> {
     return processedProjects;
 }
 
-export async function processProject(project: LCEProjectInfo): Promise<LCEProject> {
+export async function processProject(project: LCEProjectInfo, options: ExtractorOptions = {}): Promise<LCEProject> {
     const projectNorm = ProjectUtils.normalizeProjectInfo(project);
     const projectRoot = project.rootPath;
     const fileList = project.sourceFilePaths;
@@ -125,6 +132,7 @@ export async function processProject(project: LCEProjectInfo): Promise<LCEProjec
                 ast: ast,
                 services: services,
                 typeChecker: typeChecker,
+                maxTypeResolutionDepth: options.maxTypeResolutionDepth ?? DEFAULT_MAX_TYPE_RESOLUTION_DEPTH,
             };
 
             concepts = mergeConceptMaps(concepts, unifyConceptMap(traverser.traverse(globalContext), globalContext.sourceFilePathAbsolute));

@@ -5,6 +5,7 @@
 - located under `./typescript/test`
 - they test the extraction of individual [[Concepts|concepts]] by running the complete extraction process on different sample projects and validating the resulting `LCEConcept` objects
 - to simply the test code a number of utility methods are defined under `./typescript/test/utils`
+- the parsing of the command line options is tested separately in `./typescript/test/cli.test.ts`
 
 **jQA Plugin Integration Tests:**
 - located under `./java/src/test`

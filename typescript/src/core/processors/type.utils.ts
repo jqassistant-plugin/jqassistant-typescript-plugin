@@ -56,12 +56,6 @@ import path from "path";
 import { FileUtils } from "../utils/file.utils";
 import {debug} from "../utils/log.utils";
 
-let MAX_TYPE_RESOLUTION_DEPTH = 10;
-
-export function setMaxTypeResolutionDepth(maxDepth: number) {
-    MAX_TYPE_RESOLUTION_DEPTH = maxDepth;
-}
-
 /**
  * Returns the type for a given class property (with a non-computed name)
  * @param esProperty property name node provided in ESTree
@@ -317,7 +311,7 @@ function parseType(
     typeResolutionDepth = 0,
 ): LCEType {
     // cut off type resolution at a certain depth to prevent graph clutter and potential infinite recursion
-    if (typeResolutionDepth > MAX_TYPE_RESOLUTION_DEPTH) {
+    if (typeResolutionDepth > processingContext.globalContext.maxTypeResolutionDepth) {
         return LCETypeNotIdentified.RESOLUTION_LIMIT;
     }
 
@@ -628,7 +622,7 @@ function parseAnonymousType(
                 ),
             );
         }
-        const typeParameters = parseFunctionTypeParameters(processingContext, signature, node);
+        const typeParameters = parseFunctionTypeParameters(processingContext, signature, node, typeResolutionDepth + 1);
         return new LCETypeFunction(returnType, parameters, false, typeParameters);
     } else if (type.symbol?.members) {
         // anonymous object type
@@ -691,7 +685,12 @@ function isLiteralNumberOrString(literalValue: number | string | PseudoBigInt): 
     return typeof literalValue === "string" || typeof literalValue === "number";
 }
 
-function parseFunctionTypeParameters(processingContext: ProcessingContext, signature: Signature, node: Node): LCETypeParameterDeclaration[] {
+function parseFunctionTypeParameters(
+    processingContext: ProcessingContext,
+    signature: Signature,
+    node: Node,
+    typeResolutionDepth = 0,
+): LCETypeParameterDeclaration[] {
     const result: LCETypeParameterDeclaration[] = [];
     const typeParameters = signature.getTypeParameters();
     if (typeParameters) {
@@ -702,7 +701,7 @@ function parseFunctionTypeParameters(processingContext: ProcessingContext, signa
 
             const constraint = typeParam.getConstraint();
             if (constraint) {
-                constraintType = parseType(processingContext, constraint, node);
+                constraintType = parseType(processingContext, constraint, node, undefined, false, typeResolutionDepth);
             } else {
                 // if no constraint is found, return empty object type (unconstrained)
                 constraintType = new LCETypeObject([]);

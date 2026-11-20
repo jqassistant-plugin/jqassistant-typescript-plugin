@@ -40,7 +40,8 @@ export class GlobalContext {
             range: true;
         }>,
         public services: ParserServicesWithTypeInformation,
-        public typeChecker: TypeChecker
+        public typeChecker: TypeChecker,
+        public maxTypeResolutionDepth: number,
     ) {
     }
 }

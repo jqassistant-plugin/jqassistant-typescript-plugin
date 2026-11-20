@@ -63,6 +63,7 @@ docs/                    documentation (Obsidian vault, published with Quartz)
   templates/             page templates (e.g. node page)
 typescript/              LCE tool (npm package @jqassistant/ts-lce)
   src/main.ts            CLI entry point, activates extensions
+  src/cli.ts             CLI definition (options and their parsing)
   src/core/              LCE framework (*.ts directly in core/) and all core language features
     concepts/ traversers/ processors/ post-processors/ utils/
   src/react/             React extension (same sub-structure as core/)
@@ -97,6 +98,7 @@ The two halves are built independently: the LCE tool with npm only, the plugin w
 - Tests must be started from `typescript/`: sample project paths are relative to it.
 - Jest transpiles each file on its own (`isolatedModules`) and therefore does **not** type-check. Type errors only show up in `npm run typecheck` / `npm run build`, so run them as well as the tests; CI runs all of them.
 - `test/tsconfig.json` extends the main `tsconfig.json` and only sets `include`. Change compiler options in the main config.
+- Jest runs the tests as CommonJS and cannot load packages that are published as ES modules only (such as `commander`). `jest.config.js` lets ts-jest transform them: add further ESM-only packages to the exception in `transformIgnorePatterns`.
 - A few sample projects need npm packages; the tests install them on first use (`initNodeSampleProject`), which needs network access and makes the first run slower.
 - Dependencies are pinned to exact versions (`.npmrc`: `save-exact=true`); `npm run upgrade` bumps all of them.
 
@@ -259,7 +261,7 @@ Follow [Extensions](docs/development/Extensions.md): a new directory under `type
 
 ## Testing conventions
 
-- **LCE**: integration tests only. Each `test/<core|react>/integration/<topic>.test.ts` runs `processProjects(...)` on `sample-projects/<topic>/` (a real project with `tsconfig.json`) once in `beforeAll`, indexes the returned concepts by local FQN and asserts on concept objects. Use the helpers in `test/utils/test-utils.ts` (`expectDependency`, `expectDeclaredType`, `resolveGlobalFqn`, ...). Assert on direct dependencies only; propagation happens in the plugin.
+- **LCE**: integration tests only, apart from `test/cli.test.ts`, which covers the option parsing of `src/cli.ts`. Each `test/<core|react>/integration/<topic>.test.ts` runs `processProjects(...)` on `sample-projects/<topic>/` (a real project with `tsconfig.json`) once in `beforeAll`, indexes the returned concepts by local FQN and asserts on concept objects. Use the helpers in `test/utils/test-utils.ts` (`expectDependency`, `expectDeclaredType`, `resolveGlobalFqn`, ...). Assert on direct dependencies only; propagation happens in the plugin. Options of `processProjects` (`ExtractorOptions`, e.g. `maxTypeResolutionDepth`) can be set per run.
 - **jQA plugin**: `*IT` classes extend `AbstractPluginIT`, scan a checked-in report from `java/src/test/resources/java-it-*-ts-output.json` and assert on the graph through descriptor getters or Cypher. Reusable fluent assertions live in the `assertions` packages. `TestUtils.getReportJson` turns the cropped paths of the checked-in reports into absolute paths for the current machine.
 - **Regenerating the checked-in reports**: after any change to the `java-it-*` sample projects and after any LCE change that may change its output, run `./regenerate-test-data.sh` from within `java/src/test/resources/` (workflow in [Adding or changing Java integration tests](#adding-or-changing-java-integration-tests)). It runs the LCE from source (via `ts-node`, with `-p -e react`) on the three `java-it-*` sample projects and strips the repository root from all paths. Beforehand it needs `npm ci` in `typescript/` and in `java/src/test/resources/java-it-react-sample-project/` (the React type definitions; without them the React report silently loses its components). It also needs GNU `sed`.
 - There is no automated end-to-end test from TypeScript source to graph, and CI does not check that the checked-in reports are up to date. An LCE change is only covered by the ITs if the reports are regenerated and the ITs are extended.

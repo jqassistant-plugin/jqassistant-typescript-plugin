@@ -1,5 +1,6 @@
 {
   "accentColor": "",
   "textFontFamily": "Inter",
-  "monospaceFontFamily": "Fira Code"
+  "monospaceFontFamily": "Fira Code",
+  "showRibbon": true
 }

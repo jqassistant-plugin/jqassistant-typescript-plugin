@@ -26,4 +26,5 @@ The codebase of the plugin is structured the following way:
 		- `react/`: code for the [[React Extension]]
 		- ... *directories for future extensions*
 		- `main.ts`: contains entry point of the tool that parses the CLI arguments and initializes the extensions
+		- `cli.ts`: definition of the command line interface (options and their parsing)
 	- `test/`: tests for the [LCE tool](https://jqassistant-plugin.github.io/jqassistant-lce-docs/architecture/LCE-Tool)
