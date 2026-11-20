@@ -83,6 +83,10 @@ export class ModulePathUtils {
     private static addFileEnding(absoluteFilePath: string): string {
         if (fs.existsSync(absoluteFilePath)) {
             return absoluteFilePath;
+        }
+        const replacedFilePath = this.replaceJsFileEnding(absoluteFilePath);
+        if (replacedFilePath) {
+            return replacedFilePath;
         } else if (fs.existsSync(absoluteFilePath + ".ts")) {
             return absoluteFilePath + ".ts";
         } else if (fs.existsSync(absoluteFilePath + ".tsx")) {
@@ -101,6 +105,30 @@ export class ModulePathUtils {
             return absoluteFilePath + ".d.mts";
         }
         return absoluteFilePath;
+    }
+
+    /**
+     * Maps the file ending of a JavaScript file to the file endings of the TypeScript files that it may refer to,
+     * in the order in which TypeScript tries them (e.g. `import "./a.js"` for the module `a.ts`).
+     */
+    private static readonly JS_TO_TS_FILE_ENDINGS: [string, string[]][] = [
+        [".js", [".ts", ".tsx", ".d.ts"]],
+        [".jsx", [".tsx", ".ts", ".d.ts"]],
+        [".mjs", [".mts", ".d.mts"]],
+        [".cjs", [".cts", ".d.cts"]],
+    ];
+
+    /**
+     * @returns path of the existing TypeScript file that a path with a JavaScript file ending refers to, or `undefined` if there is none
+     */
+    private static replaceJsFileEnding(absoluteFilePath: string): string | undefined {
+        for (const [jsFileEnding, tsFileEndings] of this.JS_TO_TS_FILE_ENDINGS) {
+            if (absoluteFilePath.endsWith(jsFileEnding)) {
+                const pathWithoutFileEnding = absoluteFilePath.slice(0, -jsFileEnding.length);
+                return tsFileEndings.map((tsFileEnding) => pathWithoutFileEnding + tsFileEnding).find((tsFilePath) => fs.existsSync(tsFilePath));
+            }
+        }
+        return undefined;
     }
 
     /**
@@ -216,11 +244,10 @@ export class ModulePathUtils {
 
                 const modules = subproject.concepts.get(LCEModule.conceptId) as LCEModule[];
                 for (const module of modules) {
+                    moduleIndex.set(module.fqn.globalFqn, true);
                     if(module.fqn.globalFqn.match(/\/index\.[a-z]+$/)) {
-                        // use directory path for index.* modules
+                        // index.* modules may also be referred to by their directory path
                         moduleIndex.set(module.fqn.globalFqn.replace(/\/index\.[a-z]+$/, ""), true);
-                    } else {
-                        moduleIndex.set(module.fqn.globalFqn, true);
                     }
                 }
             }

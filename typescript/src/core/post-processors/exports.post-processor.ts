@@ -11,6 +11,7 @@ import {debug} from "../utils/log.utils";
 
 export class ExportsPostProcessor extends PostProcessor {
     postProcess(projects: LCEProject[]): void {
+        const ignoredExports: Set<LCEExportDeclaration> = new Set();
         for (const project of projects) {
             const concepts = project.concepts;
             const modules = (concepts.get(LCEModule.conceptId) ?? []) as LCEModule[];
@@ -21,7 +22,15 @@ export class ExportsPostProcessor extends PostProcessor {
 
             for (const module of modules) {
                 newExports.push(
-                    ...this.getAllModuleExports(newDependencies, allExports, module.fqn.globalFqn, externalModules, project.projectInfo, projects),
+                    ...this.getAllModuleExports(
+                        newDependencies,
+                        ignoredExports,
+                        allExports,
+                        module.fqn.globalFqn,
+                        externalModules,
+                        project.projectInfo,
+                        projects,
+                    ),
                 );
             }
 
@@ -30,10 +39,14 @@ export class ExportsPostProcessor extends PostProcessor {
                 concepts.set(LCEDependency.conceptId, [...(concepts.get(LCEDependency.conceptId) ?? []), ...newDependencies.values()]);
             }
         }
+        if (ignoredExports.size > 0) {
+            console.log(`Ignored ${ignoredExports.size} re-export(s) that could not be resolved (run with --debug for details)`);
+        }
     }
 
     private getAllModuleExports(
         dependencies: Map<string, LCEDependency>,
+        ignoredExports: Set<LCEExportDeclaration>,
         exports: LCEExportDeclaration[],
         modulePathAbsolute: string,
         externalModules: LCEExternalModule[],
@@ -63,6 +76,7 @@ export class ExportsPostProcessor extends PostProcessor {
                     // (the dependencies of the re-exported module are added when its own exports are resolved)
                     const moduleExports = this.getAllModuleExports(
                         dependencies,
+                        ignoredExports,
                         exports,
                         exp.importSource,
                         externalModules,
@@ -111,7 +125,9 @@ export class ExportsPostProcessor extends PostProcessor {
                                 if (addDependencies) this.addDependency(dependencies, modulePathAbsolute, originalExport.globalDeclFqn);
                             }
                         } else {
-                            debug(
+                            this.ignoreExport(
+                                ignoredExports,
+                                exp,
                                 `Error: could not find exported declaration "${exp.identifier}" in "${exp.importSource}": Ignoring export...\n\toccurred at ${exp.sourceFilePathAbsolute}}`,
                             );
                         }
@@ -120,6 +136,11 @@ export class ExportsPostProcessor extends PostProcessor {
                     // external re-export: link to external declaration(s)
                     let importSource = exp.importSource;
                     let externalImportModule = externalModules.find((em) => em.fqn.globalFqn === exp.importSource);
+                    if (!externalImportModule && ModulePathUtils.getPathType(exp.importSource) === "absolute") {
+                        // external index.* modules are known by their directory path
+                        importSource = exp.importSource.replace(/\/index\.\w+$/, "");
+                        externalImportModule = externalModules.find((em) => em.fqn.globalFqn === importSource);
+                    }
                     if (!externalImportModule) {
                         // if import source is a node module identifier try to resolve it
                         let resolvedModulePath;
@@ -185,13 +206,17 @@ export class ExportsPostProcessor extends PostProcessor {
                                 );
                                 if (addDependencies) this.addDependency(dependencies, modulePathAbsolute, eDecl.fqn.globalFqn);
                             } else {
-                                debug(
+                                this.ignoreExport(
+                                    ignoredExports,
+                                    exp,
                                     `Error: external declaration with identifier "${exp.identifier}" in module "${exp.importSource}" could not be found: Ignoring export...`,
                                 );
                             }
                         }
                     } else {
-                        debug(
+                        this.ignoreExport(
+                            ignoredExports,
+                            exp,
                             `Error: external module "${exp.importSource}" for re-export of "${exp.identifier}" could not be found. Ignoring export...\n\toccurred at ${exp.sourceFilePathAbsolute}`,
                         );
                     }
@@ -202,6 +227,17 @@ export class ExportsPostProcessor extends PostProcessor {
         }
 
         return result;
+    }
+
+    /**
+     * Records an export that could not be resolved. Exports of a module are resolved again for every module that re-exports it,
+     * so the same export may be ignored several times, but it is only logged and counted once.
+     */
+    private ignoreExport(ignoredExports: Set<LCEExportDeclaration>, exp: LCEExportDeclaration, message: string) {
+        if (!ignoredExports.has(exp)) {
+            ignoredExports.add(exp);
+            debug(message);
+        }
     }
 
     private filterExportsForModule(exports: LCEExportDeclaration[], modulePath: string): LCEExportDeclaration[] {
