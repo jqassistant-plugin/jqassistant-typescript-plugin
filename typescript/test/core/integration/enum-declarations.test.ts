@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { processProjects } from "../../../src/core/extractor";
 import { LCEModule } from "../../../src/core/concepts/typescript-module.concept";
 import { LCEDependency } from "../../../src/core/concepts/dependency.concept";
@@ -118,6 +120,40 @@ describe("enum declarations test", () => {
             expect(exportDecl.alias).toBeUndefined();
             expect(exportDecl.isDefault).toBe(false);
             expect(exportDecl.sourceFilePathAbsolute).toBe(mainModule.fqn.globalFqn);
+        }
+    });
+
+    test("code coordinates", async () => {
+        const sourceLines = fs.readFileSync(path.join(projectRootPath, "src", "main.ts"), "utf8").split(/\r?\n/);
+        const basicLine = sourceLines.indexOf("enum eBasic {") + 1;
+        const exportedLine = sourceLines.indexOf("export enum eExported {") + 1;
+        expect(basicLine).toBeGreaterThan(0);
+        expect(exportedLine).toBeGreaterThan(0);
+
+        const basic = enumDecls.get('"./src/main.ts".eBasic');
+        expect(basic).toBeDefined();
+        if (basic) {
+            expect(basic.coordinates).toEqual({
+                fileName: mainModule.path,
+                startLine: basicLine,
+                startColumn: 0,
+                endLine: basicLine + 4,
+                endColumn: 1,
+            });
+            const a = expectEnumMember(basic, "A", '"./src/main.ts".eBasic.A');
+            expect(a.coordinates).toEqual({ fileName: undefined, startLine: basicLine + 1, startColumn: 4, endLine: basicLine + 1, endColumn: 5 });
+        }
+
+        const exported = enumDecls.get('"./src/main.ts".eExported');
+        expect(exported).toBeDefined();
+        if (exported) {
+            expect(exported.coordinates).toEqual({
+                fileName: mainModule.path,
+                startLine: exportedLine,
+                startColumn: 7,
+                endLine: exportedLine + 4,
+                endColumn: 1,
+            });
         }
     });
 
