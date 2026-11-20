@@ -22,7 +22,7 @@ public interface ProjectDescriptor extends TypeScriptDescriptor {
     @Relation("USES")
     List<ExternalModuleDescriptor> getExternalModules();
 
-    @Relation
+    @Relation("REFERENCES")
     List<ProjectDescriptor> getReferencedProjects();
 
 }

@@ -309,6 +309,12 @@ public class TypescriptScannerCoreMultiProjectIT extends AbstractPluginIT {
             .hasSize(1);
 
 
+        // relation type of the project references
+        assertThat(query("MATCH (:TS:Project)-[r]->(:TS:Project) RETURN type(r) AS type, count(*) AS count").getRows())
+            .as("projects are connected through REFERENCES relations only")
+            .containsExactly(Map.of("type", "REFERENCES", "count", 7L));
+
+
         // check dependencies between modules
         assertModuleDependency(module1_1, module1_2, 2);
         assertModuleDependency(module2_1, module2_2, 2);
