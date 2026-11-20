@@ -12,6 +12,8 @@
 <li>this applies to type references as well as to value references (e.g. function calls, <code>new</code> expressions, reading a constant)</li>
 <li>it covers <code>export * from</code>, named and aliased re-exports (<code>export { A as B } from</code>), default re-exports (<code>export { default } from</code>) and namespace re-exports (<code>export * as ns from</code>), also when declarations of Node.js packages are re-exported</li>
 <li>a module that re-exports declarations depends on the re-exported declarations (named re-exports) or modules (<code>export *</code>)</li>
+<li>the module of a re-export is resolved like an import, by TypeScript’s module resolution with the compiler options of the project: e.g. <code>.js</code> specifiers of <code>.ts</code> files (as required by <code>moduleResolution</code> <code>node16</code>/<code>nodenext</code>), explicit <code>index</code> files and <code>paths</code> mappings</li>
+<li>re-exports that cannot be resolved are missing in the graph; the LCE tool prints their number (details with <code>--debug</code>)</li>
 </ul>
 </li>
 <li>dependencies whose source or target is not represented in the graph are skipped; the plugin logs their number (details on debug level), and the LCE tool lists them when run with <code>--debug</code></li>
