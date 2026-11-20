@@ -10,6 +10,25 @@
 </li>
 <li>run the jQAssistant command line utility using <code>directory/to/jqa-cli/bin/jqassistant.sh scan</code> (imports <code>.reports/jqa/ts-output.json</code> into the graph database)</li>
 </ol>
+<p><strong>Command Line Options:</strong></p>
+<ul>
+<li><code>jqa-ts-lce [path] [options]</code>: <code>path</code> is the directory that is scanned for TypeScript projects (default: the current directory)</li>
+<li><code>-e, --extension [extensions...]</code>: space separated list of extensions to activate, currently only <code>react</code> (see <a href="../usage/React-Extension" class="internal alias" data-slug="usage/React-Extension">React Extension</a>)
+<ul>
+<li>put the path in front of this option (e.g. <code>jqa-ts-lce . -e react</code>), otherwise the path is taken as an extension</li>
+</ul>
+</li>
+<li><code>-p, --pretty</code>: pretty-print the JSON report</li>
+<li><code>--type-resolution-depth &lt;depth></code>: maximum nesting depth up to which types are resolved (default: <code>10</code>)
+<ul>
+<li>the types of declarations (e.g. of variables, properties, parameters and return values) have depth 0, each nesting level (object members, type arguments, members of unions and intersections, parameters and return types of function types, …) adds 1: in <code>let x: { a: { b: string } }</code> the type <code>string</code> of <code>b</code> has depth 2</li>
+<li>deeper nested types are represented by a <a href="../usage/Node---TS-Type-NotIdentified" class="internal alias" data-slug="usage/Node---TS-Type-NotIdentified">:TS:Type:NotIdentified</a> node with the identifier <code>Type that is beyond the set type resolution depth</code></li>
+<li>the limit keeps the graph small for deeply nested types and stops the resolution of recursive anonymous types</li>
+</ul>
+</li>
+<li><code>-d, --debug</code>: print debug information</li>
+<li><code>-V, --version</code> and <code>-h, --help</code>: print the version or the help text</li>
+</ul>
 <p><strong>Possible Use Cases:</strong></p>
 <ul>
 <li>analyze the graph and report violations via <code>directory/to/jqa-cli/bin/jqassistant.sh analyze</code> and <code>directory/to/jqa-cli/bin/jqassistant.sh report</code></li>
