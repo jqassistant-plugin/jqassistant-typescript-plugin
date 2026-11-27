@@ -6,65 +6,65 @@
       <description>Last 10 notes on jQA Typescript Plugin</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>Node - TS Variable</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Variable</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Variable</guid>
+    <description>:TS:Variable Node → represents a top-level TypeScript variable/constant declaration Properties NameDescriptionglobalFqnglobal FQN of the variablelocalFqnlocal FQN of the ...</description>
+    <pubDate>Fri, 27 Nov 2026 08:09:16 GMT</pubDate>
+  </item><item>
+    <title>Node Properties - Code Coordinates</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Properties---Code-Coordinates</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Properties---Code-Coordinates</guid>
+    <description>Code Coordinates → set of node properties that describe the location of a code construct within a source code file Properties: NameDescriptionfileNameabsolute path to the source ...</description>
+    <pubDate>Fri, 27 Nov 2026 08:09:16 GMT</pubDate>
+  </item><item>
+    <title>Node Properties - Fully Qualified Names</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Properties---Fully-Qualified-Names</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Properties---Fully-Qualified-Names</guid>
+    <description>Fully Qualified Names (FQNs) → node properties that uniquely identify a concept within or across projects Properties: NameDescriptionglobalFqnGlobal fully qualified name that ...</description>
+    <pubDate>Fri, 27 Nov 2026 08:09:16 GMT</pubDate>
+  </item><item>
+    <title>Node Relation - Dependencies</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Relation---Dependencies</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node-Relation---Dependencies</guid>
+    <description>Dependencies (DEPENDS_ON) → dependencies between the various language concepts are realized by the DEPENDS_ON relation direct dependencies are registered on a statement/expression ...</description>
+    <pubDate>Fri, 27 Nov 2026 08:09:16 GMT</pubDate>
+  </item><item>
     <title>React Extension</title>
     <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/React-Extension</link>
     <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/React-Extension</guid>
     <description>React Extension → provides concepts specific to projects using React Overview: :TS:ReactComponent :TS:JSXElementType .</description>
-    <pubDate>Fri, 20 Nov 2026 16:37:57 GMT</pubDate>
+    <pubDate>Fri, 27 Nov 2026 08:09:16 GMT</pubDate>
   </item><item>
-    <title>Basic Usage</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Basic-Usage</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Basic-Usage</guid>
-    <description>Basic Usage go through the installation and project setup process if not done already, run npm install to completely download all dependencies execute jqa-ts-lce(global installation) ...</description>
-    <pubDate>Fri, 20 Nov 2026 16:37:57 GMT</pubDate>
+    <title>Node - TS Type ObjectMember</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-ObjectMember</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-ObjectMember</guid>
+    <description>:TS:Type:ObjectMember Node → represents a member of an :TS:Type:Object Properties NameDescriptionnamename of the memberoptional (boolean)indicates, if the member has been ...</description>
+    <pubDate>Fri, 27 Nov 2026 08:09:16 GMT</pubDate>
   </item><item>
-    <title>Installation</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Installation</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Installation</guid>
-    <description>Installation Requirements Node.js 22.12.0 or newer jQAssistant 2.10 or newer (plugin versions up to 1.4.x need jQAssistant 2.9 or older) NOTE From version 1.2.0 onward, the version ...</description>
-    <pubDate>Fri, 20 Nov 2026 16:37:57 GMT</pubDate>
+    <title>Node - TS Type Primitive</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Primitive</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Primitive</guid>
+    <description>:TS:Type:Primitive Node → represents a primitive type (e.g. undefined, number, string, etc.) Properties NameDescriptionnamename of the primitive type.</description>
+    <pubDate>Fri, 27 Nov 2026 08:09:16 GMT</pubDate>
   </item><item>
-    <title>Node - TS AccessorProperty</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-AccessorProperty</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-AccessorProperty</guid>
-    <description>:TS:AccessorProperty Node → represents a property of a :TS:Class or :TS:Interface that is described by getter, setter, or auto accessor constructs Properties NameDescriptionglobalFqnglobal ...</description>
-    <pubDate>Fri, 20 Nov 2026 16:37:57 GMT</pubDate>
+    <title>Node - TS Type Tuple</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Tuple</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Tuple</guid>
+    <description>:TS:Type:Tuple Node → represents a tuple type Relations NameTarget Label(s)CardinalityDescriptionCONTAINS:TS:Type1..*types of the tuple itemsProperties:- index: position ...</description>
+    <pubDate>Fri, 27 Nov 2026 08:09:16 GMT</pubDate>
   </item><item>
-    <title>Node - TS AutoAccessor</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-AutoAccessor</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-AutoAccessor</guid>
-    <description>:TS:AutoAccessor Node → represents a declared auto accessor of a :TS:Class or :TS:Interface Properties NameDescriptionvisibilityvisibility of the accessor, i.e ...</description>
-    <pubDate>Fri, 20 Nov 2026 16:37:57 GMT</pubDate>
+    <title>Node - TS Type TypeParameterReference</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-TypeParameterReference</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-TypeParameterReference</guid>
+    <description>:TS:Type:TypeParameterReference Node → represents a reference to a generic type that is defined in a type parameter list Properties NameDescriptionnamename of the type parameter ...</description>
+    <pubDate>Fri, 27 Nov 2026 08:09:16 GMT</pubDate>
   </item><item>
-    <title>Node - TS Class</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Class</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Class</guid>
-    <description>:TS:Class Node → represents a top-level TypeScript class declaration Properties NameDescriptionglobalFqnglobal FQN of the classlocalFqnlocal FQN of the classnamename of the ...</description>
-    <pubDate>Fri, 20 Nov 2026 16:37:57 GMT</pubDate>
-  </item><item>
-    <title>Node - TS Constructor</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Constructor</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Constructor</guid>
-    <description>:TS:Constructor Node → represents a TypeScript class constructor declaration Properties NameDescriptionglobalFqnglobal FQN of the constructor (always ends with .constructor)localFqnlocal ...</description>
-    <pubDate>Fri, 20 Nov 2026 16:37:57 GMT</pubDate>
-  </item><item>
-    <title>Node - TS Decorator</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Decorator</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Decorator</guid>
-    <description>:TS:Decorator Node → represents a decorator of a declaration Properties NameDescriptioncode coordinatescode coordinates of the decorator (without fileName) Relations NameTarget ...</description>
-    <pubDate>Fri, 20 Nov 2026 16:37:57 GMT</pubDate>
-  </item><item>
-    <title>Node - TS Enum</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Enum</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Enum</guid>
-    <description>:TS:Enum Node → represents a top-level TypeScript enum declaration Properties NameDescriptionglobalFqnglobal FQN of the enumlocalFqnlocal FQN of the enumnamename of the enumconstant ...</description>
-    <pubDate>Fri, 20 Nov 2026 16:37:57 GMT</pubDate>
-  </item><item>
-    <title>Node - TS EnumMember</title>
-    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-EnumMember</link>
-    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-EnumMember</guid>
-    <description>:TS:EnumMember Node → represents a TypeScript enum element Properties NameDescriptionglobalFqnglobal FQN of the enum memberlocalFqnlocal FQN of the enum membernamename of ...</description>
-    <pubDate>Fri, 20 Nov 2026 16:37:57 GMT</pubDate>
+    <title>Node - TS Type Union</title>
+    <link>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Union</link>
+    <guid>https://jqassistant-plugin.github.io/jqassistant-typescript-plugin/usage/Node---TS-Type-Union</guid>
+    <description>:TS:Type:Union Node → represents a union type Relations NameTarget Label(s)CardinalityDescriptionCONTAINS:TS:Type2..*constituent types of the union.</description>
+    <pubDate>Fri, 27 Nov 2026 08:09:16 GMT</pubDate>
   </item>
     </channel>
   </rss>
